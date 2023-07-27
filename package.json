@@ -1,0 +1,11 @@
+{
+  "name": "react-native-esbuild",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^7.1.4"
+  }
+}

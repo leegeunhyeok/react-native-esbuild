@@ -1,0 +1,33 @@
+{
+  "name": "@react-native-esbuild/cli",
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "keywords": [
+    "react-native",
+    "esbuild"
+  ],
+  "author": "leegeunhyeok <dev.ghlee@gmail.com>",
+  "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
+  "license": "MIT",
+  "main": "lib/cli.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/@react-native-esbuild/cli.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  }
+}
