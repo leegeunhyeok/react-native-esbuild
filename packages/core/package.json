@@ -9,7 +9,8 @@
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
   "license": "MIT",
-  "main": "lib/core.js",
+  "type": "commonjs",
+  "main": "dist/core.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -25,6 +26,7 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
+    "tsc": "tsc",
     "test": "node ./__tests__/@react-native-esbuild/core.test.js"
   },
   "bugs": {

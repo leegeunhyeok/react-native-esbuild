@@ -6,6 +6,12 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "lerna": "^7.1.4"
-  }
+    "@types/node": "^20.4.5",
+    "@vercel/style-guide": "^4.0.2",
+    "eslint": "^8.45.0",
+    "lerna": "^7.1.4",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.6"
+  },
+  "prettier": "@vercel/style-guide/prettier"
 }
