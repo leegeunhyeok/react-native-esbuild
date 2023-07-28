@@ -1,7 +1,7 @@
 {
   "name": "@react-native-esbuild/cli",
   "version": "0.1.0",
-  "description": "> TODO: description",
+  "description": "cli tool for @react-native-esbuild",
   "keywords": [
     "react-native",
     "esbuild"
