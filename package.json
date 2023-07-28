@@ -4,7 +4,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.4.5",
     "@vercel/style-guide": "^4.0.2",
@@ -13,5 +12,6 @@
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
   },
-  "prettier": "@vercel/style-guide/prettier"
+  "prettier": "@vercel/style-guide/prettier",
+  "packageManager": "yarn@3.6.1"
 }

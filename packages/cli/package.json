@@ -34,5 +34,8 @@
   },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^3.0.0"
   }
 }
