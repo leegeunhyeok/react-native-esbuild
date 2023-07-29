@@ -1323,6 +1323,7 @@ __metadata:
   resolution: "@react-native-esbuild/core@workspace:packages/core"
   dependencies:
     "@react-native-esbuild/config": "workspace:^"
+    "@react-native-esbuild/plugins": "workspace:^"
     deepmerge: ^4.3.1
     esbuild: ^0.18.17
   peerDependencies:
@@ -1343,7 +1344,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/plugins@workspace:packages/plugins":
+"@react-native-esbuild/plugins@workspace:^, @react-native-esbuild/plugins@workspace:packages/plugins":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/plugins@workspace:packages/plugins"
   dependencies:

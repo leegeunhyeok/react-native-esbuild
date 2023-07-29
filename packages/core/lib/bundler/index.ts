@@ -5,6 +5,10 @@ import esbuild, {
   type BuildContext,
 } from 'esbuild';
 import deepmerge from 'deepmerge';
+import {
+  createAssetRegisterPlugin,
+  createHermesTransformPlugin,
+} from '@react-native-esbuild/plugins';
 import { getESbuildOptions } from '@react-native-esbuild/config';
 import { createPromiseHandler } from '../helpers';
 import {
@@ -32,7 +36,8 @@ export class ReactNativeEsbuildBundler {
         {
           plugins: [
             mode === 'watch' ? this.getBuildStatusPlugin() : null,
-            // TODO
+            createAssetRegisterPlugin(),
+            createHermesTransformPlugin({}),
           ].filter(Boolean),
           write: mode === 'bundle',
         },
