@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.3...v0.1.0-alpha.4) (2023-07-29)
+
+
+### Bug Fixes
+
+* **cli:** invalid banner (shebang) ([c1d268f](https://github.com/leegeunhyeok/react-native-esbuild/commit/c1d268fecccef80465ac4042382452c1f8923869))
+
+
+
 ## [0.1.0-alpha.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) (2023-07-29)
 
 **Note:** Version bump only for package @react-native-esbuild/cli
