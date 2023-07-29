@@ -56,6 +56,7 @@ function getESbuildOptions(
       },
       format: 'iife',
       bundle: true,
+      sourcemap: true,
     },
     customOptions ?? {},
   );
@@ -106,3 +107,4 @@ function getSWCOptions(
 
 export { getESbuildOptions, getBabelOptions, getSWCOptions };
 export * from './shares';
+export type * from './types';
