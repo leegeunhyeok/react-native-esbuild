@@ -34,13 +34,9 @@ export function cli(): Argv | Promise<Argv> {
     .command('build', 'bundle your application', (yargs) => {
       yargs
         .options({
-          dev: {
-            describe: 'set to develop environment',
-            type: 'boolean',
-          },
-          minify: {
-            describe: 'enable minify',
-            type: 'boolean',
+          entry: {
+            type: 'string',
+            describe: 'entry file path',
           },
           destination: {
             type: 'string',
@@ -51,8 +47,16 @@ export function cli(): Argv | Promise<Argv> {
             describe: 'platform for resolve modules',
             choices: ['android', 'ios', 'web'],
           },
+          dev: {
+            describe: 'set to develop environment',
+            type: 'boolean',
+          },
+          minify: {
+            describe: 'enable minify',
+            type: 'boolean',
+          },
         })
-        .demandOption(['dev', 'destination', 'platform'])
+        .demandOption(['entry', 'destination', 'platform', 'dev'])
         .version(false)
         .help();
     })

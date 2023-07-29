@@ -45,6 +45,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
     } as StartOptions;
   } else if (typeof argv.destination === 'string') {
     return {
+      entryFile: argv.entry,
       destination: argv.destination,
       dev: argv.dev,
       minify: argv.minify,

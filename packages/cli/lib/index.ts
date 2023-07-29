@@ -16,9 +16,10 @@ Promise.resolve(cli())
       case 'build': {
         const buildOptions = options as BuildOptions;
         const bundler = new ReactNativeEsbuildBundler({
-          dev: buildOptions.dev,
+          entryPoints: [buildOptions.entryFile],
           outfile: resolveBundleDestination(buildOptions.destination),
           platform: buildOptions.platform,
+          dev: buildOptions.dev,
         });
         await bundler.bundle();
         break;

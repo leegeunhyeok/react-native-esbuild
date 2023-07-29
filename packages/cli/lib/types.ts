@@ -5,6 +5,7 @@ export interface Argv {
 }
 
 export interface CliOptionsBase {
+  entryFile: string;
   dev: boolean;
   minify: boolean;
 }
