@@ -3,7 +3,7 @@ const { getEsbuildBaseOptions } = require('../../../shared');
 
 const buildOptions = getEsbuildBaseOptions(__dirname, {
   banner: {
-    js: '#!/bin/node',
+    js: '#!/usr/bin/env node',
   },
 });
 
