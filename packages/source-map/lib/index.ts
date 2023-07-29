@@ -1,0 +1,3 @@
+const dummy = {};
+
+export { dummy };
