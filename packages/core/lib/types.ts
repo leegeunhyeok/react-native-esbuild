@@ -1,8 +1,7 @@
 import type { EsbuildPresetOptions } from '@react-native-esbuild/config';
 
-export interface BundleOptions extends EsbuildPresetOptions {
-  outfile: string;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface BundleOptions extends EsbuildPresetOptions {}
 
 export interface BundleRequestOptions {
   platform: 'android' | 'ios' | 'web';
