@@ -4,7 +4,7 @@ import babel, {
   type BabelFileResult,
 } from '@babel/core';
 import swc from '@swc/core';
-import type { OnLoadArgs } from 'esbuild';
+import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
 import { promisify, isFlow } from './helpers';
 import type { PluginCreator } from './types';
@@ -78,19 +78,11 @@ export const createHermesTransformPlugin: PluginCreator<
       ...config,
     };
 
-    build.onResolve({ filter }, (args) => {
-      return {
-        pluginData: {
-          fullyTransform: fullyTransformPackageName.some((packageName) =>
-            args.path.includes(`/node_modules/${packageName}`),
-          ),
-        },
-      };
-    });
-
     build.onLoad({ filter }, async (args) => {
       let source = await fs.readFile(args.path, { encoding: 'utf-8' });
-      const { fullyTransform } = args.pluginData as { fullyTransform: boolean };
+      const fullyTransform = fullyTransformPackageName.some((packageName) =>
+        args.path.includes(`/node_modules/${packageName}`),
+      );
 
       if (isFlow(source, args.path)) {
         source = await transformWithBabel(source, args, {
@@ -110,7 +102,10 @@ export const createHermesTransformPlugin: PluginCreator<
         });
       }
 
-      return { entry: await transformWithSwc(source, args), loader: 'js' };
+      return {
+        contents: await transformWithSwc(source, args),
+        loader: 'js',
+      } as OnLoadResult;
     });
   },
 });
