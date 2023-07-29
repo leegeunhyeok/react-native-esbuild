@@ -37,10 +37,8 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "dependencies": {
+    "@react-native-esbuild/config": "workspace:^",
     "deepmerge": "^4.3.1",
     "esbuild": "^0.18.17"
-  },
-  "peerDependencies": {
-    "@react-native-esbuild/config": "^0.1.0"
   }
 }

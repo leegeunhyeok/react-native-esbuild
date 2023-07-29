@@ -38,13 +38,11 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "dependencies": {
+    "@react-native-esbuild/core": "workspace:^",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/yargs": "^17.0.24",
     "esbuild": "^0.18.17"
-  },
-  "peerDependencies": {
-    "@react-native-esbuild/core": "^0.1.0"
   }
 }

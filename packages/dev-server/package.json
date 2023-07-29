@@ -43,9 +43,7 @@
   },
   "dependencies": {
     "@react-native-community/cli-server-api": "^11.3.6",
+    "@react-native-esbuild/core": "workspace:^",
     "zod": "^3.21.4"
-  },
-  "peerDependencies": {
-    "@react-native-esbuild/core": "^0.1.0"
   }
 }
