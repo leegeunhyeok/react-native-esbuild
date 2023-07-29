@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "npmClient": "yarn",
   "command": {
     "version": {
@@ -68,6 +68,13 @@
         "section": "Continuous Integration",
         "hidden": true
       }
-    ]
+    ],
+    "issuePrefixes": [
+      "#"
+    ],
+    "issueUrlFormat": "{{host}}/{{owner}}/{{repository}}/issues/{{id}}",
+    "commitUrlFormat": "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
+    "compareUrlFormat": "{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+    "userUrlFormat": "{{host}}/{{user}}"
   }
 }
