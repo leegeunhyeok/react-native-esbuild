@@ -40,6 +40,6 @@
     "esbuild": "^0.18.17"
   },
   "peerDependencies": {
-    "@react-native-esbuild/config": "workspace:^"
+    "@react-native-esbuild/config": "^0.1.0"
   }
 }
