@@ -1091,8 +1091,6 @@ __metadata:
     "@types/babel__core": ^7.20.1
     deepmerge: ^4.3.1
     esbuild: ^0.18.17
-  peerDependencies:
-    "@react-native-esbuild/core": "workspace:^"
   languageName: unknown
   linkType: soft
 

@@ -1,13 +1,11 @@
 import type { EsbuildPresetOptions } from '@react-native-esbuild/config';
 
-export type Platform = 'android' | 'ios' | 'web';
-
 export interface BundleOptions extends EsbuildPresetOptions {
   outfile: string;
 }
 
 export interface BundleRequestOptions {
-  platform: Platform;
+  platform: 'android' | 'ios' | 'web';
   dev: boolean;
   minify: boolean;
   runModule: boolean;

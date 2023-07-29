@@ -3,5 +3,6 @@
   "compilerOptions": {
     "rootDir": ".",
   },
-  "include": ["./lib"]
+  "include": ["./lib"],
+  "exclude": ["./dist"]
 }
