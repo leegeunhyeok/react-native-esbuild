@@ -24,3 +24,7 @@ npx lerna run build --scope @react-native-esbuild/xxx
 npx lerna run test
 npx lerna run test --scope @react-native-esbuild/xxx
 ```
+
+# License
+
+[MIT](./LICENSE)
