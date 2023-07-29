@@ -33,6 +33,7 @@ module.exports = {
         'array-bracket-spacing': 'off',
         'unicorn/filename-case': 'off',
         'no-console': 'off',
+        'import/no-named-as-default-member': 'off',
         'eslint-comments/disable-enable-pair': 'off',
         'prettier/prettier': 'error',
         '@typescript-eslint/prefer-reduce-type-parameter': 'off',
