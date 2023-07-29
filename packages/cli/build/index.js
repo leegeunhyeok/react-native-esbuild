@@ -3,9 +3,7 @@ const esbuild = require('esbuild');
 
 /** @type { import('esbuild').BuildOptions } */
 const options = {
-  entryPoints: [
-    path.resolve(__dirname, '../lib/cli.ts'),
-  ],
+  entryPoints: [path.resolve(__dirname, '../lib/cli.ts')],
   outfile: 'dist/cli.js',
   banner: {
     js: '#!/bin/node',
@@ -14,6 +12,7 @@ const options = {
   platform: 'node',
 };
 
-esbuild.build(options)
+esbuild
+  .build(options)
   .then(() => console.log('success'))
   .catch(console.error);

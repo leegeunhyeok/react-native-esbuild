@@ -14,7 +14,7 @@ const argv = yargs(helpers.hideBin(process.argv))
           alias: 'p',
           default: 8081,
           describe: 'dev server port',
-          type: 'number'
+          type: 'number',
         },
         dev: {
           default: true,
@@ -51,8 +51,7 @@ const argv = yargs(helpers.hideBin(process.argv))
   .demandCommand()
   .strictCommands()
   .check((argv) => assertCommandOptions(getCommand(argv), argv))
-  .help()
-  .argv;
+  .help().argv;
 
 Promise.resolve(argv).then(async (argv): Promise<void> => {
   // TODO

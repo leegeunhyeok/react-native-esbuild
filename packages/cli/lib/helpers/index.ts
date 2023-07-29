@@ -2,21 +2,23 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export function getCommand<Argv extends { _: (string | number)[] }>(
-  argv: Argv
+  argv: Argv,
 ): string {
   return argv._[0].toString();
 }
 
 export async function assertCommandOptions(
   command: string,
-  options: Record<string, unknown>
+  options: Record<string, unknown>,
 ): Promise<boolean> {
   try {
     if (command === 'build') {
-      const resolvedPath = resolveBundleDestination(options.destination as string);
+      const resolvedPath = resolveBundleDestination(
+        options.destination as string,
+      );
       await assertBundleDestinationPathIsValid(resolvedPath);
     }
-  
+
     return true;
   } catch (error: unknown) {
     throw new Error((error as Error).message);
@@ -28,10 +30,7 @@ function resolveBundleDestination(destination: string): string {
 }
 
 async function assertBundleDestinationPathIsValid(
-  resolvedPath: string
+  resolvedPath: string,
 ): Promise<void> {
-  await fs.promises.access(
-    path.dirname(resolvedPath),
-    fs.constants.W_OK,
-  );
+  await fs.promises.access(path.dirname(resolvedPath), fs.constants.W_OK);
 }
