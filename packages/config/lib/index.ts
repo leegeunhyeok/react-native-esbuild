@@ -7,7 +7,7 @@ import type { EsbuildPresetOptions, SWCPresetOptions } from './types';
 
 function getESbuildOptions(
   options: EsbuildPresetOptions,
-  customOptions?: Partial<BuildOptions>,
+  customEsbuildOptions?: Partial<BuildOptions>,
 ): BuildOptions {
   const { platform, dev } = options;
 
@@ -58,12 +58,12 @@ function getESbuildOptions(
       bundle: true,
       sourcemap: true,
     },
-    customOptions ?? {},
+    customEsbuildOptions ?? {},
   );
 }
 
 function getBabelOptions(
-  customOptions?: Partial<TransformOptions>,
+  customBabelOptions?: Partial<TransformOptions>,
 ): TransformOptions {
   const baseOptions = {
     minified: false,
@@ -71,12 +71,14 @@ function getBabelOptions(
     sourceMaps: false,
   };
 
-  return customOptions ? deepmerge(baseOptions, customOptions) : baseOptions;
+  return customBabelOptions
+    ? deepmerge(baseOptions, customBabelOptions)
+    : baseOptions;
 }
 
 function getSWCOptions(
   options: SWCPresetOptions,
-  customOptions?: Partial<SWCOptions>,
+  customSwcOptions?: Partial<SWCOptions>,
 ): SWCOptions {
   const isTS = /\.tsx?$/.test(options.filename);
 
@@ -102,7 +104,9 @@ function getSWCOptions(
     },
   };
 
-  return customOptions ? deepmerge(baseOptions, customOptions) : baseOptions;
+  return customSwcOptions
+    ? deepmerge(baseOptions, customSwcOptions)
+    : baseOptions;
 }
 
 export { getESbuildOptions, getBabelOptions, getSWCOptions };
