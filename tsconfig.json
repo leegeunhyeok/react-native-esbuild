@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["node"],
     "module": "commonjs",
     "declaration": true,
     "noImplicitAny": false,
@@ -10,6 +11,7 @@
     "target": "es6",
     "sourceMap": true,
     "strictNullChecks": true,
+    "esModuleInterop": true,
     "lib": [
       "es6"
     ]

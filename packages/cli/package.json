@@ -29,7 +29,8 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "tsc": "tsc --",
+    "tsc": "tsc",
+    "start": "yarn tsc && node ./dist/cli.js",
     "test": "node ./__tests__/@react-native-esbuild/cli.test.js"
   },
   "bugs": {
