@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { StartOptions, BuildOptions } from '../types';
+import type { Argv, StartOptions, BuildOptions } from '../types';
 
 export function getCommand<Argv extends { _: (string | number)[] }>(
   argv: Argv,
@@ -36,9 +36,7 @@ async function assertBundleDestinationPathIsValid(
   await fs.promises.access(path.dirname(resolvedPath), fs.constants.W_OK);
 }
 
-export function getOptions(
-  argv: Record<string, unknown>,
-): StartOptions | BuildOptions {
+export function getOptions(argv: Argv): StartOptions | BuildOptions {
   if (typeof argv.port === 'number') {
     return {
       port: argv.port,

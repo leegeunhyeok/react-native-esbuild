@@ -1,3 +1,9 @@
+export interface Argv {
+  [x: string]: unknown;
+  _: (string | number)[];
+  $0: string;
+}
+
 export interface CliOptionsBase {
   dev: boolean;
   minify: boolean;
