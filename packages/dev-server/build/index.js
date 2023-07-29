@@ -1,16 +1,11 @@
-const path = require('node:path');
 const esbuild = require('esbuild');
+const { getEsbuildBaseOptions } = require('../../../shared');
 
-/** @type { import('esbuild').BuildOptions } */
-const options = {
-  entryPoints: [path.resolve(__dirname, '../lib/index.ts')],
-  outfile: 'dist/index.js',
-  bundle: true,
-  platform: 'node',
+const buildOptions = getEsbuildBaseOptions(__dirname, 'index.ts', {
   external: ['react-native*'],
-};
+});
 
 esbuild
-  .build(options)
+  .build(buildOptions)
   .then(() => console.log('success'))
   .catch(console.error);

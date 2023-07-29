@@ -10,8 +10,9 @@
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
   "license": "MIT",
   "type": "commonjs",
-  "main": "dist/index.js",
   "module": "lib/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/lib/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -28,7 +29,7 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "build": "node build/index.js && tsc --emitDeclarationOnly --declaration",
+    "build": "node build/index.js && tsc",
     "test": "node ./__tests__/@react-native-esbuild/core.test.js"
   },
   "bugs": {
