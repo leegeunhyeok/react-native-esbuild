@@ -1,7 +1,11 @@
 import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
 import type { TransformOptions } from '@babel/core';
-import type { Options as SWCOptions } from '@swc/core';
+import type {
+  Options as SWCOptions,
+  TsParserConfig,
+  EsParserConfig,
+} from '@swc/core';
 import { SOURCE_EXTENSIONS, ASSET_EXTENSIONS, BANNER_VARS } from './shares';
 import type { EsbuildPresetOptions, SWCPresetOptions } from './types';
 
@@ -81,22 +85,23 @@ function getSWCOptions(
   customSwcOptions?: Partial<SWCOptions>,
 ): SWCOptions {
   const isTS = /\.tsx?$/.test(options.filename);
+  const parseOption = isTS
+    ? ({
+        syntax: 'typescript',
+        tsx: true,
+        dynamicImport: true,
+      } as TsParserConfig)
+    : ({
+        syntax: 'ecmascript',
+        jsx: true,
+        exportDefaultFrom: true,
+      } as EsParserConfig);
 
   const baseOptions: SWCOptions = {
     isModule: true,
     sourceMaps: false,
     jsc: {
-      parser: {
-        syntax: isTS ? 'typescript' : 'ecmascript',
-        [isTS ? 'tsx' : 'jsx']: true,
-        dynamicImport: true,
-        functionBind: false,
-        exportDefaultFrom: true,
-        decorators: false,
-        decoratorsBeforeExport: false,
-        importAssertions: false,
-      },
-      transform: undefined,
+      parser: parseOption,
       target: 'es5',
       loose: true,
       externalHelpers: true,
