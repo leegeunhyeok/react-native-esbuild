@@ -66,7 +66,7 @@ const transformWithSwc = async (
 export const createHermesTransformPlugin: PluginCreator<
   HermesTransformPluginConfig
 > = (config) => ({
-  name: 'hermes-transform',
+  name: 'hermes-transform-plugin',
   setup: (build): void => {
     const {
       filter,
