@@ -4,11 +4,18 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "prepare": "husky install",
+    "commitlint": "commitlint"
+  },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
     "@types/node": "^20.4.5",
     "@vercel/style-guide": "^4.0.2",
     "eslint": "^8.45.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
     "lerna": "^7.1.4",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
