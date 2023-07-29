@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2023-07-29)
+
+
+### Bug Fixes
+
+* **plugins:** reference default exports module correctly ([a90c211](https://github.com/leegeunhyeok/react-native-esbuild/commit/a90c211261cc019d1f4369a396907437853da775))
+
+
+### Reverts
+
+* Revert "chore: change type to module" ([96c32ee](https://github.com/leegeunhyeok/react-native-esbuild/commit/96c32ee767cb0553b0bbe0ba3c631da3dbc308bf))
+
+
+### Miscellaneous Chores
+
+* remove unnecessary config ([83c4b03](https://github.com/leegeunhyeok/react-native-esbuild/commit/83c4b0360cbf919376e351ea9314c594ee0a65c9))
+
+
+
 ## [0.1.0-alpha.7](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.6...v0.1.0-alpha.7) (2023-07-29)
 
 

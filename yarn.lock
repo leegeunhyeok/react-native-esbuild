@@ -1306,7 +1306,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/config@^0.1.0-alpha.7, @react-native-esbuild/config@workspace:^, @react-native-esbuild/config@workspace:packages/config":
+"@react-native-esbuild/config@workspace:^, @react-native-esbuild/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/config@workspace:packages/config"
   dependencies:
@@ -1349,7 +1349,7 @@ __metadata:
   resolution: "@react-native-esbuild/plugins@workspace:packages/plugins"
   dependencies:
     "@babel/core": ^7.22.9
-    "@react-native-esbuild/config": ^0.1.0-alpha.7
+    "@react-native-esbuild/config": "workspace:^"
     "@swc/core": ^1.3.72
     "@swc/helpers": ^0.5.1
     esbuild: ^0.18.17
