@@ -11,6 +11,7 @@ import {
   BundleTaskSignal,
   type BundleOptions,
   type BundleResult,
+  type BundleRequestOptions,
   type PromiseHandler,
 } from './types';
 
@@ -116,7 +117,7 @@ export class ReactNativeEsbuildBundler {
     }
   }
 
-  async getBundle(): Promise<Uint8Array> {
+  async getBundle(_options: BundleRequestOptions): Promise<Uint8Array> {
     this.assertTaskHandler(this.esbuildTaskHandler);
 
     // TODO: get bundle by options

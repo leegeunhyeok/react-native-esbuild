@@ -43,5 +43,8 @@
   },
   "dependencies": {
     "deepmerge": "^4.3.1"
+  },
+  "peerDependencies": {
+    "@react-native-esbuild/core": "workspace:^"
   }
 }

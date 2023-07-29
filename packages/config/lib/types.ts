@@ -1,5 +1,7 @@
+import type { Platform } from '@react-native-esbuild/core';
+
 export interface EsbuildPresetOptions {
-  platform: 'android' | 'ios' | 'web';
+  platform: Platform;
   dev: boolean;
 }
 
