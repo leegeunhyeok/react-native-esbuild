@@ -1,9 +1,7 @@
 const esbuild = require('esbuild');
 const { getEsbuildBaseOptions } = require('../../../shared');
 
-const buildOptions = getEsbuildBaseOptions(__dirname, 'index.ts', {
-  external: ['react-native*'],
-});
+const buildOptions = getEsbuildBaseOptions(__dirname);
 
 esbuild
   .build(buildOptions)

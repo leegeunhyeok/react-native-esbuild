@@ -3,7 +3,6 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
-    "skipLibCheck": true,
     "declaration": true,
     "emitDeclarationOnly": true
   },
