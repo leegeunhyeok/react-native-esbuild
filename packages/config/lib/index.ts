@@ -2,12 +2,12 @@ import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
 import type { TransformOptions } from '@babel/core';
 import type {
-  Options as SWCOptions,
+  Options as SwcOptions,
   TsParserConfig,
   EsParserConfig,
 } from '@swc/core';
 import { SOURCE_EXTENSIONS, ASSET_EXTENSIONS, BANNER_VARS } from './shares';
-import type { EsbuildPresetOptions, SWCPresetOptions } from './types';
+import type { EsbuildPresetOptions, SwcPresetOptions } from './types';
 
 function getESbuildOptions(
   options: EsbuildPresetOptions,
@@ -80,10 +80,10 @@ function getBabelOptions(
     : baseOptions;
 }
 
-function getSWCOptions(
-  options: SWCPresetOptions,
-  customSwcOptions?: Partial<SWCOptions>,
-): SWCOptions {
+function getSwcOptions(
+  options: SwcPresetOptions,
+  customSwcOptions?: Partial<SwcOptions>,
+): SwcOptions {
   const isTS = /\.tsx?$/.test(options.filename);
   const parseOption = isTS
     ? ({
@@ -97,7 +97,7 @@ function getSWCOptions(
         exportDefaultFrom: true,
       } as EsParserConfig);
 
-  const baseOptions: SWCOptions = {
+  const baseOptions: SwcOptions = {
     isModule: true,
     sourceMaps: false,
     jsc: {
@@ -114,6 +114,6 @@ function getSWCOptions(
     : baseOptions;
 }
 
-export { getESbuildOptions, getBabelOptions, getSWCOptions };
+export { getESbuildOptions, getBabelOptions, getSwcOptions };
 export * from './shares';
 export type * from './types';

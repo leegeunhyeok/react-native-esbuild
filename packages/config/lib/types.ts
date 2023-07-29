@@ -3,6 +3,6 @@ export interface EsbuildPresetOptions {
   dev: boolean;
 }
 
-export interface SWCPresetOptions {
+export interface SwcPresetOptions {
   filename: string;
 }
