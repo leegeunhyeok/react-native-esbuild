@@ -113,7 +113,7 @@ export class ReactNativeEsbuildBundler {
         typeof handler.task.then === 'function'
       )
     ) {
-      throw null;
+      throw BundleTaskSignal.NotStarted;
     }
   }
 

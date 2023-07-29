@@ -39,6 +39,7 @@ module.exports = {
         '@typescript-eslint/prefer-reduce-type-parameter': 'off',
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-floating-promises': 'off',
+        '@typescript-eslint/no-throw-literal': 'off',
       },
     },
   ],

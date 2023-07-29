@@ -21,6 +21,7 @@ export interface BundleResult {
 export enum BundleTaskSignal {
   Cancelled,
   EmptyOutput,
+  NotStarted,
 }
 
 export interface PromiseHandler<Result> {
