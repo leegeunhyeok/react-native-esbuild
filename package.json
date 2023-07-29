@@ -21,8 +21,5 @@
     "typescript": "^5.1.6"
   },
   "prettier": "@vercel/style-guide/prettier",
-  "packageManager": "yarn@3.6.1",
-  "engines": {
-    "node": ">=16"
-  }
+  "packageManager": "yarn@3.6.1"
 }

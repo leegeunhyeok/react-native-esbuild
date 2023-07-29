@@ -9,7 +9,7 @@
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
   "license": "MIT",
-  "type": "module",
+  "type": "commonjs",
   "module": "lib/index.ts",
   "main": "dist/index.js",
   "types": "dist/lib/index.d.ts",
@@ -30,7 +30,7 @@
   },
   "scripts": {
     "prepack": "yarn build",
-    "build": "node build/index.cjs && tsc",
+    "build": "node build/index.js && tsc",
     "test": "node ./__tests__/@react-native-esbuild/plugins.test.js"
   },
   "bugs": {
@@ -41,9 +41,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.22.9",
-    "@react-native-esbuild/config": "^0.1.0-alpha.7",
+    "@react-native-esbuild/config": "workspace:^",
     "@swc/core": "^1.3.72",
     "@swc/helpers": "^0.5.1"
-  },
-  "gitHead": "e0dd4425a4166d835aef79a8c825e5c060814883"
+  }
 }
