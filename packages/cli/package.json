@@ -11,7 +11,7 @@
   "license": "MIT",
   "type": "commonjs",
   "bin": {
-    "rne": "./dist/cli.js"
+    "rne": "./dist/index.js"
   },
   "directories": {
     "lib": "lib",
@@ -29,8 +29,8 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "build": "node build/index.js",
-    "start": "yarn tsc && node ./dist/cli.js",
+    "build": "node build/index.js && tsc --emitDeclarationOnly --declaration",
+    "start": "yarn tsc && node ./dist/index.js",
     "test": "node ./__tests__/@react-native-esbuild/cli.test.js"
   },
   "bugs": {
@@ -40,6 +40,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/yargs": "^17.0.24"
+    "@types/yargs": "^17.0.24",
+    "esbuild": "^0.18.17"
   }
 }

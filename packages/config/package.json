@@ -27,7 +27,7 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "build": "node build/index.js",
+    "build": "node build/index.js && tsc --emitDeclarationOnly --declaration",
     "test": "node ./__tests__/@react-native-esbuild/config.test.js"
   },
   "bugs": {

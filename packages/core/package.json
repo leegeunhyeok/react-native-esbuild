@@ -28,10 +28,13 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "tsc": "tsc",
+    "build": "node build/index.js && tsc --emitDeclarationOnly --declaration",
     "test": "node ./__tests__/@react-native-esbuild/core.test.js"
   },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.17"
   }
 }

@@ -1019,6 +1019,7 @@ __metadata:
   resolution: "@react-native-esbuild/cli@workspace:packages/cli"
   dependencies:
     "@types/yargs": ^17.0.24
+    esbuild: ^0.18.17
     yargs: ^17.7.2
   bin:
     rne: ./dist/cli.js
@@ -1040,18 +1041,24 @@ __metadata:
 "@react-native-esbuild/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/core@workspace:packages/core"
+  dependencies:
+    esbuild: ^0.18.17
   languageName: unknown
   linkType: soft
 
 "@react-native-esbuild/dev-server@workspace:packages/dev-server":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/dev-server@workspace:packages/dev-server"
+  dependencies:
+    esbuild: ^0.18.17
   languageName: unknown
   linkType: soft
 
 "@react-native-esbuild/plugins@workspace:packages/plugins":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/plugins@workspace:packages/plugins"
+  dependencies:
+    esbuild: ^0.18.17
   languageName: unknown
   linkType: soft
 
@@ -6640,7 +6647,6 @@ __metadata:
   dependencies:
     "@types/node": ^20.4.5
     "@vercel/style-guide": ^4.0.2
-    esbuild: ^0.18.17
     eslint: ^8.45.0
     eslint-plugin-prettier: ^5.0.0
     lerna: ^7.1.4
