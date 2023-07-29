@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) (2023-07-29)
+
+
+### Features
+
+* **cli:** add entry option ([c7225cb](https://github.com/leegeunhyeok/react-native-esbuild/commit/c7225cbe29737badb4a70cd718910c39d458fa99))
+
+
+### Miscellaneous Chores
+
+* **cli:** replace wrong scripts ([c3a5d3a](https://github.com/leegeunhyeok/react-native-esbuild/commit/c3a5d3a565effed8ab6dd1d149972e2f4b44f0be))
+
+
+
 ## [0.1.0-alpha.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.3...v0.1.0-alpha.4) (2023-07-29)
 
 

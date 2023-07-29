@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) (2023-07-29)
+
+
+### Bug Fixes
+
+* **config:** add missed esbuild options ([b1fda0d](https://github.com/leegeunhyeok/react-native-esbuild/commit/b1fda0d6e92186a3853b3c71b5687c35b13fd2e8))
+
+
+
 ## [0.1.0-alpha.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) (2023-07-29)
 
 
