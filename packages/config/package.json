@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/config",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.3",
   "description": "config for @react-native-esbuild",
   "keywords": [
     "react-native",

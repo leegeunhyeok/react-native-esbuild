@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) (2023-07-29)
+
+
+### Features
+
+* **config:** add outfile to esbuild config ([638e6a2](https://github.com/leegeunhyeok/react-native-esbuild/commit/638e6a27c1f48c5d3ab76bfb63cdc13682d92842))
+* **core:** add plugins to bundler ([107c869](https://github.com/leegeunhyeok/react-native-esbuild/commit/107c869d07479c75dea8df52b30265c3a4a76fcd))
+
+
+### Miscellaneous Chores
+
+* add react-native to peer deps ([22baf4b](https://github.com/leegeunhyeok/react-native-esbuild/commit/22baf4b928d2ab87388a04c300777c7a379f0f1f))
+
+
+### Code Refactoring
+
+* **config:** improve config types ([1c2c170](https://github.com/leegeunhyeok/react-native-esbuild/commit/1c2c170d01c2beb2018ac745daaa3973a4368103))
+* **plugins:** rename plugins ([7fcf1a5](https://github.com/leegeunhyeok/react-native-esbuild/commit/7fcf1a52b593bbb9019d70916971357ba87c5bfa))
+
+
+
 ## [0.1.0-alpha.2](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) (2023-07-29)
 
 
