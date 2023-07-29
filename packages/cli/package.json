@@ -29,7 +29,7 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "tsc": "tsc",
+    "build": "node build/index.js",
     "start": "yarn tsc && node ./dist/cli.js",
     "test": "node ./__tests__/@react-native-esbuild/cli.test.js"
   },
@@ -38,5 +38,9 @@
   },
   "dependencies": {
     "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.24",
+    "esbuild": "^0.18.17"
   }
 }
