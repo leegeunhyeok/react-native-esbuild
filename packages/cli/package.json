@@ -31,7 +31,7 @@
   "scripts": {
     "prepack": "yarn build",
     "build": "node build/index.js",
-    "start": "yarn tsc && node ./dist/index.js",
+    "start": "tsc && node ./dist/index.js",
     "test": "node ./__tests__/@react-native-esbuild/cli.test.js"
   },
   "bugs": {
