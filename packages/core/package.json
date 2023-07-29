@@ -30,7 +30,7 @@
   },
   "scripts": {
     "prepack": "yarn build",
-    "build": "node build/index.js && tsc",
+    "build": "node build/index.cjs && tsc",
     "test": "node ./__tests__/@react-native-esbuild/core.test.js"
   },
   "bugs": {

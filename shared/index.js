@@ -10,6 +10,7 @@ exports.getEsbuildBaseOptions = (packageDir, options = {}) => ({
   outfile: 'dist/index.js',
   bundle: true,
   platform: 'node',
+  target: 'node16',
   external: ['esbuild', 'react-native/*', '@react-native-esbuild/*'],
   ...options,
 });

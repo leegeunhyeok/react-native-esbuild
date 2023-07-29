@@ -25,7 +25,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.ts', '*.js'],
+      files: ['*.ts', '*.?(c|m)js'],
       rules: {
         semi: ['error', 'always'],
         quotes: ['error', 'single'],
