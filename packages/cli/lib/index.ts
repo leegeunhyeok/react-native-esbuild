@@ -1,7 +1,14 @@
 import yargs from 'yargs';
 import * as helpers from 'yargs/helpers';
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { VERSION } from './constants';
-import { assertCommandOptions, getCommand } from './helpers';
+import {
+  assertCommandOptions,
+  resolveBundleDestination,
+  getCommand,
+  getOptions,
+} from './helpers';
+import type { StartOptions, BuildOptions } from './types';
 
 const argv = yargs(helpers.hideBin(process.argv))
   .scriptName('rne')
@@ -42,9 +49,15 @@ const argv = yargs(helpers.hideBin(process.argv))
         },
         destination: {
           type: 'string',
+          describe: 'bundle file destination',
+        },
+        platform: {
+          type: 'string',
+          describe: 'platform for resolve modules',
+          choices: ['android', 'ios', 'web'],
         },
       })
-      .demandOption(['dev', 'destination'])
+      .demandOption(['dev', 'destination', 'platform'])
       .version(false)
       .help();
   })
@@ -53,15 +66,26 @@ const argv = yargs(helpers.hideBin(process.argv))
   .check((argv) => assertCommandOptions(getCommand(argv), argv))
   .help().argv;
 
-Promise.resolve(argv).then(async (argv): Promise<void> => {
-  // TODO
-  switch (getCommand(argv)) {
-    case 'start':
-      await Promise.resolve();
-      break;
+Promise.resolve(argv)
+  .then(async (argv): Promise<void> => {
+    const options = getOptions(argv);
+    switch (getCommand(argv)) {
+      case 'start': {
+        // TODO
+        const _startOptions = options as StartOptions;
+        break;
+      }
 
-    case 'build':
-      await Promise.resolve();
-      break;
-  }
-});
+      case 'build': {
+        const buildOptions = options as BuildOptions;
+        const bundler = new ReactNativeEsbuildBundler({
+          dev: buildOptions.dev,
+          outfile: resolveBundleDestination(buildOptions.destination),
+          platform: buildOptions.platform,
+        });
+        await bundler.bundle();
+        break;
+      }
+    }
+  })
+  .catch(console.error);

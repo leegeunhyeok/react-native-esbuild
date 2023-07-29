@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import type { StartOptions, BuildOptions } from '../types';
 
 export function getCommand<Argv extends { _: (string | number)[] }>(
   argv: Argv,
@@ -25,7 +26,7 @@ export async function assertCommandOptions(
   }
 }
 
-function resolveBundleDestination(destination: string): string {
+export function resolveBundleDestination(destination: string): string {
   return path.resolve(process.cwd(), destination);
 }
 
@@ -33,4 +34,24 @@ async function assertBundleDestinationPathIsValid(
   resolvedPath: string,
 ): Promise<void> {
   await fs.promises.access(path.dirname(resolvedPath), fs.constants.W_OK);
+}
+
+export function getOptions(
+  argv: Record<string, unknown>,
+): StartOptions | BuildOptions {
+  if (typeof argv.port === 'number') {
+    return {
+      port: argv.port,
+      dev: argv.dev,
+      minify: argv.minify,
+    } as StartOptions;
+  } else if (typeof argv.destination === 'string') {
+    return {
+      destination: argv.destination,
+      dev: argv.dev,
+      minify: argv.minify,
+      platform: argv.platform,
+    } as BuildOptions;
+  }
+  throw new Error('invalid options');
 }
