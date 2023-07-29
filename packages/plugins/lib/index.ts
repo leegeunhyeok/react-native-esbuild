@@ -1,3 +1,5 @@
-const plugin = {};
+import { createAssetRegisterPlugin } from './assetRegisterPlugin';
+import { createHermesTransformPlugin } from './hermesTransformPlugin';
 
-export { plugin };
+export { createAssetRegisterPlugin, createHermesTransformPlugin };
+export type * from './types';
