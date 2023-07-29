@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
-import babel, {
+import * as babel from '@babel/core';
+import * as swc from '@swc/core';
+import {
   type TransformOptions as BabelTransformOptions,
   type BabelFileResult,
 } from '@babel/core';
-import swc from '@swc/core';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
 import { promisify, isFlow } from './helpers';
