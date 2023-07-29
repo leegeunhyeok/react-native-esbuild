@@ -13,7 +13,7 @@ function getESbuildOptions(
   options: EsbuildPresetOptions,
   customEsbuildOptions?: Partial<BuildOptions>,
 ): BuildOptions {
-  const { platform, dev } = options;
+  const { entryPoints, outfile, platform, dev } = options;
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
@@ -29,6 +29,9 @@ function getESbuildOptions(
 
   const baseOptions: BuildOptions = {
     mainFields: ['react-native', 'browser', 'module', 'main'],
+    entryPoints,
+    outfile,
+    sourceRoot: process.cwd(),
     minify: !dev,
     resolveExtensions: platforms
       .map((p) => extensions.map((e) => `.${p}${e}`))

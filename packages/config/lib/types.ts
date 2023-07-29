@@ -1,7 +1,8 @@
 export interface EsbuildPresetOptions {
+  entryPoints: string[];
+  outfile: string;
   platform: 'android' | 'ios' | 'web';
   dev: boolean;
-  outfile: string;
 }
 
 export interface SwcPresetOptions {
