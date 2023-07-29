@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.6](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.5...v0.1.0-alpha.6) (2023-07-29)
+
+
+### Bug Fixes
+
+* **plugins:** invalid dependency relations ([8e436c3](https://github.com/leegeunhyeok/react-native-esbuild/commit/8e436c3664de8a7f98c4403a0921b969cf6672fc))
+
+
+
 ## [0.1.0-alpha.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) (2023-07-29)
 
 
