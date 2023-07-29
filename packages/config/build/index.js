@@ -7,6 +7,7 @@ const options = {
   outfile: 'dist/index.js',
   bundle: true,
   platform: 'node',
+  external: ['react-native*'],
 };
 
 esbuild
