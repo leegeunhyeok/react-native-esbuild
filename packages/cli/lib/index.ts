@@ -17,7 +17,7 @@ Promise.resolve(cli())
         }).initialize({
           entryPoint: startOptions.entryFile,
           outfile: startOptions.outputFile,
-          assetsDest: startOptions.assetsDest,
+          assetsDir: startOptions.assetsDir,
           dev: startOptions.dev,
           minify: startOptions.minify,
         });
@@ -30,7 +30,7 @@ Promise.resolve(cli())
         const bundler = new ReactNativeEsbuildBundler({
           entryPoint: buildOptions.entryFile,
           outfile: buildOptions.outputFile,
-          assetsDest: buildOptions.assetsDest,
+          assetsDir: buildOptions.assetsDir,
           dev: buildOptions.dev,
           minify: buildOptions.minify,
         });

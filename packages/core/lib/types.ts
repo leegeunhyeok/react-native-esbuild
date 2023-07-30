@@ -3,7 +3,7 @@ export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 export interface BundlerConfig {
   entryPoint: string;
   outfile: string;
-  assetsDest: string;
+  assetsDir: string;
   dev: boolean;
   minify: boolean;
 }

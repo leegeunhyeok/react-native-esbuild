@@ -35,13 +35,13 @@ export class ReactNativeEsbuildBundler {
     platform: 'android' | 'ios' | 'web',
     mode: 'bundle' | 'watch',
   ): BuildOptions {
-    const { entryPoint, outfile, assetsDest, dev, minify } = this.config;
+    const { entryPoint, outfile, assetsDir, dev, minify } = this.config;
 
     return getESbuildOptions(
       {
         entryPoint,
         outfile,
-        assetsDest,
+        assetsDir,
         dev,
         minify,
         platform,

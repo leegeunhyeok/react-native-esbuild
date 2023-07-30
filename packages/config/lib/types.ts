@@ -1,7 +1,7 @@
 export interface EsbuildPresetOptions {
   entryPoint: string;
   outfile: string;
-  assetsDest: string;
+  assetsDir: string;
   platform: 'android' | 'ios' | 'web';
   dev: boolean;
   minify: boolean;

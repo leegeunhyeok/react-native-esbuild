@@ -12,7 +12,7 @@ const commonOptions = {
   },
   assets: {
     type: 'string',
-    describe: 'assets files destination (default: --entry path)',
+    describe: 'assets directory',
   },
   platform: {
     type: 'string',

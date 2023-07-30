@@ -13,7 +13,7 @@ function getESbuildOptions(
   options: EsbuildPresetOptions,
   customEsbuildOptions?: Partial<BuildOptions>,
 ): BuildOptions {
-  const { entryPoint, outfile, assetsDest, platform, dev, minify } = options;
+  const { entryPoint, outfile, assetsDir, platform, dev, minify } = options;
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
@@ -35,7 +35,7 @@ function getESbuildOptions(
     mainFields: ['react-native', 'browser', 'main', 'module'],
     entryPoints: [entryPoint],
     outfile,
-    assetNames: `${assetsDest}/[name]-[hash]`,
+    assetNames: `${assetsDir}/[name]-[hash]`,
     sourceRoot: process.cwd(),
     resolveExtensions: platforms
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))

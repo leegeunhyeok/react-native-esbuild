@@ -7,7 +7,7 @@ export interface Argv {
 export interface CliOptionsBase {
   entryFile: string;
   outputFile: string;
-  assetsDest: string;
+  assetsDir: string;
   dev: boolean;
   minify: boolean;
 }
