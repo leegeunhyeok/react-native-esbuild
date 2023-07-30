@@ -1,4 +1,8 @@
 /* eslint-disable quotes */
+
+// asset extensions
+// https://github.com/facebook/metro/blob/0.72.x/packages/metro-config/src/defaults/defaults.js
+// https://github.com/facebook/metro/blob/0.72.x/packages/metro-file-map/src/workerExclusionList.js
 export const SOURCE_EXTENSIONS = [
   '.tsx',
   '.ts',
@@ -23,9 +27,6 @@ export const IMAGE_EXTENSIONS = [
 ];
 
 export const ASSET_EXTENSIONS = [
-  // JSONs are never haste modules, except for "package.json", which is handled.
-  '.json',
-
   // Video extensions.
   '.avi',
   '.mp4',

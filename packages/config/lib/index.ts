@@ -28,13 +28,17 @@ function getESbuildOptions(
   };
 
   const baseOptions: BuildOptions = {
-    mainFields: ['react-native', 'browser', 'module', 'main'],
+    /**
+     * mainFields
+     * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
+     */
+    mainFields: ['react-native', 'browser', 'main', 'module'],
     entryPoints,
     outfile,
     sourceRoot: process.cwd(),
     minify: !dev,
     resolveExtensions: platforms
-      .map((p) => extensions.map((e) => `.${p}${e}`))
+      .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
       .concat(extensions)
       .flat(),
     define: {
@@ -44,10 +48,7 @@ function getESbuildOptions(
         dev ? 'development' : 'production',
       ),
     },
-    loader: {
-      '.js': 'jsx',
-      ...Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
-    },
+    loader: Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
     legalComments: 'none',
     banner: {
       js: `var ${BANNER_VARS.join(',')};`,

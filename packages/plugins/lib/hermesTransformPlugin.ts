@@ -20,7 +20,7 @@ interface HermesTransformPluginConfig {
 const DEFAULT_CONFIG = {
   filter: /\.(?:[mc]js|[tj]sx?)$/,
   enableCache: true,
-  fullyTransformPackageName: ['react-native'] as string[],
+  fullyTransformPackageName: [] as string[],
 } as const;
 
 const transformWithBabel = async (
