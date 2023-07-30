@@ -1,3 +1,4 @@
+import path from 'node:path';
 import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
 import type { TransformOptions } from '@babel/core';
@@ -22,6 +23,16 @@ function getESbuildOptions(
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const getPolyfills = require(require.resolve(
       'react-native/rn-get-polyfills',
+      {
+        paths: Array.from(
+          new Set([
+            // add current workspace directory to module resolution path.
+            // improve for workspace projects (eg. monorepo)
+            path.join(process.cwd(), 'node_modules'),
+            ...(require.main?.paths ?? []),
+          ]),
+        ).filter(Boolean),
+      },
     )) as () => string[];
 
     return getPolyfills();
