@@ -1,10 +1,11 @@
 import fs from 'node:fs/promises';
-import * as babel from '@babel/core';
-import * as swc from '@swc/core';
 import {
+  loadOptions as loadBabelOptions,
+  transform as babelTransform,
   type TransformOptions as BabelTransformOptions,
   type BabelFileResult,
 } from '@babel/core';
+import { transform as swcTransform } from '@swc/core';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
 import { promisify, isFlow } from './helpers';
@@ -27,7 +28,7 @@ const transformWithBabel = async (
   args: OnLoadArgs,
   customOptions?: BabelTransformOptions,
 ): Promise<string> => {
-  const options = babel.loadOptions({
+  const options = loadBabelOptions({
     ...getBabelOptions(customOptions),
     filename: args.path,
     caller: {
@@ -39,9 +40,9 @@ const transformWithBabel = async (
     throw new Error('cannot load babel options');
   }
 
-  const { code } = await promisify<BabelFileResult>((handler) => {
-    babel.transform(source, options, handler);
-  });
+  const { code } = await promisify<BabelFileResult>((handler) =>
+    babelTransform(source, options, handler),
+  );
 
   if (typeof code !== 'string') {
     throw new Error('babel transformed source is empty');
@@ -55,7 +56,7 @@ const transformWithSwc = async (
   args: OnLoadArgs,
 ): Promise<string> => {
   const options = getSwcOptions({ filename: args.path });
-  const { code } = await swc.transform(source, options);
+  const { code } = await swcTransform(source, options);
 
   if (typeof code !== 'string') {
     throw new Error('swc transformed source is empty');

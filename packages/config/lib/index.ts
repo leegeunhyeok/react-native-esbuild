@@ -73,7 +73,7 @@ function getESbuildOptions(
 function getBabelOptions(
   customBabelOptions?: Partial<TransformOptions>,
 ): TransformOptions {
-  const baseOptions = {
+  const baseOptions: TransformOptions = {
     minified: false,
     compact: false,
     sourceMaps: false,
