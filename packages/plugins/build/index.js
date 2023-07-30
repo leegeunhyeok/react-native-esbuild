@@ -1,15 +1,7 @@
 const esbuild = require('esbuild');
 const { getEsbuildBaseOptions } = require('../../../shared');
 
-const buildOptions = getEsbuildBaseOptions(__dirname, {
-  external: [
-    '@babel/*',
-    '@react-native-esbuild/*',
-    '@swc/*',
-    'esbuild',
-    'react-native/*',
-  ],
-});
+const buildOptions = getEsbuildBaseOptions(__dirname);
 
 esbuild.build(buildOptions).catch((error) => {
   console.error(error);
