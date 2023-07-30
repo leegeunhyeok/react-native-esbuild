@@ -1,3 +1,4 @@
+import type { ParsedUrlQuery } from 'node:querystring';
 import { z } from 'zod';
 import type { DevServerMiddleware } from '../types';
 
@@ -22,12 +23,12 @@ const bundleSearchParamSchema = z
   .required();
 
 export function parseBundleOptionsFromSearchParams(
-  searchParams: URLSearchParams,
+  query: ParsedUrlQuery,
 ): ParsedBundlerOptions {
-  const platform = searchParams.get('platform');
-  const dev = searchParams.get('dev');
-  const minify = searchParams.get('minify');
-  const runModule = searchParams.get('runModule');
+  const platform = query.platform;
+  const dev = query.dev;
+  const minify = query.minify;
+  const runModule = query.runModule;
 
   return bundleSearchParamSchema.parse({
     platform,

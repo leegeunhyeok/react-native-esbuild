@@ -1,3 +1,4 @@
+import { parse } from 'node:url';
 import {
   BundleTaskSignal,
   type BundleRequestOptions,
@@ -18,7 +19,7 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
         return next();
       }
 
-      const url = new URL(request.url);
+      const { pathname, query } = parse(request.url, true);
 
       const getBundleAndServe = (
         bundleRequestOptions: BundleRequestOptions,
@@ -30,10 +31,11 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
         });
       };
 
-      if (url.pathname.endsWith('.bundle')) {
-        const bundleRequestOptions = parseBundleOptionsFromSearchParams(
-          url.searchParams,
-        );
+      if (pathname?.endsWith('.bundle')) {
+        if (typeof query !== 'object') {
+          return void response.writeHead(400).end();
+        }
+        const bundleRequestOptions = parseBundleOptionsFromSearchParams(query);
 
         return void getBundleAndServe(bundleRequestOptions).catch(
           (errorOrSignal) => {
