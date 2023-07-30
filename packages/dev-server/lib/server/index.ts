@@ -1,4 +1,5 @@
 import http, { type Server as HTTPServer } from 'node:http';
+import { parse } from 'node:url';
 import type { Server as WebSocketServer } from 'ws';
 import {
   createDevServerMiddleware,
@@ -68,10 +69,10 @@ export class ReactNativeEsbuildDevServer {
     this.server.on('upgrade', (request, socket, head) => {
       if (!request.url) return;
 
-      const pathname = new URL(request.url).pathname;
-      const handler = websocketEndpoints[pathname] as
-        | WebSocketServer
-        | undefined;
+      const { pathname } = parse(request.url);
+      const handler = pathname
+        ? (websocketEndpoints[pathname] as WebSocketServer)
+        : null;
 
       if (pathname === '/hot') {
         // TODO: add live reload
