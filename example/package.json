@@ -6,7 +6,9 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
-    "start": "react-native start",
+    "start": "rne start",
+    "build:android": "rne build --platform=android --output=dist/android.bundlejs",
+    "build:ios": "rne start  --platform=android --output=dist/android.bundlejs",
     "test": "jest"
   },
   "dependencies": {
@@ -17,6 +19,7 @@
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
+    "@react-native-esbuild/cli": "workspace:^",
     "@react-native/eslint-config": "^0.72.2",
     "@react-native/metro-config": "^0.72.9",
     "@tsconfig/react-native": "^3.0.0",
