@@ -2,7 +2,7 @@
 
   # react-native-esbuild
 
-  > ⚡️ An extremely fast bundler with React Native
+  > ⚡️ An extremely fast bundler + React Native
 
 </div>
 
