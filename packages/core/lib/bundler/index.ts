@@ -10,7 +10,8 @@ import {
   createHermesTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import { getESbuildOptions } from '@react-native-esbuild/config';
-import { createPromiseHandler } from '../helpers';
+import * as colors from 'colors';
+import { createPromiseHandler, isCI } from '../helpers';
 import {
   BundleTaskSignal,
   type BundleOptions,
@@ -18,6 +19,7 @@ import {
   type BundleRequestOptions,
   type PromiseHandler,
 } from '../types';
+import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler {
   private esbuildContext?: BuildContext;
@@ -27,7 +29,10 @@ export class ReactNativeEsbuildBundler {
   constructor(
     private options: BundleOptions,
     private customEsbuildOptions?: Partial<BuildOptions>,
-  ) {}
+  ) {
+    if (isCI()) colors.disable();
+    printLogo();
+  }
 
   private getBuildOptionsForBundler(mode: 'bundle' | 'watch'): BuildOptions {
     return getESbuildOptions(

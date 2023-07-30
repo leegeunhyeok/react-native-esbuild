@@ -1324,6 +1324,7 @@ __metadata:
   dependencies:
     "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/plugins": "workspace:^"
+    colors: ^1.4.0
     deepmerge: ^4.3.1
     esbuild: ^0.18.17
   peerDependencies:
@@ -2722,6 +2723,13 @@ __metadata:
   bin:
     color-support: bin.js
   checksum: 9b7356817670b9a13a26ca5af1c21615463b500783b739b7634a0c2047c16cef4b2865d7576875c31c3cddf9dd621fa19285e628f20198b233a5cfdda6d0793b
+  languageName: node
+  linkType: hard
+
+"colors@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "colors@npm:1.4.0"
+  checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
   languageName: node
   linkType: hard
 
