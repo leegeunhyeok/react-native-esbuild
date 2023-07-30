@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@react-native-esbuild/core": "workspace:^",
+    "@react-native-esbuild/dev-server": "workspace:^",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

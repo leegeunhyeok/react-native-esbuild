@@ -37,10 +37,10 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
 
         return void getBundleAndServe(bundleRequestOptions).catch(
           (errorOrSignal) => {
-            if (errorOrSignal === BundleTaskSignal.NotStarted) {
+            if (errorOrSignal === BundleTaskSignal.WatchModeNotStarted) {
               // start bundling and watching
               // and retry to get bundle after a while
-              return bundler.watch().then(() => {
+              return bundler.watch(bundleRequestOptions.platform).then(() => {
                 setTimeout(
                   () => void getBundleAndServe(bundleRequestOptions),
                   500,

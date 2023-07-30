@@ -1,10 +1,15 @@
-import type { EsbuildPresetOptions } from '@react-native-esbuild/config';
+export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface BundleOptions extends EsbuildPresetOptions {}
+export interface BundlerConfig {
+  entryPoint: string;
+  outfile: string;
+  assetsDest: string;
+  dev: boolean;
+  minify: boolean;
+}
 
 export interface BundleRequestOptions {
-  platform: 'android' | 'ios' | 'web';
+  platform: BundlerSupportPlatform;
   dev: boolean;
   minify: boolean;
   runModule: boolean;
@@ -18,7 +23,7 @@ export interface BundleResult {
 export enum BundleTaskSignal {
   Cancelled,
   EmptyOutput,
-  NotStarted,
+  WatchModeNotStarted,
 }
 
 export interface PromiseHandler<Result> {

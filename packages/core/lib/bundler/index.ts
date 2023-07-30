@@ -4,7 +4,6 @@ import esbuild, {
   type BuildResult,
   type BuildContext,
 } from 'esbuild';
-import deepmerge from 'deepmerge';
 import {
   createAssetRegisterPlugin,
   createHermesTransformPlugin,
@@ -12,12 +11,13 @@ import {
 import { getESbuildOptions } from '@react-native-esbuild/config';
 import * as colors from 'colors';
 import { createPromiseHandler, isCI } from '../helpers';
-import {
-  BundleTaskSignal,
-  type BundleOptions,
-  type BundleResult,
-  type BundleRequestOptions,
-  type PromiseHandler,
+import { BundleTaskSignal } from '../types';
+import type {
+  BundlerConfig,
+  BundlerSupportPlatform,
+  BundleResult,
+  BundleRequestOptions,
+  PromiseHandler,
 } from '../types';
 import { printLogo } from './logo';
 
@@ -26,28 +26,34 @@ export class ReactNativeEsbuildBundler {
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
 
-  constructor(
-    private options: BundleOptions,
-    private customEsbuildOptions?: Partial<BuildOptions>,
-  ) {
+  constructor(private config: BundlerConfig) {
     if (isCI()) colors.disable();
     printLogo();
   }
 
-  private getBuildOptionsForBundler(mode: 'bundle' | 'watch'): BuildOptions {
+  private getBuildOptionsForBundler(
+    platform: 'android' | 'ios' | 'web',
+    mode: 'bundle' | 'watch',
+  ): BuildOptions {
+    const { entryPoint, outfile, assetsDest, dev, minify } = this.config;
+
     return getESbuildOptions(
-      this.options,
-      deepmerge(
-        {
-          plugins: [
-            mode === 'watch' ? this.getBuildStatusPlugin() : null,
-            createAssetRegisterPlugin(),
-            createHermesTransformPlugin({}),
-          ].filter(Boolean),
-          write: mode === 'bundle',
-        },
-        this.customEsbuildOptions ?? {},
-      ),
+      {
+        entryPoint,
+        outfile,
+        assetsDest,
+        dev,
+        minify,
+        platform,
+      },
+      {
+        plugins: [
+          mode === 'watch' ? this.getBuildStatusPlugin() : null,
+          createAssetRegisterPlugin(),
+          createHermesTransformPlugin({}),
+        ].filter(Boolean) as Plugin[],
+        write: mode === 'bundle',
+      },
     );
   }
 
@@ -55,7 +61,7 @@ export class ReactNativeEsbuildBundler {
     return {
       name: 'build-task-plugin',
       setup: (build): void => {
-        const bundleFilename = this.options.outfile;
+        const bundleFilename = this.config.outfile;
         const bundleSourcemapFilename = `${bundleFilename}.map`;
 
         const findFromOutputFile = (filename: string) => {
@@ -98,13 +104,13 @@ export class ReactNativeEsbuildBundler {
     };
   }
 
-  async bundle(): Promise<BuildResult> {
-    const buildOptions = this.getBuildOptionsForBundler('bundle');
+  async bundle(platform: BundlerSupportPlatform): Promise<BuildResult> {
+    const buildOptions = this.getBuildOptionsForBundler(platform, 'bundle');
     return esbuild.build(buildOptions);
   }
 
-  async watch(): Promise<void> {
-    const buildOptions = this.getBuildOptionsForBundler('watch');
+  async watch(platform: BundlerSupportPlatform): Promise<void> {
+    const buildOptions = this.getBuildOptionsForBundler(platform, 'watch');
     (this.esbuildContext = await esbuild.context(buildOptions)).watch();
   }
 
@@ -123,7 +129,7 @@ export class ReactNativeEsbuildBundler {
         typeof handler.task.then === 'function'
       )
     ) {
-      throw BundleTaskSignal.NotStarted;
+      throw BundleTaskSignal.WatchModeNotStarted;
     }
   }
 
@@ -137,7 +143,7 @@ export class ReactNativeEsbuildBundler {
     return bundleResult.source;
   }
 
-  async getSourcemap(): Promise<Uint8Array> {
+  async getSourcemap(_options: BundleRequestOptions): Promise<Uint8Array> {
     this.assertTaskHandler(this.esbuildTaskHandler);
 
     // TODO: get bundle by options

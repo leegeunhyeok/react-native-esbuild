@@ -4,6 +4,32 @@ import { assertCommandOptions, getCommand } from './helpers';
 import { VERSION } from './constants';
 import type { Argv } from './types';
 
+const commonOptions = {
+  entry: {
+    type: 'string',
+    describe: 'entry file path',
+    default: 'index.js',
+  },
+  assets: {
+    type: 'string',
+    describe: 'assets files destination (default: --entry path)',
+  },
+  platform: {
+    type: 'string',
+    describe: 'platform for resolve modules',
+    choices: ['android', 'ios', 'web'],
+  },
+  dev: {
+    type: 'boolean',
+    describe: 'set to develop environment',
+    default: true,
+  },
+  minify: {
+    describe: 'enable minify (default: --dev)',
+    type: 'boolean',
+  },
+} as const;
+
 export function cli(): Argv | Promise<Argv> {
   return yargs(hideBin(process.argv))
     .scriptName('rne')
@@ -12,20 +38,21 @@ export function cli(): Argv | Promise<Argv> {
     .command('start', 'start bundler with dev server', (yargs) => {
       yargs
         .options({
+          ...commonOptions,
+          output: {
+            type: 'string',
+            describe: 'bundle file name',
+            default: 'main.jsbundle',
+          },
+          host: {
+            describe: 'dev server host',
+            type: 'string',
+            default: '127.0.0.1',
+          },
           port: {
-            alias: 'p',
-            default: 8081,
             describe: 'dev server port',
             type: 'number',
-          },
-          dev: {
-            default: true,
-            describe: 'set to develop environment',
-            type: 'boolean',
-          },
-          minify: {
-            describe: 'enable minify (by default: follow --dev)',
-            type: 'boolean',
+            default: 8081,
           },
         })
         .version(false)
@@ -34,29 +61,13 @@ export function cli(): Argv | Promise<Argv> {
     .command('build', 'bundle your application', (yargs) => {
       yargs
         .options({
-          entry: {
-            type: 'string',
-            describe: 'entry file path',
-          },
-          destination: {
+          ...commonOptions,
+          output: {
             type: 'string',
             describe: 'bundle file destination',
           },
-          platform: {
-            type: 'string',
-            describe: 'platform for resolve modules',
-            choices: ['android', 'ios', 'web'],
-          },
-          dev: {
-            describe: 'set to develop environment',
-            type: 'boolean',
-          },
-          minify: {
-            describe: 'enable minify',
-            type: 'boolean',
-          },
         })
-        .demandOption(['entry', 'destination', 'platform', 'dev'])
+        .demandOption(['output', 'platform'])
         .version(false)
         .help();
     })

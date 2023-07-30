@@ -6,15 +6,17 @@ export interface Argv {
 
 export interface CliOptionsBase {
   entryFile: string;
+  outputFile: string;
+  assetsDest: string;
   dev: boolean;
   minify: boolean;
 }
 
 export interface StartOptions extends CliOptionsBase {
   port: number;
+  host: string;
 }
 
 export interface BuildOptions extends CliOptionsBase {
-  destination: string;
   platform: 'android' | 'ios' | 'web';
 }

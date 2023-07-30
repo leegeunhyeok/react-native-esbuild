@@ -1298,6 +1298,7 @@ __metadata:
   resolution: "@react-native-esbuild/cli@workspace:packages/cli"
   dependencies:
     "@react-native-esbuild/core": "workspace:^"
+    "@react-native-esbuild/dev-server": "workspace:^"
     "@types/yargs": ^17.0.24
     esbuild: ^0.18.17
     yargs: ^17.7.2
@@ -1332,7 +1333,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/dev-server@workspace:packages/dev-server":
+"@react-native-esbuild/dev-server@workspace:^, @react-native-esbuild/dev-server@workspace:packages/dev-server":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/dev-server@workspace:packages/dev-server"
   dependencies:

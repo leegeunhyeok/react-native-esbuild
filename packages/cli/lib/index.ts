@@ -1,27 +1,40 @@
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import { cli } from './command';
-import { resolveBundleDestination, getCommand, getOptions } from './helpers';
+import { getCommand, getOptions } from './helpers';
 import type { StartOptions, BuildOptions } from './types';
 
 Promise.resolve(cli())
   .then(async (argv): Promise<void> => {
     const options = getOptions(argv);
+
     switch (getCommand(argv)) {
       case 'start': {
-        // TODO
-        const _startOptions = options as StartOptions;
+        const startOptions = options as StartOptions;
+        const devServer = new ReactNativeEsbuildDevServer({
+          host: startOptions.host,
+          port: startOptions.port,
+        }).initialize({
+          entryPoint: startOptions.entryFile,
+          outfile: startOptions.outputFile,
+          assetsDest: startOptions.assetsDest,
+          dev: startOptions.dev,
+          minify: startOptions.minify,
+        });
+        devServer.listen();
         break;
       }
 
       case 'build': {
         const buildOptions = options as BuildOptions;
         const bundler = new ReactNativeEsbuildBundler({
-          entryPoints: [buildOptions.entryFile],
-          outfile: resolveBundleDestination(buildOptions.destination),
-          platform: buildOptions.platform,
+          entryPoint: buildOptions.entryFile,
+          outfile: buildOptions.outputFile,
+          assetsDest: buildOptions.assetsDest,
           dev: buildOptions.dev,
+          minify: buildOptions.minify,
         });
-        await bundler.bundle();
+        await bundler.bundle(buildOptions.platform);
         break;
       }
     }

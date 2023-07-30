@@ -1,13 +1,12 @@
 import http, { type Server as HTTPServer } from 'node:http';
 import type { Server as WebSocketServer } from 'ws';
-import type { BuildOptions } from 'esbuild';
 import {
   createDevServerMiddleware,
   indexPageMiddleware,
 } from '@react-native-community/cli-server-api';
 import {
   ReactNativeEsbuildBundler,
-  type BundleOptions,
+  type BundlerConfig,
 } from '@react-native-esbuild/core';
 import {
   createServeAssetMiddleware,
@@ -45,14 +44,8 @@ export class ReactNativeEsbuildDevServer {
     }
   }
 
-  initialize(
-    bundlerOptions: BundleOptions,
-    customEsbuildOptions?: Partial<BuildOptions> | undefined,
-  ): void {
-    this.bundler = new ReactNativeEsbuildBundler(
-      bundlerOptions,
-      customEsbuildOptions,
-    );
+  initialize(bundlerConfig: BundlerConfig): this {
+    this.bundler = new ReactNativeEsbuildBundler(bundlerConfig);
 
     const context: DevServerMiddlewareContext = {
       bundler: this.bundler,
@@ -92,6 +85,8 @@ export class ReactNativeEsbuildDevServer {
         socket.destroy();
       }
     });
+
+    return this;
   }
 
   listen(): HTTPServer {

@@ -13,7 +13,7 @@ function getESbuildOptions(
   options: EsbuildPresetOptions,
   customEsbuildOptions?: Partial<BuildOptions>,
 ): BuildOptions {
-  const { entryPoints, outfile, platform, dev } = options;
+  const { entryPoint, outfile, assetsDest, platform, dev, minify } = options;
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
@@ -33,10 +33,10 @@ function getESbuildOptions(
      * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
      */
     mainFields: ['react-native', 'browser', 'main', 'module'],
-    entryPoints,
+    entryPoints: [entryPoint],
     outfile,
+    assetNames: `${assetsDest}/[name]-[hash]`,
     sourceRoot: process.cwd(),
-    minify: !dev,
     resolveExtensions: platforms
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
       .concat(extensions)
@@ -66,6 +66,7 @@ function getESbuildOptions(
     format: 'iife',
     bundle: true,
     sourcemap: true,
+    minify,
   };
 
   return deepmerge(baseOptions, customEsbuildOptions ?? {});
