@@ -38,24 +38,22 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const dev = argv.dev ?? process.env.NODE_ENV === 'development';
   const minify = argv.minify ?? dev;
 
-  if (typeof argv.port === 'number') {
-    return {
-      entryFile: entryFilePath,
-      outputFile: outputFilePath,
-      assetsDest: assetsDestination,
-      dev,
-      minify,
-      port: argv.port,
-      host: argv.host,
-    } as StartOptions;
-  } else if (typeof argv.destination === 'string') {
-    return {
-      entryFile: entryFilePath,
-      outputFile: outputFilePath,
-      platform: assetsDestination,
-      dev,
-      minify,
-    } as BuildOptions;
-  }
-  throw new Error('invalid options');
+  return typeof argv.port === 'number'
+    ? ({
+        entryFile: entryFilePath,
+        outputFile: outputFilePath,
+        assetsDest: assetsDestination,
+        dev,
+        minify,
+        port: argv.port,
+        host: argv.host,
+      } as StartOptions)
+    : ({
+        entryFile: entryFilePath,
+        outputFile: outputFilePath,
+        assetsDest: assetsDestination,
+        platform: argv.platform,
+        dev,
+        minify,
+      } as BuildOptions);
 }
