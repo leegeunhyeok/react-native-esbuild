@@ -3173,6 +3173,7 @@ __metadata:
   dependencies:
     "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/plugins": "workspace:^"
+    "@react-native-esbuild/utils": "workspace:^"
     colors: ^1.4.0
     deepmerge: ^4.3.1
     esbuild: ^0.18.17
@@ -3214,7 +3215,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/utils@workspace:packages/utils":
+"@react-native-esbuild/utils@workspace:^, @react-native-esbuild/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/utils@workspace:packages/utils"
   dependencies:

@@ -9,8 +9,9 @@ import {
   createHermesTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import { getESbuildOptions } from '@react-native-esbuild/config';
+import { isCI } from '@react-native-esbuild/utils';
 import * as colors from 'colors';
-import { createPromiseHandler, isCI } from '../helpers';
+import { createPromiseHandler } from '../helpers';
 import { BundleTaskSignal } from '../types';
 import type {
   BundlerConfig,
