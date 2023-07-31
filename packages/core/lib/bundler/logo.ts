@@ -8,7 +8,7 @@ const LOGO = `
 `;
 
 const LABEL = ' » ESBuild ';
-const DESCRIPTION = 'An extremely fast bundler';
+const DESCRIPTION = 'An extremely fast bundler + React Native';
 
 export const printLogo = (): void => {
   console.log(LOGO.yellow);
