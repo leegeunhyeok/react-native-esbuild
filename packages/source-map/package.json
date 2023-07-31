@@ -39,5 +39,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.18.17"
+  },
+  "dependencies": {
+    "@react-native-esbuild/utils": "workspace:^"
   }
 }

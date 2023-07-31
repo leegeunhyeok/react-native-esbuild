@@ -7,7 +7,10 @@ import {
   toSafetyMiddleware,
   parseBundleOptionsFromSearchParams,
 } from '../helpers';
+import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
+
+const TAG = 'serve-bundle-middleware';
 
 export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
   bundler,
@@ -15,7 +18,7 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
   return toSafetyMiddleware(
     function serveBundleMiddleware(request, response, next) {
       if (!request.url) {
-        console.warn('[serveBundleMiddleware] request url is empty');
+        logger.warn(`(${TAG}) request url is empty`);
         return next();
       }
 
@@ -24,7 +27,14 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       const getBundleAndServe = (
         bundleRequestOptions: BundleRequestOptions,
       ): Promise<void> => {
+        const { platform, dev } = bundleRequestOptions;
+        const bundleType = `platform: ${platform}, dev: ${
+          dev ? 'true' : 'false'
+        }`;
+        logger.info(`request bundle to bundler (${bundleType})`);
+
         return bundler.getBundle(bundleRequestOptions).then((bundle) => {
+          logger.info(`bundle received (${bundleType})`);
           response
             .writeHead(200, { 'Content-Type': 'application/javascript' })
             .end(bundle);
@@ -33,6 +43,7 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
 
       if (pathname?.endsWith('.bundle')) {
         if (typeof query !== 'object') {
+          logger.warn(`(${TAG}) invalid request`);
           return void response.writeHead(400).end();
         }
         const bundleRequestOptions = parseBundleOptionsFromSearchParams(query);
@@ -40,9 +51,11 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
         return void getBundleAndServe(bundleRequestOptions).catch(
           (errorOrSignal) => {
             if (errorOrSignal === BundleTaskSignal.WatchModeNotStarted) {
+              logger.info(`(${TAG}) watch mode is not started`);
               // start bundling and watching
               // and retry to get bundle after a while
               return bundler.watch(bundleRequestOptions.platform).then(() => {
+                logger.info(`(${TAG}) watch mode started`);
                 setTimeout(
                   () => void getBundleAndServe(bundleRequestOptions),
                   500,
@@ -50,14 +63,13 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
               });
             }
 
-            response
-              .writeHead(
-                500,
-                errorOrSignal instanceof Error
-                  ? errorOrSignal.message
-                  : 'unexpected error',
-              )
-              .end();
+            const error = errorOrSignal as Error;
+            logger.error(
+              'an unexpected error occurred while getting the bundle',
+              error,
+            );
+
+            response.writeHead(500, error.message).end();
           },
         );
       }

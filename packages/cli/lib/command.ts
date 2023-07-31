@@ -28,6 +28,11 @@ const commonOptions = {
     describe: 'enable minify (default: --dev)',
     type: 'boolean',
   },
+  debug: {
+    describe: 'show cli debug log',
+    type: 'boolean',
+    default: false,
+  },
 } as const;
 
 export function cli(): Argv | Promise<Argv> {

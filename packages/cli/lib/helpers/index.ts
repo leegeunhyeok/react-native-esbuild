@@ -21,8 +21,8 @@ export async function assertCommandOptions(
   }
 }
 
-export function resolvePath(destination: string): string {
-  return path.resolve(process.cwd(), destination);
+export function resolvePath(filepath: string): string {
+  return path.resolve(process.cwd(), filepath);
 }
 
 async function assertBundleDestinationPathIsValid(
@@ -47,6 +47,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
         minify,
         port: argv.port,
         host: argv.host,
+        debug: argv.debug,
       } as StartOptions)
     : ({
         platform: argv.platform,
@@ -55,5 +56,6 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
         assetsDir,
         dev,
         minify,
+        debug: argv.debug,
       } as BuildOptions);
 }

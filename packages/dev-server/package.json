@@ -44,6 +44,7 @@
   "dependencies": {
     "@react-native-community/cli-server-api": "^11.3.6",
     "@react-native-esbuild/core": "workspace:^",
+    "@react-native-esbuild/utils": "workspace:^",
     "zod": "^3.21.4"
   }
 }

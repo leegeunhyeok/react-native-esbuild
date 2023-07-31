@@ -1,5 +1,8 @@
 import { toSafetyMiddleware } from '../helpers';
+import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
+
+const TAG = 'symbolicate-middleware';
 
 export const createSymbolicateMiddleware: DevServerMiddlewareCreator = (
   _context,
@@ -7,7 +10,7 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = (
   return toSafetyMiddleware(
     function symbolicateMiddleware(request, _response, next) {
       if (!request.url) {
-        console.warn('[symbolicateMiddleware] request url is empty');
+        logger.warn(`(${TAG}) request url is empty`);
         return next();
       }
 

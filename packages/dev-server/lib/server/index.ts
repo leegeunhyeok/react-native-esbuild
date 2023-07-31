@@ -14,6 +14,7 @@ import {
   createServeBundleMiddleware,
   createSymbolicateMiddleware,
 } from '../middlewares';
+import { logger } from '../shared';
 import { DEFAULT_PORT, DEFAULT_HOST } from '../constants';
 import type { DevServerMiddlewareContext, DevServerOptions } from '../types';
 
@@ -46,6 +47,9 @@ export class ReactNativeEsbuildDevServer {
   }
 
   initialize(bundlerConfig: BundlerConfig): this {
+    logger.info('initialize dev server', this.devServerOptions);
+
+    logger.info('create bundler instance');
     this.bundler = new ReactNativeEsbuildBundler(bundlerConfig);
 
     const context: DevServerMiddlewareContext = {
@@ -59,13 +63,16 @@ export class ReactNativeEsbuildDevServer {
       watchFolders: [],
     });
 
+    logger.info('setup middlewares');
     middleware.use(createServeAssetMiddleware(context));
     middleware.use(createServeBundleMiddleware(context));
     middleware.use(createSymbolicateMiddleware(context));
     middleware.use(indexPageMiddleware);
 
+    logger.info('create http server');
     this.server = http.createServer(middleware);
 
+    logger.info('setup web socket');
     this.server.on('upgrade', (request, socket, head) => {
       if (!request.url) return;
 
@@ -76,7 +83,7 @@ export class ReactNativeEsbuildDevServer {
 
       if (pathname === '/hot') {
         // TODO: add live reload
-        console.warn('HRM is not supported');
+        logger.warn('HRM is not supported');
         socket.destroy();
       } else if (handler) {
         handler.handleUpgrade(request, socket, head, (client) => {
@@ -93,9 +100,10 @@ export class ReactNativeEsbuildDevServer {
   listen(): HTTPServer {
     this.assertBundler(this.bundler);
     this.assertHTTPServer(this.server);
+    const { host, port } = this.devServerOptions;
 
-    return this.server.listen(this.devServerOptions, () => {
-      console.log(`dev server listening on ${this.devServerOptions.port}`);
+    return this.server.listen(port, () => {
+      logger.info(`dev server listening on ${host}:${port}`);
     });
   }
 }

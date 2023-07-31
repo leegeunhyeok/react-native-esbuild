@@ -10,6 +10,7 @@ export interface CliOptionsBase {
   assetsDir: string;
   dev: boolean;
   minify: boolean;
+  debug: boolean;
 }
 
 export interface StartOptions extends CliOptionsBase {

@@ -20,6 +20,7 @@ import type {
   BundleRequestOptions,
   PromiseHandler,
 } from '../types';
+import { logger } from '../shared';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler {
@@ -65,6 +66,11 @@ export class ReactNativeEsbuildBundler {
         const bundleFilename = this.config.outfile;
         const bundleSourcemapFilename = `${bundleFilename}.map`;
 
+        logger.info('preparing to build', {
+          bundleFilename,
+          bundleSourcemapFilename,
+        });
+
         const findFromOutputFile = (filename: string) => {
           return <T extends { path: string }>({ path }: T) =>
             path.endsWith(filename);
@@ -72,11 +78,13 @@ export class ReactNativeEsbuildBundler {
 
         build.onStart(() => {
           // reject previous task with cancelled signal
+          logger.info('build started');
           this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
           this.esbuildTaskHandler = createPromiseHandler();
         });
 
         build.onEnd((result: BuildResult<{ write: false }>) => {
+          logger.info('build finished');
           try {
             const { outputFiles } = result;
             const bundleOutput = outputFiles.find(
@@ -87,6 +95,7 @@ export class ReactNativeEsbuildBundler {
             );
 
             if (!(bundleOutput && bundleSourcemapOutput)) {
+              logger.warn('cannot found bundle and sourcemap');
               this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.EmptyOutput);
               return;
             }
@@ -107,16 +116,24 @@ export class ReactNativeEsbuildBundler {
 
   async bundle(platform: BundlerSupportPlatform): Promise<BuildResult> {
     const buildOptions = this.getBuildOptionsForBundler(platform, 'bundle');
+    logger.debug('prepare for bundle mode', { platform });
+    logger.debug('current esbuild options', buildOptions);
     return esbuild.build(buildOptions);
   }
 
   async watch(platform: BundlerSupportPlatform): Promise<void> {
     const buildOptions = this.getBuildOptionsForBundler(platform, 'watch');
+    logger.debug('prepare for watch mode', { platform });
+    logger.debug('current esbuild options', buildOptions);
     (this.esbuildContext = await esbuild.context(buildOptions)).watch();
   }
 
   getContext(): BuildContext | null {
-    return this.esbuildContext ?? null;
+    if (this.esbuildContext) {
+      return this.esbuildContext;
+    }
+    logger.warn('esbuild context is empty');
+    return null;
   }
 
   private assertTaskHandler(

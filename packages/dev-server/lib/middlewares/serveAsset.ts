@@ -1,5 +1,8 @@
 import { toSafetyMiddleware } from '../helpers';
+import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
+
+const TAG = 'serve-asset-middleware';
 
 export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
   _context,
@@ -7,7 +10,7 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
   return toSafetyMiddleware(
     function serveAssetMiddleware(request, _response, next) {
       if (!request.url) {
-        console.warn('[serveAssetMiddleware] request url is empty');
+        logger.warn(`(${TAG}) request url is empty`);
         return next();
       }
 

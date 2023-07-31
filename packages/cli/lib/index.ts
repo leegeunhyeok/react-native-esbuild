@@ -3,10 +3,14 @@ import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import { cli } from './command';
 import { getCommand, getOptions } from './helpers';
 import type { StartOptions, BuildOptions } from './types';
+import { logger } from './shared';
 
 Promise.resolve(cli())
   .then(async (argv): Promise<void> => {
     const options = getOptions(argv);
+
+    logger.setLogLevel(options.debug ? 'debug' : 'info');
+    logger.debug('command line interface options', options);
 
     switch (getCommand(argv)) {
       case 'start': {
@@ -39,4 +43,4 @@ Promise.resolve(cli())
       }
     }
   })
-  .catch(console.error);
+  .catch((error) => logger.error('cannot execute command', error as Error));
