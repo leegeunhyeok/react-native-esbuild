@@ -47,9 +47,8 @@ export class ReactNativeEsbuildDevServer {
   }
 
   initialize(bundlerConfig: BundlerConfig): this {
-    logger.info('initialize dev server', this.devServerOptions);
-
-    logger.info('create bundler instance');
+    logger.debug('initialize dev server', this.devServerOptions);
+    logger.debug('create bundler instance');
     this.bundler = new ReactNativeEsbuildBundler(bundlerConfig);
 
     const context: DevServerMiddlewareContext = {
@@ -63,16 +62,16 @@ export class ReactNativeEsbuildDevServer {
       watchFolders: [],
     });
 
-    logger.info('setup middlewares');
+    logger.debug('setup middlewares');
     middleware.use(createServeAssetMiddleware(context));
     middleware.use(createServeBundleMiddleware(context));
     middleware.use(createSymbolicateMiddleware(context));
     middleware.use(indexPageMiddleware);
 
-    logger.info('create http server');
+    logger.debug('create http server');
     this.server = http.createServer(middleware);
 
-    logger.info('setup web socket');
+    logger.debug('setup web socket');
     this.server.on('upgrade', (request, socket, head) => {
       if (!request.url) return;
 
@@ -103,7 +102,7 @@ export class ReactNativeEsbuildDevServer {
     const { host, port } = this.devServerOptions;
 
     return this.server.listen(port, () => {
-      logger.info(`dev server listening on ${host}:${port}`);
+      logger.debug(`dev server listening on http://${host}:${port}`);
     });
   }
 }
