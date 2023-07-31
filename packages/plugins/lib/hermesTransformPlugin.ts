@@ -9,18 +9,17 @@ import { transform as swcTransform } from '@swc/core';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
 import { promisify, isFlow } from './helpers';
-import type { PluginCreator } from './types';
-
-interface HermesTransformPluginConfig {
-  filter?: RegExp;
-  enableCache?: boolean;
-  fullyTransformPackageName?: string[];
-}
+import type {
+  PluginCreator,
+  HermesTransformPluginConfig,
+  CustomBabelTransformRule,
+} from './types';
 
 const DEFAULT_CONFIG = {
   filter: /\.(?:[mc]js|[tj]sx?)$/,
   enableCache: true,
-  fullyTransformPackageName: [] as string[],
+  fullyTransformPackageNames: [] as string[],
+  customBabelTransformRules: [] as CustomBabelTransformRule[],
 } as const;
 
 const transformWithBabel = async (
@@ -72,7 +71,8 @@ export const createHermesTransformPlugin: PluginCreator<
   setup: (build): void => {
     const {
       filter,
-      fullyTransformPackageName,
+      fullyTransformPackageNames,
+      customBabelTransformRules,
       // TODO: need to implement caching features
       enableCache: _enableCache,
     } = {
@@ -80,16 +80,19 @@ export const createHermesTransformPlugin: PluginCreator<
       ...config,
     };
 
+    const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
+      ? new RegExp(`node_modules/${fullyTransformPackageNames.join('|')}/`)
+      : undefined;
+
     build.onLoad({ filter }, async (args) => {
       let source = await fs.readFile(args.path, { encoding: 'utf-8' });
-      const fullyTransform = fullyTransformPackageName.some((packageName) =>
-        args.path.includes(`/node_modules/${packageName}`),
-      );
 
       if (isFlow(source, args.path)) {
         source = await transformWithBabel(source, args, {
           babelrc: false,
           plugins: [
+            // babel plugins in metro preset
+            // https://github.com/facebook/react-native/blob/main/packages/react-native-babel-preset/src/configs/main.js
             '@babel/plugin-syntax-flow',
             '@babel/plugin-transform-flow-strip-types',
             '@babel/plugin-syntax-jsx',
@@ -97,11 +100,17 @@ export const createHermesTransformPlugin: PluginCreator<
         });
       }
 
-      if (fullyTransform) {
+      if (fullyTransformPackagesRegExp?.test(args.path)) {
         source = await transformWithBabel(source, args, {
           // follow babelrc of react-native project's root (same as metro)
           babelrc: true,
         });
+      }
+
+      for await (const { test, options } of customBabelTransformRules) {
+        if (test(source, args.path)) {
+          source = await transformWithBabel(source, args, options);
+        }
       }
 
       return {
