@@ -3214,6 +3214,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@react-native-esbuild/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@react-native-esbuild/utils@workspace:packages/utils"
+  dependencies:
+    esbuild: ^0.18.17
+  languageName: unknown
+  linkType: soft
+
 "@react-native/assets-registry@npm:^0.72.0":
   version: 0.72.0
   resolution: "@react-native/assets-registry@npm:0.72.0"
