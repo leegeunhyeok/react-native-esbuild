@@ -20,12 +20,16 @@ export class Logger {
 
   private stdout(...messages: string[]): void {
     if (!this.enabled) return;
-    process.stdout.write(messages.join(' ') + EOL);
+    process.stdout.write(this.getMessage(messages));
   }
 
   private stderr(...messages: string[]): void {
     if (!this.enabled) return;
-    process.stderr.write(messages.join(' ') + EOL);
+    process.stderr.write(this.getMessage(messages));
+  }
+
+  private getMessage(messages: string[]): string {
+    return messages.filter(Boolean).join(' ') + EOL;
   }
 
   private parseExtra(extra?: object): string {
@@ -38,6 +42,11 @@ export class Logger {
       }
     }
     return extraString;
+  }
+
+  private parseError(error?: Error): string {
+    if (!error) return '';
+    return error.message + (error.stack ? `\n${error.stack}` : '');
   }
 
   private getLevelTag(level: LogLevel): string {
@@ -78,22 +87,24 @@ export class Logger {
     );
   }
 
-  public warn(message: string, extra?: object): void {
+  public warn(message: string, error?: Error, extra?: object): void {
     if (['error'].some((level) => level === this.logLevel)) return;
 
     this.stderr(
       this.getLevelTag('warn'),
       magenta(this.scope),
       message,
+      this.parseError(error),
       this.parseExtra(extra),
     );
   }
 
-  public error(message: string, extra?: object): void {
+  public error(message: string, error: Error, extra?: object): void {
     this.stderr(
       this.getLevelTag('error'),
       magenta(this.scope),
       message,
+      this.parseError(error),
       this.parseExtra(extra),
     );
   }
