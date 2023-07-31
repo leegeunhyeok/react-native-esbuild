@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2023-07-31)
+
+
+### Features
+
+* add buildStatusPlugin ([07142c0](https://github.com/leegeunhyeok/react-native-esbuild/commit/07142c0e3863f9c1472ff45f85b86aeaf16a58ad))
+* add logger to packages ([fa789d0](https://github.com/leegeunhyeok/react-native-esbuild/commit/fa789d0d9414ec6356f5bf223960754027766be9))
+* now load config file before bundle ([7449cf3](https://github.com/leegeunhyeok/react-native-esbuild/commit/7449cf361dcba4e2e3425516bbcb594b7533f399))
+* **plugins:** support custom babel transforming ([aac234e](https://github.com/leegeunhyeok/react-native-esbuild/commit/aac234e4fee2a0fb30923f38c823ca518d233467))
+
+
+### Performance Improvements
+
+* improve bundle performance ([72844d5](https://github.com/leegeunhyeok/react-native-esbuild/commit/72844d5b5d5529b1245a1642218b5ef9d41e3dd5))
+
+
+### Code Refactoring
+
+* cleanup import statement ([badc372](https://github.com/leegeunhyeok/react-native-esbuild/commit/badc372d6db1ddb8f3b68270829ea4be842c3c63))
+* update basic external modules ([75ab87c](https://github.com/leegeunhyeok/react-native-esbuild/commit/75ab87cb8536ac015024dd256eeea2a88ffdbc45))
+
+
+
 ## [0.1.0-alpha.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2023-07-29)
 
 

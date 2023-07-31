@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2023-07-31)
+
+
+### Features
+
+* add ascii logo ([3e462be](https://github.com/leegeunhyeok/react-native-esbuild/commit/3e462bebc876961618a93ace12526e816d34150e))
+* add buildStatusPlugin ([07142c0](https://github.com/leegeunhyeok/react-native-esbuild/commit/07142c0e3863f9c1472ff45f85b86aeaf16a58ad))
+* add core options ([3743760](https://github.com/leegeunhyeok/react-native-esbuild/commit/3743760d285b7e55db1cc634b53800be36c05d1d))
+* add error param to stderr log ([db5b5fe](https://github.com/leegeunhyeok/react-native-esbuild/commit/db5b5fe2aae111d98242753dd30c126b6c14eac0))
+* add logger to packages ([fa789d0](https://github.com/leegeunhyeok/react-native-esbuild/commit/fa789d0d9414ec6356f5bf223960754027766be9))
+* change assetsDest to assetsDir ([2ec231b](https://github.com/leegeunhyeok/react-native-esbuild/commit/2ec231b7a63ee68f0acb9c16fba5dea6f355b62a))
+* implement logger ([e4b85ab](https://github.com/leegeunhyeok/react-native-esbuild/commit/e4b85ab5c9c860c59b23a601db19c4407d618904))
+* improve configs and implement start command ([936d33b](https://github.com/leegeunhyeok/react-native-esbuild/commit/936d33b2f916c22410aa7241ae53b634f83116ee))
+* improve module resolution for react native polyfills ([300df3f](https://github.com/leegeunhyeok/react-native-esbuild/commit/300df3f0c6654764ed9539d13243346faa6559a9))
+* isCI moved to utils ([27415bc](https://github.com/leegeunhyeok/react-native-esbuild/commit/27415bc78c686fa00b85f4e2687e402e49aaf51b))
+* now load config file before bundle ([7449cf3](https://github.com/leegeunhyeok/react-native-esbuild/commit/7449cf361dcba4e2e3425516bbcb594b7533f399))
+* **plugins:** support custom babel transforming ([aac234e](https://github.com/leegeunhyeok/react-native-esbuild/commit/aac234e4fee2a0fb30923f38c823ca518d233467))
+* **utils:** add setLogLevel ([9c93cbf](https://github.com/leegeunhyeok/react-native-esbuild/commit/9c93cbf24a23f0d31cbffc311875dc9e8315f837))
+
+
+### Bug Fixes
+
+* **cli:** remove invalid options ([3d8832b](https://github.com/leegeunhyeok/react-native-esbuild/commit/3d8832b3a7155fceaddad1283b14995071002a6f))
+* url parse ([b91bc5a](https://github.com/leegeunhyeok/react-native-esbuild/commit/b91bc5a45aab16d43b36a674d383b041e8fbea62))
+* wrong build script ([7c00fad](https://github.com/leegeunhyeok/react-native-esbuild/commit/7c00fadfeefa412db2096be23abdfd25fa10b807))
+
+
+### Performance Improvements
+
+* improve bundle performance ([72844d5](https://github.com/leegeunhyeok/react-native-esbuild/commit/72844d5b5d5529b1245a1642218b5ef9d41e3dd5))
+
+
+### Miscellaneous Chores
+
+* add @react-native-esbuild/cli to example ([d291b53](https://github.com/leegeunhyeok/react-native-esbuild/commit/d291b53751c47104d0a839fd069c869d9b934edc))
+* add @react-native-esbuild/utils ([913768a](https://github.com/leegeunhyeok/react-native-esbuild/commit/913768a7e3f67d787cf0339e2c5fac8b94cebe81))
+* add react-native-esbuild config ([c0d2753](https://github.com/leegeunhyeok/react-native-esbuild/commit/c0d27539d865c2599c0f31c29fc9c138de6e5fe5))
+* change bundler description ([2e1432b](https://github.com/leegeunhyeok/react-native-esbuild/commit/2e1432bba7db39e7f09ad4915502718aec247fea))
+* cleanup example application ([a3f52cc](https://github.com/leegeunhyeok/react-native-esbuild/commit/a3f52cc4f5229f18e32714bdbea9730ba9146fae))
+* set hoistingLimits to example ([5fbc3f6](https://github.com/leegeunhyeok/react-native-esbuild/commit/5fbc3f63ba6032a88fdc7d57eb221f4d741dad14))
+
+
+### Code Refactoring
+
+* change log levels ([521e545](https://github.com/leegeunhyeok/react-native-esbuild/commit/521e5457f9535e4551f0b44da2c19a4eb7d64156))
+* cleanup import statement ([badc372](https://github.com/leegeunhyeok/react-native-esbuild/commit/badc372d6db1ddb8f3b68270829ea4be842c3c63))
+* split config modules to each target ([f37427d](https://github.com/leegeunhyeok/react-native-esbuild/commit/f37427d3160b7eb995befbeea8116fe53cb9e1d5))
+* update basic external modules ([75ab87c](https://github.com/leegeunhyeok/react-native-esbuild/commit/75ab87cb8536ac015024dd256eeea2a88ffdbc45))
+* using buildStatusPlugin ([3289c4f](https://github.com/leegeunhyeok/react-native-esbuild/commit/3289c4f013eae9b585e92b61752a576aeb18e85c))
+
+
+
 ## [0.1.0-alpha.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2023-07-29)
 
 
