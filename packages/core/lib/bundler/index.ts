@@ -1,3 +1,4 @@
+import path from 'node:path';
 import esbuild, {
   type Plugin,
   type BuildOptions,
@@ -8,7 +9,11 @@ import {
   createAssetRegisterPlugin,
   createHermesTransformPlugin,
 } from '@react-native-esbuild/plugins';
-import { getESbuildOptions } from '@react-native-esbuild/config';
+import {
+  getCoreOptions,
+  getEsbuildOptions,
+  type CoreOptions,
+} from '@react-native-esbuild/config';
 import { isCI } from '@react-native-esbuild/utils';
 import * as colors from 'colors';
 import { createPromiseHandler } from '../helpers';
@@ -24,6 +29,7 @@ import { logger } from '../shared';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler {
+  private coreOptions: CoreOptions;
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
@@ -31,6 +37,24 @@ export class ReactNativeEsbuildBundler {
   constructor(private config: BundlerConfig) {
     if (isCI()) colors.disable();
     printLogo();
+    this.loadOptions();
+  }
+
+  private loadOptions(): void {
+    let config: CoreOptions | undefined;
+    const workDirectory = process.cwd();
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
+      config = require(path.resolve(
+        workDirectory,
+        'react-native-esbuild.config.js',
+      )).default;
+    } catch {
+      // empty
+    }
+
+    this.coreOptions = getCoreOptions(config);
   }
 
   private getBuildOptionsForBundler(
@@ -38,8 +62,9 @@ export class ReactNativeEsbuildBundler {
     mode: 'bundle' | 'watch',
   ): BuildOptions {
     const { entryPoint, outfile, assetsDir, dev, minify } = this.config;
+    const { cache, transform } = this.coreOptions;
 
-    return getESbuildOptions(
+    return getEsbuildOptions(
       {
         entryPoint,
         outfile,
@@ -52,7 +77,10 @@ export class ReactNativeEsbuildBundler {
         plugins: [
           mode === 'watch' ? this.getBuildStatusPlugin() : null,
           createAssetRegisterPlugin(),
-          createHermesTransformPlugin({}),
+          createHermesTransformPlugin({
+            enableCache: cache,
+            fullyTransformPackageNames: transform.fullyTransformPackageNames,
+          }),
         ].filter(Boolean) as Plugin[],
         write: mode === 'bundle',
       },

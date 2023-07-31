@@ -9,18 +9,7 @@ import { transform as swcTransform } from '@swc/core';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
 import { promisify, isFlow } from './helpers';
-import type {
-  PluginCreator,
-  HermesTransformPluginConfig,
-  CustomBabelTransformRule,
-} from './types';
-
-const DEFAULT_CONFIG = {
-  filter: /\.(?:[mc]js|[tj]sx?)$/,
-  enableCache: true,
-  fullyTransformPackageNames: [] as string[],
-  customBabelTransformRules: [] as CustomBabelTransformRule[],
-} as const;
+import type { PluginCreator, HermesTransformPluginConfig } from './types';
 
 const transformWithBabel = async (
   source: string,
@@ -70,21 +59,16 @@ export const createHermesTransformPlugin: PluginCreator<
   name: 'hermes-transform-plugin',
   setup: (build): void => {
     const {
-      filter,
-      fullyTransformPackageNames,
-      customBabelTransformRules,
+      fullyTransformPackageNames = [],
       // TODO: need to implement caching features
       enableCache: _enableCache,
-    } = {
-      ...DEFAULT_CONFIG,
-      ...config,
-    };
+    } = config;
 
     const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
       ? new RegExp(`node_modules/${fullyTransformPackageNames.join('|')}/`)
       : undefined;
 
-    build.onLoad({ filter }, async (args) => {
+    build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
       let source = await fs.readFile(args.path, { encoding: 'utf-8' });
 
       if (isFlow(source, args.path)) {
@@ -105,12 +89,6 @@ export const createHermesTransformPlugin: PluginCreator<
           // follow babelrc of react-native project's root (same as metro)
           babelrc: true,
         });
-      }
-
-      for await (const { test, options } of customBabelTransformRules) {
-        if (test(source, args.path)) {
-          source = await transformWithBabel(source, args, options);
-        }
       }
 
       return {
