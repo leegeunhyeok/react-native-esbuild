@@ -12,6 +12,7 @@ export class Logger {
     error: red,
   };
   private enabled = true;
+  private logLevel = 'info';
 
   constructor(private scope: string) {
     isCI() && disable();
@@ -51,7 +52,13 @@ export class Logger {
     this.enabled = false;
   }
 
+  public setLogLevel(level: LogLevel): void {
+    this.logLevel = level;
+  }
+
   public debug(message: string, extra?: object): void {
+    if (this.logLevel !== 'debug') return;
+
     this.stdout(
       this.getLevelTag('debug'),
       magenta(this.scope),
@@ -61,6 +68,8 @@ export class Logger {
   }
 
   public info(message: string, extra?: object): void {
+    if (['warn', 'error'].some((level) => level === this.logLevel)) return;
+
     this.stdout(
       this.getLevelTag('info'),
       magenta(this.scope),
@@ -70,6 +79,8 @@ export class Logger {
   }
 
   public warn(message: string, extra?: object): void {
+    if (['error'].some((level) => level === this.logLevel)) return;
+
     this.stderr(
       this.getLevelTag('warn'),
       magenta(this.scope),
