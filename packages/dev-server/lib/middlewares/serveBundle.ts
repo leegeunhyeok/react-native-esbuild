@@ -27,14 +27,7 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       const getBundleAndServe = (
         bundleRequestOptions: BundleRequestOptions,
       ): Promise<void> => {
-        const { platform, dev } = bundleRequestOptions;
-        const bundleType = `platform: ${platform}, dev: ${
-          dev ? 'true' : 'false'
-        }`;
-        logger.info(`request bundle to bundler (${bundleType})`);
-
         return bundler.getBundle(bundleRequestOptions).then((bundle) => {
-          logger.info(`bundle received (${bundleType})`);
           response
             .writeHead(200, { 'Content-Type': 'application/javascript' })
             .end(bundle);

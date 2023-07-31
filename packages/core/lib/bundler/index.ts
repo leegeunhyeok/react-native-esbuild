@@ -1,12 +1,12 @@
 import path from 'node:path';
 import esbuild, {
-  type Plugin,
   type BuildOptions,
   type BuildResult,
   type BuildContext,
 } from 'esbuild';
 import {
   createAssetRegisterPlugin,
+  createBuildStatusPlugin,
   createHermesTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import {
@@ -75,71 +75,60 @@ export class ReactNativeEsbuildBundler {
       },
       {
         plugins: [
-          mode === 'watch' ? this.getBuildStatusPlugin() : null,
           createAssetRegisterPlugin(),
           createHermesTransformPlugin({
             enableCache: cache,
             fullyTransformPackageNames: transform.fullyTransformPackageNames,
           }),
-        ].filter(Boolean) as Plugin[],
+          createBuildStatusPlugin({
+            printSpinner: true,
+            onStart: () => this.handleBuildStart(),
+            onEnd: (result) => this.handleBuildEnd(result),
+          }),
+        ].filter(Boolean),
         write: mode === 'bundle',
       },
     );
   }
 
-  private getBuildStatusPlugin(): Plugin {
-    return {
-      name: 'build-task-plugin',
-      setup: (build): void => {
-        const bundleFilename = this.config.outfile;
-        const bundleSourcemapFilename = `${bundleFilename}.map`;
+  private handleBuildStart(): void {
+    this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
+    this.esbuildTaskHandler = createPromiseHandler();
+  }
 
-        logger.info('preparing to build', {
-          bundleFilename,
-          bundleSourcemapFilename,
-        });
+  private handleBuildEnd(result: BuildResult<{ write: false }>): void {
+    const bundleFilename = this.config.outfile;
+    const bundleSourcemapFilename = `${bundleFilename}.map`;
 
-        const findFromOutputFile = (filename: string) => {
-          return <T extends { path: string }>({ path }: T) =>
-            path.endsWith(filename);
-        };
-
-        build.onStart(() => {
-          // reject previous task with cancelled signal
-          logger.info('build started');
-          this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
-          this.esbuildTaskHandler = createPromiseHandler();
-        });
-
-        build.onEnd((result: BuildResult<{ write: false }>) => {
-          logger.info('build finished');
-          try {
-            const { outputFiles } = result;
-            const bundleOutput = outputFiles.find(
-              findFromOutputFile(bundleFilename),
-            );
-            const bundleSourcemapOutput = outputFiles.find(
-              findFromOutputFile(bundleSourcemapFilename),
-            );
-
-            if (!(bundleOutput && bundleSourcemapOutput)) {
-              logger.warn('cannot found bundle and sourcemap');
-              this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.EmptyOutput);
-              return;
-            }
-
-            this.bundleResult = {
-              source: bundleOutput.contents,
-              sourcemap: bundleSourcemapOutput.contents,
-            };
-
-            this.esbuildTaskHandler?.resolver?.(this.bundleResult);
-          } catch (error) {
-            this.esbuildTaskHandler?.rejecter?.(error);
-          }
-        });
-      },
+    const findFromOutputFile = (
+      filename: string,
+    ): (<T extends { path: string }>(args: T) => boolean) => {
+      return <T extends { path: string }>({ path }: T) =>
+        path.endsWith(filename);
     };
+
+    try {
+      const { outputFiles } = result;
+      const bundleOutput = outputFiles.find(findFromOutputFile(bundleFilename));
+      const bundleSourcemapOutput = outputFiles.find(
+        findFromOutputFile(bundleSourcemapFilename),
+      );
+
+      if (!(bundleOutput && bundleSourcemapOutput)) {
+        logger.warn('cannot found bundle and sourcemap');
+        this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.EmptyOutput);
+        return;
+      }
+
+      this.bundleResult = {
+        source: bundleOutput.contents,
+        sourcemap: bundleSourcemapOutput.contents,
+      };
+
+      this.esbuildTaskHandler?.resolver?.(this.bundleResult);
+    } catch (error) {
+      this.esbuildTaskHandler?.rejecter?.(error);
+    }
   }
 
   async bundle(platform: BundlerSupportPlatform): Promise<BuildResult> {
