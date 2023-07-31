@@ -3218,6 +3218,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/utils@workspace:packages/utils"
   dependencies:
+    colors: ^1.4.0
     esbuild: ^0.18.17
   languageName: unknown
   linkType: soft
