@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "start": "rne start",
     "build:android": "rne build --platform=android --output=dist/android.bundlejs",
-    "build:ios": "rne start  --platform=android --output=dist/android.bundlejs",
+    "build:ios": "rne build --platform=ios --output=dist/ios.bundlejs",
     "pod:install": "cd ios && pod install",
     "test": "jest"
   },
