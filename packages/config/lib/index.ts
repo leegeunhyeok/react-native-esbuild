@@ -1,3 +1,4 @@
+export * from './core';
 export * from './esbuild';
 export * from './babel';
 export * from './swc';
