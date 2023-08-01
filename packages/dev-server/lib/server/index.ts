@@ -82,7 +82,7 @@ export class ReactNativeEsbuildDevServer {
 
       if (pathname === '/hot') {
         // TODO: add live reload
-        logger.warn('HRM is not supported');
+        logger.debug('HRM is not supported');
         socket.destroy();
       } else if (handler) {
         handler.handleUpgrade(request, socket, head, (client) => {
