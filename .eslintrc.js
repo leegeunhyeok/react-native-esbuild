@@ -25,7 +25,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.ts', '*.js'],
+      files: ['*.ts?(x)', '*.js?(x)'],
       rules: {
         semi: ['error', 'always'],
         quotes: ['error', 'single'],
@@ -40,6 +40,12 @@ module.exports = {
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/no-throw-literal': 'off',
+      },
+    },
+    {
+      files: ['example/**/*'],
+      rules: {
+        'unicorn/filename-case': 'off',
       },
     },
   ],

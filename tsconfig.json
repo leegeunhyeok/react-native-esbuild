@@ -20,7 +20,7 @@
       "es6"
     ]
   },
-  "include": ["packages/**/*"],
+  "include": ["packages/**/*", "example/**/*"],
   "exclude": [
     "**/*/node_modules"
   ]
