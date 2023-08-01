@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2023-08-01)
+
+
+### Features
+
+* **dev-server:** implement serve-asset-middleware ([dd6a48a](https://github.com/leegeunhyeok/react-native-esbuild/commit/dd6a48a588da4c40e0c6bfc3805b5c1a821bf3f5))
+* enhance loading spinner ([83049d1](https://github.com/leegeunhyeok/react-native-esbuild/commit/83049d1a7d7d5c0ef955aad3fe4e07e1f8d0feda))
+* **plugins:** implement asset-register-plugin ([9237cb4](https://github.com/leegeunhyeok/react-native-esbuild/commit/9237cb4802ffe4d9c2696292e6a63d276a1f44e1))
+* update example application ([5d5e1fc](https://github.com/leegeunhyeok/react-native-esbuild/commit/5d5e1fcd68318ca2fa3f9750a9cbff3b31ecd9e9))
+
+
+### Code Refactoring
+
+* change log level ([a86a677](https://github.com/leegeunhyeok/react-native-esbuild/commit/a86a6774f63877c093e8363c00e899b83cd45783))
+* separate plugin modules ([c7b8242](https://github.com/leegeunhyeok/react-native-esbuild/commit/c7b824216dde08d06b667f3c254109c71a009ec9))
+
+
+
 ## [0.1.0-alpha.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2023-07-31)
 
 
