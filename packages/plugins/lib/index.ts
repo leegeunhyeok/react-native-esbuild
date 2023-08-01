@@ -1,11 +1,4 @@
-import { createAssetRegisterPlugin } from './assetRegisterPlugin';
-import { createBuildStatusPlugin } from './buildStatusPlugin';
-import { createHermesTransformPlugin } from './hermesTransformPlugin';
-
-export {
-  createAssetRegisterPlugin,
-  createBuildStatusPlugin,
-  createHermesTransformPlugin,
-};
-
+export * from './assetRegisterPlugin/assetRegisterPlugin';
+export * from './buildStatusPlugin/buildStatusPlugin';
+export * from './hermesTransformPlugin/hermesTransformPlugin';
 export type * from './types';

@@ -1,0 +1,1 @@
+export { createAssetRegisterPlugin } from './assetRegisterPlugin';

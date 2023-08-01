@@ -8,8 +8,8 @@ import {
 import { transform as swcTransform } from '@swc/core';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
-import { promisify, isFlow } from './helpers';
-import type { PluginCreator, HermesTransformPluginConfig } from './types';
+import { promisify, isFlow } from '../helpers';
+import type { PluginCreator, HermesTransformPluginConfig } from '../types';
 
 const transformWithBabel = async (
   source: string,

@@ -1,6 +1,6 @@
 import ora, { type Ora } from 'ora';
 import type { BuildResult } from 'esbuild';
-import type { PluginCreator, BuildStatusPluginConfig } from './types';
+import type { PluginCreator, BuildStatusPluginConfig } from '../types';
 
 export const createBuildStatusPlugin: PluginCreator<BuildStatusPluginConfig> = (
   config,
