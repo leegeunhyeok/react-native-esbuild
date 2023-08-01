@@ -38,13 +38,16 @@
   },
   "devDependencies": {
     "@types/connect": "^3.4.35",
+    "@types/mime": "^3.0.1",
     "@types/ws": "^8.5.5",
     "esbuild": "^0.18.17"
   },
   "dependencies": {
     "@react-native-community/cli-server-api": "^11.3.6",
+    "@react-native-esbuild/config": "workspace:^",
     "@react-native-esbuild/core": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
+    "mime": "^3.0.0",
     "zod": "^3.21.4"
   }
 }
