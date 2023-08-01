@@ -12,6 +12,7 @@ import {
 import {
   getCoreOptions,
   getEsbuildOptions,
+  ASSET_EXTENSIONS,
   type CoreOptions,
 } from '@react-native-esbuild/config';
 import { isCI } from '@react-native-esbuild/utils';
@@ -75,15 +76,17 @@ export class ReactNativeEsbuildBundler {
       },
       {
         plugins: [
-          createAssetRegisterPlugin(),
-          createHermesTransformPlugin({
-            enableCache: cache,
-            fullyTransformPackageNames: transform.fullyTransformPackageNames,
-          }),
           createBuildStatusPlugin({
             printSpinner: true,
             onStart: () => this.handleBuildStart(),
             onEnd: (result) => this.handleBuildEnd(result),
+          }),
+          createAssetRegisterPlugin({
+            assetExtensions: ASSET_EXTENSIONS,
+          }),
+          createHermesTransformPlugin({
+            enableCache: cache,
+            fullyTransformPackageNames: transform.fullyTransformPackageNames,
           }),
         ].filter(Boolean),
         write: mode === 'bundle',
@@ -99,6 +102,13 @@ export class ReactNativeEsbuildBundler {
   private handleBuildEnd(result: BuildResult<{ write: false }>): void {
     const bundleFilename = this.config.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
+    const { outputFiles } = result;
+
+    // `outputFiles` available when only `write: false`
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (outputFiles === undefined) {
+      return;
+    }
 
     const findFromOutputFile = (
       filename: string,
@@ -108,7 +118,6 @@ export class ReactNativeEsbuildBundler {
     };
 
     try {
-      const { outputFiles } = result;
       const bundleOutput = outputFiles.find(findFromOutputFile(bundleFilename));
       const bundleSourcemapOutput = outputFiles.find(
         findFromOutputFile(bundleSourcemapFilename),
