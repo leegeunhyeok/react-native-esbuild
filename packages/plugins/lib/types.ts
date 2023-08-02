@@ -8,6 +8,13 @@ export interface AssetRegisterPluginConfig {
   assetExtensions: string[];
 }
 
+export interface Asset {
+  path: string;
+  basename: string;
+  extension: string;
+  scales: number[];
+}
+
 export type AssetScale = 1 | 2 | 3;
 
 export interface SuffixPathResult {

@@ -1,15 +1,21 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
-import { ASSET_PATH } from '@react-native-esbuild/config';
+import {
+  getDevServerAssetPath,
+  ASSET_PATH,
+} from '@react-native-esbuild/config';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
 import type {
+  Asset,
   AssetRegisterPluginConfig,
   AssetScale,
   PluginCreator,
   RegistrationScriptParams,
   SuffixPathResult,
 } from '../types';
+import { logger } from '../shared';
 
+const TAG = 'asset-register-plugin';
 const ASSET_NAMESPACE = 'react-native-esbuild-assets';
 
 /**
@@ -55,6 +61,18 @@ export const createAssetRegisterPlugin: PluginCreator<
     const assetExtensionsFilter = new RegExp(
       `.(${assetExtensions.join('|')})$`,
     );
+    const assets: Asset[] = [];
+
+    const addSuffix = (
+      basename: string,
+      extension: string,
+      suffix: string | number,
+    ): string => {
+      return basename.replace(
+        new RegExp(`${extension}$`),
+        `${suffix}${extension}`,
+      );
+    };
 
     /**
      * add scale suffix to asset path
@@ -80,10 +98,7 @@ export const createAssetRegisterPlugin: PluginCreator<
       const dirname = path.dirname(assetPath);
       const basename = path.basename(assetPath);
       const suffixedBasename = scale
-        ? basename.replace(
-            new RegExp(`${extension}$`),
-            `@${scale}x.${extension}`,
-          )
+        ? addSuffix(basename, extension, `@${scale}x`)
         : basename;
 
       return {
@@ -140,7 +155,7 @@ export const createAssetRegisterPlugin: PluginCreator<
         args.path,
       );
 
-      const filesInDir = await fs.promises.readdir(dirname);
+      const filesInDir = await fs.readdir(dirname);
       const assetRegExp = new RegExp(
         `${basename.replace(extension, '')}(@(\\d+)x)?${extension}$`,
       );
@@ -159,14 +174,20 @@ export const createAssetRegisterPlugin: PluginCreator<
         throw new Error(`cannot resolve base asset of ${args.path}`);
       }
 
+      const asset = {
+        path: args.path,
+        basename,
+        extension,
+        scales: Object.keys(scaledAssets).map(parseFloat).sort(),
+      };
+      assets.push(asset);
+
       return {
         resolveDir: dirname,
         contents: getRegistrationScript(
           {
-            basename,
-            extension,
+            ...asset,
             relativePath,
-            scales: Object.keys(scaledAssets).map(parseFloat).sort(),
             hash: '',
             httpServerLocation: path.join(
               ASSET_PATH,
@@ -178,6 +199,53 @@ export const createAssetRegisterPlugin: PluginCreator<
         ),
         loader: 'js',
       };
+    });
+
+    build.onEnd(async () => {
+      const devServerAssetPath = getDevServerAssetPath();
+
+      // cleanup asset cache directory
+      await fs
+        .rm(devServerAssetPath, { recursive: true, force: true })
+        .catch(() => void 0);
+      await fs.mkdir(devServerAssetPath, { recursive: true });
+
+      const assetCopyTasks = assets.map(
+        ({ path: resolvedPath, basename, extension, scales }) => {
+          return scales.map(async (scale): Promise<void> => {
+            let filepath: string;
+
+            // when scale is 1, filename can be `image.png` or `image@1x.png`
+            // 1. check resolvedPath (image.png)
+            // 2. if file is not exist, check suffixed path (image@1x.png)
+            if (scale === 1) {
+              filepath = await fs
+                .stat(resolvedPath)
+                .then(() => resolvedPath)
+                .catch(() => {
+                  const suffixedPath = resolvedPath.replace(
+                    basename,
+                    addSuffix(basename, extension, '@1x'),
+                  );
+                  return fs.stat(suffixedPath).then(() => suffixedPath);
+                });
+            } else {
+              filepath = resolvedPath.replace(
+                basename,
+                addSuffix(basename, extension, `@${scale}x`),
+              );
+            }
+
+            logger.debug(`(${TAG}) copying ${basename}`);
+            await fs.copyFile(
+              filepath,
+              path.join(devServerAssetPath, path.basename(filepath)),
+            );
+          });
+        },
+      );
+
+      await Promise.all(assetCopyTasks);
     });
   },
 });
