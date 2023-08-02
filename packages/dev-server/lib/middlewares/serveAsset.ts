@@ -1,7 +1,11 @@
-import path from 'node:path';
 import fs, { type FileHandle } from 'node:fs/promises';
+import path from 'node:path';
+import url from 'node:url';
 import mime from 'mime';
-import { ASSET_PATH } from '@react-native-esbuild/config';
+import {
+  getDevServerAssetPath,
+  ASSET_PATH,
+} from '@react-native-esbuild/config';
 import { toSafetyMiddleware } from '../helpers';
 import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
@@ -19,14 +23,17 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
       }
 
       if (request.url.startsWith(ASSET_PATH)) {
-        logger.debug(`(${TAG}) ${request.url}`);
-        const filename = path.basename(request.url);
-        const filepath = path.join(
-          path.resolve(__dirname, '../'),
-          ASSET_PATH,
-          filename,
-        );
+        const filename = url.parse(path.basename(request.url)).pathname;
+
+        if (!filename) {
+          logger.warn(`(${TAG}) unable to resolve asset name: ${request.url}`);
+          return next();
+        }
+
+        const filepath = path.join(getDevServerAssetPath(), filename);
         let fileHandle: FileHandle | undefined;
+
+        logger.debug(`(${TAG}) serving ${filename}`);
 
         fs.open(filepath, 'r')
           .then((handle) => (fileHandle = handle).stat())
@@ -40,10 +47,15 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
             'Content-Length': size,
           }))
           .then((headers) => {
-            response.writeHead(200, headers);
-            return fileHandle?.readFile();
+            return fileHandle?.readFile().then((data) => {
+              response.writeHead(200, headers);
+              response.end(data);
+            });
           })
-          .then((data) => response.end(data))
+          .catch((error) => {
+            logger.error(`unable to serve asset: ${filename}`, error as Error);
+            response.writeHead(500).end();
+          })
           .finally(() => void fileHandle?.close());
 
         return;
