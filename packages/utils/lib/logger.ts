@@ -1,8 +1,11 @@
+import 'node-self';
 import { EOL } from 'node:os';
 import { gray, cyan, yellow, red, magenta, disable } from 'colors';
 import type { Color } from 'colors';
 import type { LogLevel } from './types';
 import { isCI } from './env';
+
+self.logLevel = 'info';
 
 export class Logger {
   private COLOR_BY_LEVEL: Record<LogLevel, Color> = {
@@ -11,20 +14,18 @@ export class Logger {
     warn: yellow,
     error: red,
   };
-  private enabled = true;
-  private logLevel = 'info';
 
   constructor(private scope: string) {
     isCI() && disable();
   }
 
   private stdout(...messages: string[]): void {
-    if (!this.enabled) return;
+    if (self.logEnabled === false) return;
     process.stdout.write(this.getMessage(messages));
   }
 
   private stderr(...messages: string[]): void {
-    if (!this.enabled) return;
+    if (self.logEnabled === false) return;
     process.stderr.write(this.getMessage(messages));
   }
 
@@ -54,19 +55,19 @@ export class Logger {
   }
 
   public enable(): void {
-    this.enabled = true;
+    self.logEnabled = true;
   }
 
   public disable(): void {
-    this.enabled = false;
+    self.logEnabled = false;
   }
 
   public setLogLevel(level: LogLevel): void {
-    this.logLevel = level;
+    self.logLevel = level;
   }
 
   public debug(message: string, extra?: object): void {
-    if (this.logLevel !== 'debug') return;
+    if (self.logLevel !== 'debug') return;
 
     this.stdout(
       this.getLevelTag('debug'),
@@ -77,7 +78,7 @@ export class Logger {
   }
 
   public info(message: string, extra?: object): void {
-    if (['warn', 'error'].some((level) => level === this.logLevel)) return;
+    if (['warn', 'error'].some((level) => level === self.logLevel)) return;
 
     this.stdout(
       this.getLevelTag('info'),
@@ -88,7 +89,7 @@ export class Logger {
   }
 
   public warn(message: string, error?: Error, extra?: object): void {
-    if (['error'].some((level) => level === this.logLevel)) return;
+    if (['error'].some((level) => level === self.logLevel)) return;
 
     this.stderr(
       this.getLevelTag('warn'),

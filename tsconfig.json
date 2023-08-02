@@ -20,6 +20,7 @@
       "es6"
     ]
   },
+  "files": ["./types/self.d.ts"],
   "include": ["packages/**/*", "example/**/*"],
   "exclude": [
     "**/*/node_modules"
