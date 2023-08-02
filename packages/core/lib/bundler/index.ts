@@ -15,8 +15,7 @@ import {
   ASSET_EXTENSIONS,
   type CoreOptions,
 } from '@react-native-esbuild/config';
-import { isCI } from '@react-native-esbuild/utils';
-import * as colors from 'colors';
+import { colors, isCI } from '@react-native-esbuild/utils';
 import { createPromiseHandler } from '../helpers';
 import { BundleTaskSignal } from '../types';
 import type {

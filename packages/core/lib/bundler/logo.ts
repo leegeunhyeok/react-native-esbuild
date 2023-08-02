@@ -1,3 +1,5 @@
+import { colors } from '@react-native-esbuild/utils';
+
 const LOGO = `
            "88e   "88e
              "88e   "88e
@@ -11,6 +13,10 @@ const LABEL = ' » ESBuild ';
 const DESCRIPTION = 'An extremely fast bundler + React Native';
 
 export const printLogo = (): void => {
-  console.log(LOGO.yellow);
-  console.log(LABEL.black.bgYellow, DESCRIPTION.gray, '\n');
+  process.stdout.write(`${colors.yellow(LOGO)}\n`);
+  process.stdout.write(
+    [colors.bgYellow(colors.black(LABEL)), colors.gray(DESCRIPTION), '\n'].join(
+      ' ',
+    ),
+  );
 };

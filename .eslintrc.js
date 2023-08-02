@@ -32,7 +32,6 @@ module.exports = {
         'object-curly-spacing': ['error', 'always'],
         'array-bracket-spacing': 'off',
         'unicorn/filename-case': 'off',
-        'no-console': 'off',
         'import/no-named-as-default-member': 'off',
         'eslint-comments/disable-enable-pair': 'off',
         'prettier/prettier': 'error',
@@ -40,6 +39,12 @@ module.exports = {
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/no-throw-literal': 'off',
+      },
+    },
+    {
+      files: ['**/build/*.js'],
+      rules: {
+        'no-console': 'off',
       },
     },
     {
