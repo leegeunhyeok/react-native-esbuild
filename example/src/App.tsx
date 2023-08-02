@@ -71,6 +71,7 @@ export function App(): JSX.Element {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: 'white',
   },
   logoArea: {
     alignItems: 'center',
