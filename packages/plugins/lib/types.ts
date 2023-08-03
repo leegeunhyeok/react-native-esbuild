@@ -1,11 +1,20 @@
 import type { Plugin } from 'esbuild';
-import type { CustomBabelTransformOption } from '@react-native-esbuild/config';
+import type { BundlerConfig } from '@react-native-esbuild/core';
+import type { CoreConfig } from '@react-native-esbuild/config';
 
-export type PluginCreator<Config> = (config: Config) => Plugin;
+export type PluginCreator<Config> = (
+  config: Config,
+  context: PluginContext,
+) => Plugin;
+
+export interface PluginContext {
+  config: CoreConfig;
+  bundlerConfig: BundlerConfig;
+}
 
 // asset-register-plugin
 export interface AssetRegisterPluginConfig {
-  assetExtensions: string[];
+  assetExtensions?: string[];
 }
 
 export interface Asset {
@@ -32,11 +41,4 @@ export interface RegistrationScriptParams {
   httpServerLocation: string;
   scales: number[];
   dimensions: { width: number; height: number };
-}
-
-// hermes-transform-plugin
-export interface HermesTransformPluginConfig {
-  enableCache?: boolean;
-  fullyTransformPackageNames?: string[];
-  customBabelTransformRules?: CustomBabelTransformOption[];
 }

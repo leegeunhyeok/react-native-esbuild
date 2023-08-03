@@ -47,7 +47,10 @@ export class ReactNativeEsbuildDevServer {
     }
   }
 
-  initialize(bundlerConfig: BundlerConfig): this {
+  initialize(bundlerConfig: BundlerConfig): {
+    server: ReactNativeEsbuildDevServer;
+    bundler: ReactNativeEsbuildBundler;
+  } {
     logger.debug('initialize dev server', this.devServerOptions);
     logger.debug('create bundler instance');
 
@@ -105,7 +108,7 @@ export class ReactNativeEsbuildDevServer {
       }
     });
 
-    return this;
+    return { server: this, bundler: this.bundler };
   }
 
   listen(): HTTPServer {

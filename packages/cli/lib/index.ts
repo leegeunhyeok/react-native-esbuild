@@ -1,5 +1,9 @@
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
+import {
+  createAssetRegisterPlugin,
+  createHermesTransformPlugin,
+} from '@react-native-esbuild/plugins';
 import { cli } from './command';
 import { getCommand, getOptions } from './helpers';
 import type { StartOptions, BuildOptions } from './types';
@@ -15,7 +19,7 @@ Promise.resolve(cli())
     switch (getCommand(argv)) {
       case 'start': {
         const startOptions = options as StartOptions;
-        const devServer = new ReactNativeEsbuildDevServer({
+        const { bundler, server } = new ReactNativeEsbuildDevServer({
           host: startOptions.host,
           port: startOptions.port,
         }).initialize({
@@ -25,7 +29,11 @@ Promise.resolve(cli())
           dev: startOptions.dev,
           minify: startOptions.minify,
         });
-        devServer.listen();
+        bundler.registerPlugins((config, bundlerConfig) => [
+          createAssetRegisterPlugin(undefined, { config, bundlerConfig }),
+          createHermesTransformPlugin(null, { config, bundlerConfig }),
+        ]);
+        server.listen();
         break;
       }
 
@@ -37,7 +45,10 @@ Promise.resolve(cli())
           assetsDir: buildOptions.assetsDir,
           dev: buildOptions.dev,
           minify: buildOptions.minify,
-        });
+        }).registerPlugins((config, bundlerConfig) => [
+          createAssetRegisterPlugin(undefined, { config, bundlerConfig }),
+          createHermesTransformPlugin(null, { config, bundlerConfig }),
+        ]);
         await bundler.bundle(buildOptions.platform);
         break;
       }

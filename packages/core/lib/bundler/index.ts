@@ -8,13 +8,8 @@ import esbuild, {
 } from 'esbuild';
 import ora from 'ora';
 import {
-  createAssetRegisterPlugin,
-  createHermesTransformPlugin,
-} from '@react-native-esbuild/plugins';
-import {
   loadConfig,
   getEsbuildOptions,
-  ASSET_EXTENSIONS,
   type CoreConfig,
 } from '@react-native-esbuild/config';
 import { colors, isCI } from '@react-native-esbuild/utils';
@@ -32,6 +27,7 @@ import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends EventEmitter {
   private config: CoreConfig;
+  private plugins: Plugin[];
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
@@ -47,8 +43,6 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     platform: 'android' | 'ios' | 'web',
     mode: 'bundle' | 'watch',
   ): BuildOptions {
-    const { plugins = this.getDefaultPlugins() } = this.bundlerConfig;
-
     return getEsbuildOptions(
       { ...this.bundlerConfig, platform },
       {
@@ -57,7 +51,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
            * `build-status-plugin` is required and must be placed first
            */
           this.createBuildStatusPlugin(),
-          ...plugins,
+          ...this.plugins,
         ].filter(Boolean),
         write: mode === 'bundle',
       },
@@ -119,18 +113,6 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     };
 
     return buildStatusPlugin;
-  }
-
-  private getDefaultPlugins(): Plugin[] {
-    const { cache, transform } = this.config;
-
-    return [
-      createAssetRegisterPlugin({ assetExtensions: ASSET_EXTENSIONS }),
-      createHermesTransformPlugin({
-        enableCache: cache,
-        fullyTransformPackageNames: transform.fullyTransformPackageNames,
-      }),
-    ];
   }
 
   private handleBuildStart(): void {
@@ -195,14 +177,6 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     (this.esbuildContext = await esbuild.context(buildOptions)).watch();
   }
 
-  getContext(): BuildContext | null {
-    if (this.esbuildContext) {
-      return this.esbuildContext;
-    }
-    logger.warn('esbuild context is empty');
-    return null;
-  }
-
   private assertTaskHandler(
     handler?: PromiseHandler<BundleResult>,
   ): asserts handler is PromiseHandler<BundleResult> {
@@ -216,6 +190,21 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     ) {
       throw BundleTaskSignal.WatchModeNotStarted;
     }
+  }
+
+  registerPlugins(
+    register: (config: CoreConfig, bundlerConfig: BundlerConfig) => Plugin[],
+  ): this {
+    this.plugins = register(this.config, this.bundlerConfig);
+    return this;
+  }
+
+  getContext(): BuildContext | null {
+    if (this.esbuildContext) {
+      return this.esbuildContext;
+    }
+    logger.warn('esbuild context is empty');
+    return null;
   }
 
   async getBundle(_options: BundleRequestOptions): Promise<Uint8Array> {

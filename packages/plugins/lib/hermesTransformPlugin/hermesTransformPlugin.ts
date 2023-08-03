@@ -9,7 +9,7 @@ import { transform as swcTransform } from '@swc/core';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import { getBabelOptions, getSwcOptions } from '@react-native-esbuild/config';
 import { promisify, isFlow } from '../helpers';
-import type { PluginCreator, HermesTransformPluginConfig } from '../types';
+import type { PluginCreator } from '../types';
 
 const transformWithBabel = async (
   source: string,
@@ -53,16 +53,17 @@ const transformWithSwc = async (
   return code;
 };
 
-export const createHermesTransformPlugin: PluginCreator<
-  HermesTransformPluginConfig
-> = (config) => ({
+export const createHermesTransformPlugin: PluginCreator<null> = (
+  _config,
+  context,
+) => ({
   name: 'hermes-transform-plugin',
   setup: (build): void => {
     const {
-      fullyTransformPackageNames = [],
+      transform: { fullyTransformPackageNames = [] },
       // TODO: need to implement caching features
-      enableCache: _enableCache,
-    } = config;
+      cache: _enableCache,
+    } = context.config;
 
     const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
       ? new RegExp(`node_modules/${fullyTransformPackageNames.join('|')}/`)

@@ -3,6 +3,7 @@ import path from 'node:path';
 import {
   getDevServerAssetPath,
   ASSET_PATH,
+  ASSET_EXTENSIONS,
 } from '@react-native-esbuild/config';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
 import type {
@@ -53,11 +54,11 @@ const getRegistrationScript = (
 `;
 
 export const createAssetRegisterPlugin: PluginCreator<
-  AssetRegisterPluginConfig
+  AssetRegisterPluginConfig | undefined
 > = (config) => ({
   name: 'asset-register-plugin',
   setup: (build): void => {
-    const { assetExtensions } = config;
+    const { assetExtensions = ASSET_EXTENSIONS } = config ?? {};
     const assetExtensionsFilter = new RegExp(
       `.(${assetExtensions.join('|')})$`,
     );

@@ -1,5 +1,3 @@
-import type { Plugin } from 'esbuild';
-
 export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
 export interface BundlerConfig {
@@ -8,7 +6,6 @@ export interface BundlerConfig {
   assetsDir: string;
   dev: boolean;
   minify: boolean;
-  plugins?: Plugin[];
 }
 
 export interface BundleRequestOptions {

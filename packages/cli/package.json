@@ -40,6 +40,7 @@
   "dependencies": {
     "@react-native-esbuild/core": "workspace:^",
     "@react-native-esbuild/dev-server": "workspace:^",
+    "@react-native-esbuild/plugins": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
     "yargs": "^17.7.2"
   },

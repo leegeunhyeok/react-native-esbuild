@@ -11,12 +11,6 @@ export interface SwcPresetOptions {
   filename: string;
 }
 
-export interface CustomBabelTransformOption {
-  testSource?: string | RegExp;
-  testPath?: string | RegExp;
-  plugins: string[];
-}
-
 export interface CoreConfig {
   cache: boolean;
   transform: {
