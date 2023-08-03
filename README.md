@@ -33,7 +33,6 @@ npm install -D install @react-native-esbuild/cli
 
 # using yarn
 yarn add -D @react-native-esbuild/cli
-
 ```
 
 ## Start
@@ -75,7 +74,28 @@ rne build --platform=<platform> --output=<dest>
 
 ## Plugins
 
-wip
+```ts
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import {
+  createAssetRegisterPlugin,
+  createHermesTransformPlugin,
+} from '@react-native-esbuild/plugins';
+
+const bundler = new ReactNativeEsbuildBundler(/* bundler config */);
+
+bundler.registerPlugins((config, bundlerConfig) => {
+  return [
+    createAssetRegisterPlugin({ config, bundlerConfig }),
+    createHermesTransformPlugin({ config, bundlerConfig }),
+    {
+      name: 'your-custom-esbuild-plugin',
+      setup: () {
+        // ...
+      },
+    },
+  ];
+});
+```
 
 # Development
 

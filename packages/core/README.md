@@ -1,11 +1,26 @@
 # `@react-native-esbuild/core`
 
-> TODO: description
+> Core of @react-native-esbuild
 
 ## Usage
 
-```
-const core = require('@react-native-esbuild/core');
+```ts
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
-// TODO: DEMONSTRATE API
+const bundler = new ReactNativeEsbuildBundler({
+  entryPoint: 'index.js';
+  outfile: 'dist/main.jsbundle';
+  assetsDir: 'dist/assets';
+  dev: true;
+  minify: false;
+});
+
+bundler.registerPlugins((config, bundlerConfig) => {
+  return [
+    // esbuild plugins here
+  ];
+});
+
+await bundler.bundle(platform);
+await bundler.watch(platform);
 ```

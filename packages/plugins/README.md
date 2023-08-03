@@ -1,11 +1,7 @@
 # `@react-native-esbuild/plugins`
 
-> TODO: description
+> Base plugins for @react-native-esbuild
 
-## Usage
+## Custom plugins
 
-```
-const plugins = require('@react-native-esbuild/plugins');
-
-// TODO: DEMONSTRATE API
-```
+[README](https://github.com/leegeunhyeok/react-native-esbuild)

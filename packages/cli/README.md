@@ -1,11 +1,5 @@
 # `@react-native-esbuild/cli`
 
-> TODO: description
+> CLI tool for @react-native-esbuild
 
-## Usage
-
-```
-const cli = require('@react-native-esbuild/cli');
-
-// TODO: DEMONSTRATE API
-```
+[README](https://github.com/leegeunhyeok/react-native-esbuild)

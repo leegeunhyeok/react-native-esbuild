@@ -1,7 +1,7 @@
 {
   "name": "@react-native-esbuild/config",
   "version": "0.1.0-alpha.11",
-  "description": "config for @react-native-esbuild",
+  "description": "shared configs for @react-native-esbuild",
   "keywords": [
     "react-native",
     "rebuild"
