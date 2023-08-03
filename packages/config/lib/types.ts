@@ -17,7 +17,7 @@ export interface CustomBabelTransformOption {
   plugins: string[];
 }
 
-export interface CoreOptions {
+export interface CoreConfig {
   cache: boolean;
   transform: {
     fullyTransformPackageNames?: string[];

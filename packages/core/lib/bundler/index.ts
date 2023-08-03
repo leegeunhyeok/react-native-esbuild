@@ -1,20 +1,21 @@
 import path from 'node:path';
 import EventEmitter from 'node:events';
 import esbuild, {
+  type Plugin,
   type BuildOptions,
   type BuildResult,
   type BuildContext,
 } from 'esbuild';
+import ora from 'ora';
 import {
   createAssetRegisterPlugin,
-  createBuildStatusPlugin,
   createHermesTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import {
-  getCoreOptions,
+  loadConfig,
   getEsbuildOptions,
   ASSET_EXTENSIONS,
-  type CoreOptions,
+  type CoreConfig,
 } from '@react-native-esbuild/config';
 import { colors, isCI } from '@react-native-esbuild/utils';
 import { createPromiseHandler } from '../helpers';
@@ -30,41 +31,24 @@ import { logger } from '../shared';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends EventEmitter {
-  private coreOptions: CoreOptions;
+  private config: CoreConfig;
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
 
-  constructor(private config: BundlerConfig) {
+  constructor(private bundlerConfig: BundlerConfig) {
     super();
     if (isCI()) colors.disable();
     printLogo();
-    this.loadOptions();
-  }
-
-  private loadOptions(): void {
-    let config: CoreOptions | undefined;
-    const workDirectory = process.cwd();
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-      config = require(path.resolve(
-        workDirectory,
-        'react-native-esbuild.config.js',
-      )).default;
-    } catch {
-      // empty
-    }
-
-    this.coreOptions = getCoreOptions(config);
+    this.config = loadConfig();
   }
 
   private getBuildOptionsForBundler(
     platform: 'android' | 'ios' | 'web',
     mode: 'bundle' | 'watch',
   ): BuildOptions {
-    const { entryPoint, outfile, assetsDir, dev, minify } = this.config;
-    const { cache, transform } = this.coreOptions;
+    const { entryPoint, outfile, assetsDir, dev, minify } = this.bundlerConfig;
+    const { cache, transform } = this.config;
 
     return getEsbuildOptions(
       {
@@ -77,11 +61,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
       },
       {
         plugins: [
-          createBuildStatusPlugin({
-            printSpinner: true,
-            onStart: () => this.handleBuildStart(),
-            onEnd: (result) => this.handleBuildEnd(result),
-          }),
+          this.createBuildStatusPlugin(),
           createAssetRegisterPlugin({
             assetExtensions: ASSET_EXTENSIONS,
           }),
@@ -95,6 +75,63 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     );
   }
 
+  private createBuildStatusPlugin(): Plugin {
+    const buildStatusPlugin: Plugin = {
+      name: 'build-status-plugin',
+      setup: (build): void => {
+        const spinner = ora({
+          color: 'yellow',
+          prefixText: colors.bgYellow(colors.black(' » esbuild ')),
+        });
+        // eslint-disable-next-line prefer-named-capture-group
+        const filter = /(.*?)/;
+        const moduleResolved = new Set<string>();
+        let startTime: Date | null = null;
+        let moduleLoaded = 0;
+
+        const updateStatusText = (): void => {
+          spinner.text = `build in progress... (${moduleLoaded}/${moduleResolved.size})`;
+        };
+
+        build.onStart(() => {
+          moduleResolved.clear();
+          moduleLoaded = 0;
+          updateStatusText();
+          spinner.start();
+          this.handleBuildStart();
+          startTime = new Date();
+        });
+
+        build.onResolve({ filter }, (args) => {
+          const isRelative = args.path.startsWith('.');
+          moduleResolved.add(
+            isRelative ? path.resolve(args.resolveDir, args.path) : args.path,
+          );
+          return null;
+        });
+
+        build.onLoad({ filter }, () => {
+          ++moduleLoaded;
+          updateStatusText();
+          return null;
+        });
+
+        build.onEnd((result: BuildResult<{ write: false }>) => {
+          const endTime = new Date().getTime() - (startTime?.getTime() ?? 0);
+          const statusText = colors.gray(`(${endTime / 1000}s)`);
+          result.errors.length
+            ? spinner.fail(`failed! ${statusText}`)
+            : spinner.succeed(`done! ${statusText}`);
+          spinner.stop();
+
+          this.handleBuildEnd(result);
+        });
+      },
+    };
+
+    return buildStatusPlugin;
+  }
+
   private handleBuildStart(): void {
     this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
     this.esbuildTaskHandler = createPromiseHandler();
@@ -102,7 +139,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
   }
 
   private handleBuildEnd(result: BuildResult<{ write: false }>): void {
-    const bundleFilename = this.config.outfile;
+    const bundleFilename = this.bundlerConfig.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const { outputFiles } = result;
 
@@ -111,6 +148,8 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     if (outputFiles === undefined) {
       return;
     }
+
+    logger.info('preparing bundled result');
 
     const findFromOutputFile = (
       filename: string,
@@ -146,15 +185,15 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
 
   async bundle(platform: BundlerSupportPlatform): Promise<BuildResult> {
     const buildOptions = this.getBuildOptionsForBundler(platform, 'bundle');
-    logger.debug('prepare for bundle mode', { platform });
-    logger.debug('current esbuild options', buildOptions);
+    logger.debug('preparing bundle mode', { platform });
+    logger.debug('esbuild option', buildOptions);
     return esbuild.build(buildOptions);
   }
 
   async watch(platform: BundlerSupportPlatform): Promise<void> {
     const buildOptions = this.getBuildOptionsForBundler(platform, 'watch');
-    logger.debug('prepare for watch mode', { platform });
-    logger.debug('current esbuild options', buildOptions);
+    logger.debug('preparing watch mode', { platform });
+    logger.debug('esbuild option', buildOptions);
     (this.esbuildContext = await esbuild.context(buildOptions)).watch();
   }
 
