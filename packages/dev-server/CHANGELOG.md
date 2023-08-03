@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
+
+
+### Features
+
+* now support client logs ([632d206](https://github.com/leegeunhyeok/react-native-esbuild/commit/632d20672e51018f603af0dde8668acddc438db4))
+* read asset data from assets cache ([3ae010a](https://github.com/leegeunhyeok/react-native-esbuild/commit/3ae010a94b3c45091d2bb3017e7b3143c98b3b53))
+
+
+
 ## [0.1.0-alpha.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2023-08-01)
 
 

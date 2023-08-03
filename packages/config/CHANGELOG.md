@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
+
+
+### Features
+
+* copying assets when build complete ([db10be1](https://github.com/leegeunhyeok/react-native-esbuild/commit/db10be14be375910835def9efd07bf7e3efe6398))
+
+
+### Bug Fixes
+
+* **core:** change react native initialize order ([81b5a30](https://github.com/leegeunhyeok/react-native-esbuild/commit/81b5a3033d0f478dea69a20b2922b0e7bf736858))
+
+
+
 ## [0.1.0-alpha.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2023-08-01)
 
 

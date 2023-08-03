@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
+
+
+### Features
+
+* **cli:** update base config values ([b4da292](https://github.com/leegeunhyeok/react-native-esbuild/commit/b4da29294d6bfe719dc7b526a13d9e2d6d801a7b))
+* default minify option to false ([5ac5c2e](https://github.com/leegeunhyeok/react-native-esbuild/commit/5ac5c2e30815df42d162598bad55d820badaed01))
+
+
+
 ## [0.1.0-alpha.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2023-08-01)
 
 **Note:** Version bump only for package @react-native-esbuild/cli

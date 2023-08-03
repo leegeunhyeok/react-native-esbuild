@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
+
+
+### Features
+
+* add background color ([b3ee50d](https://github.com/leegeunhyeok/react-native-esbuild/commit/b3ee50db843d26e422413e0d4a1e8659e625e988))
+* add log level ([5ee42f4](https://github.com/leegeunhyeok/react-native-esbuild/commit/5ee42f4f64906091e474de1b6572d8196434d7cb))
+* add transform condition for reanimated ([c311bff](https://github.com/leegeunhyeok/react-native-esbuild/commit/c311bff4d89fd460f61270b1a87b851585584fef))
+* **cli:** update base config values ([b4da292](https://github.com/leegeunhyeok/react-native-esbuild/commit/b4da29294d6bfe719dc7b526a13d9e2d6d801a7b))
+* copying assets when build complete ([db10be1](https://github.com/leegeunhyeok/react-native-esbuild/commit/db10be14be375910835def9efd07bf7e3efe6398))
+* default minify option to false ([5ac5c2e](https://github.com/leegeunhyeok/react-native-esbuild/commit/5ac5c2e30815df42d162598bad55d820badaed01))
+* export colors ([916e62e](https://github.com/leegeunhyeok/react-native-esbuild/commit/916e62e9ab42c6011afe99529ff08e541dc7f2b7))
+* improve build status logging ([94083f9](https://github.com/leegeunhyeok/react-native-esbuild/commit/94083f9dcbf3cb8533239611f2b79939faaa5d6a))
+* now sharing logger configs ([ff0a199](https://github.com/leegeunhyeok/react-native-esbuild/commit/ff0a1993fc15c6735d5abe4c403018038a20026b))
+* now support client logs ([632d206](https://github.com/leegeunhyeok/react-native-esbuild/commit/632d20672e51018f603af0dde8668acddc438db4))
+* read asset data from assets cache ([3ae010a](https://github.com/leegeunhyeok/react-native-esbuild/commit/3ae010a94b3c45091d2bb3017e7b3143c98b3b53))
+* reset assets before build ([0531960](https://github.com/leegeunhyeok/react-native-esbuild/commit/053196060e0611bcd984bdb158e2f409c8040365))
+* update demo application ([393c077](https://github.com/leegeunhyeok/react-native-esbuild/commit/393c0772f2d4c04842ec164dc6d7c770f30a43b6))
+
+
+### Bug Fixes
+
+* android build issue ([d09e0e7](https://github.com/leegeunhyeok/react-native-esbuild/commit/d09e0e7f493dad117bbe24e26c8d4b06d0efe2c1))
+* **core:** change react native initialize order ([81b5a30](https://github.com/leegeunhyeok/react-native-esbuild/commit/81b5a3033d0f478dea69a20b2922b0e7bf736858))
+* react-native-community packages set as external module ([4bd944a](https://github.com/leegeunhyeok/react-native-esbuild/commit/4bd944a54d5493353b195c01aafee58acba18c8c))
+* using react-native internal asset registry ([081bd83](https://github.com/leegeunhyeok/react-native-esbuild/commit/081bd838e3a2265880d611cbfb7b3939d7731a9c))
+
+
+### Code Refactoring
+
+* using colors in utils ([1c844fc](https://github.com/leegeunhyeok/react-native-esbuild/commit/1c844fcd7bf8adf4daf0ca4793d6c5151e3c33cf))
+
+
+### Miscellaneous Chores
+
+* change description text ([d771d4b](https://github.com/leegeunhyeok/react-native-esbuild/commit/d771d4b080cabbb45b36693c032b467f26bcf984))
+
+
+
 ## [0.1.0-alpha.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2023-08-01)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
+
+
+### Features
+
+* add log level ([5ee42f4](https://github.com/leegeunhyeok/react-native-esbuild/commit/5ee42f4f64906091e474de1b6572d8196434d7cb))
+* export colors ([916e62e](https://github.com/leegeunhyeok/react-native-esbuild/commit/916e62e9ab42c6011afe99529ff08e541dc7f2b7))
+* now sharing logger configs ([ff0a199](https://github.com/leegeunhyeok/react-native-esbuild/commit/ff0a1993fc15c6735d5abe4c403018038a20026b))
+
+
+
 ## [0.1.0-alpha.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2023-07-31)
 
 

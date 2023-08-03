@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
+
+
+### Features
+
+* add transform condition for reanimated ([c311bff](https://github.com/leegeunhyeok/react-native-esbuild/commit/c311bff4d89fd460f61270b1a87b851585584fef))
+* copying assets when build complete ([db10be1](https://github.com/leegeunhyeok/react-native-esbuild/commit/db10be14be375910835def9efd07bf7e3efe6398))
+* improve build status logging ([94083f9](https://github.com/leegeunhyeok/react-native-esbuild/commit/94083f9dcbf3cb8533239611f2b79939faaa5d6a))
+* reset assets before build ([0531960](https://github.com/leegeunhyeok/react-native-esbuild/commit/053196060e0611bcd984bdb158e2f409c8040365))
+
+
+### Bug Fixes
+
+* using react-native internal asset registry ([081bd83](https://github.com/leegeunhyeok/react-native-esbuild/commit/081bd838e3a2265880d611cbfb7b3939d7731a9c))
+
+
+
 ## [0.1.0-alpha.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2023-08-01)
 
 
