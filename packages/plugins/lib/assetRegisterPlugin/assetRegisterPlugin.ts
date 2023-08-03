@@ -37,7 +37,7 @@ const getRegistrationScript = (
   params: RegistrationScriptParams,
   isDev: boolean,
 ): string => `
-  module.exports = require('@react-native/assets-registry/registry.js').registerAsset(${JSON.stringify(
+  module.exports = require('react-native/Libraries/Image/AssetRegistry').registerAsset(${JSON.stringify(
     {
       __packager_asset: true,
       name: params.basename.replace(params.extension, ''),
