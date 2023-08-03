@@ -1,6 +1,7 @@
 import type { ParsedUrlQuery } from 'node:querystring';
 import { z } from 'zod';
-import type { DevServerMiddleware } from '../types';
+import type { LogLevel } from '@react-native-esbuild/utils';
+import type { DevServerMiddleware, LogMessage } from '../types';
 
 type ParsedBundlerOptions = z.infer<typeof bundleSearchParamSchema>;
 
@@ -48,4 +49,17 @@ export function toSafetyMiddleware(
       next(error);
     }
   };
+}
+
+export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
+  switch (level) {
+    case 'group':
+    case 'groupCollapsed':
+    case 'groupEnd':
+    case 'trace':
+      return 'log';
+
+    default:
+      return level;
+  }
 }

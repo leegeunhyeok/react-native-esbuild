@@ -40,7 +40,7 @@ export function App(): JSX.Element {
         </Section>
         <Section title="Live Reload" delay={400}>
           <Text style={styles.sectionDescription}>
-            Support live reload (HRM is not supported)
+            Support live reload (HMR is not supported)
           </Text>
         </Section>
         <Section title="Tree shaking" delay={600}>

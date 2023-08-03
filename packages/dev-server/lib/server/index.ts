@@ -17,6 +17,7 @@ import {
 import { logger } from '../shared';
 import { DEFAULT_PORT, DEFAULT_HOST } from '../constants';
 import type { DevServerMiddlewareContext, DevServerOptions } from '../types';
+import { createHotReloadMiddleware } from '../middlewares/hotReload';
 
 export class ReactNativeEsbuildDevServer {
   private bundler?: ReactNativeEsbuildBundler;
@@ -61,6 +62,7 @@ export class ReactNativeEsbuildDevServer {
       host: this.devServerOptions.host,
       watchFolders: [],
     });
+    const { server: hotReloadServer } = createHotReloadMiddleware();
 
     logger.debug('setup middlewares');
     middleware.use(createServeAssetMiddleware(context));
@@ -81,9 +83,10 @@ export class ReactNativeEsbuildDevServer {
         : null;
 
       if (pathname === '/hot') {
-        // TODO: add live reload
-        logger.debug('HRM is not supported');
-        socket.destroy();
+        logger.debug('HMR is not supported');
+        hotReloadServer.handleUpgrade(request, socket, head, (client) => {
+          hotReloadServer.emit('connection', client, request);
+        });
       } else if (handler) {
         handler.handleUpgrade(request, socket, head, (client) => {
           handler.emit('connection', client, request);

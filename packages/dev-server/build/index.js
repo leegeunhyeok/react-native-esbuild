@@ -2,7 +2,7 @@ const esbuild = require('esbuild');
 const { getEsbuildBaseOptions } = require('../../../shared');
 
 const buildOptions = getEsbuildBaseOptions(__dirname, {
-  external: ['errorhandler'],
+  external: ['errorhandler', 'ws'],
 });
 
 esbuild.build(buildOptions).catch((error) => {
