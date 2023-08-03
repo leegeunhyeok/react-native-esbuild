@@ -10,10 +10,6 @@ const commonOptions = {
     describe: 'entry file path',
     default: 'index.js',
   },
-  assets: {
-    type: 'string',
-    describe: 'assets directory',
-  },
   platform: {
     type: 'string',
     describe: 'platform for resolve modules',
@@ -21,7 +17,7 @@ const commonOptions = {
   },
   dev: {
     type: 'boolean',
-    describe: 'set to develop environment',
+    describe: 'set as development environment',
     default: true,
   },
   minify: {
@@ -45,11 +41,6 @@ export function cli(): Argv | Promise<Argv> {
       yargs
         .options({
           ...commonOptions,
-          output: {
-            type: 'string',
-            describe: 'bundle file name',
-            default: 'main.jsbundle',
-          },
           host: {
             describe: 'dev server host',
             type: 'string',
@@ -70,7 +61,11 @@ export function cli(): Argv | Promise<Argv> {
           ...commonOptions,
           output: {
             type: 'string',
-            describe: 'bundle file destination',
+            describe: 'bundle result destination',
+          },
+          assets: {
+            type: 'string',
+            describe: 'assets directory',
           },
         })
         .demandOption(['output', 'platform'])

@@ -33,7 +33,9 @@ async function assertBundleDestinationPathIsValid(
 
 export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const entryFilePath = resolvePath(argv.entry as string);
-  const outputFilePath = resolvePath(argv.output as string);
+  const outputFilePath = resolvePath(
+    typeof argv.output === 'string' ? argv.output : 'main.jsbundle',
+  );
   const assetsDir = argv.assets ?? 'assets';
   const dev = argv.dev ?? process.env.NODE_ENV === 'development';
   const minify = argv.minify ?? dev;
