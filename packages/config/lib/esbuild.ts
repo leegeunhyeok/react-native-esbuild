@@ -59,8 +59,8 @@ export function getEsbuildOptions(
       js: `var ${BANNER_VARS.join(',')};`,
     },
     inject: [
-      ...getReactNativePolyfills(),
       'react-native/Libraries/Core/InitializeCore',
+      ...getReactNativePolyfills(),
     ],
     target: 'es6',
     supported: {
