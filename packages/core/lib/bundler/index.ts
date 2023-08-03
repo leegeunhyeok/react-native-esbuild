@@ -43,6 +43,10 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     platform: 'android' | 'ios' | 'web',
     mode: 'bundle' | 'watch',
   ): BuildOptions {
+    if (!this.plugins.length) {
+      throw new Error('plugins is not registered');
+    }
+
     return getEsbuildOptions(
       { ...this.bundlerConfig, platform },
       {
