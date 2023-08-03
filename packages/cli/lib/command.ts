@@ -25,8 +25,9 @@ const commonOptions = {
     default: true,
   },
   minify: {
-    describe: 'enable minify (default: --dev)',
+    describe: 'enable minify',
     type: 'boolean',
+    default: false,
   },
   debug: {
     describe: 'show cli debug log',
