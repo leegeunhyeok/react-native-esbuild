@@ -3341,7 +3341,6 @@ __metadata:
   resolution: "@react-native-esbuild/core@workspace:packages/core"
   dependencies:
     "@react-native-esbuild/config": "workspace:^"
-    "@react-native-esbuild/plugins": "workspace:^"
     "@react-native-esbuild/utils": "workspace:^"
     "@types/md5": ^2.3.2
     deepmerge: ^4.3.1

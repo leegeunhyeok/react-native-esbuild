@@ -31,3 +31,8 @@ export interface PromiseHandler<Result> {
   resolver?: (val: Result) => void;
   rejecter?: (reason?: unknown) => void;
 }
+
+export interface Cache {
+  data: string;
+  modifiedAt: number;
+}
