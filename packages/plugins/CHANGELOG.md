@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.13](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2023-08-03)
+
+
+### Bug Fixes
+
+* missing hash ([466c957](https://github.com/leegeunhyeok/react-native-esbuild/commit/466c957b08555ba62fbd94d3002dbecf9cc0808c))
+
+
+
 ## [0.1.0-alpha.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2023-08-03)
 
 

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.13](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2023-08-03)
+
+
+### Features
+
+* validate plugins ([a5b722c](https://github.com/leegeunhyeok/react-native-esbuild/commit/a5b722c48c31d5630aeac760f9ddc44f76e89e98))
+
+
+
 ## [0.1.0-alpha.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2023-08-03)
 
 
