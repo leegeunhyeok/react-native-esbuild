@@ -21,8 +21,8 @@
 - ⚡️ Blazing Fast Build
 - 🌳 Tree Shaking
 - 🎨 Flexible & Extensible
-- ~~💾 Caching~~ (WIP)
-- ~~🔥 Support Hot Reload~~ (WIP)
+- 💾 Caching
+- 🔥 Support Hot Reload
 - ~~🌍 Support Web~~ (WIP)
 
 # Setup
