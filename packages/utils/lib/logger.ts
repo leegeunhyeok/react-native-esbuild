@@ -1,6 +1,6 @@
 import 'node-self';
 import { EOL } from 'node:os';
-import { gray, cyan, yellow, red, magenta, disable } from 'colors';
+import { gray, cyan, green, yellow, red, magenta, bold, disable } from 'colors';
 import type { Color } from 'colors';
 import type { LogLevel } from './types';
 import { isCI } from './env';
@@ -11,6 +11,7 @@ export class Logger {
   private COLOR_BY_LEVEL: Record<LogLevel, Color> = {
     debug: gray,
     info: cyan,
+    log: green,
     warn: yellow,
     error: red,
   };
@@ -51,7 +52,7 @@ export class Logger {
   }
 
   private getLevelTag(level: LogLevel): string {
-    return this.COLOR_BY_LEVEL[level](level);
+    return bold(this.COLOR_BY_LEVEL[level](level));
   }
 
   public enable(): void {
@@ -71,6 +72,19 @@ export class Logger {
 
     this.stdout(
       this.getLevelTag('debug'),
+      magenta(this.scope),
+      message,
+      this.parseExtra(extra),
+    );
+  }
+
+  public log(message: string, extra?: object): void {
+    if (['info', 'warn', 'error'].some((level) => level === self.logLevel)) {
+      return;
+    }
+
+    this.stdout(
+      this.getLevelTag('log'),
       magenta(this.scope),
       message,
       this.parseExtra(extra),
@@ -100,7 +114,7 @@ export class Logger {
     );
   }
 
-  public error(message: string, error: Error, extra?: object): void {
+  public error(message: string, error?: Error, extra?: object): void {
     this.stderr(
       this.getLevelTag('error'),
       magenta(this.scope),
