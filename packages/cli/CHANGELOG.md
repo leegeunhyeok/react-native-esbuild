@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2023-08-03)
+
+
+### Features
+
+* **cli:** add cache clean command ([139417e](https://github.com/leegeunhyeok/react-native-esbuild/commit/139417e0374eed625382249a89466411a84292f3))
+
+
+### Bug Fixes
+
+* add default output path ([69b6e2a](https://github.com/leegeunhyeok/react-native-esbuild/commit/69b6e2a123818e1be2a0928fff877f8f598852dd))
+
+
+### Code Refactoring
+
+* add registerPlugins ([263219f](https://github.com/leegeunhyeok/react-native-esbuild/commit/263219f629b8535a1928e3ef5e87dc0ce797fe9d))
+
+
+
 ## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
 
 

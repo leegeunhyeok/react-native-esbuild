@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2023-08-03)
+
+
+### Features
+
+* **cli:** add cache clean command ([139417e](https://github.com/leegeunhyeok/react-native-esbuild/commit/139417e0374eed625382249a89466411a84292f3))
+* **core:** add caching feature ([ccf193d](https://github.com/leegeunhyeok/react-native-esbuild/commit/ccf193d1890a59ece6924a67f067782ca1507b4c))
+* **core:** add plugins option for customizing ([9b884cc](https://github.com/leegeunhyeok/react-native-esbuild/commit/9b884cc42e2ff19bb9514ca04f865f9b4472b623))
+* **core:** extends event emitter for subscribe events ([cf91ef0](https://github.com/leegeunhyeok/react-native-esbuild/commit/cf91ef0729fd9dbfa9e83587f1b57cc3684a1468))
+* now support hot reload ([2fae39d](https://github.com/leegeunhyeok/react-native-esbuild/commit/2fae39de39e9c4976dc8ae6c24f28335877d53cc))
+
+
+### Bug Fixes
+
+* add default output path ([69b6e2a](https://github.com/leegeunhyeok/react-native-esbuild/commit/69b6e2a123818e1be2a0928fff877f8f598852dd))
+
+
+### Code Refactoring
+
+* add registerPlugins ([263219f](https://github.com/leegeunhyeok/react-native-esbuild/commit/263219f629b8535a1928e3ef5e87dc0ce797fe9d))
+* **core:** move build-status-plugin to core ([7d23543](https://github.com/leegeunhyeok/react-native-esbuild/commit/7d2354325cdd52b014aecaaa327071300877a1fc))
+
+
+
 ## [0.1.0-alpha.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2023-08-03)
 
 
