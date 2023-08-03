@@ -10,6 +10,11 @@ const commonOptions = {
     describe: 'entry file path',
     default: 'index.js',
   },
+  output: {
+    type: 'string',
+    describe: 'bundle result destination',
+    default: 'main.jsbundle',
+  },
   platform: {
     type: 'string',
     describe: 'platform for resolve modules',
@@ -59,10 +64,6 @@ export function cli(): Argv | Promise<Argv> {
       yargs
         .options({
           ...commonOptions,
-          output: {
-            type: 'string',
-            describe: 'bundle result destination',
-          },
           assets: {
             type: 'string',
             describe: 'assets directory',
