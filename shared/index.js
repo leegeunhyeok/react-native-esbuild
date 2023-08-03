@@ -16,6 +16,7 @@ exports.getEsbuildBaseOptions = (packageDir, options = {}) => ({
     'react-native/*',
     '@swc/*',
     '@babel/*',
+    '@react-native-community/*',
     '@react-native-esbuild/*',
     ...(options.external || []),
   ],
