@@ -61,7 +61,7 @@ export const createAssetRegisterPlugin: PluginCreator<
     const assetExtensionsFilter = new RegExp(
       `.(${assetExtensions.join('|')})$`,
     );
-    const assets: Asset[] = [];
+    let assets: Asset[] = [];
 
     const addSuffix = (
       basename: string,
@@ -121,6 +121,10 @@ export const createAssetRegisterPlugin: PluginCreator<
         pluginData: result,
       });
     };
+
+    build.onStart(() => {
+      assets = [];
+    });
 
     build.onResolve({ filter: assetExtensionsFilter }, async (args) => {
       if (args.pluginData) return null;
