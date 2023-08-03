@@ -25,15 +25,68 @@
 - ~~🔥 Support Hot Reload~~ (WIP)
 - ~~🌍 Support Web~~ (WIP)
 
+# Setup
+
+```bash
+# using npm
+npm install -D install @react-native-esbuild/cli
+
+# using yarn
+yarn add -D @react-native-esbuild/cli
+
+```
+
+## Start
+
+Launch dev server
+
+```bash
+rne start
+```
+
+| Option | Description | Default value |
+|:--:|:--|:--:|
+| `--entry` | entry file path | `index.js` |
+| `--host` | dev server host | `127.0.0.1` |
+| `--port` | dev server port | `8081` |
+| `--dev` | set as development environment | `true` |
+| `--minify` | enable minify | `false` |
+| `--debug` | show cli debug log | `false` |
+
+## Build
+
+Build bundle
+
+```bash
+rne build --platform=<platform> --output=<dest>
+```
+
+| Option | Description | Default value |
+|:--:|:--|:--:|
+| `--platform` | (required) platform for resolve modules | |
+| `--entry` | entry file path | `index.js` |
+| `--output` | (required) bundle result destination | |
+| `--assets` | assets directory | |
+| `--dev` | set as development environment | `true` |
+| `--minify` | enable minify | `false` |
+| `--debug` | show cli debug log | `false` |
+
+# Customize
+
+## Plugins
+
+wip
+
 # Development
 
 ```bash
+# in example directory,
 # run example application (start @react-native-esbuild/dev-server)
-lerna run start --scope="example"
+yarn start
 
 # build example project (example/dist/<bundle and assets>)
-lerna run build:android --scope="example"
-lerna run build:ios --scope="example"
+yarn build:android
+yarn build:ios
 ```
 
 ```bash
