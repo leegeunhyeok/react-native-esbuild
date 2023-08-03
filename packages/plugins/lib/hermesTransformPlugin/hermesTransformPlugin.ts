@@ -114,9 +114,8 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
             };
           }
 
-          const cachedSource = await cache.readFromFileSystem(
-            cache.getCacheHash(hashParam),
-          );
+          hash = cache.getCacheHash(hashParam);
+          const cachedSource = await cache.readFromFileSystem(hash);
 
           // 2. find cache from fils system
           if (cachedSource) {
