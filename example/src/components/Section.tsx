@@ -1,46 +1,17 @@
-import React, { useRef, useEffect, type PropsWithChildren } from 'react';
-import { StyleSheet, Animated, Text } from 'react-native';
+import React, { type PropsWithChildren } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
 type SectionProps = PropsWithChildren<{
   title?: string;
   delay?: number;
 }>;
 
-export function Section({
-  children,
-  title,
-  delay = 0,
-}: SectionProps): JSX.Element {
-  const animate = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(animate, {
-      toValue: 1,
-      delay,
-      useNativeDriver: true,
-    }).start();
-  }, [animate, delay]);
-
+export function Section({ children, title }: SectionProps): JSX.Element {
   return (
-    <Animated.View
-      style={[
-        styles.sectionContainer,
-        {
-          opacity: animate,
-          transform: [
-            {
-              translateY: animate.interpolate({
-                inputRange: [0, 1],
-                outputRange: [50, 0],
-              }),
-            },
-          ],
-        },
-      ]}
-    >
+    <View style={styles.sectionContainer}>
       {title ? <Text style={styles.sectionTitle}>{title}</Text> : null}
       {children}
-    </Animated.View>
+    </View>
   );
 }
 

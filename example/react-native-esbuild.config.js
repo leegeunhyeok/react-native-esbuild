@@ -4,6 +4,6 @@
 exports.default = {
   cache: true,
   transform: {
-    fullyTransformPackageNames: ['react-native'],
+    fullyTransformPackageNames: ['react-native', 'react-native-reanimated'],
   },
 };
