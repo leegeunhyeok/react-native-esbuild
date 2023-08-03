@@ -1,4 +1,5 @@
 import path from 'node:path';
+import EventEmitter from 'node:events';
 import esbuild, {
   type BuildOptions,
   type BuildResult,
@@ -28,13 +29,14 @@ import type {
 import { logger } from '../shared';
 import { printLogo } from './logo';
 
-export class ReactNativeEsbuildBundler {
+export class ReactNativeEsbuildBundler extends EventEmitter {
   private coreOptions: CoreOptions;
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
 
   constructor(private config: BundlerConfig) {
+    super();
     if (isCI()) colors.disable();
     printLogo();
     this.loadOptions();
@@ -96,6 +98,7 @@ export class ReactNativeEsbuildBundler {
   private handleBuildStart(): void {
     this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
     this.esbuildTaskHandler = createPromiseHandler();
+    this.emit('build-start');
   }
 
   private handleBuildEnd(result: BuildResult<{ write: false }>): void {
@@ -136,6 +139,8 @@ export class ReactNativeEsbuildBundler {
       this.esbuildTaskHandler?.resolver?.(this.bundleResult);
     } catch (error) {
       this.esbuildTaskHandler?.rejecter?.(error);
+    } finally {
+      this.emit('build-end');
     }
   }
 
