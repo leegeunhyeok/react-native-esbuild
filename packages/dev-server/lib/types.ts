@@ -24,6 +24,9 @@ export type DevServerMiddleware = (
 
 export interface HotReloadMiddleware {
   server: Server;
+  hotReload: () => void;
+  updateStart: () => void;
+  updateDone: () => void;
 }
 
 /**
@@ -58,4 +61,42 @@ export interface LogMessage {
 
 export interface LogOptInMessage {
   type: 'log-opt-in';
+}
+
+/**
+ * HMR update message
+ * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro-runtime/src/modules/types.flow.js#L44-L56}
+ */
+export type HmrMessage =
+  | HmrUpdateMessage
+  | HmrUpdateStartMessage
+  | HmrUpdateDoneMessage;
+
+export interface HmrUpdateMessage {
+  type: 'update';
+  body: HmrUpdate;
+}
+export interface HmrUpdateStartMessage {
+  type: 'update-start';
+  body: {
+    isInitialUpdate: boolean;
+  };
+}
+
+export interface HmrUpdateDoneMessage {
+  type: 'update-done';
+}
+
+export interface HmrUpdate {
+  readonly added: HmrModule[];
+  readonly deleted: number[];
+  readonly modified: HmrModule[];
+  isInitialUpdate: boolean;
+  revisionId: string;
+}
+
+export interface HmrModule {
+  module: [number, string];
+  sourceMappingURL: string | null;
+  sourceURL: string | null;
 }

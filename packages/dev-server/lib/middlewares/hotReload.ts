@@ -1,7 +1,13 @@
 import { Server, type WebSocket, type MessageEvent, type Data } from 'ws';
-import { clientLogger } from '../shared';
+import { clientLogger, logger } from '../shared';
 import { convertHmrLogLevel } from '../helpers';
-import type { HmrClientMessage, HotReloadMiddleware } from '../types';
+import type {
+  HotReloadMiddleware,
+  HmrClientMessage,
+  HmrUpdateDoneMessage,
+  HmrUpdateMessage,
+  HmrUpdateStartMessage,
+} from '../types';
 
 const getMessage = (data: Data): HmrClientMessage | null => {
   try {
@@ -32,7 +38,6 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
     switch (message.type) {
       case 'log': {
         const level = convertHmrLogLevel(message.level);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         clientLogger[level](message.data.join(' '));
         break;
       }
@@ -44,6 +49,66 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
     }
   };
 
+  const handleError = (error?: Error): void => {
+    if (error) {
+      logger.error('cannot send HMR update message', error);
+    }
+  };
+
+  /**
+   * inject reload code to application
+   *
+   * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro-runtime/src/modules/HMRClient.js#L91-L99}
+   * @see [turboModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/TurboModule/TurboModuleRegistry.js#L17}
+   * @see [nativeModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/BatchedBridge/NativeModules.js#L179}
+   */
+  const hotReload = (): void => {
+    const hmrUpdateMessage: HmrUpdateMessage = {
+      type: 'update',
+      body: {
+        added: [
+          {
+            /**
+             * ```ts
+             * // it works the same as the code below
+             * import { DevSettings } from 'react-native';
+             *
+             * DevSettings.reload();
+             * ```
+             */
+            module: [
+              -1,
+              '(window.__turboModuleProxy || window.nativeModuleProxy)["DevSettings"].reload();',
+            ],
+            sourceMappingURL: null,
+            sourceURL: null,
+          },
+        ],
+        deleted: [],
+        modified: [],
+        isInitialUpdate: false,
+        revisionId: new Date().getTime().toString(),
+      },
+    };
+
+    connectedSocket?.send(JSON.stringify(hmrUpdateMessage), handleError);
+  };
+
+  const updateStart = (): void => {
+    const hmrUpdateStartMessage: HmrUpdateStartMessage = {
+      type: 'update-start',
+      body: {
+        isInitialUpdate: false,
+      },
+    };
+    connectedSocket?.send(JSON.stringify(hmrUpdateStartMessage), handleError);
+  };
+
+  const updateDone = (): void => {
+    const hmrUpdateDoneMessage: HmrUpdateDoneMessage = { type: 'update-done' };
+    connectedSocket?.send(JSON.stringify(hmrUpdateDoneMessage), handleError);
+  };
+
   server.on('connection', (socket) => {
     connectedSocket = socket;
     connectedSocket.onerror = handleClose;
@@ -51,5 +116,5 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
     connectedSocket.onmessage = handleMessage;
   });
 
-  return { server };
+  return { server, hotReload, updateStart, updateDone };
 };

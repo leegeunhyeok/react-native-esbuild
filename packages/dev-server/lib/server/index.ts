@@ -50,19 +50,25 @@ export class ReactNativeEsbuildDevServer {
   initialize(bundlerConfig: BundlerConfig): this {
     logger.debug('initialize dev server', this.devServerOptions);
     logger.debug('create bundler instance');
-    this.bundler = new ReactNativeEsbuildBundler(bundlerConfig);
 
-    const context: DevServerMiddlewareContext = {
-      bundler: this.bundler,
-      devServerOptions: this.devServerOptions,
-    };
-
+    const { server: hotReloadServer, ...hr } = createHotReloadMiddleware();
     const { middleware, websocketEndpoints } = createDevServerMiddleware({
       port: this.devServerOptions.port,
       host: this.devServerOptions.host,
       watchFolders: [],
     });
-    const { server: hotReloadServer } = createHotReloadMiddleware();
+
+    this.bundler = new ReactNativeEsbuildBundler(bundlerConfig);
+    this.bundler.addListener('build-start', hr.updateStart);
+    this.bundler.addListener('build-end', () => {
+      hr.hotReload();
+      hr.updateDone();
+    });
+
+    const context: DevServerMiddlewareContext = {
+      bundler: this.bundler,
+      devServerOptions: this.devServerOptions,
+    };
 
     logger.debug('setup middlewares');
     middleware.use(createServeAssetMiddleware(context));
@@ -82,6 +88,9 @@ export class ReactNativeEsbuildDevServer {
         ? (websocketEndpoints[pathname] as WebSocketServer)
         : null;
 
+      /**
+       * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro/src/index.flow.js#L230-L239}
+       */
       if (pathname === '/hot') {
         logger.debug('HMR is not supported');
         hotReloadServer.handleUpgrade(request, socket, head, (client) => {
