@@ -47,28 +47,17 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     platform: 'android' | 'ios' | 'web',
     mode: 'bundle' | 'watch',
   ): BuildOptions {
-    const { entryPoint, outfile, assetsDir, dev, minify } = this.bundlerConfig;
-    const { cache, transform } = this.config;
+    const { plugins = this.getDefaultPlugins() } = this.bundlerConfig;
 
     return getEsbuildOptions(
-      {
-        entryPoint,
-        outfile,
-        assetsDir,
-        dev,
-        minify,
-        platform,
-      },
+      { ...this.bundlerConfig, platform },
       {
         plugins: [
+          /**
+           * `build-status-plugin` is required and must be placed first
+           */
           this.createBuildStatusPlugin(),
-          createAssetRegisterPlugin({
-            assetExtensions: ASSET_EXTENSIONS,
-          }),
-          createHermesTransformPlugin({
-            enableCache: cache,
-            fullyTransformPackageNames: transform.fullyTransformPackageNames,
-          }),
+          ...plugins,
         ].filter(Boolean),
         write: mode === 'bundle',
       },
@@ -132,22 +121,31 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     return buildStatusPlugin;
   }
 
+  private getDefaultPlugins(): Plugin[] {
+    const { cache, transform } = this.config;
+
+    return [
+      createAssetRegisterPlugin({ assetExtensions: ASSET_EXTENSIONS }),
+      createHermesTransformPlugin({
+        enableCache: cache,
+        fullyTransformPackageNames: transform.fullyTransformPackageNames,
+      }),
+    ];
+  }
+
   private handleBuildStart(): void {
     this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
     this.esbuildTaskHandler = createPromiseHandler();
     this.emit('build-start');
   }
 
-  private handleBuildEnd(result: BuildResult<{ write: false }>): void {
+  private handleBuildEnd(result: BuildResult): void {
     const bundleFilename = this.bundlerConfig.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const { outputFiles } = result;
 
     // `outputFiles` available when only `write: false`
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (outputFiles === undefined) {
-      return;
-    }
+    if (outputFiles === undefined) return;
 
     logger.info('preparing bundled result');
 
