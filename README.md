@@ -70,6 +70,15 @@ rne build --platform=<platform> --output=<dest>
 | `--minify` | enable minify | `false` |
 | `--debug` | show cli debug log | `false` |
 
+## Cache
+
+Manage transform cache
+
+```bash
+# clear transform cache in temporary directory
+rne cache clear
+```
+
 # Customize
 
 ## Plugins
