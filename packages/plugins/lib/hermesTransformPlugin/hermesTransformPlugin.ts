@@ -84,7 +84,10 @@ export const createHermesTransformPlugin: PluginCreator<
         });
       }
 
-      if (fullyTransformPackagesRegExp?.test(args.path)) {
+      if (
+        source.includes('react-native-reanimated') ||
+        fullyTransformPackagesRegExp?.test(args.path)
+      ) {
         source = await transformWithBabel(source, args, {
           // follow babelrc of react-native project's root (same as metro)
           babelrc: true,
