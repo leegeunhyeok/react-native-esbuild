@@ -4,15 +4,17 @@ import type { Argv, StartOptions, BuildOptions } from '../types';
 
 export function getCommand<Argv extends { _: (string | number)[] }>(
   argv: Argv,
+  position = 0,
 ): string {
-  return argv._[0].toString();
+  return argv._[position].toString();
 }
 
 export async function assertCommandOptions(
-  _command: string,
+  command: string,
   options: Record<string, unknown>,
 ): Promise<boolean> {
   try {
+    if (command === 'cache') return true;
     const resolvedPath = resolvePath(options.output as string);
     await assertBundleDestinationPathIsValid(resolvedPath);
     return true;

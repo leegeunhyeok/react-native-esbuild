@@ -1,4 +1,8 @@
-import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import fs from 'node:fs/promises';
+import {
+  CacheManager,
+  ReactNativeEsbuildBundler,
+} from '@react-native-esbuild/core';
 import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import {
   createAssetRegisterPlugin,
@@ -11,14 +15,11 @@ import { logger } from './shared';
 
 Promise.resolve(cli())
   .then(async (argv): Promise<void> => {
-    const options = getOptions(argv);
-
-    logger.setLogLevel(options.debug ? 'debug' : 'info');
-    logger.debug('command line interface options', options);
+    logger.setLogLevel(argv.debug ? 'debug' : 'info');
 
     switch (getCommand(argv)) {
       case 'start': {
-        const startOptions = options as StartOptions;
+        const startOptions = getOptions(argv) as StartOptions;
         const { bundler, server } = new ReactNativeEsbuildDevServer({
           host: startOptions.host,
           port: startOptions.port,
@@ -38,7 +39,7 @@ Promise.resolve(cli())
       }
 
       case 'build': {
-        const buildOptions = options as BuildOptions;
+        const buildOptions = getOptions(argv) as BuildOptions;
         const bundler = new ReactNativeEsbuildBundler({
           entryPoint: buildOptions.entryFile,
           outfile: buildOptions.outputFile,
@@ -51,6 +52,13 @@ Promise.resolve(cli())
         ]);
         await bundler.bundle(buildOptions.platform);
         break;
+      }
+
+      case 'cache': {
+        if (getCommand(argv, 1) === 'clean') {
+          await fs.rm(CacheManager.getCacheDirectory(), { recursive: true });
+          logger.info('transform cache was reset');
+        }
       }
     }
   })

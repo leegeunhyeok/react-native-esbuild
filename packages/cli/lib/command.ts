@@ -73,6 +73,12 @@ export function cli(): Argv | Promise<Argv> {
         .version(false)
         .help();
     })
+    .command('cache', 'manage transform cache', (yargs) => {
+      yargs
+        .command('clean', 'clear all transform cache')
+        .demandCommand()
+        .strictCommands();
+    })
     .demandCommand()
     .strictCommands()
     .check((argv) => assertCommandOptions(getCommand(argv), argv))
