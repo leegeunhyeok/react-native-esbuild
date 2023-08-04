@@ -15,14 +15,13 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
   name: NAME,
   setup: (build): void => {
     const cache = new CacheManager();
+    const cacheEnabled = context.bundlerConfig.dev;
     const {
       transform: {
         stripFlowPackageNames = [],
         fullyTransformPackageNames = [],
         customTransformRules = [],
       },
-      // TODO: need to implement caching features
-      cache: cacheEnabled,
     } = context.config;
     const workingDirectory = process.cwd();
 

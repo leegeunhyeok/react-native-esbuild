@@ -9,7 +9,6 @@ export function loadConfig(): CoreConfig {
   let config: CoreConfig | undefined;
 
   const baseOptions: CoreConfig = {
-    cache: true,
     transform: {},
   };
 

@@ -2,7 +2,6 @@
  * @type {import('@react-native-esbuild/config').CoreConfig}
  */
 exports.default = {
-  cache: true,
   transform: {
     svgr: true,
     stripFlowPackageNames: ['react-native'],

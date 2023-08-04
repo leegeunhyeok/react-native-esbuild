@@ -14,7 +14,6 @@ export interface SwcPresetOptions {
 }
 
 export interface CoreConfig {
-  cache: boolean;
   transform: {
     svgr?: boolean;
     stripFlowPackageNames?: string[];
