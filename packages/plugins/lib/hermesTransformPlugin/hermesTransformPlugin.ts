@@ -66,11 +66,19 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
   setup: (build): void => {
     const cache = new CacheManager();
     const {
-      transform: { fullyTransformPackageNames = [] },
+      transform: {
+        stripFlowPackageNames = [],
+        fullyTransformPackageNames = [],
+        customTransformRules = [],
+      },
       // TODO: need to implement caching features
       cache: cacheEnabled,
     } = context.config;
     const workingDirectory = process.cwd();
+
+    const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
+      ? new RegExp(`node_modules/${stripFlowPackageNames.join('|')}/`)
+      : undefined;
 
     const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
       ? new RegExp(`node_modules/${fullyTransformPackageNames.join('|')}/`)
@@ -93,6 +101,7 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
           const inMemoryCache = cache.readFromMemory(memoryCacheKey);
           const hashParam = [
             build.initialOptions.platform,
+            context.config,
             args.path,
             mtimeMs,
           ] as const;
@@ -149,7 +158,10 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
 
       let source = rawSource;
 
-      if (isFlow(source, args.path)) {
+      if (
+        isFlow(source, args.path) ||
+        stripFlowPackageNamesRegExp?.test(args.path)
+      ) {
         source = await transformWithBabel(source, args, {
           babelrc: false,
           plugins: [
@@ -162,16 +174,23 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
         });
       }
 
-      if (
-        source.includes('react-native-reanimated') ||
-        fullyTransformPackagesRegExp?.test(args.path)
-      ) {
+      if (fullyTransformPackagesRegExp?.test(args.path)) {
         source = await transformWithBabel(source, args, {
           // follow babelrc of react-native project's root (same as metro)
           babelrc: true,
         });
       }
 
+      for await (const rule of customTransformRules) {
+        if (rule.test(args.path, source)) {
+          source = await transformWithBabel(source, args, {
+            babelrc: false,
+            plugins: rule.plugins,
+          });
+        }
+      }
+
+      // transform source target to es5
       source = await transformWithSwc(source, args);
 
       if (cacheEnabled) {

@@ -1,3 +1,5 @@
+import type { PluginItem } from '@babel/core';
+
 export interface EsbuildPresetOptions {
   entryPoint: string;
   outfile: string;
@@ -14,7 +16,14 @@ export interface SwcPresetOptions {
 export interface CoreConfig {
   cache: boolean;
   transform: {
-    fullyTransformPackageNames?: string[];
     svgr?: boolean;
+    stripFlowPackageNames?: string[];
+    fullyTransformPackageNames?: string[];
+    customTransformRules?: CustomTransformRule[];
   };
+}
+
+export interface CustomTransformRule {
+  test: (path: string, source: string) => boolean;
+  plugins: PluginItem[];
 }
