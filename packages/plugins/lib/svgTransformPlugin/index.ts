@@ -1,0 +1,1 @@
+export { createSvgTransformPlugin } from './svgTransformPlugin';

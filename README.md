@@ -90,6 +90,7 @@ import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
   createAssetRegisterPlugin,
   createHermesTransformPlugin,
+  createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
 
 const bundler = new ReactNativeEsbuildBundler(/* bundler config */);
@@ -97,6 +98,7 @@ const bundler = new ReactNativeEsbuildBundler(/* bundler config */);
 bundler.registerPlugins((config, bundlerConfig) => {
   return [
     createAssetRegisterPlugin({ config, bundlerConfig }),
+    createSvgTransformPlugin({ config, bundlerConfig }),
     createHermesTransformPlugin({ config, bundlerConfig }),
     {
       name: 'your-custom-esbuild-plugin',

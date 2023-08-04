@@ -7,6 +7,7 @@ import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import {
   createAssetRegisterPlugin,
   createHermesTransformPlugin,
+  createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import { cli } from './command';
 import { getCommand, getOptions } from './helpers';
@@ -32,6 +33,7 @@ Promise.resolve(cli())
         });
         bundler.registerPlugins((config, bundlerConfig) => [
           createAssetRegisterPlugin(undefined, { config, bundlerConfig }),
+          createSvgTransformPlugin(null, { config, bundlerConfig }),
           createHermesTransformPlugin(null, { config, bundlerConfig }),
         ]);
         server.listen();
@@ -48,6 +50,7 @@ Promise.resolve(cli())
           minify: buildOptions.minify,
         }).registerPlugins((config, bundlerConfig) => [
           createAssetRegisterPlugin(undefined, { config, bundlerConfig }),
+          createSvgTransformPlugin(null, { config, bundlerConfig }),
           createHermesTransformPlugin(null, { config, bundlerConfig }),
         ]);
         await bundler.bundle(buildOptions.platform);

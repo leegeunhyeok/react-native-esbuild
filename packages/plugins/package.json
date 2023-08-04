@@ -44,6 +44,8 @@
     "@react-native-esbuild/config": "workspace:^",
     "@react-native-esbuild/core": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
+    "@svgr/core": "^8.0.0",
+    "@svgr/plugin-jsx": "^8.0.1",
     "@swc/core": "^1.3.72",
     "@swc/helpers": "^0.5.1"
   }

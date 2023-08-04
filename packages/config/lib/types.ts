@@ -15,5 +15,6 @@ export interface CoreConfig {
   cache: boolean;
   transform: {
     fullyTransformPackageNames?: string[];
+    svgr?: boolean;
   };
 }

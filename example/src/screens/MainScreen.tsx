@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Image, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Fade, Button } from '../components';
 import type { RootStackProps } from '../navigators/types';
-import EsbuildLogo from '../assets/esbuild.png';
+import SvgEsbuildLogo from '../assets/esbuild.svg';
 
 export function MainScreen({
   navigation,
@@ -15,7 +15,7 @@ export function MainScreen({
   return (
     <SafeAreaView style={styles.container}>
       <Fade style={styles.contentArea} delay={500}>
-        <Image style={styles.logo} source={EsbuildLogo} />
+        <SvgEsbuildLogo width={120} height={120} />
         <Text style={styles.title}>React Native Esbuild</Text>
         <Text style={styles.subTitle}>
           ⚡️ An extremely fast bundler{'\n'}+{'\n'}React Native
@@ -41,10 +41,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 24,
     gap: 8,
-  },
-  logo: {
-    width: 120,
-    height: 120,
   },
   title: {
     fontSize: 30,

@@ -16,7 +16,7 @@ import type {
 } from '../types';
 import { logger } from '../shared';
 
-const TAG = 'asset-register-plugin';
+const NAME = 'asset-register-plugin';
 const ASSET_NAMESPACE = 'react-native-esbuild-assets';
 
 /**
@@ -55,12 +55,18 @@ const getRegistrationScript = (
 
 export const createAssetRegisterPlugin: PluginCreator<
   AssetRegisterPluginConfig | undefined
-> = (config) => ({
-  name: 'asset-register-plugin',
+> = (config, context) => ({
+  name: NAME,
   setup: (build): void => {
     const { assetExtensions = ASSET_EXTENSIONS } = config ?? {};
+    const { svgr = false } = context.config.transform;
     const assetExtensionsFilter = new RegExp(
-      `.(${assetExtensions.join('|')})$`,
+      `.(${assetExtensions
+        .filter((extension) =>
+          // if using svgr, ignore .svg file
+          svgr ? extension !== '.svg' : true,
+        )
+        .join('|')})$`,
     );
     let assets: Asset[] = [];
 
@@ -241,7 +247,7 @@ export const createAssetRegisterPlugin: PluginCreator<
               );
             }
 
-            logger.debug(`(${TAG}) copying ${basename}`);
+            logger.debug(`(${NAME}) copying ${basename}`);
             await fs.copyFile(
               filepath,
               path.join(devServerAssetPath, path.basename(filepath)),
