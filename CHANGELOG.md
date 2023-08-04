@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.14](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.13...v0.1.0-alpha.14) (2023-08-04)
+
+
+### Features
+
+* add log to landing component ([9bc2a6f](https://github.com/leegeunhyeok/react-native-esbuild/commit/9bc2a6fde933f574800ca49355b9379b206d88d0))
+* add svg-transform-plugin ([0526207](https://github.com/leegeunhyeok/react-native-esbuild/commit/05262075d33d8df24a392e731a418435cf74c2bd))
+
+
+### Bug Fixes
+
+* log level limitation ([0e02fab](https://github.com/leegeunhyeok/react-native-esbuild/commit/0e02fabcd89b29b347e340385c4402bb0f71c456))
+* resolving sacled asset ([0fc063d](https://github.com/leegeunhyeok/react-native-esbuild/commit/0fc063d19ce331eaf59892572f43780074faf37b))
+
+
+### Miscellaneous Chores
+
+* change main banner image ([59fc546](https://github.com/leegeunhyeok/react-native-esbuild/commit/59fc54640bcdaec74d8ad66dd66c4d83baa7d5c3))
+
+
+
 ## [0.1.0-alpha.13](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2023-08-03)
 
 
