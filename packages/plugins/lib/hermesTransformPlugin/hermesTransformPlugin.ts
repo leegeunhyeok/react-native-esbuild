@@ -27,11 +27,11 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
     const workingDirectory = process.cwd();
 
     const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
-      ? new RegExp(`node_modules/${stripFlowPackageNames.join('|')}/`)
+      ? new RegExp(`node_modules/(${stripFlowPackageNames.join('|')})/`)
       : undefined;
 
     const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
-      ? new RegExp(`node_modules/${fullyTransformPackageNames.join('|')}/`)
+      ? new RegExp(`node_modules/(${fullyTransformPackageNames.join('|')})/`)
       : undefined;
 
     const getTransformedSourceFromCache = async (
