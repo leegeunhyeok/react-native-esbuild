@@ -104,11 +104,26 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
         });
 
         build.onEnd((result: BuildResult<{ write: false }>) => {
+          const { warnings, errors } = result;
           const endTime = new Date().getTime() - (startTime?.getTime() ?? 0);
-          const statusText = colors.gray(`(${endTime / 1000}s)`);
-          result.errors.length
-            ? spinner.fail(`failed! ${statusText}`)
-            : spinner.succeed(`done! ${statusText}`);
+          const duration = colors.gray(`(${endTime / 1000}s)`);
+          spinner.stopAndPersist();
+
+          const status = `(${colors.yellow(
+            warnings.length.toString(),
+          )} warnings, ${colors.red(errors.length.toString())} errors)`;
+
+          warnings.forEach((warning) => {
+            logger.warn(warning.text, undefined, warning.location ?? undefined);
+          });
+
+          errors.forEach((error) => {
+            logger.error(error.text, undefined, error.location ?? undefined);
+          });
+
+          errors.length
+            ? spinner.fail(`failed! ${status} ${duration}`)
+            : spinner.succeed(`done! ${status} ${duration}`);
           spinner.stop();
 
           this.handleBuildEnd(result);

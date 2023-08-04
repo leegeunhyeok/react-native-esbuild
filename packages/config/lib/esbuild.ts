@@ -72,6 +72,7 @@ export function getEsbuildOptions(
     bundle: true,
     sourcemap: true,
     minify,
+    logLevel: 'silent',
   };
 
   return deepmerge(baseOptions, customEsbuildOptions ?? {});
