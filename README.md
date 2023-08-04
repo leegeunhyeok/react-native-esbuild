@@ -21,6 +21,8 @@
 
 # Features
 
+> ⚠️ This project is under development
+
 - ⚡️ Blazing Fast Build
 - 🌳 Tree Shaking
 - 🎨 Flexible & Extensible
