@@ -137,15 +137,14 @@ export const createAssetRegisterPlugin: PluginCreator<
       if (args.pluginData) return null;
 
       // resolve original path (eg. `image.png`)
-      // if cannot resolve asset, try resolve with suffixed path (eg. `image@1x.png`)
       let suffixedPathResult = getSuffixedPath(args.path);
-      const resolveResult = await resolveAsset(suffixedPathResult, args).catch(
-        () =>
-          resolveAsset(
-            (suffixedPathResult = getSuffixedPath(args.path, 1)),
-            args,
-          ),
-      );
+      let resolveResult = await resolveAsset(suffixedPathResult, args);
+
+      if (resolveResult.errors.length) {
+        // if cannot resolve asset, try resolve with suffixed path (eg. `image@1x.png`)
+        suffixedPathResult = getSuffixedPath(args.path, 1);
+        resolveResult = await resolveAsset(suffixedPathResult, args);
+      }
 
       if (resolveResult.errors.length) {
         return { errors: resolveResult.errors };
