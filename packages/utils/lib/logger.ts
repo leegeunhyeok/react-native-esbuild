@@ -31,7 +31,7 @@ export class Logger {
   }
 
   private getMessage(messages: string[]): string {
-    return messages.filter(Boolean).join(' ') + EOL;
+    return messages.filter(Boolean).join(' ').trimEnd() + EOL;
   }
 
   private parseExtra(extra?: object): string {
