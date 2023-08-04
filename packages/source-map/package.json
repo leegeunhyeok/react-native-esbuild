@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/source-map",
-  "version": "0.1.0-alpha.15",
+  "version": "0.1.0-alpha.16",
   "description": "sourcemap utilities for @react-native-esbuild",
   "keywords": [
     "react-native",

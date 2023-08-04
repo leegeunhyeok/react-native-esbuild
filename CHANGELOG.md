@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.16](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.15...v0.1.0-alpha.16) (2023-08-04)
+
+
+### Features
+
+* add --reset-cache option ([3d08751](https://github.com/leegeunhyeok/react-native-esbuild/commit/3d087516a0d6e2724ee4c896d5632572d34b861c))
+* add transform options ([018a731](https://github.com/leegeunhyeok/react-native-esbuild/commit/018a7312679bfed118e6d26ffede696b293f4cb7))
+* remove whitespaces end of log message ([38fea8e](https://github.com/leegeunhyeok/react-native-esbuild/commit/38fea8e7ce72c5e3784fe9b7c9b50ba2eaa31826))
+
+
+
 ## [0.1.0-alpha.15](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.14...v0.1.0-alpha.15) (2023-08-04)
 
 
