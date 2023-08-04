@@ -112,7 +112,7 @@ export const createAssetRegisterPlugin: PluginCreator<
         dirname,
         basename: suffixedBasename,
         extension,
-        path: scale ? path.join(dirname, suffixedBasename) : assetPath,
+        path: scale ? `${dirname}/${suffixedBasename}` : assetPath,
       };
     };
 
