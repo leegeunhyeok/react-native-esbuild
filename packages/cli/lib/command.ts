@@ -35,6 +35,12 @@ const commonOptions = {
     type: 'boolean',
     default: false,
   },
+  resetCache: {
+    alias: '--reset-cache',
+    describe: 'reset transform cache before build',
+    type: 'boolean',
+    default: false,
+  },
 } as const;
 
 export function cli(): Argv | Promise<Argv> {

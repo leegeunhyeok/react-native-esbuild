@@ -40,7 +40,10 @@ export class CacheManager {
       .catch(() => void 0);
   }
 
-  public clear(): void {
+  public clear(): Promise<void> {
     this.cache.clear();
+    return fs.promises.rm(CacheManager.getCacheDirectory(), {
+      recursive: true,
+    });
   }
 }

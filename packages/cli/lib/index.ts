@@ -1,4 +1,3 @@
-import fs from 'node:fs/promises';
 import {
   CacheManager,
   ReactNativeEsbuildBundler,
@@ -17,6 +16,15 @@ import { logger } from './shared';
 Promise.resolve(cli())
   .then(async (argv): Promise<void> => {
     logger.setLogLevel(argv.debug ? 'debug' : 'info');
+
+    const resetCache = async (): Promise<void> => {
+      await new CacheManager().clear();
+      logger.info('transform cache was reset');
+    };
+
+    if (argv.resetCache) {
+      await resetCache();
+    }
 
     switch (getCommand(argv)) {
       case 'start': {
@@ -59,8 +67,7 @@ Promise.resolve(cli())
 
       case 'cache': {
         if (getCommand(argv, 1) === 'clean') {
-          await fs.rm(CacheManager.getCacheDirectory(), { recursive: true });
-          logger.info('transform cache was reset');
+          await resetCache();
         }
       }
     }

@@ -52,6 +52,7 @@ rne start
 | `--port` | dev server port | `8081` |
 | `--dev` | set as development environment | `true` |
 | `--minify` | enable minify | `false` |
+| `--reset-cache` | reset transform cache | `false` |
 | `--debug` | show cli debug log | `false` |
 
 ## Build
@@ -65,11 +66,12 @@ rne build --platform=<platform> --output=<dest>
 | Option | Description | Default value |
 |:--:|:--|:--:|
 | `--platform` | (required) platform for resolve modules | |
-| `--entry` | entry file path | `index.js` |
 | `--output` | (required) bundle result destination | |
+| `--entry` | entry file path | `index.js` |
 | `--assets` | assets directory | |
 | `--dev` | set as development environment | `true` |
 | `--minify` | enable minify | `false` |
+| `--reset-cache` | reset transform cache | `false` |
 | `--debug` | show cli debug log | `false` |
 
 ## Cache
