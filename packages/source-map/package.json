@@ -30,7 +30,7 @@
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
   "scripts": {
-    "prepack": "yarn build",
+    "prepack": "rimraf ./dist && yarn build",
     "build": "node build/index.js && tsc",
     "test": "node ./__tests__/@react-native-esbuild/source-map.test.js"
   },

@@ -22,6 +22,7 @@
     "husky": "^8.0.3",
     "lerna": "^7.1.4",
     "prettier": "^3.0.0",
+    "rimraf": "^5.0.1",
     "typescript": "^5.1.6"
   },
   "prettier": "@vercel/style-guide/prettier",
