@@ -5,12 +5,15 @@ exports.default = {
   cache: true,
   transform: {
     svgr: true,
-    stripFlowPackageNames: ['react-native', 'react-native-reanimated'],
+    stripFlowPackageNames: ['react-native'],
     fullyTransformPackageNames: [],
     customTransformRules: [
       {
-        test: (_path, source) => {
-          return source.includes('react-native-reanimated');
+        test: (path, source) => {
+          return (
+            /node_modules\/react-native-reanimated\//.test(path) ||
+            source.includes('react-native-reanimated')
+          );
         },
         plugins: ['react-native-reanimated/plugin'],
       },

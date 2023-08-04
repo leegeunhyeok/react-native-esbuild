@@ -107,7 +107,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
           const { warnings, errors } = result;
           const endTime = new Date().getTime() - (startTime?.getTime() ?? 0);
           const duration = colors.gray(`(${endTime / 1000}s)`);
-          spinner.stopAndPersist();
+          spinner.clear();
 
           const status = `(${colors.yellow(
             warnings.length.toString(),
@@ -124,7 +124,6 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
           errors.length
             ? spinner.fail(`failed! ${status} ${duration}`)
             : spinner.succeed(`done! ${status} ${duration}`);
-          spinner.stop();
 
           this.handleBuildEnd(result);
         });
