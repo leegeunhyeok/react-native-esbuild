@@ -41,6 +41,8 @@ yarn add -D @react-native-esbuild/cli
 ```
 
 ```js
+// <project-root>/react-native-esbuild.config.js
+
 /**
  * @type {import('@react-native-esbuild/config').CoreConfig}
  */
@@ -60,6 +62,7 @@ exports.default = {
          * @param {string} source
          **/
         test: (path, source) => {
+          // example: apply plugin for reanimated
           return (
             /node_modules\/react-native-reanimated\//.test(path) ||
             source.includes('react-native-reanimated')
