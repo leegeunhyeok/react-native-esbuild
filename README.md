@@ -37,6 +37,39 @@ npm install -D install @react-native-esbuild/cli
 yarn add -D @react-native-esbuild/cli
 ```
 
+```js
+/**
+ * @type {import('@react-native-esbuild/config').CoreConfig}
+ */
+exports.default = {
+  cache: true,
+  transform: {
+    // convert `.svg` assets to react-native-svg based component using @svgr/core
+    svgr: true,
+    // strip flow syntax
+    stripFlowPackageNames: [
+      'react-native',
+      'react-native-reanimated'
+    ],
+    // transform same as metro bundler (slow)
+    fullyTransformPackageNames: [],
+    // custom babel transform rules
+    customTransformRules: [
+      {
+        /**
+         * @param {string} path resolved source code path
+         * @param {string} source source code
+         **/
+        test: (_path, source) => {
+          return source.includes('react-native-reanimated');
+        },
+        plugins: ['react-native-reanimated/plugin'],
+      },
+    ],
+  },
+};
+```
+
 ## Start
 
 Launch dev server
