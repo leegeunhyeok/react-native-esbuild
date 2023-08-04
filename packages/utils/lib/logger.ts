@@ -79,7 +79,7 @@ export class Logger {
   }
 
   public log(message: string, extra?: object): void {
-    if (['info', 'warn', 'error'].some((level) => level === self.logLevel)) {
+    if (['warn', 'error'].some((level) => level === self.logLevel)) {
       return;
     }
 
