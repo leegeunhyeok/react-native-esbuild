@@ -141,6 +141,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
   }
 
   private handleBuildEnd(result: BuildResult): void {
+    const isInitialBuild = !this.bundleResult;
     const bundleFilename = this.bundlerConfig.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const { outputFiles } = result;
@@ -178,7 +179,9 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     } catch (error) {
       this.esbuildTaskHandler?.rejecter?.(error);
     } finally {
-      this.emit('build-end');
+      if (!isInitialBuild) {
+        this.emit('build-end');
+      }
     }
   }
 
