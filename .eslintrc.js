@@ -50,6 +50,7 @@ module.exports = {
     {
       files: ['example/**/*'],
       rules: {
+        'no-console': 'off',
         'unicorn/filename-case': 'off',
       },
     },
