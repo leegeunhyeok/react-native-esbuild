@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.17](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2023-08-04)
+
+
+### Code Refactoring
+
+* clear spinner when build end ([d29e749](https://github.com/leegeunhyeok/react-native-esbuild/commit/d29e7492d13b25132fd47493d6093c34c13f31d5))
+
+
+
 ## [0.1.0-alpha.16](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.15...v0.1.0-alpha.16) (2023-08-04)
 
 

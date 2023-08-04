@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.17](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2023-08-04)
+
+
+### Bug Fixes
+
+* wrong package name regexp ([4c5ceed](https://github.com/leegeunhyeok/react-native-esbuild/commit/4c5ceed218f8c248a6ee91cf303af0bebc788153))
+
+
+### Code Refactoring
+
+* clear spinner when build end ([d29e749](https://github.com/leegeunhyeok/react-native-esbuild/commit/d29e7492d13b25132fd47493d6093c34c13f31d5))
+* remove cache option and now following dev option ([0bd385a](https://github.com/leegeunhyeok/react-native-esbuild/commit/0bd385a5931ddc69e258415d7f876bb96b6185de))
+* seperate transformer modules ([4e09440](https://github.com/leegeunhyeok/react-native-esbuild/commit/4e0944043438565639b866cd077c7b0a590be780))
+
+
+
 ## [0.1.0-alpha.16](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.15...v0.1.0-alpha.16) (2023-08-04)
 
 
