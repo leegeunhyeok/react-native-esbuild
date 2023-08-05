@@ -36,8 +36,7 @@ Promise.resolve(cli())
           .registerPlugin(createSvgTransformPlugin())
           .registerPlugin(createHermesTransformPlugin());
 
-        server.listen();
-        break;
+        return void server.listen();
       }
 
       case 'build': {
@@ -49,15 +48,14 @@ Promise.resolve(cli())
           .registerPlugin(createSvgTransformPlugin())
           .registerPlugin(createHermesTransformPlugin());
 
-        await bundler.bundle({
+        return void (await bundler.bundle({
           platform: buildOptions.platform,
           entryPoint: buildOptions.entryFile,
           outfile: buildOptions.outputFile,
           assetsDir: buildOptions.assetsDir,
           dev: buildOptions.dev,
           minify: buildOptions.minify,
-        });
-        break;
+        }));
       }
 
       case 'cache': {

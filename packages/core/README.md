@@ -7,16 +7,13 @@
 ```ts
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
-const bundler = new ReactNativeEsbuildBundler({
-  entryPoint: 'index.js';
-  outfile: 'dist/main.jsbundle';
-  assetsDir: 'dist/assets';
-  dev: true;
-  minify: false;
-});
+const bundler = new ReactNativeEsbuildBundler();
 
-bundler.registerPlugin(/* call EsbuildPluginFactory */);
+bundler
+  .registerPlugin(/* call EsbuildPluginFactory */)
+  .registerPlugin(/* call EsbuildPluginFactory */)
+  .registerPlugin(/* call EsbuildPluginFactory */);
 
-await bundler.bundle(platform);
-await bundler.watch(platform);
+await bundler.bundle(bundleConfig);
+await bundler.watch(bundleConfig);
 ```
