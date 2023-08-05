@@ -17,11 +17,7 @@ export class CacheManager {
     const cacheDirectory = CacheManager.getCacheDirectory();
 
     try {
-      fs.accessSync(
-        cacheDirectory,
-        // eslint-disable-next-line no-bitwise
-        fs.constants.R_OK | fs.constants.W_OK,
-      );
+      fs.accessSync(cacheDirectory, fs.constants.R_OK | fs.constants.W_OK);
     } catch (_error) {
       fs.mkdirSync(CacheManager.getCacheDirectory(), { recursive: true });
     }
