@@ -1,5 +1,5 @@
 /**
- * @type {import('@react-native-esbuild/config').CoreConfig}
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transform: {

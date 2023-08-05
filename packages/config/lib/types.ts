@@ -1,7 +1,7 @@
 import type { PluginItem } from '@babel/core';
 
 // common
-export interface CoreConfig {
+export interface ReactNativeEsbuildConfig {
   transform: {
     svgr?: boolean;
     stripFlowPackageNames?: string[];
@@ -9,6 +9,7 @@ export interface CoreConfig {
     customTransformRules?: CustomTransformRule[];
   };
 }
+
 export interface SwcPresetOptions {
   filename: string;
 }

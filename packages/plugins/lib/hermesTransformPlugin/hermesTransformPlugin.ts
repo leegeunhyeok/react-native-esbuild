@@ -1,6 +1,6 @@
 import fs, { type FileHandle } from 'node:fs/promises';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
-import { CacheManager } from '@react-native-esbuild/core';
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { isFlow } from '../helpers';
 import { logger } from '../shared';
 import type { PluginCreator } from '../types';
@@ -14,15 +14,15 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
 ) => ({
   name: NAME,
   setup: (build): void => {
-    const cache = new CacheManager();
-    const cacheEnabled = context.bundlerConfig.dev;
+    const cacheController = ReactNativeEsbuildBundler.caches.get(
+      context.platform,
+    );
+    const cacheEnabled = context.dev;
     const {
-      transform: {
-        stripFlowPackageNames = [],
-        fullyTransformPackageNames = [],
-        customTransformRules = [],
-      },
-    } = context.config;
+      stripFlowPackageNames = [],
+      fullyTransformPackageNames = [],
+      customTransformRules = [],
+    } = context.config.transform;
     const workingDirectory = process.cwd();
 
     const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
@@ -47,7 +47,7 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
           const memoryCacheKey = `${args.path}${
             build.initialOptions.platform ?? ''
           }`;
-          const inMemoryCache = cache.readFromMemory(memoryCacheKey);
+          const inMemoryCache = cacheController.readFromMemory(memoryCacheKey);
           const hashParam = [
             build.initialOptions.platform,
             context.config,
@@ -68,16 +68,16 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
             return {
               contents: await fileHandle.readFile({ encoding: 'utf-8' }),
               fromCache: false,
-              hash: cache.getCacheHash(hashParam),
+              hash: cacheController.getCacheHash(hashParam),
             };
           }
 
-          hash = cache.getCacheHash(hashParam);
-          const cachedSource = await cache.readFromFileSystem(hash);
+          hash = cacheController.getCacheHash(hashParam);
+          const cachedSource = await cacheController.readFromFileSystem(hash);
 
           // 2. find cache from fils system
           if (cachedSource) {
-            cache.writeToMemory(memoryCacheKey, {
+            cacheController.writeToMemory(memoryCacheKey, {
               data: cachedSource,
               modifiedAt: mtimeMs,
             });
@@ -145,7 +145,7 @@ export const createHermesTransformPlugin: PluginCreator<null> = (
       source = await transformWithSwc(source, args);
 
       if (cacheEnabled) {
-        await cache.writeToFileSystem(hash, source);
+        await cacheController.writeToFileSystem(hash, source);
       }
 
       return source;

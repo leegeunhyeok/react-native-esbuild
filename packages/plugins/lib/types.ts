@@ -1,15 +1,15 @@
 import type { Plugin } from 'esbuild';
 import type { BundlerConfig } from '@react-native-esbuild/core';
-import type { CoreConfig } from '@react-native-esbuild/config';
+import type { ReactNativeEsbuildConfig } from '@react-native-esbuild/config';
 
 export type PluginCreator<Config> = (
   config: Config,
   context: PluginContext,
 ) => Plugin;
 
-export interface PluginContext {
-  config: CoreConfig;
-  bundlerConfig: BundlerConfig;
+export interface PluginContext extends BundlerConfig {
+  config: ReactNativeEsbuildConfig;
+  platform: 'android' | 'ios' | 'web';
 }
 
 // asset-register-plugin

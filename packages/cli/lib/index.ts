@@ -1,7 +1,4 @@
-import {
-  CacheManager,
-  ReactNativeEsbuildBundler,
-} from '@react-native-esbuild/core';
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import {
   createAssetRegisterPlugin,
@@ -18,7 +15,7 @@ Promise.resolve(cli())
     logger.setLogLevel(argv.debug ? 'debug' : 'info');
 
     const resetCache = async (): Promise<void> => {
-      await new CacheManager().clear();
+      await ReactNativeEsbuildBundler.caches.clearAll();
       logger.info('transform cache was reset');
     };
 

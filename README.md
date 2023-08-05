@@ -44,7 +44,7 @@ yarn add -D @react-native-esbuild/cli
 // <project-root>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').CoreConfig}
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transform: {

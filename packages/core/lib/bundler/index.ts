@@ -10,9 +10,10 @@ import ora from 'ora';
 import {
   loadConfig,
   getEsbuildOptions,
-  type CoreConfig,
+  type ReactNativeEsbuildConfig,
 } from '@react-native-esbuild/config';
 import { colors, isCI } from '@react-native-esbuild/utils';
+import { CacheStorage } from '../cache';
 import { createPromiseHandler } from '../helpers';
 import { BundleTaskSignal } from '../types';
 import type {
@@ -26,7 +27,8 @@ import { logger } from '../shared';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends EventEmitter {
-  private config: CoreConfig;
+  public static caches = CacheStorage.getInstance();
+  private config: ReactNativeEsbuildConfig;
   private plugins: Plugin[];
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
@@ -214,7 +216,10 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
   }
 
   registerPlugins(
-    register: (config: CoreConfig, bundlerConfig: BundlerConfig) => Plugin[],
+    register: (
+      config: ReactNativeEsbuildConfig,
+      bundlerConfig: BundlerConfig,
+    ) => Plugin[],
   ): this {
     this.plugins = register(this.config, this.bundlerConfig);
     return this;

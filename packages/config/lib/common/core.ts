@@ -1,14 +1,18 @@
 import path from 'node:path';
 import deepmerge from 'deepmerge';
-import { OptionFlag, type BitwiseOptions, type CoreConfig } from '../types';
+import {
+  OptionFlag,
+  type BitwiseOptions,
+  type ReactNativeEsbuildConfig,
+} from '../types';
 
 export const CACHE_DIR = 'rne';
 export const LOCAL_CACHE_DIR = '.rne';
 
-export function loadConfig(): CoreConfig {
-  let config: CoreConfig | undefined;
+export function loadConfig(): ReactNativeEsbuildConfig {
+  let config: ReactNativeEsbuildConfig | undefined;
 
-  const baseOptions: CoreConfig = {
+  const baseOptions: ReactNativeEsbuildConfig = {
     transform: {},
   };
 

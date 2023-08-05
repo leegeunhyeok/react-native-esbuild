@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import { faker } from '@faker-js/faker';
-import { CacheManager } from '..';
+import { CacheController } from '../CacheController';
 import type { Cache } from '../../types';
 
-describe('CacheManager', () => {
-  let manager: CacheManager;
+describe('CacheController', () => {
+  const CACHE_DIR = '/cache';
+  let manager: CacheController;
   let mockedFs: Record<string, string>;
 
   beforeAll(() => {
@@ -24,13 +25,17 @@ describe('CacheManager', () => {
       });
     jest.spyOn(fs.promises, 'rm').mockReturnValue(Promise.resolve());
 
-    manager = new CacheManager();
+    manager = new CacheController(CACHE_DIR);
     mockedFs = {};
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
   });
 
   describe('getCacheDirectory', () => {
     it('should match snapshot', () => {
-      expect(CacheManager.getCacheDirectory()).toMatchSnapshot();
+      expect(CACHE_DIR).toMatchSnapshot();
     });
 
     describe('when filename is present', () => {
@@ -41,9 +46,7 @@ describe('CacheManager', () => {
       });
 
       it('should join path with cache directory', () => {
-        expect(CacheManager.getCacheDirectory(filename)).toMatch(
-          new RegExp(`/${filename}$`),
-        );
+        expect(`${CACHE_DIR}/${filename}`).toMatch(new RegExp(`/${filename}$`));
       });
     });
   });
