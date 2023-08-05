@@ -16,9 +16,11 @@
   "devDependencies": {
     "@commitlint/cli": "^17.6.7",
     "@commitlint/config-conventional": "^17.6.7",
+    "@faker-js/faker": "^8.0.2",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.5",
     "@vercel/style-guide": "^4.0.2",
+    "esbuild": "^0.18.17",
     "eslint": "^8.45.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",

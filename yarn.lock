@@ -2062,6 +2062,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "@faker-js/faker@npm:8.0.2"
+  checksum: cf73daf9a50397eb0b3f04a7ef3fbb6f54acc026b167707136a7e58a517fd805a46c9e8c5f017f3022f104a4ff984765daaeee2cb98b3c34646db05c2acad441
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -3340,6 +3347,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/core@workspace:packages/core"
   dependencies:
+    "@faker-js/faker": ^8.0.2
     "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/utils": "workspace:^"
     "@types/md5": ^2.3.2
@@ -12189,9 +12197,11 @@ __metadata:
   dependencies:
     "@commitlint/cli": ^17.6.7
     "@commitlint/config-conventional": ^17.6.7
+    "@faker-js/faker": ^8.0.2
     "@types/jest": ^29.5.3
     "@types/node": ^20.4.5
     "@vercel/style-guide": ^4.0.2
+    esbuild: ^0.18.17
     eslint: ^8.45.0
     eslint-plugin-prettier: ^5.0.0
     husky: ^8.0.3

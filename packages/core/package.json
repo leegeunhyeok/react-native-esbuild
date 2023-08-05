@@ -47,6 +47,7 @@
     "react-native": "^0.72.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/md5": "^2.3.2"
   }
 }

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CacheManager getCacheDirectory should match snapshot 1`] = `"/var/folders/fp/5dmhdqcd0f178fv2jkypxx0r0000gn/T/react-native-esbuild"`;
