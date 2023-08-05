@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { LogLevel } from '@react-native-esbuild/utils';
 import type { DevServerMiddleware, LogMessage } from '../types';
 
-type ParsedBundlerOptions = z.infer<typeof bundleSearchParamSchema>;
+export type ParsedBundlerOptions = z.infer<typeof bundleSearchParamSchema>;
 
 const toBoolean = (val: z.infer<typeof boolean>): boolean => val === 'true';
 
@@ -46,7 +46,7 @@ export function toSafetyMiddleware(
     try {
       middleware(request, response, next);
     } catch (error) {
-      next(error);
+      response.writeHead(500).end();
     }
   };
 }

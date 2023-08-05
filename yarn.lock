@@ -3364,6 +3364,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/dev-server@workspace:packages/dev-server"
   dependencies:
+    "@faker-js/faker": ^8.0.2
     "@react-native-community/cli-server-api": ^11.3.6
     "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/core": "workspace:^"

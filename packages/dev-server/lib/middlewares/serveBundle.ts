@@ -3,6 +3,7 @@ import {
   BundleTaskSignal,
   type BundleRequestOptions,
 } from '@react-native-esbuild/core';
+import type { ParsedBundlerOptions } from '../helpers';
 import {
   toSafetyMiddleware,
   parseBundleOptionsFromSearchParams,
@@ -35,11 +36,12 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       };
 
       if (pathname?.endsWith('.bundle')) {
-        if (typeof query !== 'object') {
-          logger.warn(`(${TAG}) invalid request`);
-          return void response.writeHead(400).end();
+        let bundleRequestOptions: ParsedBundlerOptions;
+        try {
+          bundleRequestOptions = parseBundleOptionsFromSearchParams(query);
+        } catch (_error) {
+          return response.writeHead(400).end();
         }
-        const bundleRequestOptions = parseBundleOptionsFromSearchParams(query);
 
         return void getBundleAndServe(bundleRequestOptions).catch(
           (errorOrSignal) => {

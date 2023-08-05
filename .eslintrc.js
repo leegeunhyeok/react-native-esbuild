@@ -58,6 +58,7 @@ module.exports = {
       files: ['**/*.test.ts'],
       rules: {
         '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/unbound-method': 'off',
       },
     },
   ],
