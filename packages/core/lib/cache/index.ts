@@ -4,8 +4,9 @@ import path from 'node:path';
 import md5 from 'md5';
 import type { Cache } from '../types';
 
+const OPTIONS = { encoding: 'utf-8' } as const;
+
 export class CacheManager {
-  private fileEncoding = { encoding: 'utf-8' } as const;
   private cache = new Map<string, Cache>();
 
   public static getCacheDirectory(filename?: string): string {
@@ -13,7 +14,17 @@ export class CacheManager {
   }
 
   constructor() {
-    fs.mkdirSync(CacheManager.getCacheDirectory(), { recursive: true });
+    const cacheDirectory = CacheManager.getCacheDirectory();
+
+    try {
+      fs.accessSync(
+        cacheDirectory,
+        // eslint-disable-next-line no-bitwise
+        fs.constants.R_OK | fs.constants.W_OK,
+      );
+    } catch (_error) {
+      fs.mkdirSync(CacheManager.getCacheDirectory(), { recursive: true });
+    }
   }
 
   public getCacheHash(data: object): string {
@@ -26,7 +37,7 @@ export class CacheManager {
 
   public readFromFileSystem(hash: string): Promise<string | null> {
     return fs.promises
-      .readFile(CacheManager.getCacheDirectory(hash), this.fileEncoding)
+      .readFile(CacheManager.getCacheDirectory(hash), OPTIONS)
       .catch(() => null);
   }
 
@@ -36,7 +47,7 @@ export class CacheManager {
 
   public writeToFileSystem(hash: string, data: string): Promise<void> {
     return fs.promises
-      .writeFile(CacheManager.getCacheDirectory(hash), data, this.fileEncoding)
+      .writeFile(CacheManager.getCacheDirectory(hash), data, OPTIONS)
       .catch(() => void 0);
   }
 

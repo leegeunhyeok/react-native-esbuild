@@ -8,6 +8,7 @@ describe('CacheManager', () => {
   let mockedFs: Record<string, string>;
 
   beforeAll(() => {
+    jest.spyOn(fs, 'accessSync').mockImplementation(() => void 0);
     jest.spyOn(fs, 'mkdirSync').mockImplementation(() => void 0);
     jest
       .spyOn(fs.promises, 'readFile')
