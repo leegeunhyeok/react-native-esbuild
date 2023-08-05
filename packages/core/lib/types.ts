@@ -5,6 +5,8 @@ import type {
 } from '@react-native-esbuild/config';
 import type { Plugin } from 'esbuild';
 
+export type RunType = 'bundle' | 'watch';
+
 export interface BundleRequestOptions {
   platform: BundlerSupportPlatform;
   dev: boolean;
@@ -28,6 +30,7 @@ export type EsbuildPluginFactory<PluginConfig = void> = (
 ) => (context: PluginContext) => Plugin;
 
 export interface PluginContext extends BundleConfig {
+  mode: RunType;
   config: ReactNativeEsbuildConfig;
 }
 

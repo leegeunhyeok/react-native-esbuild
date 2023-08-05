@@ -22,6 +22,7 @@ import type {
   EsbuildPluginFactory,
   PluginContext,
   PromiseHandler,
+  RunType,
 } from '../types';
 import { createBuildStatusPlugin } from './internal';
 import { printLogo } from './logo';
@@ -43,7 +44,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
 
   private getBuildOptionsForBundler(
     bundleConfig: BundleConfig,
-    mode: 'bundle' | 'watch',
+    mode: RunType,
   ): BuildOptions {
     if (!this.plugins.length) {
       throw new Error('plugins is not registered');
@@ -51,6 +52,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
 
     const context: PluginContext = {
       ...bundleConfig,
+      mode,
       config: this.config,
     };
 
