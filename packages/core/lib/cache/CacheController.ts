@@ -16,8 +16,8 @@ export class CacheController {
     }
   }
 
-  public getCacheHash(data: object): string {
-    return md5(JSON.stringify(data));
+  public getCacheHash(message: string): string {
+    return md5(message);
   }
 
   public readFromMemory(key: string): Cache | undefined {

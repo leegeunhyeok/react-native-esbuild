@@ -93,7 +93,7 @@ describe('CacheController', () => {
     let data: string;
 
     beforeEach(async () => {
-      const hashParam = { _: faker.string.alphanumeric(10) };
+      const hashParam = faker.string.alphanumeric(10);
       hash = manager.getCacheHash(hashParam);
       data = faker.string.alphanumeric(10);
       await manager.writeToFileSystem(hash, data);

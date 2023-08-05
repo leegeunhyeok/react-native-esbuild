@@ -3,7 +3,6 @@ import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import type { EsbuildPluginFactory } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { isFlow } from '../helpers';
-import { logger } from '../shared';
 import { transformWithBabel, transformWithSwc } from './transformer';
 
 const NAME = 'hermes-transform-plugin';
@@ -35,27 +34,35 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
 
         const getTransformedSourceFromCache = async (
           args: OnLoadArgs,
-        ): Promise<{ contents: string; fromCache: boolean; hash?: string }> => {
+        ): Promise<{
+          contents: string;
+          fromCache: boolean;
+          hash?: string;
+          mtimeMs?: number;
+        }> => {
           let fileHandle: FileHandle | null = null;
-          let hash: string | undefined;
 
           try {
             fileHandle = await fs.open(args.path, 'r');
+            const { mtimeMs } = await fileHandle.stat();
+
+            // `taskId` is combined value (platform, dev, minify)
+            // use `taskId` as filesystem hash key generation
+            //
+            // md5(taskId + modified time + file path) = cache key
+            //     number + number        + string
+            //
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+            const hashParam = context.taskId + mtimeMs + args.path;
+            const hash = cacheController.getCacheHash(hashParam);
 
             if (cacheEnabled) {
-              const { mtimeMs } = await fileHandle.stat();
-              const memoryCacheKey = `${args.path}${
-                build.initialOptions.platform ?? ''
-              }`;
-              const inMemoryCache =
-                cacheController.readFromMemory(memoryCacheKey);
-              const hashInput = taskId + mtimeMs + args.path;
+              const inMemoryCache = cacheController.readFromMemory(hash);
 
               // 1. find cache from memory
               if (inMemoryCache) {
                 if (inMemoryCache.modifiedAt === mtimeMs) {
                   // file is not modified, using cache data
-                  logger.debug(`in-memory cache hit: ${args.path}`);
                   return { contents: inMemoryCache.data, fromCache: true };
                 }
 
@@ -64,18 +71,17 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
                 return {
                   contents: await fileHandle.readFile({ encoding: 'utf-8' }),
                   fromCache: false,
-                  hash: cacheController.getCacheHash(hashParam),
+                  hash,
                 };
               }
 
-              hash = cacheController.getCacheHash(hashParam);
               const cachedSource = await cacheController.readFromFileSystem(
                 hash,
               );
 
               // 2. find cache from fils system
               if (cachedSource) {
-                cacheController.writeToMemory(memoryCacheKey, {
+                cacheController.writeToMemory(hash, {
                   data: cachedSource,
                   modifiedAt: mtimeMs,
                 });
@@ -88,6 +94,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
               contents: await fileHandle.readFile({ encoding: 'utf-8' }),
               fromCache: false,
               hash,
+              mtimeMs,
             };
           } finally {
             await fileHandle?.close();
@@ -98,6 +105,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           args: OnLoadArgs,
           rawSource: string,
           hash?: string,
+          mtimeMs?: number,
         ): Promise<string> => {
           if (typeof hash !== 'string') {
             throw new Error('hash is required for caching');
@@ -143,6 +151,10 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           source = await transformWithSwc(source, args);
 
           if (cacheEnabled) {
+            cacheController.writeToMemory(hash, {
+              data: source,
+              modifiedAt: mtimeMs ?? 0,
+            });
             await cacheController.writeToFileSystem(hash, source);
           }
 
@@ -150,23 +162,13 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
         };
 
         build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
-          const { contents, fromCache, hash } =
+          const { contents, fromCache, hash, mtimeMs } =
             await getTransformedSourceFromCache(args);
-          const usingCache = fromCache && cacheEnabled;
-
-          if (usingCache) {
-            logger.debug(
-              `(${NAME}) transform cache hit: ${args.path.replace(
-                context.cwd,
-                '',
-              )}`,
-            );
-          }
 
           return {
             contents: fromCache
               ? contents
-              : await transformSource(args, contents, hash),
+              : await transformSource(args, contents, hash, mtimeMs),
             loader: 'js',
           } as OnLoadResult;
         });
