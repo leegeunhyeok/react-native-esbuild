@@ -3,12 +3,13 @@ import type { Plugin } from 'esbuild';
 
 export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
-export interface BundlerConfig {
+export interface BundleConfig {
   entryPoint: string;
   outfile: string;
   assetsDir: string;
   dev: boolean;
   minify: boolean;
+  platform: BundlerSupportPlatform;
 }
 
 export interface BundleRequestOptions {
@@ -33,9 +34,8 @@ export type EsbuildPluginFactory<PluginConfig = void> = (
   config?: PluginConfig,
 ) => (context: PluginContext) => Plugin;
 
-export interface PluginContext extends BundlerConfig {
+export interface PluginContext extends BundleConfig {
   config: ReactNativeEsbuildConfig;
-  platform: 'android' | 'ios' | 'web';
 }
 
 export interface PromiseHandler<Result> {

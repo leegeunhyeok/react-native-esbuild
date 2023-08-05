@@ -5,10 +5,7 @@ import {
   createDevServerMiddleware,
   indexPageMiddleware,
 } from '@react-native-community/cli-server-api';
-import {
-  ReactNativeEsbuildBundler,
-  type BundlerConfig,
-} from '@react-native-esbuild/core';
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
   createServeAssetMiddleware,
   createServeBundleMiddleware,
@@ -20,6 +17,7 @@ import type { DevServerMiddlewareContext, DevServerOptions } from '../types';
 import { createHotReloadMiddleware } from '../middlewares/hotReload';
 
 export class ReactNativeEsbuildDevServer {
+  private initialized = false;
   private bundler?: ReactNativeEsbuildBundler;
   private server?: HTTPServer;
   private devServerOptions: Required<DevServerOptions>;
@@ -47,11 +45,16 @@ export class ReactNativeEsbuildDevServer {
     }
   }
 
-  initialize(bundlerConfig: BundlerConfig): {
+  initialize(): {
     server: ReactNativeEsbuildDevServer;
     bundler: ReactNativeEsbuildBundler;
   } {
-    logger.debug('initialize dev server', this.devServerOptions);
+    if (this.initialized && this.bundler) {
+      logger.warn('dev server already initialized');
+      return { server: this, bundler: this.bundler };
+    }
+
+    logger.debug('setup dev server', this.devServerOptions);
     logger.debug('create bundler instance');
 
     const { server: hotReloadServer, ...hr } = createHotReloadMiddleware();
@@ -61,7 +64,7 @@ export class ReactNativeEsbuildDevServer {
       watchFolders: [],
     });
 
-    this.bundler = new ReactNativeEsbuildBundler(bundlerConfig);
+    this.bundler = new ReactNativeEsbuildBundler();
     this.bundler.addListener('build-start', hr.updateStart);
     this.bundler.addListener('build-end', () => {
       hr.hotReload();

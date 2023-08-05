@@ -48,15 +48,26 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
             if (errorOrSignal === BundleTaskSignal.WatchModeNotStarted) {
               logger.debug(`(${TAG}) watch mode is not started`);
               logger.debug(`(${TAG}) starting watch mode`);
+
               // start bundling and watching
               // and retry to get bundle after a while
-              return bundler.watch(bundleRequestOptions.platform).then(() => {
-                logger.debug(`(${TAG}) watch mode started`);
-                setTimeout(
-                  () => void getBundleAndServe(bundleRequestOptions),
-                  500,
-                );
-              });
+              return bundler
+                .watch({
+                  dev: bundleRequestOptions.dev,
+                  minify: bundleRequestOptions.minify,
+                  platform: bundleRequestOptions.platform,
+                  // TODO: typing
+                  assetsDir: '',
+                  outfile: '',
+                  entryPoint: '',
+                })
+                .then(() => {
+                  logger.debug(`(${TAG}) watch mode started`);
+                  setTimeout(
+                    () => void getBundleAndServe(bundleRequestOptions),
+                    500,
+                  );
+                });
             }
 
             const error = errorOrSignal as Error;

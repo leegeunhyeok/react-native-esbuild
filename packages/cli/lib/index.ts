@@ -29,13 +29,7 @@ Promise.resolve(cli())
         const { bundler, server } = new ReactNativeEsbuildDevServer({
           host: startOptions.host,
           port: startOptions.port,
-        }).initialize({
-          entryPoint: startOptions.entryFile,
-          outfile: startOptions.outputFile,
-          assetsDir: startOptions.assetsDir,
-          dev: startOptions.dev,
-          minify: startOptions.minify,
-        });
+        }).initialize();
 
         bundler
           .registerPlugin(createAssetRegisterPlugin())
@@ -48,20 +42,21 @@ Promise.resolve(cli())
 
       case 'build': {
         const buildOptions = getOptions(argv) as BuildOptions;
-        const bundler = new ReactNativeEsbuildBundler({
-          entryPoint: buildOptions.entryFile,
-          outfile: buildOptions.outputFile,
-          assetsDir: buildOptions.assetsDir,
-          dev: buildOptions.dev,
-          minify: buildOptions.minify,
-        });
+        const bundler = new ReactNativeEsbuildBundler();
 
         bundler
           .registerPlugin(createAssetRegisterPlugin())
           .registerPlugin(createSvgTransformPlugin())
           .registerPlugin(createHermesTransformPlugin());
 
-        await bundler.bundle(buildOptions.platform);
+        await bundler.bundle({
+          platform: buildOptions.platform,
+          entryPoint: buildOptions.entryFile,
+          outfile: buildOptions.outputFile,
+          assetsDir: buildOptions.assetsDir,
+          dev: buildOptions.dev,
+          minify: buildOptions.minify,
+        });
         break;
       }
 
