@@ -126,7 +126,10 @@ rne cache clear
 ## Plugins
 
 ```ts
-import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import {
+  ReactNativeEsbuildBundler,
+  type EsbuildPluginFactory,
+} from '@react-native-esbuild/core';
 import {
   createAssetRegisterPlugin,
   createHermesTransformPlugin,
@@ -135,19 +138,24 @@ import {
 
 const bundler = new ReactNativeEsbuildBundler(/* bundler config */);
 
-bundler.registerPlugins((config, bundlerConfig) => {
-  return [
-    createAssetRegisterPlugin({ config, bundlerConfig }),
-    createSvgTransformPlugin({ config, bundlerConfig }),
-    createHermesTransformPlugin({ config, bundlerConfig }),
-    {
+const createMyPlugin: EsbuildPluginFactory<MyPluginConfigType> = (pluginConfig) => {
+  return function myPlugin (context) {
+    return {
+      // implement your custom esbuild plugin here
       name: 'your-custom-esbuild-plugin',
-      setup: () {
+      setup: (build): void {
         // ...
       },
     },
-  ];
-});
+  };
+};
+
+bundler
+  .registerPlugin(createAssetRegisterPlugin())
+  .registerPlugin(createSvgTransformPlugin())
+  .registerPlugin(createHermesTransformPlugin())
+  // register custom esbuild plugin
+  .registerPlugin(createMyPlugin(config));
 ```
 
 # Development

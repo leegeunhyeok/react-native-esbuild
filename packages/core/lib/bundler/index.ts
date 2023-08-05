@@ -21,6 +21,8 @@ import type {
   BundlerSupportPlatform,
   BundleResult,
   BundleRequestOptions,
+  EsbuildPluginFactory,
+  PluginContext,
   PromiseHandler,
 } from '../types';
 import { logger } from '../shared';
@@ -29,7 +31,7 @@ import { printLogo } from './logo';
 export class ReactNativeEsbuildBundler extends EventEmitter {
   public static caches = CacheStorage.getInstance();
   private config: ReactNativeEsbuildConfig;
-  private plugins: Plugin[];
+  private plugins: ReturnType<EsbuildPluginFactory<unknown>>[];
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
@@ -49,6 +51,12 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
       throw new Error('plugins is not registered');
     }
 
+    const context: PluginContext = {
+      ...this.bundlerConfig,
+      config: this.config,
+      platform,
+    };
+
     return getEsbuildOptions(
       { ...this.bundlerConfig, platform },
       {
@@ -57,7 +65,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
            * `build-status-plugin` is required and must be placed first
            */
           this.createBuildStatusPlugin(),
-          ...this.plugins,
+          ...this.plugins.map((plugin) => plugin(context)),
         ].filter(Boolean),
         write: mode === 'bundle',
       },
@@ -215,13 +223,8 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     }
   }
 
-  registerPlugins(
-    register: (
-      config: ReactNativeEsbuildConfig,
-      bundlerConfig: BundlerConfig,
-    ) => Plugin[],
-  ): this {
-    this.plugins = register(this.config, this.bundlerConfig);
+  registerPlugin(plugin: ReturnType<EsbuildPluginFactory<unknown>>): this {
+    this.plugins.push(plugin);
     return this;
   }
 

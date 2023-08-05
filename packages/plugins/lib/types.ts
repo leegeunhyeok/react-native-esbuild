@@ -1,16 +1,6 @@
-import type { Plugin } from 'esbuild';
-import type { BundlerConfig } from '@react-native-esbuild/core';
-import type { ReactNativeEsbuildConfig } from '@react-native-esbuild/config';
-
-export type PluginCreator<Config> = (
-  config: Config,
-  context: PluginContext,
-) => Plugin;
-
-export interface PluginContext extends BundlerConfig {
-  config: ReactNativeEsbuildConfig;
-  platform: 'android' | 'ios' | 'web';
-}
+import type { OnLoadArgs } from 'esbuild';
+import type { CacheController } from '@react-native-esbuild/core';
+import type { CustomTransformRule } from '@react-native-esbuild/config';
 
 // asset-register-plugin
 export interface AssetRegisterPluginConfig {
@@ -41,4 +31,35 @@ export interface RegistrationScriptParams {
   httpServerLocation: string;
   scales: number[];
   dimensions: { width: number; height: number };
+}
+
+// hermes-transform-plugin
+interface CacheParams {
+  cacheEnabled: boolean;
+  cacheController: CacheController;
+}
+
+export interface GetCacheParam extends CacheParams {
+  args: OnLoadArgs;
+}
+
+export type GetCacheResult = BaseCacheResult | NoCacheResult;
+
+export interface BaseCacheResult {
+  contents: string;
+  modifiedAt: number;
+}
+
+export interface NoCacheResult extends BaseCacheResult {
+  content: string;
+  hash: string;
+}
+
+export interface TransformSourceParam extends CacheParams {
+  args: OnLoadArgs;
+  rawSource: string;
+  hash?: string;
+  stripFlowPackageNamesRegExp?: RegExp;
+  fullyTransformPackagesRegExp?: RegExp;
+  customTransformRules?: CustomTransformRule[];
 }

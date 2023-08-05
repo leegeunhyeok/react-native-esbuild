@@ -15,11 +15,7 @@ const bundler = new ReactNativeEsbuildBundler({
   minify: false;
 });
 
-bundler.registerPlugins((config, bundlerConfig) => {
-  return [
-    // esbuild plugins here
-  ];
-});
+bundler.registerPlugin(/* call EsbuildPluginFactory */);
 
 await bundler.bundle(platform);
 await bundler.watch(platform);

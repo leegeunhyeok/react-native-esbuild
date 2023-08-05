@@ -6,11 +6,11 @@ import {
   ASSET_EXTENSIONS,
 } from '@react-native-esbuild/config';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
+import type { EsbuildPluginFactory } from '@react-native-esbuild/core';
 import type {
   Asset,
   AssetRegisterPluginConfig,
   AssetScale,
-  PluginCreator,
   RegistrationScriptParams,
   SuffixPathResult,
 } from '../types';
@@ -18,6 +18,7 @@ import { logger } from '../shared';
 
 const NAME = 'asset-register-plugin';
 const ASSET_NAMESPACE = 'react-native-esbuild-assets';
+const DEFAULT_PLUGIN_CONFIG = { assetExtensions: ASSET_EXTENSIONS } as const;
 
 /**
  * @see {@link https://developer.android.com/training/multiscreen/screendensities#TaskProvideAltBmp}
@@ -53,209 +54,216 @@ const getRegistrationScript = (
   )});
 `;
 
-export const createAssetRegisterPlugin: PluginCreator<
-  AssetRegisterPluginConfig | undefined
-> = (config, context) => ({
-  name: NAME,
-  setup: (build): void => {
-    const { assetExtensions = ASSET_EXTENSIONS } = config ?? {};
-    const { svgr = false } = context.config.transform;
-    const assetExtensionsFilter = new RegExp(
-      `.(${assetExtensions
-        .filter((extension) =>
-          // if using svgr, ignore .svg file
-          svgr ? extension !== '.svg' : true,
-        )
-        .join('|')})$`,
-    );
-    let assets: Asset[] = [];
+export const createAssetRegisterPlugin: EsbuildPluginFactory<
+  AssetRegisterPluginConfig
+> = (config = DEFAULT_PLUGIN_CONFIG) => {
+  return function assetRegisterPlugin(context) {
+    return {
+      name: NAME,
+      setup: (build): void => {
+        const { assetExtensions = ASSET_EXTENSIONS } = config;
+        const { svgr = false } = context.config.transform;
+        const assetExtensionsFilter = new RegExp(
+          `.(${assetExtensions
+            .filter((extension) =>
+              // if using svgr, ignore .svg file
+              svgr ? extension !== '.svg' : true,
+            )
+            .join('|')})$`,
+        );
+        let assets: Asset[] = [];
 
-    const addSuffix = (
-      basename: string,
-      extension: string,
-      suffix: string | number,
-    ): string => {
-      return basename.replace(
-        new RegExp(`${extension}$`),
-        `${suffix}${extension}`,
-      );
-    };
+        const addSuffix = (
+          basename: string,
+          extension: string,
+          suffix: string | number,
+        ): string => {
+          return basename.replace(
+            new RegExp(`${extension}$`),
+            `${suffix}${extension}`,
+          );
+        };
 
-    /**
-     * add scale suffix to asset path
-     *
-     * ```js
-     * // assetPath input
-     * '/path/to/assets/image.png'
-     *
-     * // suffixed by `scale`
-     * '/path/to/assets/image@1x.png'
-     * '/path/to/assets/image@2x.png'
-     * '/path/to/assets/image@3x.png'
-     * ```
-     */
-    const getSuffixedPath = (
-      assetPath: string,
-      scale?: AssetScale,
-    ): SuffixPathResult => {
-      // if `scale` present, append scale suffix to path
-      // assetPath: '/path/to/assets/image.png'
-      // result: '/path/to/assets/image@{scale}x.png'
-      const extension = path.extname(assetPath);
-      const dirname = path.dirname(assetPath);
-      const basename = path.basename(assetPath);
-      const suffixedBasename = scale
-        ? addSuffix(basename, extension, `@${scale}x`)
-        : basename;
+        /**
+         * add scale suffix to asset path
+         *
+         * ```js
+         * // assetPath input
+         * '/path/to/assets/image.png'
+         *
+         * // suffixed by `scale`
+         * '/path/to/assets/image@1x.png'
+         * '/path/to/assets/image@2x.png'
+         * '/path/to/assets/image@3x.png'
+         * ```
+         */
+        const getSuffixedPath = (
+          assetPath: string,
+          scale?: AssetScale,
+        ): SuffixPathResult => {
+          // if `scale` present, append scale suffix to path
+          // assetPath: '/path/to/assets/image.png'
+          // result: '/path/to/assets/image@{scale}x.png'
+          const extension = path.extname(assetPath);
+          const dirname = path.dirname(assetPath);
+          const basename = path.basename(assetPath);
+          const suffixedBasename = scale
+            ? addSuffix(basename, extension, `@${scale}x`)
+            : basename;
 
-      return {
-        dirname,
-        basename: suffixedBasename,
-        extension,
-        path: scale ? `${dirname}/${suffixedBasename}` : assetPath,
-      };
-    };
+          return {
+            dirname,
+            basename: suffixedBasename,
+            extension,
+            path: scale ? `${dirname}/${suffixedBasename}` : assetPath,
+          };
+        };
 
-    const resolveAsset = (
-      result: SuffixPathResult,
-      { importer, kind, namespace, resolveDir }: OnResolveArgs,
-    ): Promise<ResolveResult> => {
-      return build.resolve(result.path, {
-        resolveDir,
-        importer,
-        kind,
-        namespace,
-        pluginData: result,
-      });
-    };
+        const resolveAsset = (
+          result: SuffixPathResult,
+          { importer, kind, namespace, resolveDir }: OnResolveArgs,
+        ): Promise<ResolveResult> => {
+          return build.resolve(result.path, {
+            resolveDir,
+            importer,
+            kind,
+            namespace,
+            pluginData: result,
+          });
+        };
 
-    build.onStart(() => {
-      assets = [];
-    });
+        build.onStart(() => {
+          assets = [];
+        });
 
-    build.onResolve({ filter: assetExtensionsFilter }, async (args) => {
-      if (args.pluginData) return null;
+        build.onResolve({ filter: assetExtensionsFilter }, async (args) => {
+          if (args.pluginData) return null;
 
-      // resolve original path (eg. `image.png`)
-      let suffixedPathResult = getSuffixedPath(args.path);
-      let resolveResult = await resolveAsset(suffixedPathResult, args);
+          // resolve original path (eg. `image.png`)
+          let suffixedPathResult = getSuffixedPath(args.path);
+          let resolveResult = await resolveAsset(suffixedPathResult, args);
 
-      if (resolveResult.errors.length) {
-        // if cannot resolve asset, try resolve with suffixed path (eg. `image@1x.png`)
-        suffixedPathResult = getSuffixedPath(args.path, 1);
-        resolveResult = await resolveAsset(suffixedPathResult, args);
-      }
+          if (resolveResult.errors.length) {
+            // if cannot resolve asset, try resolve with suffixed path (eg. `image@1x.png`)
+            suffixedPathResult = getSuffixedPath(args.path, 1);
+            resolveResult = await resolveAsset(suffixedPathResult, args);
+          }
 
-      if (resolveResult.errors.length) {
-        return { errors: resolveResult.errors };
-      }
+          if (resolveResult.errors.length) {
+            return { errors: resolveResult.errors };
+          }
 
-      return {
-        path: resolveResult.path,
-        namespace: ASSET_NAMESPACE,
-        pluginData: suffixedPathResult,
-      };
-    });
+          return {
+            path: resolveResult.path,
+            namespace: ASSET_NAMESPACE,
+            pluginData: suffixedPathResult,
+          };
+        });
 
-    build.onLoad({ filter: /./, namespace: ASSET_NAMESPACE }, async (args) => {
-      const { basename, extension } = args.pluginData as SuffixPathResult;
-      const dirname = path.dirname(args.path);
-      const relativePath = path.relative(
-        build.initialOptions.sourceRoot ?? process.cwd(),
-        args.path,
-      );
+        build.onLoad(
+          { filter: /./, namespace: ASSET_NAMESPACE },
+          async (args) => {
+            const { basename, extension } = args.pluginData as SuffixPathResult;
+            const dirname = path.dirname(args.path);
+            const relativePath = path.relative(
+              build.initialOptions.sourceRoot ?? process.cwd(),
+              args.path,
+            );
 
-      const filesInDir = await fs.readdir(dirname);
-      const assetRegExp = new RegExp(
-        `${basename.replace(extension, '')}(@(\\d+)x)?${extension}$`,
-      );
-      const scaledAssets: Partial<Record<AssetScale, string>> = {};
+            const filesInDir = await fs.readdir(dirname);
+            const assetRegExp = new RegExp(
+              `${basename.replace(extension, '')}(@(\\d+)x)?${extension}$`,
+            );
+            const scaledAssets: Partial<Record<AssetScale, string>> = {};
 
-      for (const file of filesInDir) {
-        const match = assetRegExp.exec(file);
-        if (match) {
-          const [, , scale] = match;
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          scaledAssets[scale ?? '1'] = file;
-        }
-      }
-
-      if (!(Object.keys(scaledAssets).length && scaledAssets[1])) {
-        throw new Error(`cannot resolve base asset of ${args.path}`);
-      }
-
-      const asset = {
-        path: args.path,
-        basename,
-        extension,
-        scales: Object.keys(scaledAssets).map(parseFloat).sort(),
-      };
-      assets.push(asset);
-
-      return {
-        resolveDir: dirname,
-        contents: getRegistrationScript(
-          {
-            ...asset,
-            relativePath,
-            hash: '',
-            httpServerLocation: path.join(
-              ASSET_PATH,
-              path.dirname(relativePath),
-            ),
-            dimensions: { width: 0, height: 0 },
-          },
-          true,
-        ),
-        loader: 'js',
-      };
-    });
-
-    build.onEnd(async () => {
-      const devServerAssetPath = getDevServerAssetPath();
-
-      // cleanup asset cache directory
-      await fs
-        .rm(devServerAssetPath, { recursive: true, force: true })
-        .catch(() => void 0);
-      await fs.mkdir(devServerAssetPath, { recursive: true });
-
-      const assetCopyTasks = assets.map(
-        ({ path: resolvedPath, basename, extension, scales }) => {
-          return scales.map(async (scale): Promise<void> => {
-            let filepath: string;
-
-            // when scale is 1, filename can be `image.png` or `image@1x.png`
-            // 1. check resolvedPath (image.png)
-            // 2. if file is not exist, check suffixed path (image@1x.png)
-            if (scale === 1) {
-              filepath = await fs
-                .stat(resolvedPath)
-                .then(() => resolvedPath)
-                .catch(() => {
-                  const suffixedPath = resolvedPath.replace(
-                    basename,
-                    addSuffix(basename, extension, '@1x'),
-                  );
-                  return fs.stat(suffixedPath).then(() => suffixedPath);
-                });
-            } else {
-              filepath = resolvedPath.replace(
-                basename,
-                addSuffix(basename, extension, `@${scale}x`),
-              );
+            for (const file of filesInDir) {
+              const match = assetRegExp.exec(file);
+              if (match) {
+                const [, , scale] = match;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                scaledAssets[scale ?? '1'] = file;
+              }
             }
 
-            logger.debug(`(${NAME}) copying ${basename}`);
-            await fs.copyFile(
-              filepath,
-              path.join(devServerAssetPath, path.basename(filepath)),
-            );
-          });
-        },
-      );
+            if (!(Object.keys(scaledAssets).length && scaledAssets[1])) {
+              throw new Error(`cannot resolve base asset of ${args.path}`);
+            }
 
-      await Promise.all(assetCopyTasks);
-    });
-  },
-});
+            const asset = {
+              path: args.path,
+              basename,
+              extension,
+              scales: Object.keys(scaledAssets).map(parseFloat).sort(),
+            };
+            assets.push(asset);
+
+            return {
+              resolveDir: dirname,
+              contents: getRegistrationScript(
+                {
+                  ...asset,
+                  relativePath,
+                  hash: '',
+                  httpServerLocation: path.join(
+                    ASSET_PATH,
+                    path.dirname(relativePath),
+                  ),
+                  dimensions: { width: 0, height: 0 },
+                },
+                true,
+              ),
+              loader: 'js',
+            };
+          },
+        );
+
+        build.onEnd(async () => {
+          const devServerAssetPath = getDevServerAssetPath();
+
+          // cleanup asset cache directory
+          await fs
+            .rm(devServerAssetPath, { recursive: true, force: true })
+            .catch(() => void 0);
+          await fs.mkdir(devServerAssetPath, { recursive: true });
+
+          const assetCopyTasks = assets.map(
+            ({ path: resolvedPath, basename, extension, scales }) => {
+              return scales.map(async (scale): Promise<void> => {
+                let filepath: string;
+
+                // when scale is 1, filename can be `image.png` or `image@1x.png`
+                // 1. check resolvedPath (image.png)
+                // 2. if file is not exist, check suffixed path (image@1x.png)
+                if (scale === 1) {
+                  filepath = await fs
+                    .stat(resolvedPath)
+                    .then(() => resolvedPath)
+                    .catch(() => {
+                      const suffixedPath = resolvedPath.replace(
+                        basename,
+                        addSuffix(basename, extension, '@1x'),
+                      );
+                      return fs.stat(suffixedPath).then(() => suffixedPath);
+                    });
+                } else {
+                  filepath = resolvedPath.replace(
+                    basename,
+                    addSuffix(basename, extension, `@${scale}x`),
+                  );
+                }
+
+                logger.debug(`(${NAME}) copying ${basename}`);
+                await fs.copyFile(
+                  filepath,
+                  path.join(devServerAssetPath, path.basename(filepath)),
+                );
+              });
+            },
+          );
+
+          await Promise.all(assetCopyTasks);
+        });
+      },
+    };
+  };
+};

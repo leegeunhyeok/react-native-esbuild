@@ -36,11 +36,12 @@ Promise.resolve(cli())
           dev: startOptions.dev,
           minify: startOptions.minify,
         });
-        bundler.registerPlugins((config, bundlerConfig) => [
-          createAssetRegisterPlugin(undefined, { config, bundlerConfig }),
-          createSvgTransformPlugin(null, { config, bundlerConfig }),
-          createHermesTransformPlugin(null, { config, bundlerConfig }),
-        ]);
+
+        bundler
+          .registerPlugin(createAssetRegisterPlugin())
+          .registerPlugin(createSvgTransformPlugin())
+          .registerPlugin(createHermesTransformPlugin());
+
         server.listen();
         break;
       }
@@ -53,11 +54,13 @@ Promise.resolve(cli())
           assetsDir: buildOptions.assetsDir,
           dev: buildOptions.dev,
           minify: buildOptions.minify,
-        }).registerPlugins((config, bundlerConfig) => [
-          createAssetRegisterPlugin(undefined, { config, bundlerConfig }),
-          createSvgTransformPlugin(null, { config, bundlerConfig }),
-          createHermesTransformPlugin(null, { config, bundlerConfig }),
-        ]);
+        });
+
+        bundler
+          .registerPlugin(createAssetRegisterPlugin())
+          .registerPlugin(createSvgTransformPlugin())
+          .registerPlugin(createHermesTransformPlugin());
+
         await bundler.bundle(buildOptions.platform);
         break;
       }
