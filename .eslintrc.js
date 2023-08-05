@@ -54,5 +54,11 @@ module.exports = {
         'unicorn/filename-case': 'off',
       },
     },
+    {
+      files: ['**/*.test.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+      },
+    },
   ],
 };
