@@ -84,14 +84,12 @@ rne start
 ```
 
 | Option | Description | Default value |
-|:--:|:--|:--:|
+|:--|:--|:--|
 | `--entry` | entry file path | `index.js` |
 | `--host` | dev server host | `127.0.0.1` |
 | `--port` | dev server port | `8081` |
-| `--dev` | set as development environment | `true` |
-| `--minify` | enable minify | `false` |
-| `--reset-cache` | reset transform cache | `false` |
 | `--debug` | show cli debug log | `false` |
+| `--reset-cache` | reset transform cache | `false` |
 
 ## Build
 
@@ -102,15 +100,15 @@ rne build --platform=<platform> --output=<dest>
 ```
 
 | Option | Description | Default value |
-|:--:|:--|:--:|
-| `--platform` | (required) platform for resolve modules | |
-| `--output` | (required) bundle result destination | |
+|:--|:--|:--|
 | `--entry` | entry file path | `index.js` |
+| `--output` | (required) bundle output file destination | |
+| `--platform` | (required) platform for resolve modules | |
 | `--assets` | assets directory | |
 | `--dev` | set as development environment | `true` |
 | `--minify` | enable minify | `false` |
-| `--reset-cache` | reset transform cache | `false` |
 | `--debug` | show cli debug log | `false` |
+| `--reset-cache` | reset transform cache | `false` |
 
 ## Cache
 

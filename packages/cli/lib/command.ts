@@ -11,8 +11,8 @@ const commonOptions = {
     default: false,
   },
   resetCache: {
-    alias: '--reset-cache',
-    describe: 'reset transform cache before build',
+    alias: 'reset-cache',
+    describe: 'reset transform cache',
     type: 'boolean',
     default: false,
   },
@@ -26,6 +26,10 @@ export function cli(): Argv | Promise<Argv> {
     .command('start', 'start bundler with dev server', (yargs) => {
       yargs
         .options({
+          entry: {
+            type: 'string',
+            describe: 'entry file path',
+          },
           host: {
             describe: 'dev server host',
             type: 'string',
