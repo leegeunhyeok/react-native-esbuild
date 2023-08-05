@@ -11,6 +11,7 @@ import {
   DEFAULT_OUTFILE,
   type ReactNativeEsbuildConfig,
   type BundleConfig,
+  bitwiseOptions,
 } from '@react-native-esbuild/config';
 import { CacheStorage } from '../cache';
 import { createPromiseHandler } from '../helpers';
@@ -29,6 +30,7 @@ import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends EventEmitter {
   public static caches = CacheStorage.getInstance();
+  private cwd = process.cwd();
   private config: ReactNativeEsbuildConfig;
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
   private esbuildContext?: BuildContext;
@@ -47,12 +49,20 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     mode: RunType,
   ): BuildOptions {
     if (!this.plugins.length) {
-      throw new Error('plugins is not registered');
+      throw new Error('plugin is not registered');
     }
+
+    const { platform, dev = true, minify = dev } = bundleConfig;
+    const taskId = bitwiseOptions({ platform, dev, minify });
 
     const context: PluginContext = {
       ...bundleConfig,
+      taskId,
+      platform,
+      dev,
+      minify,
       mode,
+      cwd: this.cwd,
       config: this.config,
     };
 

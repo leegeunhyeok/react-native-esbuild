@@ -14,7 +14,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
       name: NAME,
       setup: (build): void => {
         const cacheController = ReactNativeEsbuildBundler.caches.get(
-          context.platform,
+          context.taskId.toString(),
         );
         const cacheEnabled = context.dev;
         const {
@@ -22,7 +22,6 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           fullyTransformPackageNames = [],
           customTransformRules = [],
         } = context.config.transform;
-        const workingDirectory = process.cwd();
 
         const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
           ? new RegExp(`node_modules/(${stripFlowPackageNames.join('|')})/`)
@@ -50,12 +49,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
               }`;
               const inMemoryCache =
                 cacheController.readFromMemory(memoryCacheKey);
-              const hashParam = [
-                build.initialOptions.platform,
-                context.config,
-                args.path,
-                mtimeMs,
-              ] as const;
+              const hashInput = taskId + mtimeMs + args.path;
 
               // 1. find cache from memory
               if (inMemoryCache) {
@@ -163,7 +157,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           if (usingCache) {
             logger.debug(
               `(${NAME}) transform cache hit: ${args.path.replace(
-                workingDirectory,
+                context.cwd,
                 '',
               )}`,
             );
