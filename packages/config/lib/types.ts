@@ -1,18 +1,6 @@
 import type { PluginItem } from '@babel/core';
 
-export interface EsbuildPresetOptions {
-  entryPoint: string;
-  outfile: string;
-  assetsDir: string;
-  platform: 'android' | 'ios' | 'web';
-  dev: boolean;
-  minify: boolean;
-}
-
-export interface SwcPresetOptions {
-  filename: string;
-}
-
+// common
 export interface CoreConfig {
   transform: {
     svgr?: boolean;
@@ -20,6 +8,19 @@ export interface CoreConfig {
     fullyTransformPackageNames?: string[];
     customTransformRules?: CustomTransformRule[];
   };
+}
+export interface SwcPresetOptions {
+  filename: string;
+}
+
+// transformers
+export interface EsbuildPresetOptions {
+  entryPoint: string;
+  outfile: string;
+  assetsDir: string;
+  platform: 'android' | 'ios' | 'web';
+  dev: boolean;
+  minify: boolean;
 }
 
 export interface CustomTransformRule {

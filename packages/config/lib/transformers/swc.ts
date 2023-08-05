@@ -1,6 +1,6 @@
 import deepmerge from 'deepmerge';
 import type { EsParserConfig, Options, TsParserConfig } from '@swc/core';
-import type { SwcPresetOptions } from './types';
+import type { SwcPresetOptions } from '../types';
 
 export function getSwcOptions(
   options: SwcPresetOptions,

@@ -1,8 +1,12 @@
 import path from 'node:path';
 import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
-import type { EsbuildPresetOptions } from './types';
-import { ASSET_EXTENSIONS, BANNER_VARS, SOURCE_EXTENSIONS } from './shares';
+import {
+  ASSET_EXTENSIONS,
+  BANNER_VARS,
+  SOURCE_EXTENSIONS,
+} from '../common/shares';
+import type { EsbuildPresetOptions } from '../types';
 
 export function getEsbuildOptions(
   options: EsbuildPresetOptions,

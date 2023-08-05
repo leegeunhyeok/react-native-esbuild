@@ -1,6 +1,6 @@
 import path from 'node:path';
 import deepmerge from 'deepmerge';
-import type { CoreConfig } from './types';
+import type { CoreConfig } from '../types';
 
 export const CACHE_DIR = 'rne';
 export const LOCAL_CACHE_DIR = '.rne';
