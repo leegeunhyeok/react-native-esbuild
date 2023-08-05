@@ -120,7 +120,9 @@ export class ReactNativeEsbuildDevServer {
     const { host, port } = this.devServerOptions;
 
     return this.server.listen(port, () => {
-      logger.debug(`dev server listening on http://${host}:${port}`);
+      process.stdout.write('\n');
+      logger.info(`dev server listening on http://${host}:${port}`);
+      process.stdout.write('\n');
     });
   }
 }
