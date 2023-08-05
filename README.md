@@ -171,8 +171,8 @@ lerna run build
 lerna run build --scope @react-native-esbuild/xxx
 
 # run all test or specified package only
-lerna run test
-lerna run test --scope @react-native-esbuild/xxx
+yarn test
+yarn test --selectProjects <workspaceName>
 
 # show project dependencies graph
 nx graph

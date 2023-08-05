@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "types": ["node"],
+    "types": ["node", "jest"],
     "module": "commonjs",
     "declaration": true,
     "noImplicitAny": false,
@@ -21,7 +21,12 @@
     ]
   },
   "files": ["./types/self.d.ts"],
-  "include": ["packages/**/*", "example/**/*"],
+  "include": [
+    "packages/**/*",
+    "example/**/*",
+    "jest.config.ts",
+    "test/setup.ts"
+  ],
   "exclude": [
     "**/*/node_modules"
   ]

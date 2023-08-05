@@ -10,19 +10,24 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "commitlint": "commitlint"
+    "commitlint": "commitlint",
+    "test": "jest"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.7",
     "@commitlint/config-conventional": "^17.6.7",
+    "@types/jest": "^29.5.3",
     "@types/node": "^20.4.5",
     "@vercel/style-guide": "^4.0.2",
     "eslint": "^8.45.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
+    "jest": "^29.6.2",
     "lerna": "^7.1.4",
     "prettier": "^3.0.0",
+    "react-native": "0.72.3",
     "rimraf": "^5.0.1",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
   },
   "prettier": "@vercel/style-guide/prettier",

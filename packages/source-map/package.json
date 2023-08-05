@@ -31,8 +31,7 @@
   },
   "scripts": {
     "prepack": "rimraf ./dist && yarn build",
-    "build": "node build/index.js && tsc",
-    "test": "node ./__tests__/@react-native-esbuild/source-map.test.js"
+    "build": "node build/index.js && tsc"
   },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
