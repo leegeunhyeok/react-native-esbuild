@@ -6,7 +6,6 @@ describe('getEsbuildOptions', () => {
   it('should match snapshot', () => {
     expect(
       getEsbuildOptions({
-        entryPoint: 'index.js',
         assetsDir: 'assets',
         dev: true,
         minify: false,

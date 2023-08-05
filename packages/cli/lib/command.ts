@@ -5,31 +5,6 @@ import { VERSION } from './constants';
 import type { Argv } from './types';
 
 const commonOptions = {
-  entry: {
-    type: 'string',
-    describe: 'entry file path',
-    default: 'index.js',
-  },
-  output: {
-    type: 'string',
-    describe: 'bundle result destination',
-    default: 'main.jsbundle',
-  },
-  platform: {
-    type: 'string',
-    describe: 'platform for resolve modules',
-    choices: ['android', 'ios', 'web'],
-  },
-  dev: {
-    type: 'boolean',
-    describe: 'set as development environment',
-    default: true,
-  },
-  minify: {
-    describe: 'enable minify',
-    type: 'boolean',
-    default: false,
-  },
   debug: {
     describe: 'show cli debug log',
     type: 'boolean',
@@ -51,7 +26,6 @@ export function cli(): Argv | Promise<Argv> {
     .command('start', 'start bundler with dev server', (yargs) => {
       yargs
         .options({
-          ...commonOptions,
           host: {
             describe: 'dev server host',
             type: 'string',
@@ -62,6 +36,7 @@ export function cli(): Argv | Promise<Argv> {
             type: 'number',
             default: 8081,
           },
+          ...commonOptions,
         })
         .version(false)
         .help();
@@ -69,11 +44,34 @@ export function cli(): Argv | Promise<Argv> {
     .command('build', 'bundle your application', (yargs) => {
       yargs
         .options({
-          ...commonOptions,
+          entry: {
+            type: 'string',
+            describe: 'entry file path',
+          },
+          platform: {
+            type: 'string',
+            describe: 'platform for resolve modules',
+            choices: ['android', 'ios', 'web'],
+          },
+          output: {
+            type: 'string',
+            describe: 'bundle output file destination',
+          },
           assets: {
             type: 'string',
             describe: 'assets directory',
           },
+          dev: {
+            type: 'boolean',
+            describe: 'set as development environment',
+            default: true,
+          },
+          minify: {
+            describe: 'enable minify',
+            type: 'boolean',
+            default: false,
+          },
+          ...commonOptions,
         })
         .demandOption(['output', 'platform'])
         .version(false)
@@ -83,7 +81,8 @@ export function cli(): Argv | Promise<Argv> {
       yargs
         .command('clean', 'clear all transform cache')
         .demandCommand()
-        .strictCommands();
+        .strictCommands()
+        .version(false);
     })
     .demandCommand()
     .strictCommands()

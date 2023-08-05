@@ -2,17 +2,27 @@ import path from 'node:path';
 import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
 import {
+  DEFAULT_ENTRY_POINT,
+  DEFAULT_ASSETS_DIR,
+  DEFAULT_OUTFILE,
+  SOURCE_EXTENSIONS,
   ASSET_EXTENSIONS,
   BANNER_VARS,
-  SOURCE_EXTENSIONS,
-} from '../common/shares';
-import type { EsbuildPresetOptions } from '../types';
+} from '../shares';
+import type { BundleConfig } from '../types';
 
 export function getEsbuildOptions(
-  options: EsbuildPresetOptions,
+  bundleConfig: BundleConfig,
   customEsbuildOptions?: Partial<BuildOptions>,
 ): BuildOptions {
-  const { entryPoint, outfile, assetsDir, platform, dev, minify } = options;
+  const {
+    entry = DEFAULT_ENTRY_POINT,
+    outfile = DEFAULT_OUTFILE,
+    assetsDir = DEFAULT_ASSETS_DIR,
+    platform,
+    dev,
+    minify,
+  } = bundleConfig;
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
@@ -42,7 +52,7 @@ export function getEsbuildOptions(
      * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
      */
     mainFields: ['react-native', 'browser', 'main', 'module'],
-    entryPoints: [entryPoint],
+    entryPoints: [entry],
     outfile,
     assetNames: `${assetsDir}/[name]-[hash]`,
     sourceRoot: process.cwd(),

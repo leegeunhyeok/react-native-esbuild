@@ -1,16 +1,9 @@
-import type { ReactNativeEsbuildConfig } from '@react-native-esbuild/config';
+import type {
+  ReactNativeEsbuildConfig,
+  BundleConfig,
+  BundlerSupportPlatform,
+} from '@react-native-esbuild/config';
 import type { Plugin } from 'esbuild';
-
-export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
-
-export interface BundleConfig {
-  entryPoint: string;
-  outfile: string;
-  assetsDir: string;
-  dev: boolean;
-  minify: boolean;
-  platform: BundlerSupportPlatform;
-}
 
 export interface BundleRequestOptions {
   platform: BundlerSupportPlatform;

@@ -7,29 +7,30 @@ import {
 } from '@react-native-esbuild/plugins';
 import { cli } from './command';
 import { getCommand, getOptions } from './helpers';
-import type { StartOptions, BuildOptions } from './types';
 import { logger } from './shared';
+import type { StartOptions, BuildOptions } from './types';
 
 Promise.resolve(cli())
   .then(async (argv): Promise<void> => {
-    logger.setLogLevel(argv.debug ? 'debug' : 'info');
+    const options = getOptions(argv);
+
+    logger.setLogLevel(options.debug ? 'debug' : 'info');
 
     const resetCache = async (): Promise<void> => {
       await ReactNativeEsbuildBundler.caches.clearAll();
       logger.info('transform cache was reset');
     };
 
-    if (argv.resetCache) {
+    if (options.resetCache) {
       await resetCache();
     }
 
     switch (getCommand(argv)) {
       case 'start': {
-        const startOptions = getOptions(argv) as StartOptions;
-        const { bundler, server } = new ReactNativeEsbuildDevServer({
-          host: startOptions.host,
-          port: startOptions.port,
-        }).initialize();
+        const startOptions = options as StartOptions;
+        const { bundler, server } = new ReactNativeEsbuildDevServer(
+          startOptions,
+        ).initialize();
 
         bundler
           .registerPlugin(createAssetRegisterPlugin())
@@ -40,7 +41,7 @@ Promise.resolve(cli())
       }
 
       case 'build': {
-        const buildOptions = getOptions(argv) as BuildOptions;
+        const { bundleConfig } = options as BuildOptions;
         const bundler = new ReactNativeEsbuildBundler();
 
         bundler
@@ -48,14 +49,7 @@ Promise.resolve(cli())
           .registerPlugin(createSvgTransformPlugin())
           .registerPlugin(createHermesTransformPlugin());
 
-        return void (await bundler.bundle({
-          platform: buildOptions.platform,
-          entryPoint: buildOptions.entryFile,
-          outfile: buildOptions.outputFile,
-          assetsDir: buildOptions.assetsDir,
-          dev: buildOptions.dev,
-          minify: buildOptions.minify,
-        }));
+        return void (await bundler.bundle(bundleConfig));
       }
 
       case 'cache': {

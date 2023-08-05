@@ -6,9 +6,6 @@ import {
   type ReactNativeEsbuildConfig,
 } from '../types';
 
-export const CACHE_DIR = 'rne';
-export const LOCAL_CACHE_DIR = '.rne';
-
 export function loadConfig(): ReactNativeEsbuildConfig {
   let config: ReactNativeEsbuildConfig | undefined;
 

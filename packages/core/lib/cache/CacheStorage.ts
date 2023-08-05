@@ -1,6 +1,7 @@
 import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
+import { GLOBAL_CACHE_DIR } from '@react-native-esbuild/config';
 import { logger } from '../shared';
 import { CacheController } from './CacheController';
 
@@ -9,7 +10,7 @@ export class CacheStorage {
   private caches = new Map<string, CacheController>();
 
   public static getCacheDirectory(): string {
-    return path.join(os.tmpdir(), 'react-native-esbuild');
+    return path.join(os.tmpdir(), GLOBAL_CACHE_DIR);
   }
 
   public static getInstance(): CacheStorage {

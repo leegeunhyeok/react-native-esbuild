@@ -1,5 +1,7 @@
 import type { PluginItem } from '@babel/core';
 
+export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
+
 // common
 export interface ReactNativeEsbuildConfig {
   transform: {
@@ -10,12 +12,21 @@ export interface ReactNativeEsbuildConfig {
   };
 }
 
+export interface BundleConfig {
+  entry?: string;
+  outfile?: string;
+  assetsDir?: string;
+  dev?: boolean;
+  minify?: boolean;
+  platform: BundlerSupportPlatform;
+}
+
 export interface SwcPresetOptions {
   filename: string;
 }
 
 export interface BitwiseOptions {
-  platform: 'android' | 'ios' | 'web';
+  platform: BundlerSupportPlatform;
   dev: boolean;
   minify: boolean;
 }
@@ -30,15 +41,6 @@ export enum OptionFlag {
 }
 
 // transformers
-export interface EsbuildPresetOptions {
-  entryPoint: string;
-  outfile: string;
-  assetsDir: string;
-  platform: 'android' | 'ios' | 'web';
-  dev: boolean;
-  minify: boolean;
-}
-
 export interface CustomTransformRule {
   test: (path: string, source: string) => boolean;
   plugins: PluginItem[];

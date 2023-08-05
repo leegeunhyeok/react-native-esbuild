@@ -4,18 +4,19 @@ import esbuild, {
   type BuildResult,
   type BuildContext,
 } from 'esbuild';
+import { colors, isCI } from '@react-native-esbuild/utils';
 import {
   loadConfig,
   getEsbuildOptions,
+  DEFAULT_OUTFILE,
   type ReactNativeEsbuildConfig,
+  type BundleConfig,
 } from '@react-native-esbuild/config';
-import { colors, isCI } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { createPromiseHandler } from '../helpers';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
 import type {
-  BundleConfig,
   BundleResult,
   BundleRequestOptions,
   EsbuildPluginFactory,
@@ -28,7 +29,7 @@ import { printLogo } from './logo';
 export class ReactNativeEsbuildBundler extends EventEmitter {
   public static caches = CacheStorage.getInstance();
   private config: ReactNativeEsbuildConfig;
-  private plugins: ReturnType<EsbuildPluginFactory<unknown>>[];
+  private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
   private esbuildContext?: BuildContext;
   private esbuildTaskHandler?: PromiseHandler<BundleResult>;
   private bundleResult?: BundleResult;
@@ -78,7 +79,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
     const isInitialBuild = !this.bundleResult;
-    const bundleFilename = context.outfile;
+    const bundleFilename = context.outfile ?? DEFAULT_OUTFILE;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const { outputFiles } = result;
 

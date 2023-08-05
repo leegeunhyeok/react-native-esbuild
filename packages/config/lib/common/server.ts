@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { LOCAL_CACHE_DIR } from './core';
+import { LOCAL_CACHE_DIR } from '../shares';
 
 export const ASSET_PATH = '/assets';
 
