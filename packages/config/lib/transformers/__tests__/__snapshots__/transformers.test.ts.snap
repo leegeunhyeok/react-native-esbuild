@@ -8,8 +8,6 @@ exports[`getBabelOptions should match snapshot 1`] = `
 }
 `;
 
-exports[`getDevServerAssetPath should match snapshot 1`] = `"/user/.rne/assets"`;
-
 exports[`getEsbuildOptions should match snapshot 1`] = `
 {
   "assetNames": "assets/[name]-[hash]",

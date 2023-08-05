@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getDevServerAssetPath should match snapshot 1`] = `"/user/.rne/assets"`;

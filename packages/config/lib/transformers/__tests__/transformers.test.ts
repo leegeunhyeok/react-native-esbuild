@@ -1,9 +1,6 @@
-import {
-  getEsbuildOptions,
-  getSwcOptions,
-  getBabelOptions,
-  getDevServerAssetPath,
-} from '../lib';
+import { getEsbuildOptions } from '../esbuild';
+import { getSwcOptions } from '../swc';
+import { getBabelOptions } from '../babel';
 
 describe('getEsbuildOptions', () => {
   it('should match snapshot', () => {
@@ -90,11 +87,5 @@ describe('getBabelOptions', () => {
 
       expect(options).toMatchObject(expect.objectContaining(overrideOptions));
     });
-  });
-});
-
-describe('getDevServerAssetPath', () => {
-  it('should match snapshot', () => {
-    expect(getDevServerAssetPath()).toMatchSnapshot();
   });
 });
