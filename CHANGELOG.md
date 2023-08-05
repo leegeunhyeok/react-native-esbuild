@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.18](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.17...v0.1.0-alpha.18) (2023-08-05)
+
+
+### Features
+
+* add bitwiseOptions ([786191d](https://github.com/leegeunhyeok/react-native-esbuild/commit/786191df504bba61c71685196e82d2b2ba4e268d))
+* add mode to plugin context ([4dd2218](https://github.com/leegeunhyeok/react-native-esbuild/commit/4dd2218efcf3446a9ab516c9ab802bcefcb346ec))
+* add scoped cache system ([8d1f0bd](https://github.com/leegeunhyeok/react-native-esbuild/commit/8d1f0bd3235f977a73f1f3725ce393fae244cf97))
+* add taskId to plugin context ([5c64d22](https://github.com/leegeunhyeok/react-native-esbuild/commit/5c64d2284ade22fa24f11e3d10a17bc1d63b20ca))
+* add unexpected exception handler ([1c21443](https://github.com/leegeunhyeok/react-native-esbuild/commit/1c214430e1e286cffce4cec3fed758614b782878))
+* check cache directory is exist ([1c273ef](https://github.com/leegeunhyeok/react-native-esbuild/commit/1c273efe52aed75fb5ddd21b8937fa4adf8064aa))
+* **core:** improve file system caching ([0ed3ebb](https://github.com/leegeunhyeok/react-native-esbuild/commit/0ed3ebbe2d547935f2b686d56dd1a04ef801d3d9))
+
+
+### Miscellaneous Chores
+
+* add cleanup script ([0f03232](https://github.com/leegeunhyeok/react-native-esbuild/commit/0f032326ad5a412942b77f40130d38a3efeff472))
+
+
+### Code Refactoring
+
+* change server listening log level to info ([7ac6cad](https://github.com/leegeunhyeok/react-native-esbuild/commit/7ac6cada527af0f4dc183e529d8674a09eb4da9b))
+* change to return statement ([dc9a7bb](https://github.com/leegeunhyeok/react-native-esbuild/commit/dc9a7bb2e2df1430aa0986caaf6813d420d44245))
+* cleanup bundle config ([36ebd85](https://github.com/leegeunhyeok/react-native-esbuild/commit/36ebd85b16d68561847d55377fcadaa2217bb4c0))
+* improve config types ([4bacba6](https://github.com/leegeunhyeok/react-native-esbuild/commit/4bacba65c9609191490d89b488a9e00d3127ef38))
+* improve plugin registration ([e292ebb](https://github.com/leegeunhyeok/react-native-esbuild/commit/e292ebb826bfa26d6ad84ad9d01aa02395357ed7))
+* separate config modules ([ce6d02d](https://github.com/leegeunhyeok/react-native-esbuild/commit/ce6d02d5c5e597469e75c8c6864b553afd53b501))
+
+
+
 ## [0.1.0-alpha.17](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2023-08-04)
 
 
