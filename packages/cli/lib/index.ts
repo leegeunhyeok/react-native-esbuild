@@ -60,3 +60,16 @@ Promise.resolve(cli())
     }
   })
   .catch((error) => logger.error('cannot execute command', error as Error));
+
+process
+  .on('unhandledRejection', (reason, promise) => {
+    logger.error('unhandled rejection at promise', undefined, {
+      reason,
+      promise,
+    });
+    process.exit(1);
+  })
+  .on('uncaughtException', (error) => {
+    logger.error('uncaught Exception thrown', error);
+    process.exit(1);
+  });
