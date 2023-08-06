@@ -83,22 +83,20 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     throw new Error('unable to get build task');
   }
 
-  private handleBuildStart(context: PluginContext): void {
-    const currentTask = this.buildTasks.get(context.taskId);
-    this.assertBuildTask(currentTask);
+  private handleBuildStart(_context: PluginContext): void {
     this.emit('build-start');
   }
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
-    const currentTask = this.buildTasks.get(context.taskId);
-    this.assertBuildTask(currentTask);
-
     const bundleFilename = context.outfile ?? DEFAULT_OUTFILE;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const { outputFiles } = result;
 
     // `outputFiles` available when only `write: false`
     if (outputFiles === undefined) return;
+
+    const currentTask = this.buildTasks.get(context.taskId);
+    this.assertBuildTask(currentTask);
 
     logger.info('preparing bundled result');
 
