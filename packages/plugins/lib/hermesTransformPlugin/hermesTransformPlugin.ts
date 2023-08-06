@@ -23,12 +23,12 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
         } = context.config.transform;
 
         const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
-          ? new RegExp(`node_modules/(${stripFlowPackageNames.join('|')})/`)
+          ? new RegExp(`/node_modules/(?:${stripFlowPackageNames.join('|')})/`)
           : undefined;
 
         const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
           ? new RegExp(
-              `node_modules/(${fullyTransformPackageNames.join('|')})/`,
+              `node_modules/(?:${fullyTransformPackageNames.join('|')})/`,
             )
           : undefined;
 

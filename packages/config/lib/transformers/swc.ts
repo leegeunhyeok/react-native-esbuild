@@ -20,8 +20,11 @@ export function getSwcOptions(
       } as EsParserConfig);
 
   const baseOptions: Options = {
-    isModule: true,
+    minify: false,
     sourceMaps: false,
+    isModule: true,
+    inputSourceMap: false,
+    inlineSourcesContent: false,
     jsc: {
       parser: parseOption,
       target: 'es5',
