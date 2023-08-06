@@ -34,7 +34,6 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
     /**
      * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro/src/HmrServer.js#L200-L239}
      */
-
     switch (message.type) {
       case 'log': {
         const level = convertHmrLogLevel(message.level);
