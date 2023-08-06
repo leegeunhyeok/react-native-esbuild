@@ -184,6 +184,26 @@ yarn test --selectProjects <workspaceName>
 nx graph
 ```
 
+# Benchmark
+
+```bash
+# in `example` directory
+
+# react-native-esbuild (with cache)
+time yarn build:android
+time yarn build:ios
+# react-native-esbuild (without cache)
+time yarn build:android --reset-cache
+time yarn build:ios --reset-cache
+
+# metro (with cache)
+time yarn metro:android
+time yarn metro:ios
+# metro (without cache)
+time yarn metro:android --reset-cache
+time yarn metro:ios --reset-cache
+```
+
 # License
 
 [MIT](./LICENSE)

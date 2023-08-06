@@ -12,6 +12,8 @@
     "start": "rne start",
     "build:android": "rne build --platform=android --output=dist/android.bundlejs",
     "build:ios": "rne build --platform=ios --output=dist/ios.bundlejs",
+    "metro:android": "react-native bundle --entry-file=index.js --platform=android --bundle-output=dist/android-metro.bundlejs",
+    "metro:ios": "react-native bundle --entry-file=index.js --platform=ios --bundle-output=dist/ios-metro.bundlejs",
     "pod:install": "cd ios && pod install",
     "test": "jest"
   },
