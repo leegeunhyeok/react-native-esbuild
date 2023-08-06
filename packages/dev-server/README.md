@@ -12,5 +12,10 @@ const { server, bundler } = new ReactNativeEsbuildDevServer({
   host: '127.0.0.1',
 }).initialize();
 
+bundler
+  .registerPlugin(/* plugin */)
+  .registerPlugin(/* plugin */)
+  .registerPlugin(/* plugin */);
+
 server.listen();
 ```

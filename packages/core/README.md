@@ -14,6 +14,10 @@ bundler
   .registerPlugin(/* call EsbuildPluginFactory */)
   .registerPlugin(/* call EsbuildPluginFactory */);
 
+// using `esbuild.build()` (write output to file system)
 await bundler.bundle(bundleConfig);
-await bundler.watch(bundleConfig);
+
+// using `esbuildContext.watch()` (in-memory output for dev-server)
+await bundler.getBundle(bundleConfig);
+await bundler.getSourcemap(bundleConfig);
 ```
