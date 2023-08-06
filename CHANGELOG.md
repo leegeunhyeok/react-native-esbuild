@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.20](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.19...v0.1.0-alpha.20) (2023-08-06)
+
+
+### Bug Fixes
+
+* **core:** assert bundle task in watch mode ([65d7dbe](https://github.com/leegeunhyeok/react-native-esbuild/commit/65d7dbe7c86a4edb1a5b7e76820f125de1ac9fb6))
+
+
+
 ## [0.1.0-alpha.19](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2023-08-06)
 
 
