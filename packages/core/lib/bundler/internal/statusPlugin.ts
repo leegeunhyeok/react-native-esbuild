@@ -23,11 +23,12 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         // eslint-disable-next-line prefer-named-capture-group
         const filter = /(.*?)/;
         const moduleResolved = new Set<string>();
+        const platformText = colors.gray(`[${context.platform}]`);
         let startTime: Date | null = null;
         let moduleLoaded = 0;
 
         const updateStatusText = (): void => {
-          spinner.text = `build in progress... (${moduleLoaded}/${moduleResolved.size})`;
+          spinner.text = `${platformText} build in progress... (${moduleLoaded}/${moduleResolved.size})`;
         };
 
         build.onStart(() => {
@@ -72,8 +73,8 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
           });
 
           errors.length
-            ? spinner.fail(`failed! ${status} ${duration}`)
-            : spinner.succeed(`done! ${status} ${duration}`);
+            ? spinner.fail(`${platformText} failed! ${status} ${duration}`)
+            : spinner.succeed(`${platformText} done! ${status} ${duration}`);
 
           config?.onEnd(result, context);
         });

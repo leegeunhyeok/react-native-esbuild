@@ -1,9 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { FileHandle } from 'node:fs/promises';
-import {
-  BundleTaskSignal,
-  type ReactNativeEsbuildBundler,
-} from '@react-native-esbuild/core';
+import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
 interface MockedRequestParams {
   url: string | undefined;
@@ -17,7 +14,7 @@ interface MockedFileHandlerParams {
 
 interface MockedBundlerParams {
   bundle: string;
-  watchModeStarted: boolean;
+  hasError: boolean;
 }
 
 export function getMockedRequest({
@@ -52,16 +49,11 @@ export function getMockedFileHandler({
 
 export function getMockedBundler({
   bundle,
-  watchModeStarted,
+  hasError,
 }: MockedBundlerParams): ReactNativeEsbuildBundler {
   return {
     getBundle: jest
       .fn()
-      .mockReturnValue(
-        watchModeStarted
-          ? Promise.resolve(bundle)
-          : Promise.reject(BundleTaskSignal.WatchModeNotStarted),
-      ),
-    watch: jest.fn().mockReturnValue({ then: jest.fn() }),
+      .mockReturnValue(hasError ? Promise.reject() : Promise.resolve(bundle)),
   } as unknown as ReactNativeEsbuildBundler;
 }

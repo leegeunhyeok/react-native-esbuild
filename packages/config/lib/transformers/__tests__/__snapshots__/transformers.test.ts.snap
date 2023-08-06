@@ -236,6 +236,8 @@ exports[`getEsbuildOptions should match snapshot 1`] = `
 
 exports[`getSwcOptions should match snapshot 1`] = `
 {
+  "inlineSourcesContent": false,
+  "inputSourceMap": false,
   "isModule": true,
   "jsc": {
     "externalHelpers": true,
@@ -248,6 +250,7 @@ exports[`getSwcOptions should match snapshot 1`] = `
     },
     "target": "es5",
   },
+  "minify": false,
   "sourceMaps": false,
 }
 `;

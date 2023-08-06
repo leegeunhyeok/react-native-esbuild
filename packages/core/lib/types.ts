@@ -1,11 +1,17 @@
+import type { BuildContext, Plugin } from 'esbuild';
 import type {
   ReactNativeEsbuildConfig,
   BundleConfig,
   BundlerSupportPlatform,
 } from '@react-native-esbuild/config';
-import type { Plugin } from 'esbuild';
 
 export type RunType = 'bundle' | 'watch';
+
+export interface BuildTask {
+  context: BuildContext;
+  handler: PromiseHandler<BundleResult> | null;
+  status: 'pending' | 'resolved';
+}
 
 export interface BundleRequestOptions {
   platform: BundlerSupportPlatform;
@@ -20,9 +26,7 @@ export interface BundleResult {
 }
 
 export enum BundleTaskSignal {
-  Cancelled,
   EmptyOutput,
-  WatchModeNotStarted,
 }
 
 export type EsbuildPluginFactory<PluginConfig = void> = (

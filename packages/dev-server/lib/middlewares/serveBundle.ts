@@ -1,12 +1,9 @@
 import { parse } from 'node:url';
-import {
-  BundleTaskSignal,
-  type BundleRequestOptions,
-} from '@react-native-esbuild/core';
-import type { ParsedBundlerOptions } from '../helpers';
+import { BundleTaskSignal } from '@react-native-esbuild/core';
+import type { ParsedBundleConfig } from '../helpers';
 import {
   toSafetyMiddleware,
-  parseBundleOptionsFromSearchParams,
+  parseBundleConfigFromSearchParams,
 } from '../helpers';
 import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
@@ -25,50 +22,29 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
 
       const { pathname, query } = parse(request.url, true);
 
-      const getBundleAndServe = (
-        bundleRequestOptions: BundleRequestOptions,
-      ): Promise<void> => {
-        return bundler.getBundle(bundleRequestOptions).then((bundle) => {
-          response
-            .writeHead(200, { 'Content-Type': 'application/javascript' })
-            .end(bundle);
-        });
-      };
-
       if (pathname?.endsWith('.bundle')) {
-        let bundleRequestOptions: ParsedBundlerOptions;
+        let bundleConfig: ParsedBundleConfig;
         try {
-          bundleRequestOptions = parseBundleOptionsFromSearchParams(query);
+          bundleConfig = parseBundleConfigFromSearchParams(query);
         } catch (_error) {
           return response.writeHead(400).end();
         }
 
-        return void getBundleAndServe(bundleRequestOptions).catch(
-          (errorOrSignal) => {
-            if (errorOrSignal === BundleTaskSignal.WatchModeNotStarted) {
-              logger.debug(`(${TAG}) watch mode is not started`);
-              logger.debug(`(${TAG}) starting watch mode`);
-
-              // start bundling and watching
-              // and retry to get bundle after a while
-              return bundler.watch(bundleRequestOptions).then(() => {
-                logger.debug(`(${TAG}) watch mode started`);
-                setTimeout(
-                  () => void getBundleAndServe(bundleRequestOptions),
-                  500,
-                );
-              });
+        return void bundler
+          .getBundle(bundleConfig)
+          .then((bundle) => {
+            response
+              .writeHead(200, { 'Content-Type': 'application/javascript' })
+              .end(bundle);
+          })
+          .catch((errorOrSignal) => {
+            if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
+              logger.error('bundle result is empty');
+            } else {
+              logger.error('unable to get bundle', errorOrSignal as Error);
             }
-
-            const error = errorOrSignal as Error;
-            logger.error(
-              'an unexpected error occurred while getting the bundle',
-              error,
-            );
-
-            response.writeHead(500, error.message).end();
-          },
-        );
+            response.writeHead(500).end();
+          });
       }
 
       return next();

@@ -1,9 +1,5 @@
 import EventEmitter from 'node:events';
-import esbuild, {
-  type BuildOptions,
-  type BuildResult,
-  type BuildContext,
-} from 'esbuild';
+import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
 import { colors, isCI } from '@react-native-esbuild/utils';
 import {
   loadConfig,
@@ -18,24 +14,21 @@ import { createPromiseHandler } from '../helpers';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
 import type {
-  BundleResult,
   BundleRequestOptions,
   EsbuildPluginFactory,
   PluginContext,
-  PromiseHandler,
   RunType,
+  BuildTask,
 } from '../types';
 import { createBuildStatusPlugin } from './internal';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends EventEmitter {
   public static caches = CacheStorage.getInstance();
-  private cwd = process.cwd();
   private config: ReactNativeEsbuildConfig;
+  private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
-  private esbuildContext?: BuildContext;
-  private esbuildTaskHandler?: PromiseHandler<BundleResult>;
-  private bundleResult?: BundleResult;
+  private cwd = process.cwd();
 
   constructor() {
     super();
@@ -52,15 +45,9 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
       throw new Error('plugin is not registered');
     }
 
-    const { platform, dev = true, minify = dev } = bundleConfig;
-    const taskId = bitwiseOptions({ platform, dev, minify });
-
     const context: PluginContext = {
       ...bundleConfig,
-      taskId,
-      platform,
-      dev,
-      minify,
+      taskId: this.identifyTaskByBundleConfig(bundleConfig),
       mode,
       cwd: this.cwd,
       config: this.config,
@@ -83,14 +70,29 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     });
   }
 
-  private handleBuildStart(_context: PluginContext): void {
-    this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.Cancelled);
-    this.esbuildTaskHandler = createPromiseHandler();
+  private identifyTaskByBundleConfig({
+    platform,
+    dev = true,
+    minify = true,
+  }: BundleConfig): number {
+    return bitwiseOptions({ platform, dev, minify });
+  }
+
+  private assertBuildTask(task?: BuildTask): asserts task is BuildTask {
+    if (task) return;
+    throw new Error('unable to get build task');
+  }
+
+  private handleBuildStart(context: PluginContext): void {
+    const currentTask = this.buildTasks.get(context.taskId);
+    this.assertBuildTask(currentTask);
     this.emit('build-start');
   }
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
-    const isInitialBuild = !this.bundleResult;
+    const currentTask = this.buildTasks.get(context.taskId);
+    this.assertBuildTask(currentTask);
+
     const bundleFilename = context.outfile ?? DEFAULT_OUTFILE;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const { outputFiles } = result;
@@ -115,51 +117,25 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
 
       if (!(bundleOutput && bundleSourcemapOutput)) {
         logger.warn('cannot found bundle and sourcemap');
-        this.esbuildTaskHandler?.rejecter?.(BundleTaskSignal.EmptyOutput);
+        currentTask.handler?.rejecter?.(BundleTaskSignal.EmptyOutput);
         return;
       }
 
-      this.bundleResult = {
+      currentTask.handler?.resolver?.({
         source: bundleOutput.contents,
         sourcemap: bundleSourcemapOutput.contents,
-      };
-
-      this.esbuildTaskHandler?.resolver?.(this.bundleResult);
+      });
     } catch (error) {
-      this.esbuildTaskHandler?.rejecter?.(error);
+      currentTask.handler?.rejecter?.(error);
     } finally {
-      if (!isInitialBuild) {
-        this.emit('build-end');
-      }
-    }
-  }
-
-  private assertTaskHandler(
-    handler?: PromiseHandler<BundleResult>,
-  ): asserts handler is PromiseHandler<BundleResult> {
-    if (
-      !(
-        handler &&
-        typeof handler.rejecter === 'function' &&
-        typeof handler.resolver === 'function' &&
-        typeof handler.task.then === 'function'
-      )
-    ) {
-      throw BundleTaskSignal.WatchModeNotStarted;
+      currentTask.status = 'resolved';
+      this.emit('build-end');
     }
   }
 
   registerPlugin(plugin: ReturnType<EsbuildPluginFactory<unknown>>): this {
     this.plugins.push(plugin);
     return this;
-  }
-
-  getContext(): BuildContext | null {
-    if (this.esbuildContext) {
-      return this.esbuildContext;
-    }
-    logger.warn('esbuild context is empty');
-    return null;
   }
 
   async bundle(bundleConfig: BundleConfig): Promise<BuildResult> {
@@ -169,30 +145,36 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     return esbuild.build(buildOptions);
   }
 
-  async watch(bundleConfig: BundleConfig): Promise<void> {
-    const buildOptions = this.getBuildOptionsForBundler(bundleConfig, 'watch');
-    logger.debug('preparing watch mode', { platform: bundleConfig.platform });
-    logger.debug('esbuild option', buildOptions);
-    (this.esbuildContext = await esbuild.context(buildOptions)).watch();
+  async getBundle(bundleConfig: BundleConfig): Promise<Uint8Array> {
+    const targetTaskId = this.identifyTaskByBundleConfig(bundleConfig);
+
+    if (!this.buildTasks.has(targetTaskId)) {
+      logger.debug(`bundle task not registered (id: ${targetTaskId})`);
+      const buildOptions = this.getBuildOptionsForBundler(
+        bundleConfig,
+        'watch',
+      );
+      const context = await esbuild.context(buildOptions);
+      this.buildTasks.set(targetTaskId, {
+        context,
+        handler: createPromiseHandler(),
+        status: 'pending',
+      });
+      await context.watch();
+      logger.debug(`bundle task is now watching: (id: ${targetTaskId})`);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const targetTask = this.buildTasks.get(targetTaskId)!;
+    if (targetTask.handler === null || targetTask.status === 'resolved') {
+      targetTask.handler = createPromiseHandler();
+      await targetTask.context.rebuild();
+    }
+
+    return (await targetTask.handler.task).source;
   }
 
-  async getBundle(_options: BundleRequestOptions): Promise<Uint8Array> {
-    this.assertTaskHandler(this.esbuildTaskHandler);
-
-    // TODO: get bundle by options
-
-    const bundleResult = await this.esbuildTaskHandler.task;
-
-    return bundleResult.source;
-  }
-
-  async getSourcemap(_options: BundleRequestOptions): Promise<Uint8Array> {
-    this.assertTaskHandler(this.esbuildTaskHandler);
-
-    // TODO: get bundle by options
-
-    const bundleResult = await this.esbuildTaskHandler.task;
-
-    return bundleResult.sourcemap;
+  async getSourcemap(_options: BundleRequestOptions): Promise<void> {
+    // TODO
   }
 }

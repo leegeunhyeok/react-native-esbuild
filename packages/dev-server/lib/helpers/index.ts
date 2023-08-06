@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { LogLevel } from '@react-native-esbuild/utils';
 import type { DevServerMiddleware, LogMessage } from '../types';
 
-export type ParsedBundlerOptions = z.infer<typeof bundleSearchParamSchema>;
+export type ParsedBundleConfig = z.infer<typeof bundleSearchParamSchema>;
 
 const toBoolean = (val: z.infer<typeof boolean>): boolean => val === 'true';
 
@@ -23,9 +23,9 @@ const bundleSearchParamSchema = z
   })
   .required();
 
-export function parseBundleOptionsFromSearchParams(
+export function parseBundleConfigFromSearchParams(
   query: ParsedUrlQuery,
-): ParsedBundlerOptions {
+): ParsedBundleConfig {
   const platform = query.platform;
   const dev = query.dev;
   const minify = query.minify;

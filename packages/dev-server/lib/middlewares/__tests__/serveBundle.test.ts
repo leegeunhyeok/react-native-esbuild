@@ -12,7 +12,7 @@ describe('serve-asset-middleware', () => {
 
   beforeEach(() => {
     bundle = faker.string.alphanumeric(50);
-    bundler = getMockedBundler({ bundle, watchModeStarted: true });
+    bundler = getMockedBundler({ bundle, hasError: false });
     middleware = createServeBundleMiddleware({
       devServerOptions: {
         host: '127.0.0.1',
@@ -63,54 +63,48 @@ describe('serve-asset-middleware', () => {
     let response: ServerResponse;
     let next: jest.Mock;
 
-    describe('bundler is not watching', () => {
-      beforeEach(() => {
-        const platform = faker.helpers.arrayElement(['android', 'ios', 'web']);
-        bundler = getMockedBundler({ bundle, watchModeStarted: false });
-        middleware = createServeBundleMiddleware({
-          devServerOptions: {
-            host: '127.0.0.1',
-            port: 8081,
-          },
-          bundler,
-        });
-        bundleRequestUrl = `main.bundle?platform=${platform}`;
-        request = getMockedRequest({ url: bundleRequestUrl });
-        response = getMockedResponse();
-        next = jest.fn();
-        middleware(request, response, next);
-      });
-
-      it('should start bundler watch mode', () => {
-        expect(bundler.getBundle).toBeCalled();
-        expect(bundler.watch).toBeCalled();
-      });
+    beforeEach(() => {
+      const platform = faker.helpers.arrayElement(['android', 'ios', 'web']);
+      bundleRequestUrl = `main.bundle?platform=${platform}`;
+      request = getMockedRequest({ url: bundleRequestUrl });
+      response = getMockedResponse();
+      next = jest.fn();
+      middleware(request, response, next);
     });
 
-    describe('bundler is watching', () => {
-      beforeEach(() => {
-        const platform = faker.helpers.arrayElement(['android', 'ios', 'web']);
-        bundler = getMockedBundler({ bundle, watchModeStarted: true });
-        middleware = createServeBundleMiddleware({
-          devServerOptions: {
-            host: '127.0.0.1',
-            port: 8081,
-          },
-          bundler,
-        });
-        bundleRequestUrl = `main.bundle?platform=${platform}`;
-        request = getMockedRequest({ url: bundleRequestUrl });
-        response = getMockedResponse();
-        next = jest.fn();
-        middleware(request, response, next);
+    it('should response bundle with status 200', () => {
+      expect(response.writeHead).toBeCalledWith(200, {
+        'Content-Type': 'application/javascript',
       });
+      expect(response.end).toBeCalledWith(bundle);
+    });
+  });
 
-      it('should response bundle with status 200', () => {
-        expect(response.writeHead).toBeCalledWith(200, {
-          'Content-Type': 'application/javascript',
-        });
-        expect(response.end).toBeCalledWith(bundle);
+  describe('when unable to get bundle ', () => {
+    let bundleRequestUrl: string;
+    let request: IncomingMessage;
+    let response: ServerResponse;
+    let next: jest.Mock;
+
+    beforeEach(() => {
+      const platform = faker.helpers.arrayElement(['android', 'ios', 'web']);
+      bundleRequestUrl = `main.bundle?platform=${platform}`;
+      request = getMockedRequest({ url: bundleRequestUrl });
+      response = getMockedResponse();
+      bundler = getMockedBundler({ bundle, hasError: true });
+      middleware = createServeBundleMiddleware({
+        devServerOptions: {
+          host: '127.0.0.1',
+          port: 8081,
+        },
+        bundler,
       });
+      middleware(request, response, next);
+    });
+
+    it('should response with status 500', () => {
+      expect(response.writeHead).toBeCalledWith(500);
+      expect(response.end).toBeCalled();
     });
   });
 });
