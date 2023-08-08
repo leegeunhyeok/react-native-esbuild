@@ -20,8 +20,7 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
           prefixText: colors.bgYellow(colors.black(' » esbuild ')),
         });
 
-        // eslint-disable-next-line prefer-named-capture-group
-        const filter = /(.*?)/;
+        const filter = /.*/;
         const moduleResolved = new Set<string>();
         const platformText = colors.gray(`[${context.platform}]`);
         let startTime: Date | null = null;
