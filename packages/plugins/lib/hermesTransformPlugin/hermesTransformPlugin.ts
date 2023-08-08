@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import {
   ReactNativeEsbuildBundler,
@@ -147,6 +148,23 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
               : await transformSource(args, { hash, modifiedAt: mtimeMs }),
             loader: 'js',
           } as OnLoadResult;
+        });
+
+        build.onEnd(async () => {
+          if (!(build.initialOptions.outfile && context.sourcemap)) return;
+
+          const sourceDirectory = path.dirname(build.initialOptions.outfile);
+          const sourceName = path.basename(build.initialOptions.outfile);
+          const sourceExtension = path.extname(sourceName);
+          const sourceMapName = sourceName.replace(
+            sourceExtension,
+            `.map${sourceExtension}`,
+          );
+
+          await fs.rename(
+            path.join(sourceDirectory, sourceMapName),
+            context.sourcemap,
+          );
         });
       },
     };
