@@ -28,7 +28,7 @@ export function getSwcOptions(
     jsc: {
       parser: parseOption,
       target: 'es5',
-      loose: true,
+      loose: false,
       externalHelpers: true,
       keepClassNames: true,
     },
