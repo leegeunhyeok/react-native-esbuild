@@ -98,8 +98,8 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
 
           if (
             !fullyTransformed &&
-            (isFlow(source, args.path) ||
-              stripFlowPackageNamesRegExp?.test(args.path))
+            (stripFlowPackageNamesRegExp?.test(args.path) ||
+              isFlow(source, args.path))
           ) {
             source = await stripFlowWithSucrase(source, context);
           }
