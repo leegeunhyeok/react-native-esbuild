@@ -4,15 +4,15 @@ exports[`getBabelOptions should match snapshot 1`] = `
 {
   "compact": false,
   "minified": false,
+  "root": "/root",
   "sourceMaps": false,
 }
 `;
 
 exports[`getEsbuildOptions should match snapshot 1`] = `
 {
-  "assetNames": "assets/[name]-[hash]",
   "banner": {
-    "js": "var __BUNDLE_START_TIME__=this.nativePerformanceNow?nativePerformanceNow():Date.now(),__DEV__=true,process=this.process||{},__METRO_GLOBAL_PREFIX__='',window = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this;",
+    "js": "var __BUNDLE_START_TIME__=this.nativePerformanceNow?nativePerformanceNow():Date.now(),process=this.process||{},__METRO_GLOBAL_PREFIX__='',window = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this;",
   },
   "bundle": true,
   "define": {
@@ -225,7 +225,7 @@ exports[`getEsbuildOptions should match snapshot 1`] = `
     ".tif",
     ".webp",
   ],
-  "sourceRoot": "/user",
+  "sourceRoot": ".",
   "sourcemap": true,
   "supported": {
     "for-of": false,
@@ -242,7 +242,7 @@ exports[`getSwcOptions should match snapshot 1`] = `
   "jsc": {
     "externalHelpers": true,
     "keepClassNames": true,
-    "loose": true,
+    "loose": false,
     "parser": {
       "exportDefaultFrom": true,
       "jsx": true,
@@ -251,6 +251,7 @@ exports[`getSwcOptions should match snapshot 1`] = `
     "target": "es5",
   },
   "minify": false,
+  "root": "/root",
   "sourceMaps": false,
 }
 `;

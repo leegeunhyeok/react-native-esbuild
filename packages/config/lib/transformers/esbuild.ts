@@ -3,7 +3,6 @@ import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
 import {
   DEFAULT_ENTRY_POINT,
-  DEFAULT_ASSETS_DIR,
   DEFAULT_OUTFILE,
   SOURCE_EXTENSIONS,
   ASSET_EXTENSIONS,
@@ -18,7 +17,6 @@ export function getEsbuildOptions(
   const {
     entry = DEFAULT_ENTRY_POINT,
     outfile = DEFAULT_OUTFILE,
-    assetsDir = DEFAULT_ASSETS_DIR,
     platform,
     dev,
     minify,
@@ -54,7 +52,6 @@ export function getEsbuildOptions(
     mainFields: ['react-native', 'browser', 'main', 'module'],
     entryPoints: [entry],
     outfile,
-    assetNames: `${assetsDir}/[name]-[hash]`,
     sourceRoot: path.dirname(entry),
     resolveExtensions: platforms
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
@@ -70,7 +67,7 @@ export function getEsbuildOptions(
     loader: Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
     legalComments: 'none',
     banner: {
-      js: `var ${BANNER_VARS.join(',')},__DEV__=${String(dev)};`,
+      js: `var ${BANNER_VARS.join(',')};`,
     },
     inject: [
       'react-native/Libraries/Core/InitializeCore',
