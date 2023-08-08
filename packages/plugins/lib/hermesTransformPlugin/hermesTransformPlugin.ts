@@ -3,7 +3,11 @@ import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import type { EsbuildPluginFactory } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { isFlow } from '../helpers';
-import { transformWithBabel, transformWithSwc } from './transformer';
+import {
+  transformWithBabel,
+  stripFlowWithSucrase,
+  transformWithSwc,
+} from './transformer';
 
 const NAME = 'hermes-transform-plugin';
 
@@ -127,15 +131,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
             (isFlow(source, args.path) ||
               stripFlowPackageNamesRegExp?.test(args.path))
           ) {
-            source = await transformWithBabel(source, args, {
-              babelrc: false,
-              plugins: [
-                // babel plugins in metro preset
-                // https://github.com/facebook/react-native/blob/main/packages/react-native-babel-preset/src/configs/main.js
-                '@babel/plugin-syntax-flow',
-                '@babel/plugin-transform-flow-strip-types',
-              ],
-            });
+            source = stripFlowWithSucrase(source, args);
           }
 
           for await (const rule of customTransformRules) {
