@@ -72,7 +72,6 @@ export function cli(): Argv | Promise<Argv> {
           minify: {
             describe: 'enable minify',
             type: 'boolean',
-            default: false,
           },
           ...commonOptions,
         })

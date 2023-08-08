@@ -23,7 +23,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const assetsDir = typeof argv.assets === 'string' ? argv.assets : undefined;
   const platform = argv.platform as BundleConfig['platform'];
   const dev = Boolean(argv.dev ?? process.env.NODE_ENV === 'development');
-  const minify = Boolean(argv.minify ?? dev);
+  const minify = Boolean(argv.minify ?? !dev);
   const debug = typeof argv.debug === 'boolean' ? argv.debug : undefined;
   const resetCache =
     typeof argv.resetCache === 'boolean' ? argv.resetCache : undefined;
