@@ -4,10 +4,11 @@ import { colors, isCI } from '@react-native-esbuild/utils';
 import {
   loadConfig,
   getEsbuildOptions,
+  setEnvironment,
+  bitwiseOptions,
   DEFAULT_OUTFILE,
   type ReactNativeEsbuildConfig,
   type BundleConfig,
-  bitwiseOptions,
 } from '@react-native-esbuild/config';
 import { CacheStorage } from '../cache';
 import { createPromiseHandler } from '../helpers';
@@ -43,6 +44,8 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     if (!this.plugins.length) {
       throw new Error('plugin is not registered');
     }
+
+    setEnvironment(bundleConfig.dev ?? true);
 
     const context: PluginContext = {
       ...bundleConfig,

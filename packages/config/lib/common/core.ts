@@ -44,3 +44,9 @@ export function bitwiseOptions({
 
   return value;
 }
+
+export function setEnvironment(isDev: boolean): void {
+  const env = isDev ? 'development' : 'production';
+  process.env.NODE_ENV = env;
+  process.env.BABEL_ENV = env;
+}
