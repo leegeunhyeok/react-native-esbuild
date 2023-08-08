@@ -18,33 +18,35 @@ describe('getEsbuildOptions', () => {
 
 describe('getSwcOptions', () => {
   it('should match snapshot', () => {
-    expect(getSwcOptions({ filename: 'file.js' })).toMatchSnapshot();
+    expect(
+      getSwcOptions({ filename: 'file.js', root: '/root' }),
+    ).toMatchSnapshot();
   });
 
   describe('when filename ends with `.js`', () => {
     it('should set parse syntax to `ecmascript`', () => {
-      const options = getSwcOptions({ filename: 'file.js' });
+      const options = getSwcOptions({ filename: 'file.js', root: '/root' });
       expect(options.jsc?.parser?.syntax).toEqual('ecmascript');
     });
   });
 
   describe('when filename ends with `.jsx`', () => {
     it('should set parse syntax to `ecmascript`', () => {
-      const options = getSwcOptions({ filename: 'file.jsx' });
+      const options = getSwcOptions({ filename: 'file.jsx', root: '/root' });
       expect(options.jsc?.parser?.syntax).toEqual('ecmascript');
     });
   });
 
   describe('when filename ends with `.ts`', () => {
     it('should set parse syntax to `typescript`', () => {
-      const options = getSwcOptions({ filename: 'file.ts' });
+      const options = getSwcOptions({ filename: 'file.ts', root: '/root' });
       expect(options.jsc?.parser?.syntax).toEqual('typescript');
     });
   });
 
   describe('when filename ends with `.tsx`', () => {
     it('should set parse syntax to `typescript`', () => {
-      const options = getSwcOptions({ filename: 'file.tsx' });
+      const options = getSwcOptions({ filename: 'file.tsx', root: '/root' });
       expect(options.jsc?.parser?.syntax).toEqual('typescript');
     });
   });
@@ -58,7 +60,10 @@ describe('getSwcOptions', () => {
           loose: false,
         },
       };
-      const options = getSwcOptions({ filename: 'file.js' }, overrideOptions);
+      const options = getSwcOptions(
+        { filename: 'file.js', root: '/root' },
+        overrideOptions,
+      );
 
       expect(options).toMatchObject(
         expect.objectContaining({
@@ -72,7 +77,7 @@ describe('getSwcOptions', () => {
 
 describe('getBabelOptions', () => {
   it('should match snapshot', () => {
-    expect(getBabelOptions()).toMatchSnapshot();
+    expect(getBabelOptions('/root')).toMatchSnapshot();
   });
 
   describe('when customBabelOptions present', () => {
@@ -82,7 +87,7 @@ describe('getBabelOptions', () => {
         compact: true,
         sourceMaps: true,
       };
-      const options = getBabelOptions(overrideOptions);
+      const options = getBabelOptions('/root', overrideOptions);
 
       expect(options).toMatchObject(expect.objectContaining(overrideOptions));
     });

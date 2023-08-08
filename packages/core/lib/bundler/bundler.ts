@@ -33,7 +33,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
     super();
     if (isCI()) colors.disable();
     printLogo();
-    this.config = loadConfig();
+    this.config = loadConfig(this.root);
   }
 
   private getBuildOptionsForBundler(

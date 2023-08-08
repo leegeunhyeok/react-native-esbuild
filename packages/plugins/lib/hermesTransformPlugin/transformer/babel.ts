@@ -11,10 +11,11 @@ import { promisify } from '../../utils';
 export const transformWithBabel = async (
   source: string,
   args: OnLoadArgs,
+  root: string,
   customOptions?: TransformOptions,
 ): Promise<string> => {
   const options = loadOptions({
-    ...getBabelOptions(customOptions),
+    ...getBabelOptions(root, customOptions),
     filename: args.path,
     caller: {
       name: '@react-native-esbuild/plugins',

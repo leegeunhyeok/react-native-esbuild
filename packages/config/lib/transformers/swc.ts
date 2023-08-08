@@ -25,6 +25,7 @@ export function getSwcOptions(
     isModule: true,
     inputSourceMap: false,
     inlineSourcesContent: false,
+    root: options.root,
     jsc: {
       parser: parseOption,
       target: 'es5',

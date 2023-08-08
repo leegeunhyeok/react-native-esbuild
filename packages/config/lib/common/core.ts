@@ -6,7 +6,7 @@ import {
   type ReactNativeEsbuildConfig,
 } from '../types';
 
-export function loadConfig(): ReactNativeEsbuildConfig {
+export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
   let config: ReactNativeEsbuildConfig | undefined;
 
   const baseOptions: ReactNativeEsbuildConfig = {
@@ -16,7 +16,7 @@ export function loadConfig(): ReactNativeEsbuildConfig {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
     config = require(path.resolve(
-      process.cwd(),
+      resolveDir,
       'react-native-esbuild.config.js',
     )).default;
   } catch {

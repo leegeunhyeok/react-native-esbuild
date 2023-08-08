@@ -5,8 +5,9 @@ import { getSwcOptions } from '@react-native-esbuild/config';
 export const transformWithSwc = async (
   source: string,
   args: OnLoadArgs,
+  root: string,
 ): Promise<string> => {
-  const options = getSwcOptions({ filename: args.path });
+  const options = getSwcOptions({ filename: args.path, root });
   const { code } = await transform(source, options);
 
   if (typeof code !== 'string') {

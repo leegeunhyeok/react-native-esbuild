@@ -23,6 +23,7 @@ export interface BundleConfig {
 
 export interface SwcPresetOptions {
   filename: string;
+  root: string;
 }
 
 export interface BitwiseOptions {

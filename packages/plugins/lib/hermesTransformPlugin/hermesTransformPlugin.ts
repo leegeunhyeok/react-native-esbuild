@@ -28,6 +28,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           context.taskId.toString(),
         );
         const cacheEnabled = context.dev;
+        const root = context.root;
         const {
           stripFlowPackageNames = [],
           fullyTransformPackageNames = [],
@@ -85,7 +86,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           let fullyTransformed = false;
 
           if (fullyTransformPackagesRegExp?.test(args.path)) {
-            source = await transformWithBabel(source, args, {
+            source = await transformWithBabel(source, args, root, {
               // follow babelrc of react-native project's root (same as metro)
               babelrc: true,
             });
@@ -102,7 +103,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
 
           for await (const rule of customTransformRules) {
             if (rule.test(args.path, source)) {
-              source = await transformWithBabel(source, args, {
+              source = await transformWithBabel(source, args, root, {
                 babelrc: false,
                 plugins: rule.plugins,
               });
@@ -110,7 +111,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           }
 
           // transform source target to es5
-          source = await transformWithSwc(source, args);
+          source = await transformWithSwc(source, args, root);
 
           if (cacheEnabled) {
             cacheController.writeToMemory(cacheConfig.hash, {
