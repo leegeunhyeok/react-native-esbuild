@@ -1,12 +1,9 @@
 import { transform } from 'sucrase';
-import type { OnLoadArgs } from 'esbuild';
+import type { Transformer } from '../../types';
 
-export const stripFlowWithSucrase = (
-  source: string,
-  args: OnLoadArgs,
-): string => {
-  return transform(source, {
+export const stripFlowWithSucrase: Transformer<void> = (code, context) => {
+  return transform(code, {
     transforms: ['flow', 'imports', 'jsx'],
-    filePath: args.path,
+    filePath: context.args.path,
   }).code;
 };

@@ -4,19 +4,18 @@ import {
   type TransformOptions,
   type BabelFileResult,
 } from '@babel/core';
-import type { OnLoadArgs } from 'esbuild';
 import { getBabelOptions } from '@react-native-esbuild/config';
 import { promisify } from '../../utils';
+import type { Transformer } from '../../types';
 
-export const transformWithBabel = async (
-  source: string,
-  args: OnLoadArgs,
-  root: string,
-  customOptions?: TransformOptions,
-): Promise<string> => {
+export const transformWithBabel: Transformer<TransformOptions> = async (
+  code: string,
+  context,
+  customOptions,
+) => {
   const options = loadOptions({
-    ...getBabelOptions(root, customOptions),
-    filename: args.path,
+    ...getBabelOptions(context.root, customOptions),
+    filename: context.args.path,
     caller: {
       name: '@react-native-esbuild/plugins',
     },
@@ -26,13 +25,13 @@ export const transformWithBabel = async (
     throw new Error('cannot load babel options');
   }
 
-  const { code } = await promisify<BabelFileResult>((handler) =>
-    transform(source, options, handler),
+  const { code: transformedCode } = await promisify<BabelFileResult>(
+    (handler) => transform(code, options, handler),
   );
 
-  if (typeof code !== 'string') {
+  if (typeof transformedCode !== 'string') {
     throw new Error('babel transformed source is empty');
   }
 
-  return code;
+  return transformedCode;
 };

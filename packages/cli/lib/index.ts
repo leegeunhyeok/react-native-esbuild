@@ -44,7 +44,7 @@ Promise.resolve(cli())
       case 'build': {
         const { bundleConfig } = options as BuildOptions;
         const bundler = new ReactNativeEsbuildBundler(
-          path.dirname(bundleConfig.entry ?? process.cwd()),
+          bundleConfig.entry ? path.dirname(bundleConfig.entry) : process.cwd(),
         );
 
         bundler
