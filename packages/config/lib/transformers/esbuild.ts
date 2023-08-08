@@ -55,7 +55,7 @@ export function getEsbuildOptions(
     entryPoints: [entry],
     outfile,
     assetNames: `${assetsDir}/[name]-[hash]`,
-    sourceRoot: process.cwd(),
+    sourceRoot: path.dirname(entry),
     resolveExtensions: platforms
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
       .concat(extensions)

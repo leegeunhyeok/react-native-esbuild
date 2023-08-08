@@ -28,9 +28,8 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
   private config: ReactNativeEsbuildConfig;
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
-  private cwd = process.cwd();
 
-  constructor() {
+  constructor(private root: string = process.cwd()) {
     super();
     if (isCI()) colors.disable();
     printLogo();
@@ -49,7 +48,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
       ...bundleConfig,
       taskId: this.identifyTaskByBundleConfig(bundleConfig),
       mode,
-      cwd: this.cwd,
+      root: this.root,
       config: this.config,
     };
 

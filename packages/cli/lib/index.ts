@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import {
@@ -42,7 +43,9 @@ Promise.resolve(cli())
 
       case 'build': {
         const { bundleConfig } = options as BuildOptions;
-        const bundler = new ReactNativeEsbuildBundler();
+        const bundler = new ReactNativeEsbuildBundler(
+          path.dirname(bundleConfig.entry ?? process.cwd()),
+        );
 
         bundler
           .registerPlugin(createAssetRegisterPlugin())

@@ -166,7 +166,7 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
             const { basename, extension } = args.pluginData as SuffixPathResult;
             const dirname = path.dirname(args.path);
             const relativePath = path.relative(
-              build.initialOptions.sourceRoot ?? process.cwd(),
+              build.initialOptions.sourceRoot ?? context.root,
               args.path,
             );
 

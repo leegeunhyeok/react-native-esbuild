@@ -35,7 +35,7 @@ export type EsbuildPluginFactory<PluginConfig = void> = (
 
 export interface PluginContext extends BundleConfig {
   taskId: number;
-  cwd: string;
+  root: string;
   mode: RunType;
   config: ReactNativeEsbuildConfig;
 }
