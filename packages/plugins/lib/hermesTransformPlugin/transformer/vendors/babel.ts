@@ -6,7 +6,7 @@ import {
 } from '@babel/core';
 import type { OnLoadArgs } from 'esbuild';
 import { getBabelOptions } from '@react-native-esbuild/config';
-import { promisify } from '../../utils';
+import { promisify } from '../../../utils';
 
 export const transformWithBabel = async (
   source: string,

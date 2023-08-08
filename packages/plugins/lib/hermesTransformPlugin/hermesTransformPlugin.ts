@@ -2,7 +2,6 @@ import fs from 'node:fs/promises';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import type { EsbuildPluginFactory } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
-import { isFlow } from '../helpers';
 import {
   transformWithBabel,
   stripFlowWithSucrase,
@@ -10,6 +9,15 @@ import {
 } from './transformer';
 
 const NAME = 'hermes-transform-plugin';
+
+const isFlow = (source: string, path: string): boolean => {
+  return (
+    path.endsWith('.js') &&
+    ['@flow', '@noflow'].some((flowSyntaxToken) =>
+      source.includes(flowSyntaxToken),
+    )
+  );
+};
 
 export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
   return function hermesTransformPlugin(context) {

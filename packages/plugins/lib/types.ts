@@ -1,7 +1,3 @@
-import type { OnLoadArgs } from 'esbuild';
-import type { CacheController } from '@react-native-esbuild/core';
-import type { CustomTransformRule } from '@react-native-esbuild/config';
-
 // asset-register-plugin
 export interface AssetRegisterPluginConfig {
   assetExtensions?: string[];
