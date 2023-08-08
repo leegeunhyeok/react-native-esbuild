@@ -85,21 +85,19 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           cacheConfig: { modifiedAt: number; hash: string },
         ): Promise<string> => {
           let source = await fs.readFile(args.path, { encoding: 'utf-8' });
-          let fullyTransformed = false;
           const context = { args, root };
 
           if (fullyTransformPackagesRegExp?.test(args.path)) {
-            source = await transformWithBabel(source, context, {
+            // eslint-disable-next-line no-return-await
+            return await transformWithBabel(source, context, {
               // follow babelrc of react-native project's root (same as metro)
               babelrc: true,
             });
-            fullyTransformed = true;
           }
 
           if (
-            !fullyTransformed &&
-            (stripFlowPackageNamesRegExp?.test(args.path) ||
-              isFlow(source, args.path))
+            stripFlowPackageNamesRegExp?.test(args.path) ||
+            isFlow(source, args.path)
           ) {
             source = await stripFlowWithSucrase(source, context);
           }
