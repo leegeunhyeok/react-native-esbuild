@@ -67,7 +67,6 @@ export const ASSET_EXTENSIONS = [
 
 export const BANNER_VARS = [
   '__BUNDLE_START_TIME__=this.nativePerformanceNow?nativePerformanceNow():Date.now()',
-  `__DEV__=${String(true)}`,
   'process=this.process||{}',
   `__METRO_GLOBAL_PREFIX__=''`,
   `window = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this`,

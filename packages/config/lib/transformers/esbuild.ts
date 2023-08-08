@@ -70,7 +70,7 @@ export function getEsbuildOptions(
     loader: Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
     legalComments: 'none',
     banner: {
-      js: `var ${BANNER_VARS.join(',')};`,
+      js: `var ${BANNER_VARS.join(',')},__DEV__=${String(dev)};`,
     },
     inject: [
       'react-native/Libraries/Core/InitializeCore',
