@@ -17,6 +17,9 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const entryFilePath = argv.entry
     ? resolvePath(argv.entry as string)
     : undefined;
+  const sourcemapPath = argv.sourcemap
+    ? resolvePath(argv.sourcemap as string)
+    : undefined;
   const outputFilePath = argv.output
     ? resolvePath(argv.output as string)
     : undefined;
@@ -24,12 +27,13 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const platform = argv.platform as BundleConfig['platform'];
   const dev = Boolean(argv.dev ?? process.env.NODE_ENV === 'development');
   const minify = Boolean(argv.minify ?? !dev);
-  const debug = typeof argv.debug === 'boolean' ? argv.debug : undefined;
+  const verbose = typeof argv.verbose === 'boolean' ? argv.verbose : undefined;
   const resetCache =
     typeof argv.resetCache === 'boolean' ? argv.resetCache : undefined;
 
   const bundleConfig: BundleConfig = {
     entry: entryFilePath,
+    sourcemap: sourcemapPath,
     outfile: outputFilePath,
     assetsDir,
     platform,
@@ -39,10 +43,10 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
 
   return typeof argv.port === 'number'
     ? ({
-        debug,
+        verbose,
         resetCache,
         port: argv.port,
         host: argv.host,
       } as StartOptions)
-    : ({ bundleConfig, debug, resetCache } as BuildOptions);
+    : ({ bundleConfig, verbose, resetCache } as BuildOptions);
 }

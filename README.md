@@ -85,29 +85,30 @@ rne start
 
 | Option | Description | Default value |
 |:--|:--|:--|
-| `--entry` | entry file path | `index.js` |
+| `--entry-file` | entry file path | `index.js` |
 | `--host` | dev server host | `127.0.0.1` |
 | `--port` | dev server port | `8081` |
-| `--debug` | show cli debug log | `false` |
+| `--verbose` | show cli debug log | `false` |
 | `--reset-cache` | reset transform cache | `false` |
 
-## Build
+## Bundle
 
 Build bundle
 
 ```bash
-rne build --platform=<platform> --output=<dest>
+rne bundle --platform=<platform> --bundle-output=<dest>
 ```
 
 | Option | Description | Default value |
 |:--|:--|:--|
-| `--entry` | entry file path | `index.js` |
-| `--output` | (required) bundle output file destination | |
+| `--entry-file` | entry file path | `index.js` |
 | `--platform` | (required) platform for resolve modules | |
-| `--assets` | assets directory | |
+| `--bundle-output` | (required) bundle output file destination | |
+| `--sourcemap-output` | sourcemap file destination | |
+| `--assets-dest` | assets directory | |
 | `--dev` | set as development environment | `true` |
 | `--minify` | enable minify | `false` |
-| `--debug` | show cli debug log | `false` |
+| `--verbose` | print all logs | `false` |
 | `--reset-cache` | reset transform cache | `false` |
 
 ## Cache

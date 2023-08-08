@@ -4,8 +4,8 @@ import { VERSION } from './constants';
 import type { Argv } from './types';
 
 const commonOptions = {
-  debug: {
-    describe: 'show cli debug log',
+  verbose: {
+    describe: 'print all logs',
     type: 'boolean',
     default: false,
   },
@@ -26,6 +26,7 @@ export function cli(): Argv | Promise<Argv> {
       yargs
         .options({
           entry: {
+            alias: 'entry-file',
             type: 'string',
             describe: 'entry file path',
           },
@@ -44,10 +45,11 @@ export function cli(): Argv | Promise<Argv> {
         .version(false)
         .help();
     })
-    .command('build', 'bundle your application', (yargs) => {
+    .command('bundle', 'bundle your application', (yargs) => {
       yargs
         .options({
           entry: {
+            alias: 'entry-file',
             type: 'string',
             describe: 'entry file path',
           },
@@ -57,10 +59,17 @@ export function cli(): Argv | Promise<Argv> {
             choices: ['android', 'ios', 'web'],
           },
           output: {
+            alias: 'bundle-output',
             type: 'string',
             describe: 'bundle output file destination',
           },
+          sourcemap: {
+            alias: 'sourcemap-output',
+            type: 'string',
+            describe: 'sourcemap file destination',
+          },
           assets: {
+            alias: 'assets-dest',
             type: 'string',
             describe: 'assets directory',
           },

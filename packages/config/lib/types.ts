@@ -15,6 +15,7 @@ export interface ReactNativeEsbuildConfig {
 export interface BundleConfig {
   entry?: string;
   outfile?: string;
+  sourcemap?: string;
   assetsDir?: string;
   dev?: boolean;
   minify?: boolean;

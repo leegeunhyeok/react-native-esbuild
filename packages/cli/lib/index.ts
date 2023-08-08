@@ -15,7 +15,8 @@ Promise.resolve(cli())
   .then(async (argv): Promise<void> => {
     const options = getOptions(argv);
 
-    logger.setLogLevel(options.debug ? 'debug' : 'info');
+    logger.setLogLevel(options.verbose ? 'debug' : 'info');
+    logger.debug('parsed options', options);
 
     const resetCache = async (): Promise<void> => {
       await ReactNativeEsbuildBundler.caches.clearAll();
@@ -41,7 +42,7 @@ Promise.resolve(cli())
         return void server.listen();
       }
 
-      case 'build': {
+      case 'bundle': {
         const { bundleConfig } = options as BuildOptions;
         const bundler = new ReactNativeEsbuildBundler(
           bundleConfig.entry ? path.dirname(bundleConfig.entry) : process.cwd(),

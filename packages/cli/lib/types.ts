@@ -7,7 +7,7 @@ export interface Argv {
 }
 
 export interface CliOptionsBase {
-  debug: boolean;
+  verbose: boolean;
   resetCache: boolean;
 }
 
