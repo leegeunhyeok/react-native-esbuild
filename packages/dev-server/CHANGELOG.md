@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
+
+
+### Miscellaneous Chores
+
+* remove newline ([c7549bf](https://github.com/leegeunhyeok/react-native-esbuild/commit/c7549bf47370580370185b3c0efa71312c866c93))
+
+
+
 ## [0.1.0-alpha.20](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.19...v0.1.0-alpha.20) (2023-08-06)
 
 **Note:** Version bump only for package @react-native-esbuild/dev-server

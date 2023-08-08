@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
+
+
+### Performance Improvements
+
+* improve regexp ([5202582](https://github.com/leegeunhyeok/react-native-esbuild/commit/5202582535d4bff46f3b9a44d12ab9a83c924d36))
+
+
+
 ## [0.1.0-alpha.20](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.19...v0.1.0-alpha.20) (2023-08-06)
 
 

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
+
+
+### Features
+
+* disable swc loose option ([ab1da4d](https://github.com/leegeunhyeok/react-native-esbuild/commit/ab1da4d8fbfbc9028e1de074e9df1d9dee96ff24))
+
+
+### Bug Fixes
+
+* wrong __DEV__ value ([620c9b4](https://github.com/leegeunhyeok/react-native-esbuild/commit/620c9b4c40d3d97f5676a5114e19c586e06738fb))
+
+
+
 ## [0.1.0-alpha.19](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2023-08-06)
 
 

@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
+
+
+### Features
+
+* disable swc loose option ([ab1da4d](https://github.com/leegeunhyeok/react-native-esbuild/commit/ab1da4d8fbfbc9028e1de074e9df1d9dee96ff24))
+* strip flow syntax using sucrase ([3e7b107](https://github.com/leegeunhyeok/react-native-esbuild/commit/3e7b107be6f9274200cfc753a67421c5eda8b328))
+
+
+### Bug Fixes
+
+* wrong __DEV__ value ([620c9b4](https://github.com/leegeunhyeok/react-native-esbuild/commit/620c9b4c40d3d97f5676a5114e19c586e06738fb))
+
+
+### Performance Improvements
+
+* improve regexp ([5202582](https://github.com/leegeunhyeok/react-native-esbuild/commit/5202582535d4bff46f3b9a44d12ab9a83c924d36))
+
+
+### Miscellaneous Chores
+
+* remove newline ([c7549bf](https://github.com/leegeunhyeok/react-native-esbuild/commit/c7549bf47370580370185b3c0efa71312c866c93))
+
+
+### Code Refactoring
+
+* cleanup transformer ([4a672a9](https://github.com/leegeunhyeok/react-native-esbuild/commit/4a672a96ce823cdb697c8d0c896010a2347b4c9e))
+
+
+
 ## [0.1.0-alpha.20](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.19...v0.1.0-alpha.20) (2023-08-06)
 
 
