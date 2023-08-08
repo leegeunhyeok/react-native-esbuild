@@ -1,6 +1,5 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { assertCommandOptions, getCommand } from './helpers';
 import { VERSION } from './constants';
 import type { Argv } from './types';
 
@@ -90,6 +89,5 @@ export function cli(): Argv | Promise<Argv> {
     })
     .demandCommand()
     .strictCommands()
-    .check((argv) => assertCommandOptions(getCommand(argv), argv))
     .help().argv;
 }
