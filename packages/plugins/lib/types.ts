@@ -32,34 +32,3 @@ export interface RegistrationScriptParams {
   scales: number[];
   dimensions: { width: number; height: number };
 }
-
-// hermes-transform-plugin
-interface CacheParams {
-  cacheEnabled: boolean;
-  cacheController: CacheController;
-}
-
-export interface GetCacheParam extends CacheParams {
-  args: OnLoadArgs;
-}
-
-export type GetCacheResult = BaseCacheResult | NoCacheResult;
-
-export interface BaseCacheResult {
-  contents: string;
-  modifiedAt: number;
-}
-
-export interface NoCacheResult extends BaseCacheResult {
-  content: string;
-  hash: string;
-}
-
-export interface TransformSourceParam extends CacheParams {
-  args: OnLoadArgs;
-  rawSource: string;
-  hash?: string;
-  stripFlowPackageNamesRegExp?: RegExp;
-  fullyTransformPackagesRegExp?: RegExp;
-  customTransformRules?: CustomTransformRule[];
-}

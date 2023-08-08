@@ -1,4 +1,4 @@
-import fs, { type FileHandle } from 'node:fs/promises';
+import fs from 'node:fs/promises';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import type { EsbuildPluginFactory } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
@@ -36,86 +36,44 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
             )
           : undefined;
 
-        const getTransformedSourceFromCache = async (
-          args: OnLoadArgs,
-        ): Promise<{
-          contents: string;
-          fromCache: boolean;
-          hash?: string;
-          mtimeMs?: number;
-        }> => {
-          let fileHandle: FileHandle | null = null;
+        const getTransformedCodeFromCache = async (
+          key: string,
+          modifiedAt: number,
+        ): Promise<string | null> => {
+          if (!cacheEnabled) return null;
 
-          try {
-            fileHandle = await fs.open(args.path, 'r');
-            const { mtimeMs } = await fileHandle.stat();
+          const inMemoryCache = cacheController.readFromMemory(key);
 
-            // `taskId` is combined value (platform, dev, minify)
-            // use `taskId` as filesystem hash key generation
-            //
-            // md5(taskId + modified time + file path) = cache key
-            //     number + number        + string
-            //
-            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-            const hashParam = context.taskId + mtimeMs + args.path;
-            const hash = cacheController.getCacheHash(hashParam);
-
-            if (cacheEnabled) {
-              const inMemoryCache = cacheController.readFromMemory(hash);
-
-              // 1. find cache from memory
-              if (inMemoryCache) {
-                if (inMemoryCache.modifiedAt === mtimeMs) {
-                  // file is not modified, using cache data
-                  return { contents: inMemoryCache.data, fromCache: true };
-                }
-
-                // cache is not exist or file is modified(stale),
-                // read original content (to be transformed)
-                return {
-                  contents: await fileHandle.readFile({ encoding: 'utf-8' }),
-                  fromCache: false,
-                  hash,
-                };
-              }
-
-              const cachedSource = await cacheController.readFromFileSystem(
-                hash,
-              );
-
-              // 2. find cache from fils system
-              if (cachedSource) {
-                cacheController.writeToMemory(hash, {
-                  data: cachedSource,
-                  modifiedAt: mtimeMs,
-                });
-                return { contents: cachedSource, fromCache: true };
-              }
+          // 1. find cache from memory
+          if (inMemoryCache) {
+            if (inMemoryCache.modifiedAt === modifiedAt) {
+              // file is not modified, using cache data
+              return inMemoryCache.data;
             }
 
-            // 3. if cache is not exist or cache is disabled, read original source code
-            return {
-              contents: await fileHandle.readFile({ encoding: 'utf-8' }),
-              fromCache: false,
-              hash,
-              mtimeMs,
-            };
-          } finally {
-            await fileHandle?.close();
+            return null;
           }
+
+          const fsCache = await cacheController.readFromFileSystem(key);
+
+          // 2. find cache from fils system
+          if (fsCache) {
+            cacheController.writeToMemory(key, {
+              data: fsCache,
+              modifiedAt,
+            });
+            return fsCache;
+          }
+
+          // 3. cache not found
+          return null;
         };
 
         const transformSource = async (
           args: OnLoadArgs,
-          rawSource: string,
-          hash?: string,
-          mtimeMs?: number,
+          cacheConfig: { modifiedAt: number; hash: string },
         ): Promise<string> => {
-          if (typeof hash !== 'string') {
-            throw new Error('hash is required for caching');
-          }
-
-          let source = rawSource;
+          let source = await fs.readFile(args.path, { encoding: 'utf-8' });
           let fullyTransformed = false;
 
           if (fullyTransformPackagesRegExp?.test(args.path)) {
@@ -147,24 +105,36 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           source = await transformWithSwc(source, args);
 
           if (cacheEnabled) {
-            cacheController.writeToMemory(hash, {
+            cacheController.writeToMemory(cacheConfig.hash, {
               data: source,
-              modifiedAt: mtimeMs ?? 0,
+              modifiedAt: cacheConfig.modifiedAt,
             });
-            await cacheController.writeToFileSystem(hash, source);
+            await cacheController.writeToFileSystem(cacheConfig.hash, source);
           }
 
           return source;
         };
 
         build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
-          const { contents, fromCache, hash, mtimeMs } =
-            await getTransformedSourceFromCache(args);
+          const { mtimeMs } = await fs.stat(args.path);
+
+          // `taskId` is combined value (platform, dev, minify)
+          // use `taskId` as filesystem hash key generation
+          //
+          // md5(taskId + modified time + file path) = cache key
+          //     number + number        + string
+          //
+          const hash = cacheController.getCacheHash(
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+            context.taskId + mtimeMs + args.path,
+          );
+
+          const cache = await getTransformedCodeFromCache(hash, mtimeMs);
 
           return {
-            contents: fromCache
-              ? contents
-              : await transformSource(args, contents, hash, mtimeMs),
+            contents: cache
+              ? cache
+              : await transformSource(args, { hash, modifiedAt: mtimeMs }),
             loader: 'js',
           } as OnLoadResult;
         });
