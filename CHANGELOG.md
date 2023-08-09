@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.24](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2023-08-09)
+
+
+### Bug Fixes
+
+* strip exist scale suffix before resolve ([8e95268](https://github.com/leegeunhyeok/react-native-esbuild/commit/8e9526873a4b098db23f1522a203a722e91b79ba))
+
+
+
 ## [0.1.0-alpha.23](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.22...v0.1.0-alpha.23) (2023-08-09)
 
 
