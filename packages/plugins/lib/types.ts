@@ -6,10 +6,21 @@ export interface AssetRegisterPluginConfig {
 }
 
 export interface Asset {
+  // `/path/to/asset/image.png`
   path: string;
+  // `image.png`
   basename: string;
+  // `image`
+  name: string;
+  // `.png`
   extension: string;
+  // `png`
+  type: string;
+  // [1, 2, 3]
   scales: number[];
+  httpServerLocation: string;
+  hash: string;
+  dimensions: { width: number; height: number };
 }
 
 export type AssetScale = 1 | 2 | 3;
@@ -19,16 +30,6 @@ export interface SuffixPathResult {
   basename: string;
   extension: string;
   path: string;
-}
-
-export interface RegistrationScriptParams {
-  basename: string;
-  extension: string;
-  hash: string;
-  relativePath: string;
-  httpServerLocation: string;
-  scales: number[];
-  dimensions: { width: number; height: number };
 }
 
 // hermes-transform-plugin
