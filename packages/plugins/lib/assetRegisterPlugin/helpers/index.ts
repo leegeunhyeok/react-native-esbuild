@@ -126,7 +126,11 @@ export async function resolveScaledAssets(
   const dirname = path.dirname(args.path);
   const filesInDir = await fs.readdir(dirname);
   const assetRegExp = new RegExp(
-    `${basename.replace(extension, '')}(@(\\d+)x)?${extension}$`,
+    // strip exist scale suffix
+    `${basename.replace(
+      new RegExp(`(@(\\d+)x)?${extension}$`),
+      '',
+    )}(@(\\d+)x)?${extension}$`,
   );
   const scaledAssets: Partial<Record<AssetScale, string>> = {};
 
