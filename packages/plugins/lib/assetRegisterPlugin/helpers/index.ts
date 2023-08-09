@@ -125,12 +125,13 @@ export async function resolveScaledAssets(
   const relativePath = path.relative(context.root, args.path);
   const dirname = path.dirname(args.path);
   const filesInDir = await fs.readdir(dirname);
+  const stripedBasename = basename.replace(
+    new RegExp(`(@(\\d+)x)?${extension}$`),
+    '',
+  );
   const assetRegExp = new RegExp(
     // strip exist scale suffix
-    `${basename.replace(
-      new RegExp(`(@(\\d+)x)?${extension}$`),
-      '',
-    )}(@(\\d+)x)?${extension}$`,
+    `${stripedBasename}(@(\\d+)x)?${extension}$`,
   );
   const scaledAssets: Partial<Record<AssetScale, string>> = {};
 
@@ -152,8 +153,8 @@ export async function resolveScaledAssets(
 
   return {
     path: args.path,
-    basename,
-    name: basename.replace(extension, ''),
+    basename: stripedBasename,
+    name: stripedBasename.replace(extension, ''),
     extension,
     type: extension.substring(1),
     scales: Object.keys(scaledAssets).map(parseFloat).sort(),
@@ -167,32 +168,31 @@ export async function resolveScaledAssets(
 }
 
 export async function resolveAssetPath(
-  { path, basename, extension }: Asset,
+  asset: Asset,
   targetScale: number,
 ): Promise<string> {
-  let filepath: string;
+  const basename = path.basename(asset.path);
   // when scale is 1, filename can be `image.png` or `image@1x.png`
   // 1. check resolvedPath (image.png)
   // 2. if file is not exist, check suffixed path (image@1x.png)
   if (targetScale === 1) {
-    filepath = await fs
-      .stat(path)
-      .then(() => path)
+    // eslint-disable-next-line no-return-await
+    return await fs
+      .stat(asset.path)
+      .then(() => asset.path)
       .catch(() => {
-        const suffixedPath = path.replace(
+        const suffixedPath = asset.path.replace(
           basename,
-          addScaleSuffix(basename, extension, targetScale),
+          addScaleSuffix(basename, asset.extension, targetScale),
         );
         return fs.stat(suffixedPath).then(() => suffixedPath);
       });
-  } else {
-    filepath = path.replace(
-      basename,
-      addScaleSuffix(basename, extension, targetScale),
-    );
   }
 
-  return filepath;
+  return asset.path.replace(
+    basename,
+    addScaleSuffix(basename, asset.extension, targetScale),
+  );
 }
 
 export async function copyAssetsToDevServer(
