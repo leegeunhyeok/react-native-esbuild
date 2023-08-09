@@ -162,7 +162,41 @@ export async function resolveScaledAssets(
   };
 }
 
-export async function copyAssetsToDevServer(assets: Asset[]): Promise<void> {
+export async function resolveAssetPath(
+  { path, basename, extension }: Asset,
+  targetScale: number,
+): Promise<string> {
+  let filepath: string;
+  // when scale is 1, filename can be `image.png` or `image@1x.png`
+  // 1. check resolvedPath (image.png)
+  // 2. if file is not exist, check suffixed path (image@1x.png)
+  if (targetScale === 1) {
+    filepath = await fs
+      .stat(path)
+      .then(() => path)
+      .catch(() => {
+        const suffixedPath = path.replace(
+          basename,
+          addScaleSuffix(basename, extension, targetScale),
+        );
+        return fs.stat(suffixedPath).then(() => suffixedPath);
+      });
+  } else {
+    filepath = path.replace(
+      basename,
+      addScaleSuffix(basename, extension, targetScale),
+    );
+  }
+
+  return filepath;
+}
+
+export async function copyAssetsToDevServer(
+  context: PluginContext,
+  assets: Asset[],
+): Promise<void> {
+  if (context.mode === 'bundle') return;
+
   const devServerAssetPath = getDevServerAssetPath();
 
   // cleanup asset cache directory
@@ -171,40 +205,15 @@ export async function copyAssetsToDevServer(assets: Asset[]): Promise<void> {
     .catch(() => void 0);
   await fs.mkdir(devServerAssetPath, { recursive: true });
 
-  const assetCopyTasks = assets.map(
-    ({ path: resolvedPath, basename, extension, scales }) => {
-      return scales.map(async (scale): Promise<void> => {
-        let filepath: string;
-
-        // when scale is 1, filename can be `image.png` or `image@1x.png`
-        // 1. check resolvedPath (image.png)
-        // 2. if file is not exist, check suffixed path (image@1x.png)
-        if (scale === 1) {
-          filepath = await fs
-            .stat(resolvedPath)
-            .then(() => resolvedPath)
-            .catch(() => {
-              const suffixedPath = resolvedPath.replace(
-                basename,
-                addScaleSuffix(basename, extension, scale),
-              );
-              return fs.stat(suffixedPath).then(() => suffixedPath);
-            });
-        } else {
-          filepath = resolvedPath.replace(
-            basename,
-            addScaleSuffix(basename, extension, scale),
-          );
-        }
-
-        logger.debug(`copying ${basename}`);
-        await fs.copyFile(
-          filepath,
-          path.join(devServerAssetPath, path.basename(filepath)),
-        );
-      });
-    },
-  );
+  const assetCopyTasks = assets.map((asset) => {
+    return asset.scales.map(async (scale): Promise<void> => {
+      const filepath = await resolveAssetPath(asset, scale);
+      await fs.copyFile(
+        filepath,
+        path.join(devServerAssetPath, path.basename(filepath)),
+      );
+    });
+  });
 
   await Promise.all(assetCopyTasks);
 }
@@ -218,7 +227,7 @@ export async function copyAssetsToDestination(
 ): Promise<void> {
   const { assetsDir } = context;
 
-  if (!assetsDir) return;
+  if (!assetsDir || context.mode === 'watch') return;
 
   const mkdirWithAssertPath = (targetPath: string): Promise<void> => {
     const dirname = path.dirname(targetPath);
@@ -233,13 +242,14 @@ export async function copyAssetsToDestination(
       return Promise.all(
         asset.scales.map(async (scale): Promise<void> => {
           if (context.platform !== 'android') {
-            const from = asset.path;
+            const from = await resolveAssetPath(asset, scale);
             const to = path.join(
               assetsDir,
               asset.httpServerLocation,
               path.basename(from),
             );
-            logger.debug('copy asset', { from, to });
+
+            logger.debug('copying asset', { from, to });
 
             await mkdirWithAssertPath(to);
             return fs.copyFile(from, to);
@@ -272,18 +282,18 @@ export async function copyAssetsToDestination(
           if (isDrawable && scale === 1) {
             const from = asset.path;
             const to = `${assetsDir}/drawable/${assetName}`;
-            logger.debug('copy asset', { from, to });
+            logger.debug('copying asset', { from, to });
 
             await mkdirWithAssertPath(to);
             await fs.copyFile(from, to);
           }
 
-          const from = asset.path;
+          const from = await resolveAssetPath(asset, scale);
           const to = `${assetsDir}/${resourceDir}/${assetName}`;
-          logger.debug('copy asset', { from, to });
+          logger.debug('copying asset', { from, to });
 
           await mkdirWithAssertPath(to);
-          await fs.copyFile(from, `${assetsDir}/${resourceDir}/${assetName}`);
+          await fs.copyFile(from, to);
         }),
       ).then(() => void 0);
     }),
