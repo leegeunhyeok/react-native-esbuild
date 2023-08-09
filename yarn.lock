@@ -3384,6 +3384,7 @@ __metadata:
   resolution: "@react-native-esbuild/plugins@workspace:packages/plugins"
   dependencies:
     "@babel/core": ^7.22.9
+    "@faker-js/faker": ^8.0.2
     "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/core": "workspace:^"
     "@react-native-esbuild/utils": "workspace:^"
