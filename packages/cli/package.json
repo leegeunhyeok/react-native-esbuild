@@ -19,7 +19,8 @@
   },
   "files": [
     "lib",
-    "dist"
+    "dist",
+    "scripts"
   ],
   "publishConfig": {
     "access": "public"
