@@ -78,6 +78,12 @@ Go to `node_modules/@react-native/gradle-plugin/src/main/kotlin/com/facebook/rea
 
 and then sync gradle project.
 
+If you want to keep those changes in your environment, checkout [patch-package](https://github.com/ds300/patch-package).
+
+```bash
+patch-package @react-native/gradle-plugin
+```
+
 ## iOS
 
 Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and update script.
