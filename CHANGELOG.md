@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.25](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.24...v0.1.0-alpha.25) (2023-08-09)
+
+
+### Bug Fixes
+
+* use basename as suffix striped name ([3a59aa2](https://github.com/leegeunhyeok/react-native-esbuild/commit/3a59aa20f6afd059218a9f727599260bb4f62358))
+
+
+
 ## [0.1.0-alpha.24](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2023-08-09)
 
 
