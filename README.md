@@ -24,11 +24,13 @@
 > ⚠️ This project is under development
 
 - ⚡️ Blazing Fast Build
+- 💾 In-memory & Local File System Caching
 - 🌳 Tree Shaking
 - 🎨 Flexible & Extensible
-- 💾 Caching
+- 🚀 Support Hermes environment
 - 🔥 Support Hot Reload
 - ~~🌍 Support Web~~ (WIP)
+- ~~⭐️ Support Fabric~~ (WIP)
 
 # Setup
 
@@ -39,6 +41,7 @@ npm install -D install @react-native-esbuild/cli
 # using yarn
 yarn add -D @react-native-esbuild/cli
 ```
+
 
 ```js
 // <project-root>/react-native-esbuild.config.js
@@ -55,24 +58,39 @@ exports.default = {
     // fully transform based on `metro-react-native-babel-preset` (slow)
     fullyTransformPackageNames: [],
     // custom babel transform rules
-    customTransformRules: [
-      {
-        /**
-         * @param {string} path
-         * @param {string} source
-         **/
-        test: (path, source) => {
-          // example: apply plugin for reanimated
-          return (
-            /node_modules\/react-native-reanimated\//.test(path) ||
-            source.includes('react-native-reanimated')
-          );
-        },
-        plugins: ['react-native-reanimated/plugin'],
-      },
-    ],
+    customTransformRules: [],
   },
 };
+```
+
+If you looking for more configurations, go to [CONFIGURATIONS.md](./CONFIGURATIONS.md).
+
+## Android
+
+Go to `node_modules/@react-native/gradle-plugin/src/main/kotlin/com/facebook/react/TaskConfiguration.kt`
+
+```diff
+// The location of the cli.js file for React Native
+
+- val cliFile = detectedCliFile(config)
++ val cliFile = File(config.root.dir("node_modules/@react-native-esbuild/cli/dist/index.js").get().asFile.absolutePath)
+```
+
+and then sync gradle project.
+
+## iOS
+
+Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and update script.
+
+```diff
+set -e
+
+WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
+
+- REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
++ REACT_NATIVE_XCODE="../node_modules/@react-native-esbuild/cli/scripts/xcode.sh"
+
+/bin/sh -c "$WITH_ENVIRONMENT $REACT_NATIVE_XCODE"
 ```
 
 ## Start
@@ -183,6 +201,42 @@ yarn test --selectProjects <workspaceName>
 
 # show project dependencies graph
 nx graph
+```
+
+# Architecture
+
+- [esbuild](https://esbuild.github.io): for transform source and bundling (minify, mangle, tree shaking)
+- [swc](https://swc.rs) for transform source to es5
+- [sucrase](https://github.com/alangpierce/sucrase): for strip flow syntax
+- [babel](https://babeljs.io): for transform with plugins
+
+```mermaid
+flowchart TD
+    subgraph "@swc/core"
+        SW1[transform]
+    end
+
+    subgraph "@babel/core"
+        B1[loadConfig] --> B2
+        B2[transform]
+    end
+
+    subgraph sucrase
+        S1[transform]
+    end
+
+    A[transformer] -->|Code| B{shouldFullyTransform?}
+    B -->|Yes\nusing metro babel preset| B1
+    B --No--> C{"isFlow || shouldStripFlow"}
+    C --Yes--> sucrase
+    C --No--> D{customTransformRules}
+    D -.-Yes-.-> B1
+    D --No--> SW1
+
+    S1 --> D
+    B2 -.-> SW1
+    B2 --> done([END])
+    SW1 --> done([END])
 ```
 
 # Benchmark
