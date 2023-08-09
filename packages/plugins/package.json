@@ -37,6 +37,7 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
+    "@types/md5": "^2.3.2",
     "esbuild": "^0.18.17"
   },
   "dependencies": {
@@ -48,6 +49,8 @@
     "@svgr/plugin-jsx": "^8.0.1",
     "@swc/core": "^1.3.72",
     "@swc/helpers": "^0.5.1",
+    "image-size": "^1.0.2",
+    "md5": "^2.3.0",
     "sucrase": "^3.34.0"
   }
 }

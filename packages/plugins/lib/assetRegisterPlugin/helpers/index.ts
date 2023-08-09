@@ -1,13 +1,18 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { promisify } from 'node:util';
+import type { OnLoadArgs } from 'esbuild';
+import { imageSize } from 'image-size';
+import md5 from 'md5';
 import {
   ASSET_PATH,
   getDevServerAssetPath,
 } from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
-import type { OnLoadArgs } from 'esbuild';
 import { logger } from '../../shared';
 import type { Asset, AssetScale, SuffixPathResult } from '../../types';
+
+const imageSizeOf = promisify(imageSize);
 
 /**
  * @see {@link https://developer.android.com/training/multiscreen/screendensities#TaskProvideAltBmp}
@@ -139,6 +144,9 @@ export async function resolveScaledAssets(
     throw new Error(`cannot resolve base asset of ${args.path}`);
   }
 
+  const dimensions = await imageSizeOf(args.path);
+  const imageData = await fs.readFile(args.path);
+
   return {
     path: args.path,
     basename,
@@ -147,9 +155,11 @@ export async function resolveScaledAssets(
     type: extension.substring(1),
     scales: Object.keys(scaledAssets).map(parseFloat).sort(),
     httpServerLocation: path.join(ASSET_PATH, path.dirname(relativePath)),
-    // TODO
-    hash: '',
-    dimensions: { width: 0, height: 0 },
+    hash: md5(imageData),
+    dimensions: {
+      width: dimensions?.width ?? 0,
+      height: dimensions?.height ?? 0,
+    },
   };
 }
 
