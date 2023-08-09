@@ -5,6 +5,7 @@ import {
   ReactNativeEsbuildBundler,
   type EsbuildPluginFactory,
 } from '@react-native-esbuild/core';
+import { logger } from '../shared';
 import {
   transformWithBabel,
   transformWithSwc,
@@ -151,20 +152,21 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
         });
 
         build.onEnd(async () => {
-          if (!(build.initialOptions.outfile && context.sourcemap)) return;
+          if (!(build.initialOptions.outfile && context.sourcemap)) {
+            logger.debug('outfile or sourcemap path is not specified');
+            return;
+          }
 
           const sourceDirectory = path.dirname(build.initialOptions.outfile);
           const sourceName = path.basename(build.initialOptions.outfile);
-          const sourceExtension = path.extname(sourceName);
-          const sourceMapName = sourceName.replace(
-            sourceExtension,
-            `.map${sourceExtension}`,
-          );
+          const sourceMapPath = path.join(sourceDirectory, `${sourceName}.map`);
 
-          await fs.rename(
-            path.join(sourceDirectory, sourceMapName),
-            context.sourcemap,
-          );
+          logger.debug('move sourcemap to specified path', {
+            from: sourceMapPath,
+            to: context.sourcemap,
+          });
+
+          await fs.rename(sourceMapPath, context.sourcemap);
         });
       },
     };
