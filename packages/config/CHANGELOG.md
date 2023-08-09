@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.22](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2023-08-09)
+
+
+### Features
+
+* add root ([acde580](https://github.com/leegeunhyeok/react-native-esbuild/commit/acde580db75bffd27e5c12ea11d483bc585ea87a))
+* add root option to transformers ([68c8c52](https://github.com/leegeunhyeok/react-native-esbuild/commit/68c8c524daa458fad5d5f060ffcaba3ca40b2344))
+* add setEnvironment ([2372662](https://github.com/leegeunhyeok/react-native-esbuild/commit/237266258553547e7638d6b499aa44e40f33e37f))
+* cleanup esbuild options ([7ff4cd5](https://github.com/leegeunhyeok/react-native-esbuild/commit/7ff4cd5d08bb66db964945976218b459dc3dae96))
+* follow @react-native-community/cli options ([723a0fd](https://github.com/leegeunhyeok/react-native-esbuild/commit/723a0fda5f4c462c7d1bda0afc084ed48a5b7d3e))
+
+
+
 ## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
 
 

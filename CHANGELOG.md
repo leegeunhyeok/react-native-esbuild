@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.22](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2023-08-09)
+
+
+### Features
+
+* add asset hash and dimensions ([3b4b7fb](https://github.com/leegeunhyeok/react-native-esbuild/commit/3b4b7fbb9fc324751410106e6b6d073452a2ae01))
+* add http request logger ([4224296](https://github.com/leegeunhyeok/react-native-esbuild/commit/4224296c774293ab4692323b456b67ac1fe709a8))
+* add root ([acde580](https://github.com/leegeunhyeok/react-native-esbuild/commit/acde580db75bffd27e5c12ea11d483bc585ea87a))
+* add root option to transformers ([68c8c52](https://github.com/leegeunhyeok/react-native-esbuild/commit/68c8c524daa458fad5d5f060ffcaba3ca40b2344))
+* add setEnvironment ([2372662](https://github.com/leegeunhyeok/react-native-esbuild/commit/237266258553547e7638d6b499aa44e40f33e37f))
+* cleanup esbuild options ([7ff4cd5](https://github.com/leegeunhyeok/react-native-esbuild/commit/7ff4cd5d08bb66db964945976218b459dc3dae96))
+* early return when fully transformed ([2cae9ef](https://github.com/leegeunhyeok/react-native-esbuild/commit/2cae9ef5b05a1d94db5c2079f086b521f711ced8))
+* follow @react-native-community/cli options ([723a0fd](https://github.com/leegeunhyeok/react-native-esbuild/commit/723a0fda5f4c462c7d1bda0afc084ed48a5b7d3e))
+* load config from root ([33b11c8](https://github.com/leegeunhyeok/react-native-esbuild/commit/33b11c81692a5790cf78eb31e35b2515b5a0bfea))
+* move sourcemap to specified path ([e672fe3](https://github.com/leegeunhyeok/react-native-esbuild/commit/e672fe3c38f46393dbf811ac3140c0083a12aedb))
+* remove output dir assertion ([c21b6da](https://github.com/leegeunhyeok/react-native-esbuild/commit/c21b6da59be51d8531cb729b10e959e6df5f15eb))
+* resolve assets for release build ([ac2f3a3](https://github.com/leegeunhyeok/react-native-esbuild/commit/ac2f3a3ad62933df7267fdafdd9d832fda4dbb71))
+
+
+### Bug Fixes
+
+* wrong minify default value ([59a74eb](https://github.com/leegeunhyeok/react-native-esbuild/commit/59a74eb063688bbb05ad059b1e6c7fdb37aa522f))
+
+
+### Performance Improvements
+
+* short circuit evaluation ([60009bd](https://github.com/leegeunhyeok/react-native-esbuild/commit/60009bda3b7afbadd852b9e744bed7c2546b062c))
+
+
+### Code Refactoring
+
+* add Transformer type ([08506b0](https://github.com/leegeunhyeok/react-native-esbuild/commit/08506b0c303db2f2333de8b1d5bea38178a0e5f6))
+* remove transform helpers ([133dec2](https://github.com/leegeunhyeok/react-native-esbuild/commit/133dec22fec03acb7db8cc5751996ca70fc3d63f))
+
+
+### Miscellaneous Chores
+
+* update reanimated ([6b6fc89](https://github.com/leegeunhyeok/react-native-esbuild/commit/6b6fc89f5882dba9fb73cda7ac74bbe8f946a4ca))
+
+
+### Build System
+
+* add release scheme ([084f446](https://github.com/leegeunhyeok/react-native-esbuild/commit/084f446917f024046865814cbc11c044557faba2))
+* add xcode build helper script ([1d59181](https://github.com/leegeunhyeok/react-native-esbuild/commit/1d591817c7bcea71d5b189cd5c01f3405dd284ae))
+
+
+
 ## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
 
 

@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.22](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2023-08-09)
+
+
+### Features
+
+* add root ([acde580](https://github.com/leegeunhyeok/react-native-esbuild/commit/acde580db75bffd27e5c12ea11d483bc585ea87a))
+* follow @react-native-community/cli options ([723a0fd](https://github.com/leegeunhyeok/react-native-esbuild/commit/723a0fda5f4c462c7d1bda0afc084ed48a5b7d3e))
+* remove output dir assertion ([c21b6da](https://github.com/leegeunhyeok/react-native-esbuild/commit/c21b6da59be51d8531cb729b10e959e6df5f15eb))
+
+
+### Bug Fixes
+
+* wrong minify default value ([59a74eb](https://github.com/leegeunhyeok/react-native-esbuild/commit/59a74eb063688bbb05ad059b1e6c7fdb37aa522f))
+
+
+### Code Refactoring
+
+* add Transformer type ([08506b0](https://github.com/leegeunhyeok/react-native-esbuild/commit/08506b0c303db2f2333de8b1d5bea38178a0e5f6))
+
+
+### Build System
+
+* add xcode build helper script ([1d59181](https://github.com/leegeunhyeok/react-native-esbuild/commit/1d591817c7bcea71d5b189cd5c01f3405dd284ae))
+
+
+
 ## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
 
 **Note:** Version bump only for package @react-native-esbuild/cli

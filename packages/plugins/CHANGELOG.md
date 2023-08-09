@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.22](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2023-08-09)
+
+
+### Features
+
+* add asset hash and dimensions ([3b4b7fb](https://github.com/leegeunhyeok/react-native-esbuild/commit/3b4b7fbb9fc324751410106e6b6d073452a2ae01))
+* add root ([acde580](https://github.com/leegeunhyeok/react-native-esbuild/commit/acde580db75bffd27e5c12ea11d483bc585ea87a))
+* add root option to transformers ([68c8c52](https://github.com/leegeunhyeok/react-native-esbuild/commit/68c8c524daa458fad5d5f060ffcaba3ca40b2344))
+* early return when fully transformed ([2cae9ef](https://github.com/leegeunhyeok/react-native-esbuild/commit/2cae9ef5b05a1d94db5c2079f086b521f711ced8))
+* move sourcemap to specified path ([e672fe3](https://github.com/leegeunhyeok/react-native-esbuild/commit/e672fe3c38f46393dbf811ac3140c0083a12aedb))
+* resolve assets for release build ([ac2f3a3](https://github.com/leegeunhyeok/react-native-esbuild/commit/ac2f3a3ad62933df7267fdafdd9d832fda4dbb71))
+
+
+### Performance Improvements
+
+* short circuit evaluation ([60009bd](https://github.com/leegeunhyeok/react-native-esbuild/commit/60009bda3b7afbadd852b9e744bed7c2546b062c))
+
+
+### Code Refactoring
+
+* add Transformer type ([08506b0](https://github.com/leegeunhyeok/react-native-esbuild/commit/08506b0c303db2f2333de8b1d5bea38178a0e5f6))
+* remove transform helpers ([133dec2](https://github.com/leegeunhyeok/react-native-esbuild/commit/133dec22fec03acb7db8cc5751996ca70fc3d63f))
+
+
+
 ## [0.1.0-alpha.21](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2023-08-08)
 
 
