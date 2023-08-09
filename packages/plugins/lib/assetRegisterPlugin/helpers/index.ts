@@ -31,10 +31,7 @@ export function addSuffix(
   extension: string,
   suffix: string | number,
 ): string {
-  return basename.replace(
-    new RegExp(`${extension}$`),
-    `${suffix}.${extension}`,
-  );
+  return basename.replace(new RegExp(`${extension}$`), `${suffix}${extension}`);
 }
 
 /**
