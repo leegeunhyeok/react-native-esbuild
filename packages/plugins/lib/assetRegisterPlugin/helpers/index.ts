@@ -26,12 +26,14 @@ const ANDROID_ASSET_QUALIFIER: Record<number, string> = {
   4: 'xxxhdpi',
 } as const;
 
-export function addSuffix(
+export function addScaleSuffix(
   basename: string,
   extension: string,
   suffix: string | number,
 ): string {
-  return basename.replace(new RegExp(`${extension}$`), `${suffix}${extension}`);
+  return basename
+    .replace(new RegExp(`(@(\\d+)x)?${extension}$`), '')
+    .concat(`@${suffix}x${extension}`);
 }
 
 /**
@@ -58,7 +60,7 @@ export function getSuffixedPath(
   const dirname = path.dirname(assetPath);
   const basename = path.basename(assetPath);
   const suffixedBasename = scale
-    ? addSuffix(basename, extension, `@${scale}x`)
+    ? addScaleSuffix(basename, extension, scale)
     : basename;
 
   return {
@@ -184,14 +186,14 @@ export async function copyAssetsToDevServer(assets: Asset[]): Promise<void> {
             .catch(() => {
               const suffixedPath = resolvedPath.replace(
                 basename,
-                addSuffix(basename, extension, '@1x'),
+                addScaleSuffix(basename, extension, scale),
               );
               return fs.stat(suffixedPath).then(() => suffixedPath);
             });
         } else {
           filepath = resolvedPath.replace(
             basename,
-            addSuffix(basename, extension, `@${scale}x`),
+            addScaleSuffix(basename, extension, scale),
           );
         }
 
@@ -235,7 +237,7 @@ export async function copyAssetsToDestination(
             const to = path.join(
               assetsDir,
               asset.httpServerLocation,
-              asset.basename,
+              path.basename(from),
             );
             logger.debug('copy asset', { from, to });
 

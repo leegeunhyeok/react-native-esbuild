@@ -2,7 +2,11 @@ import fs from 'node:fs/promises';
 import { faker } from '@faker-js/faker';
 import type { OnLoadArgs } from 'esbuild';
 import type { PluginContext } from '@react-native-esbuild/core';
-import { getSuffixedPath, resolveScaledAssets } from '../helpers';
+import {
+  addScaleSuffix,
+  getSuffixedPath,
+  resolveScaledAssets,
+} from '../helpers';
 import type { AssetScale } from '../../types';
 
 jest.mock('fs', () => ({
@@ -22,6 +26,42 @@ jest.mock('image-size', () => ({
 }));
 
 describe('assetRegisterPlugin', () => {
+  describe('addScaleSuffix', () => {
+    let filename: string;
+    let extension: string;
+    let scale: AssetScale;
+
+    beforeEach(() => {
+      filename = faker.string.alphanumeric(10);
+      extension = faker.helpers.arrayElement(['.png', '.jpg', '.jpeg', '.gif']);
+      scale = faker.number.int({ min: 1, max: 3 }) as AssetScale;
+    });
+
+    describe('when non-suffixed filename is present', () => {
+      it('should add scale suffix', () => {
+        expect(addScaleSuffix(filename, extension, scale)).toEqual(
+          `${filename}@${scale}x${extension}`,
+        );
+      });
+    });
+
+    describe('when suffixed filename is present', () => {
+      let previousScale: AssetScale;
+      let suffixedFilename: string;
+
+      beforeEach(() => {
+        previousScale = faker.number.int({ min: 1, max: 3 }) as AssetScale;
+        suffixedFilename = `${filename}@${previousScale}x${extension}`;
+      });
+
+      it('should override scale suffix', () => {
+        expect(addScaleSuffix(suffixedFilename, extension, scale)).toEqual(
+          `${filename}@${scale}x${extension}`,
+        );
+      });
+    });
+  });
+
   describe('getSuffixedPath', () => {
     let dirname: string;
     let filename: string;
