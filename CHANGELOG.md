@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.23](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.22...v0.1.0-alpha.23) (2023-08-09)
+
+
+### Bug Fixes
+
+* improve scaled asset resolve logic ([ac770d8](https://github.com/leegeunhyeok/react-native-esbuild/commit/ac770d8d0fe8e14f892f1d2a8ff1861bf506a3aa))
+* remove unnecessary dot on suffix ([21d70a0](https://github.com/leegeunhyeok/react-native-esbuild/commit/21d70a0250f744f3503ed831dc1f14d7c2a39646))
+
+
+### Code Refactoring
+
+* add resolveAssetPath ([d1ca035](https://github.com/leegeunhyeok/react-native-esbuild/commit/d1ca0359fb72b09b628cb2d5c0c87f76268f181c))
+
+
+
 ## [0.1.0-alpha.22](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2023-08-09)
 
 
