@@ -179,6 +179,7 @@ export class BundleResponse {
         true,
       );
     } else {
+      this.response.setHeader('Content-Type', 'application/javascript');
       this.response.writeHead(200).end(bundle);
     }
   }
