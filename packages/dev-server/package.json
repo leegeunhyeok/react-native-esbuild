@@ -48,6 +48,7 @@
     "@react-native-esbuild/config": "workspace:^",
     "@react-native-esbuild/core": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
+    "metro-inspector-proxy": "^0.78.0",
     "mime": "^3.0.0",
     "ws": "^8.13.0",
     "zod": "^3.21.4"

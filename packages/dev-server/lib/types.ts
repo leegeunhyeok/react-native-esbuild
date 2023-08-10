@@ -1,5 +1,9 @@
-import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { Server } from 'ws';
+import type {
+  Server as HTTPServer,
+  IncomingMessage,
+  ServerResponse,
+} from 'node:http';
+import type { Server as WebSocketServer } from 'ws';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
 export interface DevServerOptions {
@@ -23,7 +27,7 @@ export type DevServerMiddleware = (
 ) => void;
 
 export interface HotReloadMiddleware {
-  server: Server;
+  server: WebSocketServer;
   hotReload: (revisionId: string) => void;
   updateStart: () => void;
   updateDone: () => void;
@@ -125,4 +129,29 @@ export interface ReportableEvent {
     | 'debug';
   data: unknown[];
   mode: 'BRIDGE' | 'NOBRIDGE';
+}
+
+// TODO: convert to declare module 'metro-inspector-proxy' { ... }
+export interface TypedInspectorProxy {
+  (projectRoot: string): TypedInspectorProxy;
+
+  /**
+   * Process HTTP request sent to server. We only respond to 2 HTTP requests:
+   * 1. /json/version returns Chrome debugger protocol version that we use
+   * 2. /json and /json/list returns list of page descriptions (list of inspectable apps).
+   * This list is combined from all the connected devices.
+   */
+  processRequest: (
+    request: IncomingMessage,
+    response: ServerResponse,
+    next: (error?: Error) => void,
+  ) => void;
+
+  /**
+   * Adds websocket listeners to the provided HTTP/HTTPS server.
+   */
+  createWebSocketListeners: (server: HTTPServer) => {
+    ['/inspector/device']: WebSocketServer;
+    ['/inspector/debug']: WebSocketServer;
+  };
 }

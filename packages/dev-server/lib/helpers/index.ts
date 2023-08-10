@@ -3,7 +3,7 @@ import type { ParsedUrlQuery } from 'node:querystring';
 import { z } from 'zod';
 import type { LogLevel } from '@react-native-esbuild/utils';
 import { logger } from '../shared';
-import type { DevServerMiddleware, LogMessage } from '../types';
+import type { LogMessage } from '../types';
 
 export type ParsedBundleConfig = z.infer<typeof bundleSearchParamSchema>;
 
@@ -39,18 +39,6 @@ export function parseBundleConfigFromSearchParams(
     minify,
     runModule,
   });
-}
-
-export function toSafetyMiddleware(
-  middleware: DevServerMiddleware,
-): DevServerMiddleware {
-  return function wrap(request, response, next) {
-    try {
-      middleware(request, response, next);
-    } catch (error) {
-      response.writeHead(500).end();
-    }
-  };
 }
 
 export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
