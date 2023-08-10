@@ -160,7 +160,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return esbuild.build(buildOptions);
   }
 
-  async getBundle(bundleConfig: BundleConfig): Promise<Uint8Array> {
+  async getBundle(bundleConfig: BundleConfig): Promise<{
+    source: Uint8Array;
+    bundledAt: Date;
+    revisionId: string;
+  }> {
     const targetTaskId = this.identifyTaskByBundleConfig(bundleConfig);
 
     if (!this.buildTasks.has(targetTaskId)) {
@@ -186,7 +190,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       await targetTask.context.rebuild();
     }
 
-    return (await targetTask.handler.task).source;
+    const { source, bundledAt, revisionId } = await targetTask.handler.task;
+
+    return {
+      source,
+      bundledAt,
+      revisionId,
+    };
   }
 
   async getSourcemap(_options: BundleRequestOptions): Promise<void> {
