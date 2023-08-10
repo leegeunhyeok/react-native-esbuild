@@ -28,11 +28,14 @@ export type EsbuildPluginFactory<PluginConfig = void> = (
   config?: PluginConfig,
 ) => (context: PluginContext) => Plugin;
 
+export type BundlerAdditionalData = Record<string, unknown>;
+
 export interface PluginContext extends BundleConfig {
   id: number;
   root: string;
   config: ReactNativeEsbuildConfig;
   mode: BundleMode;
+  additionalData?: BundlerAdditionalData;
 }
 
 export interface PromiseHandler<Result> {

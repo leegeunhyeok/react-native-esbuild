@@ -67,7 +67,9 @@ export class ReactNativeEsbuildDevServer {
 
     this.bundler = new ReactNativeEsbuildBundler();
     this.bundler.addListener('build-start', hr.updateStart);
-    this.bundler.addListener('build-end', ({ revisionId }) => {
+    this.bundler.addListener('build-end', ({ revisionId, additionalData }) => {
+      // add additionalData `{ disableRefresh: true }` from `serve-asset-middleware`
+      if (additionalData?.disableRefresh) return;
       hr.hotReload(revisionId);
       hr.updateDone();
     });

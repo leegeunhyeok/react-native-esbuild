@@ -18,6 +18,7 @@ import type {
   PluginContext,
   BundleMode,
   BuildTask,
+  BundlerAdditionalData,
 } from '../types';
 import { BundlerEventEmitter, createBuildStatusPlugin } from './internal';
 import { printLogo } from './logo';
@@ -36,8 +37,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private getBuildOptionsForBundler(
-    bundleConfig: BundleConfig,
     mode: BundleMode,
+    bundleConfig: BundleConfig,
+    additionalData?: BundlerAdditionalData,
   ): BuildOptions {
     if (!this.plugins.length) {
       throw new Error('plugin is not registered');
@@ -51,6 +53,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       root: this.root,
       config: this.config,
       mode,
+      additionalData,
     };
 
     const plugins = [
@@ -143,7 +146,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       currentTask.handler?.rejecter?.(error);
     } finally {
       currentTask.status = 'resolved';
-      this.emit('build-end', { id: context.id, revisionId });
+      this.emit('build-end', {
+        revisionId,
+        id: context.id,
+        additionalData: context.additionalData,
+      });
     }
   }
 
@@ -152,14 +159,24 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return this;
   }
 
-  async bundle(bundleConfig: BundleConfig): Promise<BuildResult> {
-    const buildOptions = this.getBuildOptionsForBundler(bundleConfig, 'bundle');
+  async bundle(
+    bundleConfig: BundleConfig,
+    additionalData?: BundlerAdditionalData,
+  ): Promise<BuildResult> {
+    const buildOptions = this.getBuildOptionsForBundler(
+      'bundle',
+      bundleConfig,
+      additionalData,
+    );
     logger.debug('preparing bundle mode', { platform: bundleConfig.platform });
     logger.debug('esbuild option', buildOptions);
     return esbuild.build(buildOptions);
   }
 
-  async getBundle(bundleConfig: BundleConfig): Promise<{
+  async getBundle(
+    bundleConfig: BundleConfig,
+    additionalData?: BundlerAdditionalData,
+  ): Promise<{
     source: Uint8Array;
     bundledAt: Date;
     revisionId: string;
@@ -169,8 +186,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
       const buildOptions = this.getBuildOptionsForBundler(
-        bundleConfig,
         'watch',
+        bundleConfig,
+        additionalData,
       );
       const context = await esbuild.context(buildOptions);
       this.buildTasks.set(targetTaskId, {
@@ -198,7 +216,10 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     };
   }
 
-  async getSourcemap(_options: BundleConfig): Promise<void> {
+  async getSourcemap(
+    _options: BundleConfig,
+    _additionalData?: BundlerAdditionalData,
+  ): Promise<void> {
     // TODO
   }
 }

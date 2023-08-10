@@ -47,7 +47,7 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
 
     bundler.on('build-status-change', bundleStatusChangeHandler);
     bundler
-      .getBundle(bundleConfig)
+      .getBundle(bundleConfig, { disableRefresh: true })
       .then((result) => {
         bundleResponse.endWithBundle(result.source, result.bundledAt);
       })

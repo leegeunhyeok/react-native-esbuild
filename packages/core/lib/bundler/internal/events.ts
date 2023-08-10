@@ -1,4 +1,5 @@
 import EventEmitter from 'node:events';
+import type { BundlerAdditionalData } from '../../types';
 
 export class BundlerEventEmitter extends EventEmitter {
   addListener: <EventType extends BundlerEventType>(
@@ -35,14 +36,17 @@ export type BundlerEventListener<EventType extends BundlerEventType> = (
 export interface BundlerEventPayload {
   'build-start': {
     id: number;
+    additionalData?: BundlerAdditionalData;
   };
   'build-end': {
     id: number;
     revisionId: string;
+    additionalData?: BundlerAdditionalData;
   };
   'build-status-change': {
     id: number;
     resolved: number;
     loaded: number;
+    additionalData?: BundlerAdditionalData;
   };
 }
