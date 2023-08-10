@@ -67,6 +67,23 @@ If you looking for more configurations, go to [CONFIGURATIONS.md](./CONFIGURATIO
 
 ## Android
 
+```bash
+# using npm
+npm install -D @react-native/gradle-plugin
+
+# using yarn
+yarn add -D @react-native/gradle-plugin
+```
+
+Go to `android/settings.gradle`.
+
+If `react-native-gradle-plugin` already included, replace to `@react-native/gradle-plugin`
+
+```diff
+- includeBuild('../node_modules/react-native-gradle-plugin')
++ includeBuild('../node_modules/@react-native/gradle-plugin')
+```
+
 Go to `node_modules/@react-native/gradle-plugin/src/main/kotlin/com/facebook/react/TaskConfiguration.kt`
 
 ```diff
