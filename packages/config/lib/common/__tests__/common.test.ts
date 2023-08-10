@@ -1,7 +1,6 @@
-import { bitwiseOptions } from '../core';
+import { getIdByOptions } from '../core';
 import { getDevServerAssetPath } from '../server';
 import { OptionFlag } from '../../types';
-import type { BitwiseOptions } from '../../types';
 
 describe('getDevServerAssetPath', () => {
   it('should match snapshot', () => {
@@ -52,13 +51,13 @@ describe.each([
     { platform: 'web', dev: true, minify: true },
     OptionFlag.PlatformWeb | OptionFlag.Dev | OptionFlag.Minify,
   ],
-])('bitwiseOptions', (options, expected) => {
+] as const)('getIdByOptions', (options, expected) => {
   const dev = options.dev ? 'true' : 'false';
   const minify = options.minify ? 'true' : 'false';
 
   describe(`platform: ${options.platform}, dev: ${dev}, minify: ${minify}`, () => {
     it(`should bitwise value is ${expected}`, () => {
-      expect(bitwiseOptions(options as BitwiseOptions)).toEqual(expected);
+      expect(getIdByOptions(options)).toEqual(expected);
     });
   });
 });

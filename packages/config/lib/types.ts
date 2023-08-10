@@ -27,7 +27,7 @@ export interface SwcPresetOptions {
   root: string;
 }
 
-export interface BitwiseOptions {
+export interface IdParams {
   platform: BundlerSupportPlatform;
   dev: boolean;
   minify: boolean;

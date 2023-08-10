@@ -2,9 +2,9 @@ import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
 import { colors, isCI } from '@react-native-esbuild/utils';
 import {
   loadConfig,
-  getEsbuildOptions,
   setEnvironment,
-  bitwiseOptions,
+  getEsbuildOptions,
+  getIdByOptions,
   DEFAULT_OUTFILE,
   type ReactNativeEsbuildConfig,
   type BundleConfig,
@@ -78,7 +78,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     dev = true,
     minify = true,
   }: BundleConfig): number {
-    return bitwiseOptions({ platform, dev, minify });
+    return getIdByOptions({ platform, dev, minify });
   }
 
   private assertBuildTask(task?: BuildTask): asserts task is BuildTask {

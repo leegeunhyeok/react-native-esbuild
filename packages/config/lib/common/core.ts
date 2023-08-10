@@ -2,7 +2,7 @@ import path from 'node:path';
 import deepmerge from 'deepmerge';
 import {
   OptionFlag,
-  type BitwiseOptions,
+  type IdParams,
   type ReactNativeEsbuildConfig,
 } from '../types';
 
@@ -26,11 +26,7 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
   return config ? deepmerge(baseOptions, config) : baseOptions;
 }
 
-export function bitwiseOptions({
-  platform,
-  dev,
-  minify,
-}: BitwiseOptions): number {
+export function getIdByOptions({ platform, dev, minify }: IdParams): number {
   let value = OptionFlag.None; // = 0
 
   // platform
