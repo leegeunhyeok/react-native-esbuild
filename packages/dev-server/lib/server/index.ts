@@ -79,7 +79,7 @@ export class ReactNativeEsbuildDevServer {
     logger.debug('setup middlewares');
     middleware.use((request, _response, next) => {
       if (request.method && request.url) {
-        logger.debug(`[${request.method}] ${request.url}`);
+        logger.debug(`[${request.method}] ${request.url}`, request.headers);
       }
       next();
     });
