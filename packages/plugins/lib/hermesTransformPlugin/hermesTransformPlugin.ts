@@ -29,7 +29,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
       name: NAME,
       setup: (build): void => {
         const cacheController = ReactNativeEsbuildBundler.caches.get(
-          context.taskId.toString(),
+          context.id.toString(),
         );
         const cacheEnabled = context.dev;
         const root = context.root;
@@ -130,15 +130,15 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
         build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
           const { mtimeMs } = await fs.stat(args.path);
 
-          // `taskId` is combined value (platform, dev, minify)
-          // use `taskId` as filesystem hash key generation
+          // `id` is combined value (platform, dev, minify)
+          // use `id` as filesystem hash key generation
           //
-          // md5(taskId + modified time + file path) = cache key
+          // md5(id + modified time + file path) = cache key
           //     number + number        + string
           //
           const hash = cacheController.getCacheHash(
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-            context.taskId + mtimeMs + args.path,
+            context.id + mtimeMs + args.path,
           );
 
           const cache = await getTransformedCodeFromCache(hash, mtimeMs);

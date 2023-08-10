@@ -22,11 +22,15 @@ type BundlerEventListener<EventType extends BundlerEventType> = (
 ) => void;
 
 interface BundlerEventPayload {
-  'build-start': null;
+  'build-start': {
+    id: number;
+  };
   'build-end': {
+    id: number;
     revisionId: string;
   };
   'build-status-change': {
+    id: number;
     resolved: number;
     loaded: number;
   };

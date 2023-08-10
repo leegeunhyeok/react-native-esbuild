@@ -48,7 +48,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     const context: PluginContext = {
       ...bundleConfig,
-      taskId: this.identifyTaskByBundleConfig(bundleConfig),
+      id: this.identifyTaskByBundleConfig(bundleConfig),
       mode,
       root: this.root,
       config: this.config,
@@ -86,8 +86,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     throw new Error('unable to get build task');
   }
 
-  private handleBuildStart(_context: PluginContext): void {
-    this.emit('build-start', null);
+  private handleBuildStart(context: PluginContext): void {
+    this.emit('build-start', { id: context.id });
   }
 
   private handleBuildStateUpdate(
@@ -95,9 +95,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       loaded: number;
       resolved: number;
     },
-    _context: PluginContext,
+    context: PluginContext,
   ): void {
-    this.emit('build-status-change', buildState);
+    this.emit('build-status-change', { id: context.id, ...buildState });
   }
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
@@ -110,7 +110,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     // `outputFiles` available when only `write: false`
     if (outputFiles === undefined) return;
 
-    const currentTask = this.buildTasks.get(context.taskId);
+    const currentTask = this.buildTasks.get(context.id);
     this.assertBuildTask(currentTask);
 
     logger.info('preparing bundled result');
@@ -144,7 +144,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       currentTask.handler?.rejecter?.(error);
     } finally {
       currentTask.status = 'resolved';
-      this.emit('build-end', { revisionId });
+      this.emit('build-end', { id: context.id, revisionId });
     }
   }
 
