@@ -28,7 +28,7 @@ export const createHotReloadMiddleware = (
 
   const handleClose = (): void => {
     connectedSocket = null;
-    logger.warn('hmr web socket was closed');
+    logger.debug('hmr web socket was closed');
   };
 
   const handleMessage = (event: MessageEvent): void => {
