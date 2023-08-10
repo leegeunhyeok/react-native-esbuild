@@ -29,6 +29,7 @@
 - 🎨 Flexible & Extensible
 - 🚀 Support Hermes environment
 - ⭐️ Support Live Reload
+- 🐛 Support Debugging (Flipper, Chrome Debugger)
 - ~~🌍 Support Web~~ (WIP)
 - ~~🔥 Support Fabric~~ (WIP)
 
