@@ -129,29 +129,31 @@ export class ReactNativeEsbuildDevServer {
     server.use(indexPageMiddleware);
   }
 
-  private setupWebSocketHandlers(): void {
+  private setupWebSocketServers(): void {
     logger.debug('setup web socket handlers');
 
     if (!(this.server && this.bundler && this.inspectorProxy)) {
       throw new Error('server is not initialized');
     }
 
-    const { server: hotReloadServer, ...hr } = createHotReloadMiddleware(
+    const { server: hotReloadWss, ...hr } = createHotReloadMiddleware(
       (event) => {
         this.eventsSocketEndpoint.reportEvent(event);
       },
     );
 
-    const inspectorProxyHandlers = this.inspectorProxy.createWebSocketListeners(
+    const inspectorProxyWss = this.inspectorProxy.createWebSocketListeners(
       this.server,
     );
 
-    const websocketHandlers: Record<string, WebSocketServer> = {
-      '/hot': hotReloadServer,
+    const webSocketServer: Record<string, WebSocketServer> = {
+      '/hot': hotReloadWss,
       '/debugger-proxy': this.debuggerProxyEndpoint.server,
       '/message': this.messageSocketEndpoint.server,
       '/events': this.eventsSocketEndpoint.server,
-      ...inspectorProxyHandlers,
+      // handle `/inspector/device`
+      // handle `/inspector/debug`
+      ...inspectorProxyWss,
     };
 
     this.bundler.on('build-start', hr.updateStart);
@@ -167,14 +169,14 @@ export class ReactNativeEsbuildDevServer {
 
       const { pathname } = parse(request.url);
 
-      const handler = pathname ? websocketHandlers[pathname] : null;
+      const wss = pathname ? webSocketServer[pathname] : null;
 
       /**
        * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro/src/index.flow.js#L230-L239}
        */
-      if (handler) {
-        handler.handleUpgrade(request, socket, head, (client) => {
-          handler.emit('connection', client, request);
+      if (wss) {
+        wss.handleUpgrade(request, socket, head, (client) => {
+          wss.emit('connection', client, request);
         });
       } else {
         socket.destroy();
@@ -188,7 +190,7 @@ export class ReactNativeEsbuildDevServer {
     const { host, port } = this.devServerOptions;
 
     return this.server.listen(port, () => {
-      this.setupWebSocketHandlers();
+      this.setupWebSocketServers();
 
       process.stdout.write('\n');
       logger.info(`dev server listening on http://${host}:${port}`);
