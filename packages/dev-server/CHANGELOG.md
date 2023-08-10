@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.27](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.26...v0.1.0-alpha.27) (2023-08-10)
+
+
+### Features
+
+* support flipper log ([79efa17](https://github.com/leegeunhyeok/react-native-esbuild/commit/79efa17345c927bc8dab66cf352b99909009308f))
+* support hermes debugging ([aec0615](https://github.com/leegeunhyeok/react-native-esbuild/commit/aec061558018cabad9be487b75933a625bf8ccb8))
+
+
+### Miscellaneous Chores
+
+* change log level ([5774524](https://github.com/leegeunhyeok/react-native-esbuild/commit/57745243cd63c8581e531eca68a0bed9cb54e9fe))
+
+
+
 ## [0.1.0-alpha.26](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2023-08-10)
 
 
