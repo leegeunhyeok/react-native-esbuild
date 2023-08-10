@@ -7,14 +7,15 @@ import {
 } from '@react-native-community/cli-server-api';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
+  createHotReloadMiddleware,
   createServeAssetMiddleware,
   createServeBundleMiddleware,
   createSymbolicateMiddleware,
 } from '../middlewares';
+import { toSafetyMiddleware } from '../helpers';
 import { logger } from '../shared';
 import { DEFAULT_PORT, DEFAULT_HOST } from '../constants';
 import type { DevServerMiddlewareContext, DevServerOptions } from '../types';
-import { createHotReloadMiddleware } from '../middlewares/hotReload';
 
 export class ReactNativeEsbuildDevServer {
   private initialized = false;
@@ -77,16 +78,21 @@ export class ReactNativeEsbuildDevServer {
     };
 
     logger.debug('setup middlewares');
+
+    // middleware for http logging
     middleware.use((request, _response, next) => {
       if (request.method && request.url) {
         logger.debug(`[${request.method}] ${request.url}`, request.headers);
       }
       next();
     });
-    middleware.use(createServeAssetMiddleware(context));
-    middleware.use(createServeBundleMiddleware(context));
-    middleware.use(createSymbolicateMiddleware(context));
-    middleware.use(indexPageMiddleware);
+
+    [
+      createServeAssetMiddleware(context),
+      createServeBundleMiddleware(context),
+      createSymbolicateMiddleware(context),
+      indexPageMiddleware,
+    ].forEach((m) => middleware.use(toSafetyMiddleware(m)));
 
     logger.debug('create http server');
     this.server = http.createServer(middleware);
