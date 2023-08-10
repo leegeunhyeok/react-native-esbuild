@@ -25,6 +25,7 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
 
   const handleClose = (): void => {
     connectedSocket = null;
+    logger.warn('hmr web socket was closed');
   };
 
   const handleMessage = (event: MessageEvent): void => {
@@ -90,10 +91,12 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
       },
     };
 
+    logger.debug('sending update message with reload code');
     connectedSocket?.send(JSON.stringify(hmrUpdateMessage), handleError);
   };
 
   const updateStart = (): void => {
+    logger.debug('sending update-start');
     const hmrUpdateStartMessage: HmrUpdateStartMessage = {
       type: 'update-start',
       body: {
@@ -104,6 +107,7 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
   };
 
   const updateDone = (): void => {
+    logger.debug('sending update-done');
     const hmrUpdateDoneMessage: HmrUpdateDoneMessage = { type: 'update-done' };
     connectedSocket?.send(JSON.stringify(hmrUpdateDoneMessage), handleError);
   };
@@ -113,6 +117,7 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
     connectedSocket.onerror = handleClose;
     connectedSocket.onclose = handleClose;
     connectedSocket.onmessage = handleMessage;
+    logger.debug('hrm web socket was connected');
   });
 
   return { server, hotReload, updateStart, updateDone };
