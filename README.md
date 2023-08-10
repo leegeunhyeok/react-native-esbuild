@@ -28,9 +28,9 @@
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
 - 🚀 Support Hermes environment
-- 🔥 Support Hot Reload
+- ⭐️ Support Live Reload
 - ~~🌍 Support Web~~ (WIP)
-- ~~⭐️ Support Fabric~~ (WIP)
+- ~~🔥 Support Fabric~~ (WIP)
 
 # Setup
 
