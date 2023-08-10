@@ -90,8 +90,10 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
   }
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
+    const bundleEndedAt = new Date();
     const bundleFilename = context.outfile ?? DEFAULT_OUTFILE;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
+    const revisionId = bundleEndedAt.getTime().toString();
     const { outputFiles } = result;
 
     // `outputFiles` available when only `write: false`
@@ -124,12 +126,14 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
       currentTask.handler?.resolver?.({
         source: bundleOutput.contents,
         sourcemap: bundleSourcemapOutput.contents,
+        bundledAt: bundleEndedAt,
+        revisionId,
       });
     } catch (error) {
       currentTask.handler?.rejecter?.(error);
     } finally {
       currentTask.status = 'resolved';
-      this.emit('build-end');
+      this.emit('build-end', revisionId);
     }
   }
 

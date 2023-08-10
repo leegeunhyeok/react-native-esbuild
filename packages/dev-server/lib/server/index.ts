@@ -66,8 +66,8 @@ export class ReactNativeEsbuildDevServer {
 
     this.bundler = new ReactNativeEsbuildBundler();
     this.bundler.addListener('build-start', hr.updateStart);
-    this.bundler.addListener('build-end', () => {
-      hr.hotReload();
+    this.bundler.addListener('build-end', (revisionId: string) => {
+      hr.hotReload(revisionId);
       hr.updateDone();
     });
 

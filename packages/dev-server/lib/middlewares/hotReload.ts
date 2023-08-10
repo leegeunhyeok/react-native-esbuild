@@ -62,7 +62,7 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
    * @see [turboModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/TurboModule/TurboModuleRegistry.js#L17}
    * @see [nativeModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/BatchedBridge/NativeModules.js#L179}
    */
-  const hotReload = (): void => {
+  const hotReload = (revisionId: string): void => {
     const hmrUpdateMessage: HmrUpdateMessage = {
       type: 'update',
       body: {
@@ -87,7 +87,7 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
         deleted: [],
         modified: [],
         isInitialUpdate: false,
-        revisionId: new Date().getTime().toString(),
+        revisionId,
       },
     };
 

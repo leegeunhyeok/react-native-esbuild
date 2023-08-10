@@ -24,7 +24,7 @@ export type DevServerMiddleware = (
 
 export interface HotReloadMiddleware {
   server: Server;
-  hotReload: () => void;
+  hotReload: (revisionId: string) => void;
   updateStart: () => void;
   updateDone: () => void;
 }

@@ -23,6 +23,8 @@ export interface BundleRequestOptions {
 export interface BundleResult {
   source: Uint8Array;
   sourcemap: Uint8Array;
+  bundledAt: Date;
+  revisionId: string;
 }
 
 export enum BundleTaskSignal {
