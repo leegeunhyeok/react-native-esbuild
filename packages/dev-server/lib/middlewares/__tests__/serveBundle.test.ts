@@ -15,7 +15,7 @@ describe('serve-asset-middleware', () => {
     bundler = getMockedBundler({ bundle, hasError: false });
     middleware = createServeBundleMiddleware({
       devServerOptions: {
-        host: '127.0.0.1',
+        host: 'localhost',
         port: 8081,
       },
       bundler,
@@ -94,7 +94,7 @@ describe('serve-asset-middleware', () => {
       bundler = getMockedBundler({ bundle, hasError: true });
       middleware = createServeBundleMiddleware({
         devServerOptions: {
-          host: '127.0.0.1',
+          host: 'localhost',
           port: 8081,
         },
         bundler,

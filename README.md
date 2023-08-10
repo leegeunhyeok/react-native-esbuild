@@ -128,7 +128,7 @@ rne start
 | Option | Description | Default value |
 |:--|:--|:--|
 | `--entry-file` | entry file path | `index.js` |
-| `--host` | dev server host | `127.0.0.1` |
+| `--host` | dev server host | `localhost` |
 | `--port` | dev server port | `8081` |
 | `--verbose` | show cli debug log | `false` |
 | `--reset-cache` | reset transform cache | `false` |

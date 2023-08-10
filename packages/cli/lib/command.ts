@@ -33,7 +33,7 @@ export function cli(): Argv | Promise<Argv> {
           host: {
             describe: 'dev server host',
             type: 'string',
-            default: '127.0.0.1',
+            default: 'localhost',
           },
           port: {
             describe: 'dev server port',

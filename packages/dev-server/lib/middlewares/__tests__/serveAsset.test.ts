@@ -18,7 +18,7 @@ describe('serve-asset-middleware', () => {
   beforeEach(() => {
     middleware = createServeAssetMiddleware({
       devServerOptions: {
-        host: '127.0.0.1',
+        host: 'localhost',
         port: 8081,
       },
       bundler: {} as ReactNativeEsbuildBundler,
