@@ -24,8 +24,8 @@
 > ⚠️ This project is under development
 
 - ⚡️ Blazing Fast Build
-- 💾 In-memory & Local File System Caching
 - 🌳 Tree Shaking
+- 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
 - 🚀 Support Hermes environment
 - 🔥 Support Hot Reload
@@ -211,39 +211,7 @@ nx graph
 
 # Architecture
 
-- [esbuild](https://esbuild.github.io): for transform source and bundling (minify, mangle, tree shaking)
-- [swc](https://swc.rs) for transform source to es5
-- [sucrase](https://github.com/alangpierce/sucrase): for strip flow syntax
-- [babel](https://babeljs.io): for transform with plugins
-
-```mermaid
-flowchart TD
-    subgraph "@swc/core"
-        SW1[transform]
-    end
-
-    subgraph "@babel/core"
-        B1[loadConfig] --> B2
-        B2[transform]
-    end
-
-    subgraph sucrase
-        S1[transform]
-    end
-
-    A[transformer] -->|Code| B{shouldFullyTransform?}
-    B -->|Yes\nusing metro babel preset| B1
-    B --No--> C{"isFlow || shouldStripFlow"}
-    C --Yes--> sucrase
-    C --No--> D{customTransformRules}
-    D -.-Yes-.-> B1
-    D --No--> SW1
-
-    S1 --> D
-    B2 -.-> SW1
-    B2 --> done([END])
-    SW1 --> done([END])
-```
+Read [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 # Benchmark
 
