@@ -58,12 +58,16 @@ export class ReactNativeEsbuildDevServer {
     logger.debug('setup dev server', this.devServerOptions);
     logger.debug('create bundler instance');
 
-    const { server: hotReloadServer, ...hr } = createHotReloadMiddleware();
-    const { middleware, websocketEndpoints } = createDevServerMiddleware({
+    const { middleware, ...endpoints } = createDevServerMiddleware({
       port: this.devServerOptions.port,
       host: this.devServerOptions.host,
       watchFolders: [],
     });
+    const { server: hotReloadServer, ...hr } = createHotReloadMiddleware(
+      (event) => {
+        endpoints.eventsSocketEndpoint.reportEvent(event);
+      },
+    );
 
     this.bundler = new ReactNativeEsbuildBundler();
     this.bundler.addListener('build-start', hr.updateStart);
@@ -105,7 +109,7 @@ export class ReactNativeEsbuildDevServer {
 
       const { pathname } = parse(request.url);
       const handler = pathname
-        ? (websocketEndpoints[pathname] as WebSocketServer)
+        ? (endpoints.websocketEndpoints[pathname] as WebSocketServer)
         : null;
 
       /**

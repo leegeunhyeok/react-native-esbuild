@@ -7,6 +7,7 @@ import type {
   HmrUpdateDoneMessage,
   HmrUpdateMessage,
   HmrUpdateStartMessage,
+  ReportableEvent,
 } from '../types';
 
 const getMessage = (data: Data): HmrClientMessage | null => {
@@ -19,7 +20,9 @@ const getMessage = (data: Data): HmrClientMessage | null => {
   }
 };
 
-export const createHotReloadMiddleware = (): HotReloadMiddleware => {
+export const createHotReloadMiddleware = (
+  reporter?: (event: ReportableEvent) => void,
+): HotReloadMiddleware => {
   const server = new Server({ noServer: true });
   let connectedSocket: WebSocket | null = null;
 
@@ -39,6 +42,15 @@ export const createHotReloadMiddleware = (): HotReloadMiddleware => {
       case 'log': {
         const level = convertHmrLogLevel(message.level);
         clientLogger[level](message.data.join(' '));
+
+        // TODO: manage reporter to core
+        logger.debug('sending to reporter', message.data);
+        reporter?.({
+          type: 'client_log',
+          level,
+          data: message.data,
+          mode: 'BRIDGE',
+        });
         break;
       }
 
