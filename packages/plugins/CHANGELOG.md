@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.26](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2023-08-10)
+
+
+### Code Refactoring
+
+* rename taskId to id ([1a75b1f](https://github.com/leegeunhyeok/react-native-esbuild/commit/1a75b1f28d1d72dbf9b84ccca8b4d6290d2815b3))
+
+
+
 ## [0.1.0-alpha.25](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.24...v0.1.0-alpha.25) (2023-08-09)
 
 

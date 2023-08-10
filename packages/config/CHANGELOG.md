@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.26](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2023-08-10)
+
+
+### Code Refactoring
+
+* rename bitwiseOptions to getIdByOptions ([8055d6a](https://github.com/leegeunhyeok/react-native-esbuild/commit/8055d6a32e1f716615bd91385931ee99b5cf0d83))
+
+
+
 ## [0.1.0-alpha.22](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2023-08-09)
 
 
