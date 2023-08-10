@@ -9,6 +9,14 @@ export class BundlerEventEmitter extends EventEmitter {
     type: EventType,
     listener: BundlerEventListener<EventType>,
   ) => this;
+  on: <EventType extends BundlerEventType>(
+    type: EventType,
+    listener: BundlerEventListener<EventType>,
+  ) => this;
+  off: <EventType extends BundlerEventType>(
+    type: EventType,
+    listener: BundlerEventListener<EventType>,
+  ) => this;
   emit: <EventType extends BundlerEventType>(
     type: EventType,
     payload: BundlerEventPayload[EventType],
