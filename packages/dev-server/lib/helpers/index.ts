@@ -61,8 +61,9 @@ export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
  */
 export class BundleResponse {
   private static CRLF = '\r\n';
-  private static THROTTLE_DELAY = 500;
+  private static THROTTLE_DELAY = 100;
   private isSupportMultipart: boolean;
+  private previousProgress = 0;
   private boundary: string;
   private throttleTimer: NodeJS.Timeout | null = null;
 
@@ -124,7 +125,17 @@ export class BundleResponse {
    * ```
    */
   writeBundleState(done: number, total: number): void {
-    if (!this.isSupportMultipart || total < 10 || this.throttleTimer !== null) {
+    const currentProgress = done / total;
+    const previousProgress = this.previousProgress;
+    this.previousProgress = currentProgress;
+
+    if (
+      total < 10 ||
+      !this.isSupportMultipart ||
+      this.throttleTimer !== null ||
+      previousProgress >= currentProgress
+    ) {
+      this.previousProgress = currentProgress;
       return;
     }
 
