@@ -1,4 +1,3 @@
-import EventEmitter from 'node:events';
 import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
 import { colors, isCI } from '@react-native-esbuild/utils';
 import {
@@ -21,10 +20,10 @@ import type {
   RunType,
   BuildTask,
 } from '../types';
-import { createBuildStatusPlugin } from './internal';
+import { BundlerEventEmitter, createBuildStatusPlugin } from './internal';
 import { printLogo } from './logo';
 
-export class ReactNativeEsbuildBundler extends EventEmitter {
+export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
   private config: ReactNativeEsbuildConfig;
   private buildTasks = new Map<number, BuildTask>();
@@ -86,7 +85,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
   }
 
   private handleBuildStart(_context: PluginContext): void {
-    this.emit('build-start');
+    this.emit('build-start', null);
   }
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
@@ -133,7 +132,7 @@ export class ReactNativeEsbuildBundler extends EventEmitter {
       currentTask.handler?.rejecter?.(error);
     } finally {
       currentTask.status = 'resolved';
-      this.emit('build-end', revisionId);
+      this.emit('build-end', { revisionId });
     }
   }
 
