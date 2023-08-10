@@ -2,22 +2,15 @@ import type { BuildContext, Plugin } from 'esbuild';
 import type {
   ReactNativeEsbuildConfig,
   BundleConfig,
-  BundlerSupportPlatform,
 } from '@react-native-esbuild/config';
 
-export type RunType = 'bundle' | 'watch';
+export type BundleMode = 'bundle' | 'watch';
+export type InternalCaller = 'dev-server';
 
 export interface BuildTask {
   context: BuildContext;
   handler: PromiseHandler<BundleResult> | null;
   status: 'pending' | 'resolved';
-}
-
-export interface BundleRequestOptions {
-  platform: BundlerSupportPlatform;
-  dev: boolean;
-  minify: boolean;
-  runModule: boolean;
 }
 
 export interface BundleResult {
@@ -38,8 +31,8 @@ export type EsbuildPluginFactory<PluginConfig = void> = (
 export interface PluginContext extends BundleConfig {
   id: number;
   root: string;
-  mode: RunType;
   config: ReactNativeEsbuildConfig;
+  mode: BundleMode;
 }
 
 export interface PromiseHandler<Result> {

@@ -14,10 +14,9 @@ import { createPromiseHandler } from '../helpers';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
 import type {
-  BundleRequestOptions,
   EsbuildPluginFactory,
   PluginContext,
-  RunType,
+  BundleMode,
   BuildTask,
 } from '../types';
 import { BundlerEventEmitter, createBuildStatusPlugin } from './internal';
@@ -38,7 +37,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private getBuildOptionsForBundler(
     bundleConfig: BundleConfig,
-    mode: RunType,
+    mode: BundleMode,
   ): BuildOptions {
     if (!this.plugins.length) {
       throw new Error('plugin is not registered');
@@ -49,9 +48,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     const context: PluginContext = {
       ...bundleConfig,
       id: this.identifyTaskByBundleConfig(bundleConfig),
-      mode,
       root: this.root,
       config: this.config,
+      mode,
     };
 
     const plugins = [
@@ -199,7 +198,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     };
   }
 
-  async getSourcemap(_options: BundleRequestOptions): Promise<void> {
+  async getSourcemap(_options: BundleConfig): Promise<void> {
     // TODO
   }
 }
