@@ -60,6 +60,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
        */
       createBuildStatusPlugin({
         onStart: (context) => this.handleBuildStart(context),
+        onUpdate: (buildState, context) =>
+          this.handleBuildStateUpdate(buildState, context),
         onEnd: (result, context) => this.handleBuildEnd(result, context),
       }),
       ...this.plugins,
@@ -86,6 +88,16 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private handleBuildStart(_context: PluginContext): void {
     this.emit('build-start', null);
+  }
+
+  private handleBuildStateUpdate(
+    buildState: {
+      loaded: number;
+      resolved: number;
+    },
+    _context: PluginContext,
+  ): void {
+    this.emit('build-status-change', buildState);
   }
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {

@@ -15,7 +15,7 @@ export class BundlerEventEmitter extends EventEmitter {
   ) => boolean;
 }
 
-type BundlerEventType = 'build-start' | 'build-end';
+type BundlerEventType = 'build-start' | 'build-end' | 'build-status-change';
 
 type BundlerEventListener<EventType extends BundlerEventType> = (
   payload: BundlerEventPayload[EventType],
@@ -25,5 +25,9 @@ interface BundlerEventPayload {
   'build-start': null;
   'build-end': {
     revisionId: string;
+  };
+  'build-status-change': {
+    resolved: number;
+    loaded: number;
   };
 }

@@ -9,6 +9,10 @@ const NAME = 'build-status-plugin';
 
 export const createBuildStatusPlugin: EsbuildPluginFactory<{
   onStart: (context: PluginContext) => void;
+  onUpdate: (
+    buildState: { resolved: number; loaded: number },
+    context: PluginContext,
+  ) => void;
   onEnd: (result: BuildResult, context: PluginContext) => void;
 }> = (config) => {
   return function buildStatusPlugin(context) {
@@ -26,14 +30,23 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         let startTime: Date | null = null;
         let moduleLoaded = 0;
 
-        const updateStatusText = (): void => {
-          spinner.text = `${platformText} build in progress... (${moduleLoaded}/${moduleResolved.size})`;
+        const handleUpdate = (): void => {
+          const resolved = moduleResolved.size;
+          const loaded = moduleLoaded;
+          config?.onUpdate(
+            {
+              resolved,
+              loaded,
+            },
+            context,
+          );
+          spinner.text = `${platformText} build in progress... (${loaded}/${resolved})`;
         };
 
         build.onStart(() => {
           moduleResolved.clear();
           moduleLoaded = 0;
-          updateStatusText();
+          handleUpdate();
           spinner.start();
           startTime = new Date();
           config?.onStart(context);
@@ -49,7 +62,7 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
 
         build.onLoad({ filter }, () => {
           ++moduleLoaded;
-          updateStatusText();
+          handleUpdate();
           return null;
         });
 
