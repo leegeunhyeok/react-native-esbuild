@@ -17,19 +17,17 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
 ) => {
   return toSafetyMiddleware(
     function serveAssetMiddleware(request, response, next) {
-      if (!request.url) {
-        logger.warn(`(${TAG}) request url is empty`);
+      if (
+        !(typeof request.url === 'string' && request.url.startsWith(ASSET_PATH))
+      ) {
         return next();
       }
 
-      if (!request.url.startsWith(ASSET_PATH)) {
-        return next();
-      }
       const filename = url.parse(path.basename(request.url)).pathname;
 
       if (!filename) {
         logger.warn(`(${TAG}) unable to resolve asset name: ${request.url}`);
-        return next();
+        return response.writeHead(400).end();
       }
 
       const filepath = path.join(getDevServerAssetPath(), filename);
