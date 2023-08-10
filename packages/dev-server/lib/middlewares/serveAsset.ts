@@ -22,46 +22,40 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
         return next();
       }
 
-      if (request.url.startsWith(ASSET_PATH)) {
-        const filename = url.parse(path.basename(request.url)).pathname;
+      if (!request.url.startsWith(ASSET_PATH)) {
+        return next();
+      }
+      const filename = url.parse(path.basename(request.url)).pathname;
 
-        if (!filename) {
-          logger.warn(`(${TAG}) unable to resolve asset name: ${request.url}`);
-          return next();
-        }
-
-        const filepath = path.join(getDevServerAssetPath(), filename);
-        let fileHandle: FileHandle | undefined;
-
-        logger.debug(`(${TAG}) serving ${filename}`);
-
-        fs.open(filepath, 'r')
-          .then((handle) => (fileHandle = handle).stat())
-          .then((stats) =>
-            stats.isDirectory()
-              ? Promise.reject(new Error('is directory'))
-              : stats.size,
-          )
-          .then((size) => ({
-            'Content-Type': mime.getType(filepath) ?? '',
-            'Content-Length': size,
-          }))
-          .then((headers) => {
-            return fileHandle?.readFile().then((data) => {
-              response.writeHead(200, headers);
-              response.end(data);
-            });
-          })
-          .catch((error) => {
-            logger.error(`unable to serve asset: ${filename}`, error as Error);
-            response.writeHead(500).end();
-          })
-          .finally(() => void fileHandle?.close());
-
-        return;
+      if (!filename) {
+        logger.warn(`(${TAG}) unable to resolve asset name: ${request.url}`);
+        return next();
       }
 
-      return next();
+      const filepath = path.join(getDevServerAssetPath(), filename);
+      let fileHandle: FileHandle | undefined;
+
+      fs.open(filepath, 'r')
+        .then((handle) => (fileHandle = handle).stat())
+        .then((stats) =>
+          stats.isDirectory()
+            ? Promise.reject(new Error('is directory'))
+            : stats.size,
+        )
+        .then((size) => ({
+          'Content-Type': mime.getType(filepath) ?? '',
+          'Content-Length': size,
+        }))
+        .then((headers) => {
+          return fileHandle?.readFile().then((data) => {
+            response.writeHead(200, headers).end(data);
+          });
+        })
+        .catch((error) => {
+          logger.error(`unable to serve asset: ${filename}`, error as Error);
+          response.writeHead(500).end();
+        })
+        .finally(() => void fileHandle?.close());
     },
   );
 };

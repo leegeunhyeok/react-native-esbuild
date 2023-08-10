@@ -22,32 +22,33 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
 
       const { pathname, query } = parse(request.url, true);
 
-      if (pathname?.endsWith('.bundle')) {
-        let bundleConfig: ParsedBundleConfig;
-        try {
-          bundleConfig = parseBundleConfigFromSearchParams(query);
-        } catch (_error) {
-          return response.writeHead(400).end();
-        }
-
-        return void bundler
-          .getBundle(bundleConfig)
-          .then((bundle) => {
-            response
-              .writeHead(200, { 'Content-Type': 'application/javascript' })
-              .end(bundle);
-          })
-          .catch((errorOrSignal) => {
-            if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
-              logger.error('bundle result is empty');
-            } else {
-              logger.error('unable to get bundle', errorOrSignal as Error);
-            }
-            response.writeHead(500).end();
-          });
+      if (!pathname?.endsWith('.bundle')) {
+        return next();
       }
 
-      return next();
+      let bundleConfig: ParsedBundleConfig;
+      try {
+        bundleConfig = parseBundleConfigFromSearchParams(query);
+      } catch (_error) {
+        return response.writeHead(400).end();
+      }
+
+      bundler
+        .getBundle(bundleConfig)
+        .then((bundle) => {
+          logger.debug('bundle loaded');
+          response
+            .writeHead(200, { 'Content-Type': 'application/javascript' })
+            .end(bundle);
+        })
+        .catch((errorOrSignal) => {
+          if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
+            logger.error('bundle result is empty');
+          } else {
+            logger.error('unable to get bundle', errorOrSignal as Error);
+          }
+          response.writeHead(500).end();
+        });
     },
   );
 };
