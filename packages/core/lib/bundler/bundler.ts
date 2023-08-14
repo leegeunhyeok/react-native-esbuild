@@ -19,6 +19,8 @@ import type {
   BundleMode,
   BuildTask,
   BundlerAdditionalData,
+  BundleResult,
+  PromiseHandler,
 } from '../types';
 import { BundlerEventEmitter, createBuildStatusPlugin } from './internal';
 import { printLogo } from './logo';
@@ -88,6 +90,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     throw new Error('unable to get build task');
   }
 
+  private assertTaskHandler(
+    handler?: PromiseHandler<BundleResult> | null,
+  ): asserts handler is PromiseHandler<BundleResult> {
+    if (handler) return;
+    throw new Error('unable to get task handler');
+  }
+
   private handleBuildStart(context: PluginContext): void {
     this.emit('build-start', { id: context.id });
   }
@@ -154,6 +163,39 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     }
   }
 
+  private async getOrCreateBundleTask(
+    bundleConfig: BundleConfig,
+    additionalData?: BundlerAdditionalData,
+  ): Promise<BuildTask> {
+    const targetTaskId = this.identifyTaskByBundleConfig(bundleConfig);
+
+    if (!this.buildTasks.has(targetTaskId)) {
+      logger.debug(`bundle task not registered (id: ${targetTaskId})`);
+      const buildOptions = this.getBuildOptionsForBundler(
+        'watch',
+        bundleConfig,
+        additionalData,
+      );
+      const context = await esbuild.context(buildOptions);
+      this.buildTasks.set(targetTaskId, {
+        context,
+        handler: createPromiseHandler(),
+        status: 'pending',
+      });
+      await context.watch();
+      logger.debug(`bundle task is now watching: (id: ${targetTaskId})`);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const targetTask = this.buildTasks.get(targetTaskId)!;
+    if (targetTask.handler === null || targetTask.status === 'resolved') {
+      targetTask.handler = createPromiseHandler();
+      await targetTask.context.rebuild();
+    }
+
+    return targetTask;
+  }
+
   registerPlugin(plugin: ReturnType<EsbuildPluginFactory<unknown>>): this {
     this.plugins.push(plugin);
     return this;
@@ -181,33 +223,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     bundledAt: Date;
     revisionId: string;
   }> {
-    const targetTaskId = this.identifyTaskByBundleConfig(bundleConfig);
+    const buildTask = await this.getOrCreateBundleTask(
+      bundleConfig,
+      additionalData,
+    );
+    this.assertTaskHandler(buildTask.handler);
 
-    if (!this.buildTasks.has(targetTaskId)) {
-      logger.debug(`bundle task not registered (id: ${targetTaskId})`);
-      const buildOptions = this.getBuildOptionsForBundler(
-        'watch',
-        bundleConfig,
-        additionalData,
-      );
-      const context = await esbuild.context(buildOptions);
-      this.buildTasks.set(targetTaskId, {
-        context,
-        handler: createPromiseHandler(),
-        status: 'pending',
-      });
-      await context.watch();
-      logger.debug(`bundle task is now watching: (id: ${targetTaskId})`);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const targetTask = this.buildTasks.get(targetTaskId)!;
-    if (targetTask.handler === null || targetTask.status === 'resolved') {
-      targetTask.handler = createPromiseHandler();
-      await targetTask.context.rebuild();
-    }
-
-    const { source, bundledAt, revisionId } = await targetTask.handler.task;
+    const { source, bundledAt, revisionId } = await buildTask.handler.task;
 
     return {
       source,
@@ -217,9 +239,25 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   async getSourcemap(
-    _options: BundleConfig,
-    _additionalData?: BundlerAdditionalData,
-  ): Promise<void> {
-    // TODO
+    bundleConfig: BundleConfig,
+    additionalData?: BundlerAdditionalData,
+  ): Promise<{
+    sourcemap: Uint8Array;
+    bundledAt: Date;
+    revisionId: string;
+  }> {
+    const buildTask = await this.getOrCreateBundleTask(
+      bundleConfig,
+      additionalData,
+    );
+    this.assertTaskHandler(buildTask.handler);
+
+    const { sourcemap, bundledAt, revisionId } = await buildTask.handler.task;
+
+    return {
+      sourcemap,
+      bundledAt,
+      revisionId,
+    };
   }
 }

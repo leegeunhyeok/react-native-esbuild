@@ -1,6 +1,5 @@
 import { parse } from 'node:url';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { ParsedUrlQuery } from 'node:querystring';
 import type {
   BundlerEventListener,
   ReactNativeEsbuildBundler,
@@ -53,6 +52,29 @@ const serveBundle = (
     });
 };
 
+const serveSourcemap = (
+  bundler: ReactNativeEsbuildBundler,
+  bundleConfig: ParsedBundleConfig,
+  _request: IncomingMessage,
+  response: ServerResponse,
+): void => {
+  bundler
+    .getSourcemap(bundleConfig)
+    .then((result) => {
+      response.setHeader('Access-Control-Allow-Origin', 'devtools://devtools');
+      response.setHeader('Content-Type', 'application/javascript');
+      response.writeHead(200).end(result.sourcemap);
+    })
+    .catch((errorOrSignal) => {
+      if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
+        logger.error('bundle result is empty');
+      } else {
+        logger.error('unable to get sourcemap', errorOrSignal as Error);
+      }
+      response.writeHead(500).end();
+    });
+};
+
 export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
   bundler,
 }) => {
@@ -77,7 +99,7 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
         break;
 
       case pathname?.endsWith('.map'):
-        // TODO
+        serveSourcemap(bundler, bundleConfig, request, response);
         break;
 
       default:
