@@ -126,18 +126,17 @@ export class BundleResponse {
    */
   writeBundleState(done: number, total: number): void {
     const currentProgress = done / total;
-    const previousProgress = this.previousProgress;
-    this.previousProgress = currentProgress;
 
     if (
       total < 10 ||
       !this.isSupportMultipart ||
       this.throttleTimer !== null ||
-      previousProgress >= currentProgress
+      this.previousProgress >= currentProgress
     ) {
-      this.previousProgress = currentProgress;
       return;
     }
+
+    this.previousProgress = currentProgress;
 
     this.writeChunk(
       {
