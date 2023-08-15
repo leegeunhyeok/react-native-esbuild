@@ -1,0 +1,48 @@
+{
+  "name": "@react-native-esbuild/symbolicate",
+  "version": "0.1.0-alpha.0",
+  "description": "symbolicate utilities for @react-native-esbuild",
+  "keywords": [
+    "react-native",
+    "esbuild",
+    "sourcemap",
+    "symbolicate"
+  ],
+  "author": "leegeunhyeok <dev.ghlee@gmail.com>",
+  "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
+  "license": "MIT",
+  "type": "commonjs",
+  "module": "lib/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
+  },
+  "scripts": {
+    "prepack": "yarn cleanup && yarn build",
+    "cleanup": "rimraf ./dist",
+    "build": "node build/index.js && tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.17"
+  },
+  "dependencies": {
+    "@babel/code-frame": "^7.22.10",
+    "source-map": "^0.7.4"
+  }
+}

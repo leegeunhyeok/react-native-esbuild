@@ -38,10 +38,10 @@ const config: JestConfigWithTsJest = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
-      displayName: '@react-native-esbuild/source-map',
+      displayName: '@react-native-esbuild/symbolicate',
       preset: 'ts-jest',
       testEnvironment: 'node',
-      testMatch: ['<rootDir>/packages/source-map/**/*.test.ts'],
+      testMatch: ['<rootDir>/packages/symbolicate/**/*.test.ts'],
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {

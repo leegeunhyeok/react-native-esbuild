@@ -6,4 +6,11 @@ declare global {
   };
 }
 
+declare module 'http' {
+  interface IncomingMessage {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rawBody: any;
+  }
+}
+
 export {};

@@ -31,6 +31,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/code-frame@npm:^7.22.10":
+  version: 7.22.10
+  resolution: "@babel/code-frame@npm:7.22.10"
+  dependencies:
+    "@babel/highlight": ^7.22.10
+    chalk: ^2.4.2
+  checksum: 89a06534ad19759da6203a71bad120b1d7b2ddc016c8e07d4c56b35dea25e7396c6da60a754e8532a86733092b131ae7f661dbe6ba5d165ea777555daa2ed3c9
+  languageName: node
+  linkType: hard
+
 "@babel/compat-data@npm:^7.20.5, @babel/compat-data@npm:^7.22.5, @babel/compat-data@npm:^7.22.6, @babel/compat-data@npm:^7.22.9":
   version: 7.22.9
   resolution: "@babel/compat-data@npm:7.22.9"
@@ -335,6 +345,17 @@ __metadata:
     "@babel/traverse": ^7.22.6
     "@babel/types": ^7.22.5
   checksum: 5c1f33241fe7bf7709868c2105134a0a86dca26a0fbd508af10a89312b1f77ca38ebae43e50be3b208613c5eacca1559618af4ca236f0abc55d294800faeff30
+  languageName: node
+  linkType: hard
+
+"@babel/highlight@npm:^7.22.10":
+  version: 7.22.10
+  resolution: "@babel/highlight@npm:7.22.10"
+  dependencies:
+    "@babel/helper-validator-identifier": ^7.22.5
+    chalk: ^2.4.2
+    js-tokens: ^4.0.0
+  checksum: f714a1e1a72dd9d72f6383f4f30fd342e21a8df32d984a4ea8f5eab691bb6ba6db2f8823d4b4cf135d98869e7a98925b81306aa32ee3c429f8cfa52c75889e1b
   languageName: node
   linkType: hard
 
@@ -3368,6 +3389,7 @@ __metadata:
     "@react-native-community/cli-server-api": ^11.3.6
     "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/core": "workspace:^"
+    "@react-native-esbuild/symbolicate": "workspace:^"
     "@react-native-esbuild/utils": "workspace:^"
     "@types/connect": ^3.4.35
     "@types/mime": ^3.0.1
@@ -3401,12 +3423,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/source-map@workspace:packages/source-map":
+"@react-native-esbuild/symbolicate@workspace:^, @react-native-esbuild/symbolicate@workspace:packages/symbolicate":
   version: 0.0.0-use.local
-  resolution: "@react-native-esbuild/source-map@workspace:packages/source-map"
+  resolution: "@react-native-esbuild/symbolicate@workspace:packages/symbolicate"
   dependencies:
-    "@react-native-esbuild/utils": "workspace:^"
+    "@babel/code-frame": ^7.22.10
     esbuild: ^0.18.17
+    source-map: ^0.7.4
   languageName: unknown
   linkType: soft
 
@@ -5379,7 +5402,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^2.0.0":
+"chalk@npm:^2.0.0, chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -13422,7 +13445,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.7.3":
+"source-map@npm:^0.7.3, source-map@npm:^0.7.4":
   version: 0.7.4
   resolution: "source-map@npm:0.7.4"
   checksum: 01cc5a74b1f0e1d626a58d36ad6898ea820567e87f18dfc9d24a9843a351aaa2ec09b87422589906d6ff1deed29693e176194dc88bcae7c9a852dc74b311dbf5

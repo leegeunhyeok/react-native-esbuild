@@ -20,7 +20,7 @@
       "es6"
     ]
   },
-  "files": ["./types/self.d.ts"],
+  "files": ["types/index.d.ts"],
   "include": [
     "packages/**/*",
     "example/**/*",
