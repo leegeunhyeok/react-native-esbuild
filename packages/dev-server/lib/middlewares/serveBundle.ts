@@ -13,6 +13,12 @@ import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'serve-bundle-middleware';
 
+enum BundleType {
+  Unknown,
+  Bundle,
+  Sourcemap,
+}
+
 const serveBundle = (
   bundler: ReactNativeEsbuildBundler,
   bundleConfig: ParsedBundleConfig,
@@ -62,7 +68,7 @@ const serveSourcemap = (
     .getSourcemap(bundleConfig)
     .then((result) => {
       response.setHeader('Access-Control-Allow-Origin', 'devtools://devtools');
-      response.setHeader('Content-Type', 'application/javascript');
+      response.setHeader('Content-Type', 'application/json');
       response.writeHead(200).end(result.sourcemap);
     })
     .catch((errorOrSignal) => {
@@ -75,6 +81,37 @@ const serveSourcemap = (
     });
 };
 
+const parseBundleConfig = (
+  url: string,
+): {
+  type: BundleType;
+  bundleConfig: ParsedBundleConfig | null;
+} => {
+  const { pathname, query } = parse(url, true);
+
+  if (typeof pathname !== 'string') {
+    return {
+      type: BundleType.Unknown,
+      bundleConfig: null,
+    };
+  }
+
+  // eslint-disable-next-line no-nested-ternary
+  const type = pathname.endsWith('.bundle')
+    ? BundleType.Bundle
+    : pathname.endsWith('.map')
+    ? BundleType.Sourcemap
+    : BundleType.Unknown;
+
+  return {
+    type,
+    bundleConfig:
+      type === BundleType.Unknown
+        ? null
+        : parseBundleConfigFromSearchParams(query),
+  };
+};
+
 export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
   bundler,
 }) => {
@@ -84,26 +121,18 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       return next();
     }
 
-    const { pathname, query } = parse(request.url, true);
-
-    let bundleConfig: ParsedBundleConfig;
-    try {
-      bundleConfig = parseBundleConfigFromSearchParams(query);
-    } catch (_error) {
-      return response.writeHead(400).end();
+    const { type, bundleConfig } = parseBundleConfig(request.url);
+    if (type === BundleType.Unknown || bundleConfig === null) {
+      return next();
     }
 
-    switch (true) {
-      case pathname?.endsWith('.bundle'):
+    switch (type) {
+      case BundleType.Bundle:
         serveBundle(bundler, bundleConfig, request, response);
         break;
 
-      case pathname?.endsWith('.map'):
+      case BundleType.Sourcemap:
         serveSourcemap(bundler, bundleConfig, request, response);
-        break;
-
-      default:
-        next();
         break;
     }
   };
