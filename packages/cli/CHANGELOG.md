@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.28](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.27...v0.1.0-alpha.28) (2023-08-15)
+
+
+### Code Refactoring
+
+* change default host to localhost ([53c5c91](https://github.com/leegeunhyeok/react-native-esbuild/commit/53c5c915a9694a19dbb51c38acdf507101c7bdb6))
+
+
+
 ## [0.1.0-alpha.27](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.26...v0.1.0-alpha.27) (2023-08-10)
 
 **Note:** Version bump only for package @react-native-esbuild/cli

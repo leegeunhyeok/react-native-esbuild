@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.28](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.27...v0.1.0-alpha.28) (2023-08-15)
+
+
+### Features
+
+* handle for sourcemap request ([ca92e0c](https://github.com/leegeunhyeok/react-native-esbuild/commit/ca92e0ca801927061f73dc972b8088b10c264a98))
+* implement symbolicate-middleware ([ebc5e83](https://github.com/leegeunhyeok/react-native-esbuild/commit/ebc5e83d6c65306bf26659d9cabe67b24889156a))
+* improve update build status ([3e31ae8](https://github.com/leegeunhyeok/react-native-esbuild/commit/3e31ae89f5f714365f9e0f3c99d295292dccfe07))
+
+
+### Bug Fixes
+
+* send bundle state condition ([5029c15](https://github.com/leegeunhyeok/react-native-esbuild/commit/5029c1568d41565c67601e30da222131d75fa0d0))
+* set response header when not support multipart format ([e58bcf9](https://github.com/leegeunhyeok/react-native-esbuild/commit/e58bcf9c87b2a6906df7859c54949eca4497d20b))
+
+
+### Code Refactoring
+
+* change default host to localhost ([53c5c91](https://github.com/leegeunhyeok/react-native-esbuild/commit/53c5c915a9694a19dbb51c38acdf507101c7bdb6))
+* cleanup serve-bundle-middleware ([7515593](https://github.com/leegeunhyeok/react-native-esbuild/commit/75155934751778b8efcdb817de24fed35d1e74c3))
+* rename handler to wss ([77c0714](https://github.com/leegeunhyeok/react-native-esbuild/commit/77c07143891aa4c5ea5b1252ec8ab4a0affca7e7))
+* serve-bundle-middleware ([8287a54](https://github.com/leegeunhyeok/react-native-esbuild/commit/8287a54ef2faf9abd6e7b0f73e80c72dd7a8f2aa))
+
+
+
 ## [0.1.0-alpha.27](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.26...v0.1.0-alpha.27) (2023-08-10)
 
 
