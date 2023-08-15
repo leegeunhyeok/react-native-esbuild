@@ -187,13 +187,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const targetTask = this.buildTasks.get(targetTaskId)!;
-    if (targetTask.handler === null || targetTask.status === 'resolved') {
-      targetTask.handler = createPromiseHandler();
-      await targetTask.context.rebuild();
-    }
-
-    return targetTask;
+    return this.buildTasks.get(targetTaskId)!;
   }
 
   registerPlugin(plugin: ReturnType<EsbuildPluginFactory<unknown>>): this {
