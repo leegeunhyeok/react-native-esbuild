@@ -6,9 +6,14 @@ import {
   DEFAULT_OUTFILE,
   SOURCE_EXTENSIONS,
   ASSET_EXTENSIONS,
-  BANNER_VARS,
 } from '../shares';
 import type { BundleConfig } from '../types';
+import {
+  getInjectVariables,
+  getGlobalVariables,
+  getReactNativePolyfills,
+  REACT_NATIVE_INITIALIZE_CORE_MODULE,
+} from './reactNativeInternal';
 
 export function getEsbuildOptions(
   bundleConfig: BundleConfig,
@@ -18,31 +23,12 @@ export function getEsbuildOptions(
     entry = DEFAULT_ENTRY_POINT,
     outfile = DEFAULT_OUTFILE,
     platform,
-    dev,
     minify,
   } = bundleConfig;
+  const dev = Boolean(bundleConfig.dev);
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
-
-  const getReactNativePolyfills = (): string[] => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const getPolyfills = require(require.resolve(
-      'react-native/rn-get-polyfills',
-      {
-        paths: Array.from(
-          new Set([
-            // add current workspace directory to module resolution path.
-            // improve for workspace projects (eg. monorepo)
-            path.join(process.cwd(), 'node_modules'),
-            ...(require.main?.paths ?? []),
-          ]),
-        ).filter(Boolean),
-      },
-    )) as () => string[];
-
-    return getPolyfills();
-  };
 
   const baseOptions: BuildOptions = {
     /**
@@ -57,22 +43,13 @@ export function getEsbuildOptions(
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
       .concat(extensions)
       .flat(),
-    define: {
-      __DEV__: JSON.stringify(dev),
-      global: 'window',
-      'process.env.NODE_ENV': JSON.stringify(
-        dev ? 'development' : 'production',
-      ),
-    },
+    define: getGlobalVariables(Boolean(dev)),
     loader: Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
     legalComments: 'none',
     banner: {
-      js: `var ${BANNER_VARS.join(',')};`,
+      js: `var ${getInjectVariables(dev).join(',')};`,
     },
-    inject: [
-      'react-native/Libraries/Core/InitializeCore',
-      ...getReactNativePolyfills(),
-    ],
+    inject: [REACT_NATIVE_INITIALIZE_CORE_MODULE, ...getReactNativePolyfills()],
     target: 'es6',
     supported: {
       /**
