@@ -6,6 +6,6 @@
     "declaration": true,
     "emitDeclarationOnly": true
   },
-  "include": ["./lib"],
+  "include": ["./lib", "../core/lib/transformers/babel.ts"],
   "exclude": ["./dist"]
 }

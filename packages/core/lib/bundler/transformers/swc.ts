@@ -1,12 +1,19 @@
-import { transform } from '@swc/core';
+import { transform, type Options } from '@swc/core';
 import { getSwcOptions } from '@react-native-esbuild/config';
 import type { Transformer } from '../../types';
 
-export const transformWithSwc: Transformer<void> = async (code, context) => {
-  const options = getSwcOptions({
-    filename: context.args.path,
-    root: context.root,
-  });
+export const transformWithSwc: Transformer<Options> = async (
+  code,
+  context,
+  customOptions,
+) => {
+  const options = getSwcOptions(
+    {
+      filename: context.args.path,
+      root: context.root,
+    },
+    customOptions,
+  );
   const { code: transformedCode } = await transform(code, options);
 
   if (typeof transformedCode !== 'string') {

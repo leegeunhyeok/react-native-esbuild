@@ -2,15 +2,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { OnLoadArgs, OnLoadResult } from 'esbuild';
 import {
-  ReactNativeEsbuildBundler,
+  ReactNativeEsbuildBundler as Bundler,
   type EsbuildPluginFactory,
 } from '@react-native-esbuild/core';
 import { logger } from '../shared';
-import {
-  transformWithBabel,
-  transformWithSwc,
-  stripFlowWithSucrase,
-} from './transformer';
 
 const NAME = 'hermes-transform-plugin';
 
@@ -28,9 +23,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
     return {
       name: NAME,
       setup: (build): void => {
-        const cacheController = ReactNativeEsbuildBundler.caches.get(
-          context.id.toString(),
-        );
+        const cacheController = Bundler.caches.get(context.id.toString());
         const cacheEnabled = context.dev;
         const root = context.root;
         const {
@@ -91,30 +84,41 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
 
           if (fullyTransformPackagesRegExp?.test(args.path)) {
             // eslint-disable-next-line no-return-await
-            return await transformWithBabel(source, context, {
-              // follow babelrc of react-native project's root (same as metro)
-              babelrc: true,
-            });
+            return await Bundler.transforms.transformWithBabel(
+              source,
+              context,
+              {
+                // follow babelrc of react-native project's root (same as metro)
+                babelrc: true,
+              },
+            );
           }
 
           if (
             stripFlowPackageNamesRegExp?.test(args.path) ||
             isFlow(source, args.path)
           ) {
-            source = await stripFlowWithSucrase(source, context);
+            source = await Bundler.transforms.stripFlowWithSucrase(
+              source,
+              context,
+            );
           }
 
           for await (const rule of customTransformRules) {
             if (rule.test(args.path, source)) {
-              source = await transformWithBabel(source, context, {
-                babelrc: false,
-                plugins: rule.plugins,
-              });
+              source = await Bundler.transforms.transformWithBabel(
+                source,
+                context,
+                {
+                  babelrc: false,
+                  plugins: rule.plugins,
+                },
+              );
             }
           }
 
           // transform source target to es5
-          source = await transformWithSwc(source, context);
+          source = await Bundler.transforms.transformWithSwc(source, context);
 
           if (cacheEnabled) {
             cacheController.writeToMemory(cacheConfig.hash, {

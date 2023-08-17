@@ -5,7 +5,7 @@ import {
   type BabelFileResult,
 } from '@babel/core';
 import { getBabelOptions } from '@react-native-esbuild/config';
-import { promisify } from '../../utils';
+import { promisify } from '../../helpers';
 import type { Transformer } from '../../types';
 
 export const transformWithBabel: Transformer<TransformOptions> = async (

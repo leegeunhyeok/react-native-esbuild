@@ -1,5 +1,3 @@
-import type { OnLoadArgs } from 'esbuild';
-
 // asset-register-plugin
 export interface AssetRegisterPluginConfig {
   assetExtensions?: string[];
@@ -31,10 +29,3 @@ export interface SuffixPathResult {
   extension: string;
   path: string;
 }
-
-// hermes-transform-plugin
-export type Transformer<Options> = (
-  code: string,
-  context: { args: OnLoadArgs; root: string },
-  customOption?: Options,
-) => string | Promise<string>;
