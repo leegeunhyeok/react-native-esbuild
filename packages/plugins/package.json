@@ -39,16 +39,16 @@
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
     "@types/md5": "^2.3.2",
-    "esbuild": "^0.18.17"
+    "esbuild": "^0.19.2"
   },
   "dependencies": {
-    "@babel/core": "^7.22.9",
+    "@babel/core": "^7.22.10",
     "@react-native-esbuild/config": "workspace:^",
     "@react-native-esbuild/core": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
-    "@svgr/core": "^8.0.0",
-    "@svgr/plugin-jsx": "^8.0.1",
-    "@swc/core": "^1.3.72",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@swc/core": "^1.3.77",
     "@swc/helpers": "^0.5.1",
     "image-size": "^1.0.2",
     "md5": "^2.3.0",

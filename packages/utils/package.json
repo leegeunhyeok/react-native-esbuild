@@ -37,7 +37,7 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
-    "esbuild": "^0.18.17"
+    "esbuild": "^0.19.2"
   },
   "dependencies": {
     "colors": "^1.4.0",

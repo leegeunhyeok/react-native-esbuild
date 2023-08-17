@@ -20,7 +20,7 @@
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.5",
     "@vercel/style-guide": "^4.0.2",
-    "esbuild": "^0.18.17",
+    "esbuild": "^0.19.2",
     "eslint": "^8.45.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",

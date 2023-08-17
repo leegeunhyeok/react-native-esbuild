@@ -40,7 +40,7 @@
     "@react-native-esbuild/config": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
     "deepmerge": "^4.3.1",
-    "esbuild": "^0.18.17",
+    "esbuild": "^0.19.2",
     "md5": "^2.3.0",
     "ora": "^7.0.1"
   },
