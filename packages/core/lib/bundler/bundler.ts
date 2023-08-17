@@ -29,6 +29,11 @@ import {
 } from './transformers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin } from './plugins';
+import {
+  getGlobalVariables,
+  getReactNativeInitializeCore,
+  getInitializeScript,
+} from './internal';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
@@ -49,20 +54,35 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.config = loadConfig(this.root);
   }
 
-  private getBuildOptionsForBundler(
+  private async getBuildOptionsForBundler(
     mode: BundleMode,
     bundleConfig: BundleConfig,
     additionalData?: BundlerAdditionalData,
-  ): BuildOptions {
+  ): Promise<BuildOptions> {
     if (!this.plugins.length) {
       throw new Error('plugin is not registered');
     }
 
-    setEnvironment(bundleConfig.dev ?? true);
+    const {
+      dev = true,
+      entry,
+      outfile,
+      sourcemap,
+      assetsDir,
+      minify,
+      platform,
+    } = bundleConfig;
+
+    setEnvironment(dev);
 
     const context: PluginContext = {
-      ...bundleConfig,
       id: this.identifyTaskByBundleConfig(bundleConfig),
+      entry,
+      outfile,
+      sourcemap,
+      assetsDir,
+      minify,
+      platform,
       root: this.root,
       config: this.config,
       mode,
@@ -84,6 +104,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     return getEsbuildOptions(bundleConfig, {
       plugins: plugins.map((plugin) => plugin(context)),
+      define: getGlobalVariables(bundleConfig),
+      inject: [getReactNativeInitializeCore(this.root)],
+      banner: {
+        js: await getInitializeScript(bundleConfig, this.root),
+      },
       write: mode === 'bundle',
     });
   }
@@ -182,7 +207,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
-      const buildOptions = this.getBuildOptionsForBundler(
+      const buildOptions = await this.getBuildOptionsForBundler(
         'watch',
         bundleConfig,
         additionalData,
@@ -210,7 +235,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     bundleConfig: BundleConfig,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildResult> {
-    const buildOptions = this.getBuildOptionsForBundler(
+    const buildOptions = await this.getBuildOptionsForBundler(
       'bundle',
       bundleConfig,
       additionalData,

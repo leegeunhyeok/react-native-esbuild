@@ -1,4 +1,4 @@
-import type { BuildContext, Plugin, OnLoadArgs } from 'esbuild';
+import type { BuildContext, Plugin } from 'esbuild';
 import type {
   ReactNativeEsbuildConfig,
   BundleConfig,
@@ -51,6 +51,6 @@ export interface Cache {
 
 export type Transformer<Options> = (
   code: string,
-  context: { args: OnLoadArgs; root: string },
+  context: { path: string; root: string },
   customOption?: Options,
 ) => string | Promise<string>;

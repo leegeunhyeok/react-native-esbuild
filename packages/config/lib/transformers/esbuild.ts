@@ -8,12 +8,6 @@ import {
   ASSET_EXTENSIONS,
 } from '../shares';
 import type { BundleConfig } from '../types';
-import {
-  getInjectVariables,
-  getGlobalVariables,
-  getReactNativePolyfills,
-  REACT_NATIVE_INITIALIZE_CORE_MODULE,
-} from './reactNativeInternal';
 
 export function getEsbuildOptions(
   bundleConfig: BundleConfig,
@@ -25,7 +19,6 @@ export function getEsbuildOptions(
     platform,
     minify,
   } = bundleConfig;
-  const dev = Boolean(bundleConfig.dev);
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
@@ -43,13 +36,8 @@ export function getEsbuildOptions(
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
       .concat(extensions)
       .flat(),
-    define: getGlobalVariables(dev, platform),
     loader: Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
     legalComments: 'none',
-    banner: {
-      js: `var ${getInjectVariables(dev).join(',')};`,
-    },
-    inject: [REACT_NATIVE_INITIALIZE_CORE_MODULE, ...getReactNativePolyfills()],
     target: 'es6',
     supported: {
       /**
