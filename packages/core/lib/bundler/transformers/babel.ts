@@ -15,7 +15,7 @@ export const transformWithBabel: Transformer<TransformOptions> = async (
 ) => {
   const options = loadOptions({
     ...getBabelOptions(context.root, customOptions),
-    filename: context.args.path,
+    filename: context.path,
     caller: {
       name: '@react-native-esbuild/plugins',
     },

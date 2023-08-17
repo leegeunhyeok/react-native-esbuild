@@ -80,7 +80,7 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
           cacheConfig: { modifiedAt: number; hash: string },
         ): Promise<string> => {
           let source = await fs.readFile(args.path, { encoding: 'utf-8' });
-          const context = { args, root };
+          const context = { path: args.path, root };
 
           if (fullyTransformPackagesRegExp?.test(args.path)) {
             // eslint-disable-next-line no-return-await

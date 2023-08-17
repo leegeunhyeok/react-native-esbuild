@@ -9,7 +9,7 @@ export const transformWithSwc: Transformer<Options> = async (
 ) => {
   const options = getSwcOptions(
     {
-      filename: context.args.path,
+      filename: context.path,
       root: context.root,
     },
     customOptions,
