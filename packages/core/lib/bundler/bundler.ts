@@ -22,7 +22,8 @@ import type {
   BundleResult,
   PromiseHandler,
 } from '../types';
-import { BundlerEventEmitter, createBuildStatusPlugin } from './internal';
+import { BundlerEventEmitter } from './events';
+import { createBuildStatusPlugin } from './plugins';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
