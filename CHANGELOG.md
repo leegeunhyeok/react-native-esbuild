@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.29](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.28...v0.1.0-alpha.29) (2023-08-17)
+
+
+### Features
+
+* inject react native polyfills only once ([5b54909](https://github.com/leegeunhyeok/react-native-esbuild/commit/5b5490943ba7a7ea9bdda6d76281b3752224e36d))
+* specify global object by platform ([8abf893](https://github.com/leegeunhyeok/react-native-esbuild/commit/8abf893bde650808bcee201ed6b40081ffa6136f))
+
+
+### Performance Improvements
+
+* do not rebuild when each bundle or sourcemap requests ([0fd58e2](https://github.com/leegeunhyeok/react-native-esbuild/commit/0fd58e25ddec6dcbd433bb94ce6c496be7ccc5f4))
+
+
+### Miscellaneous Chores
+
+* bump version up pacakges ([e235610](https://github.com/leegeunhyeok/react-native-esbuild/commit/e235610379fbf8f5c6978ecded5dbe6549834975))
+* update pods ([3534553](https://github.com/leegeunhyeok/react-native-esbuild/commit/3534553a4b6f0c357b1308113a40b331e18c95fc))
+
+
+### Code Refactoring
+
+* add reactNativeInternal ([f553bdf](https://github.com/leegeunhyeok/react-native-esbuild/commit/f553bdff0d95b9e9240e66ab18bc82c9deaf33e2))
+* relocate internal directory ([03e6c06](https://github.com/leegeunhyeok/react-native-esbuild/commit/03e6c060c6263a27b36107166f9a8d689e4579c9))
+* relocate transformers ([8a2a19c](https://github.com/leegeunhyeok/react-native-esbuild/commit/8a2a19c4cf1695888fac2828807dddeeb014b7c8))
+* update transformer context type ([2c78cf5](https://github.com/leegeunhyeok/react-native-esbuild/commit/2c78cf549bb3d876a06c59d06ab5b85f77170471))
+
+
+
 ## [0.1.0-alpha.28](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.27...v0.1.0-alpha.28) (2023-08-15)
 
 

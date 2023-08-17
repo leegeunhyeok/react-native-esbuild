@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.29](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.28...v0.1.0-alpha.29) (2023-08-17)
+
+
+### Miscellaneous Chores
+
+* bump version up pacakges ([e235610](https://github.com/leegeunhyeok/react-native-esbuild/commit/e235610379fbf8f5c6978ecded5dbe6549834975))
+
+
+### Code Refactoring
+
+* relocate transformers ([8a2a19c](https://github.com/leegeunhyeok/react-native-esbuild/commit/8a2a19c4cf1695888fac2828807dddeeb014b7c8))
+* update transformer context type ([2c78cf5](https://github.com/leegeunhyeok/react-native-esbuild/commit/2c78cf549bb3d876a06c59d06ab5b85f77170471))
+
+
+
 ## [0.1.0-alpha.28](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.27...v0.1.0-alpha.28) (2023-08-15)
 
 **Note:** Version bump only for package @react-native-esbuild/plugins
