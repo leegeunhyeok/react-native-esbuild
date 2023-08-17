@@ -43,7 +43,7 @@ export function getEsbuildOptions(
       .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
       .concat(extensions)
       .flat(),
-    define: getGlobalVariables(Boolean(dev)),
+    define: getGlobalVariables(dev, platform),
     loader: Object.fromEntries(ASSET_EXTENSIONS.map((ext) => [ext, 'file'])),
     legalComments: 'none',
     banner: {

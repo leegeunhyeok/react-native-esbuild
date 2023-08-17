@@ -1,5 +1,6 @@
 /* eslint-disable quotes */
 import path from 'node:path';
+import type { BundlerSupportPlatform } from '../../types';
 
 const getNodeEnv = (dev: boolean): string =>
   dev ? 'development' : 'production';
@@ -16,9 +17,12 @@ export const getInjectVariables = (dev: boolean): string[] => [
   `window = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this`,
 ];
 
-export const getGlobalVariables = (dev: boolean): Record<string, string> => ({
+export const getGlobalVariables = (
+  dev: boolean,
+  platform: BundlerSupportPlatform,
+): Record<string, string> => ({
   __DEV__: JSON.stringify(dev),
-  global: 'window',
+  global: platform === 'web' ? 'window' : 'globalThis',
   'process.env.NODE_ENV': JSON.stringify(getNodeEnv(dev)),
 });
 
