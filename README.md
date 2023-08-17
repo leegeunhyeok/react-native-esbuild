@@ -104,15 +104,15 @@ patch-package @react-native/gradle-plugin
 
 ## iOS
 
-Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and update script.
+Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and add `CLI_PATH` environment variable.
 
 ```diff
 set -e
 
-WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
++ CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
 
-- REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
-+ REACT_NATIVE_XCODE="../node_modules/@react-native-esbuild/cli/scripts/xcode.sh"
+WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
+REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
 
 /bin/sh -c "$WITH_ENVIRONMENT $REACT_NATIVE_XCODE"
 ```
