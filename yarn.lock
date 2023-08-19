@@ -3504,6 +3504,7 @@ __metadata:
     "@types/md5": ^2.3.2
     deepmerge: ^4.3.1
     esbuild: ^0.19.2
+    indent-string: ^5.0.0
     md5: ^2.3.0
     ora: ^7.0.1
     sucrase: ^3.34.0
@@ -8637,6 +8638,13 @@ __metadata:
   version: 4.0.0
   resolution: "indent-string@npm:4.0.0"
   checksum: 824cfb9929d031dabf059bebfe08cf3137365e112019086ed3dcff6a0a7b698cb80cf67ccccde0e25b9e2d7527aa6cc1fed1ac490c752162496caba3e6699612
+  languageName: node
+  linkType: hard
+
+"indent-string@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "indent-string@npm:5.0.0"
+  checksum: e466c27b6373440e6d84fbc19e750219ce25865cb82d578e41a6053d727e5520dc5725217d6eb1cc76005a1bb1696a0f106d84ce7ebda3033b963a38583fb3b3
   languageName: node
   linkType: hard
 

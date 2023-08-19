@@ -1,4 +1,5 @@
 import path from 'node:path';
+import indent from 'indent-string';
 
 export const resolveFromRoot = (
   targetPath: string,
@@ -18,6 +19,6 @@ export const resolveFromRoot = (
 
 export const wrapWithIIFE = (body: string): string => `
 (function (global) {
-  ${body}
+${indent(body, 2)}
 })(typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this);
 `;
