@@ -1,5 +1,6 @@
 /* eslint-disable quotes */
 import fs from 'node:fs/promises';
+import { minify as swcMinify } from '@swc/core';
 import type { BundleConfig } from '@react-native-esbuild/config';
 import { resolveFromRoot, wrapWithIIFE } from '../../helpers';
 import { stripFlowWithSucrase } from '../transformers';
@@ -49,7 +50,7 @@ export const getGlobalVariables = ({
 });
 
 export const getInitializeScript = async (
-  { dev = true }: BundleConfig,
+  { dev = true, minify }: BundleConfig,
   root: string,
 ): Promise<string> => {
   if (!cache.initialScripts) {
@@ -64,10 +65,18 @@ export const getInitializeScript = async (
     const polyfillScripts = await Promise.all(
       rawPolyfillCode.map(async (code, index): Promise<string> => {
         const path = polyfillScriptPaths[index].replace(root, '').slice(1);
-        return wrapWithIIFE(
-          await stripFlowWithSucrase(code, { root, path }),
+        const transformContext = { root, path };
+        const strippedCode = wrapWithIIFE(
+          await stripFlowWithSucrase(code, transformContext),
           path,
         );
+        return minify
+          ? swcMinify(strippedCode, {
+              compress: true,
+              mangle: true,
+              sourceMap: false,
+            }).then(({ code }) => code)
+          : strippedCode;
       }),
     );
 
