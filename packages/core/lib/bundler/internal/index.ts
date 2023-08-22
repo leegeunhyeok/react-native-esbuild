@@ -21,7 +21,7 @@ const getInjectVariables = (dev: boolean): string[] => [
   `__METRO_GLOBAL_PREFIX__=''`,
   `__DEV__=${JSON.stringify(dev)}`,
   'process=this.process||{}',
-  `window = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this`,
+  `global = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this`,
 ];
 
 const getReactNativePolyfills = (root: string): string[] => {
