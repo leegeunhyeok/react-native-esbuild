@@ -17,7 +17,8 @@ export const resolveFromRoot = (
   });
 };
 
-export const wrapWithIIFE = (body: string): string => `
+export const wrapWithIIFE = (body: string, filepath: string): string => `
+// ${filepath}
 (function (global) {
 ${indent(body, 2)}
 })(typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this);

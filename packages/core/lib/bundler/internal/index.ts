@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import type { BundleConfig } from '@react-native-esbuild/config';
 import { resolveFromRoot, wrapWithIIFE } from '../../helpers';
-import { stripFlowWithSucrase, transformWithSwc } from '../transformers';
+import { stripFlowWithSucrase } from '../transformers';
 
 const cache: Record<'initialScripts', string | null> = {
   initialScripts: null,
@@ -49,46 +49,25 @@ export const getGlobalVariables = ({
 });
 
 export const getInitializeScript = async (
-  { dev = true, minify }: BundleConfig,
+  { dev = true }: BundleConfig,
   root: string,
 ): Promise<string> => {
   if (!cache.initialScripts) {
     const polyfillScriptPaths = getReactNativePolyfills(root);
 
     const rawPolyfillCode = await Promise.all(
-      getReactNativePolyfills(root).map((path) =>
+      polyfillScriptPaths.map((path) =>
         fs.readFile(path, { encoding: 'utf-8' }),
       ),
     );
 
     const polyfillScripts = await Promise.all(
-      rawPolyfillCode.map((code, index): Promise<string> => {
-        const preprocessing = async (): Promise<string> => {
-          const context = {
-            root,
-            path: polyfillScriptPaths[index],
-          };
-
-          return transformWithSwc(
-            await stripFlowWithSucrase(code, context),
-            context,
-            {
-              jsc: {
-                parser: {
-                  syntax: 'ecmascript',
-                  jsx: false,
-                },
-                externalHelpers: false,
-                minify: {
-                  compress: minify,
-                  mangle: minify,
-                },
-              },
-            },
-          );
-        };
-
-        return preprocessing().then(wrapWithIIFE);
+      rawPolyfillCode.map(async (code, index): Promise<string> => {
+        const path = polyfillScriptPaths[index].replace(root, '').slice(1);
+        return wrapWithIIFE(
+          await stripFlowWithSucrase(code, { root, path }),
+          path,
+        );
       }),
     );
 
