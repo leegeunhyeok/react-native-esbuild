@@ -1,9 +1,15 @@
-import type { IncomingMessage, ServerResponse } from 'node:http';
+import type {
+  IncomingMessage,
+  IncomingHttpHeaders,
+  ServerResponse,
+} from 'node:http';
 import type { FileHandle } from 'node:fs/promises';
+import { faker } from '@faker-js/faker';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
 interface MockedRequestParams {
   url: string | undefined;
+  headers?: IncomingHttpHeaders;
 }
 
 interface MockedFileHandlerParams {
@@ -19,12 +25,17 @@ interface MockedBundlerParams {
 
 export function getMockedRequest({
   url,
+  headers = { accept: '' },
 }: MockedRequestParams): IncomingMessage {
-  return { url } as IncomingMessage;
+  return {
+    url,
+    headers,
+  } as IncomingMessage;
 }
 
 export function getMockedResponse(): ServerResponse {
   const response = {
+    setHeader: jest.fn().mockImplementation(() => response),
     writeHead: jest.fn().mockImplementation(() => response),
     end: jest.fn().mockImplementation(() => response),
   } as unknown as ServerResponse;
@@ -54,6 +65,12 @@ export function getMockedBundler({
   return {
     getBundle: jest
       .fn()
-      .mockReturnValue(hasError ? Promise.reject() : Promise.resolve(bundle)),
+      .mockReturnValue(
+        hasError
+          ? Promise.reject()
+          : Promise.resolve({ source: bundle, bundledAt: faker.date.past() }),
+      ),
+    on: jest.fn(),
+    off: jest.fn(),
   } as unknown as ReactNativeEsbuildBundler;
 }

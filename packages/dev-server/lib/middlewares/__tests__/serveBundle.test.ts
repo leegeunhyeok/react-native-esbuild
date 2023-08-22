@@ -44,16 +44,16 @@ describe('serve-asset-middleware', () => {
 
     beforeEach(() => {
       response = getMockedResponse();
-      middleware(
-        getMockedRequest({ url: 'main.bundle?platform=unknown' }),
-        response,
-        jest.fn(),
-      );
     });
 
-    it('should response with status 400', () => {
-      expect(response.writeHead).toBeCalledWith(400);
-      expect(response.end).toBeCalled();
+    it('should throw error', () => {
+      expect(() => {
+        middleware(
+          getMockedRequest({ url: 'main.bundle?platform=unknown' }),
+          response,
+          jest.fn(),
+        );
+      }).toThrow();
     });
   });
 
@@ -73,10 +73,12 @@ describe('serve-asset-middleware', () => {
     });
 
     it('should response bundle with status 200', () => {
-      expect(response.writeHead).toBeCalledWith(200, {
-        'Content-Type': 'application/javascript',
-      });
-      expect(response.end).toBeCalledWith(bundle);
+      expect(response.setHeader).toBeCalledWith(
+        'Content-Type',
+        'application/javascript',
+      );
+      expect(response.writeHead).toBeCalledWith(200);
+      expect(response.end).toBeCalled();
     });
   });
 

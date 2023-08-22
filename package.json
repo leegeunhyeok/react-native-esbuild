@@ -33,5 +33,8 @@
     "typescript": "^5.1.6"
   },
   "prettier": "@vercel/style-guide/prettier",
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "dependencies": {
+    "fast-glob": "^3.3.1"
+  }
 }

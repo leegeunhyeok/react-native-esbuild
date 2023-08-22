@@ -11,25 +11,11 @@ exports[`getBabelOptions should match snapshot 1`] = `
 
 exports[`getEsbuildOptions should match snapshot 1`] = `
 {
-  "banner": {
-    "js": "var __BUNDLE_START_TIME__=this.nativePerformanceNow?nativePerformanceNow():Date.now(),process=this.process||{},__METRO_GLOBAL_PREFIX__='',window = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this;",
-  },
   "bundle": true,
-  "define": {
-    "__DEV__": "true",
-    "global": "window",
-    "process.env.NODE_ENV": ""development"",
-  },
   "entryPoints": [
     "index.js",
   ],
   "format": "iife",
-  "inject": [
-    "react-native/Libraries/Core/InitializeCore",
-    "/Users/ghlee/workspace/react-native-esbuild/node_modules/@react-native/js-polyfills/console.js",
-    "/Users/ghlee/workspace/react-native-esbuild/node_modules/@react-native/js-polyfills/error-guard.js",
-    "/Users/ghlee/workspace/react-native-esbuild/node_modules/@react-native/js-polyfills/Object.es8.js",
-  ],
   "legalComments": "none",
   "loader": {
     ".3g2": "file",
