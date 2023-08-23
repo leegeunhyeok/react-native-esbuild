@@ -45,6 +45,13 @@ const config: JestConfigWithTsJest = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
+      displayName: '@react-native-esbuild/transformer',
+      preset: 'ts-jest',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/packages/transformer/**/*.test.ts'],
+      setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
+    },
+    {
       displayName: '@react-native-esbuild/utils',
       preset: 'ts-jest',
       testEnvironment: 'node',
