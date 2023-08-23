@@ -5,6 +5,11 @@ import {
   ReactNativeEsbuildBundler as Bundler,
   type EsbuildPluginFactory,
 } from '@react-native-esbuild/core';
+import {
+  stripFlowWithSucrase,
+  transformWithBabel,
+  transformWithSwc,
+} from '@react-native-esbuild/transformer';
 import { logger } from '../shared';
 
 const NAME = 'hermes-transform-plugin';
@@ -84,41 +89,30 @@ export const createHermesTransformPlugin: EsbuildPluginFactory = () => {
 
           if (fullyTransformPackagesRegExp?.test(args.path)) {
             // eslint-disable-next-line no-return-await
-            return await Bundler.transforms.transformWithBabel(
-              source,
-              context,
-              {
-                // follow babelrc of react-native project's root (same as metro)
-                babelrc: true,
-              },
-            );
+            return await transformWithBabel(source, context, {
+              // follow babelrc of react-native project's root (same as metro)
+              babelrc: true,
+            });
           }
 
           if (
             stripFlowPackageNamesRegExp?.test(args.path) ||
             isFlow(source, args.path)
           ) {
-            source = await Bundler.transforms.stripFlowWithSucrase(
-              source,
-              context,
-            );
+            source = await stripFlowWithSucrase(source, context);
           }
 
           for await (const rule of customTransformRules) {
             if (rule.test(args.path, source)) {
-              source = await Bundler.transforms.transformWithBabel(
-                source,
-                context,
-                {
-                  babelrc: false,
-                  plugins: rule.plugins,
-                },
-              );
+              source = await transformWithBabel(source, context, {
+                babelrc: false,
+                plugins: rule.plugins,
+              });
             }
           }
 
           // transform source target to es5
-          source = await Bundler.transforms.transformWithSwc(source, context);
+          source = await transformWithSwc(source, context);
 
           if (cacheEnabled) {
             cacheController.writeToMemory(cacheConfig.hash, {

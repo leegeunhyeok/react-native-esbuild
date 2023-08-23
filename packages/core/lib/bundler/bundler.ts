@@ -22,11 +22,6 @@ import type {
   BundleResult,
   PromiseHandler,
 } from '../types';
-import {
-  transformWithBabel,
-  transformWithSwc,
-  stripFlowWithSucrase,
-} from './transformers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin } from './plugins';
 import {
@@ -37,11 +32,6 @@ import {
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
-  public static transforms = {
-    transformWithBabel,
-    transformWithSwc,
-    stripFlowWithSucrase,
-  } as const;
   public static caches = CacheStorage.getInstance();
   private config: ReactNativeEsbuildConfig;
   private buildTasks = new Map<number, BuildTask>();

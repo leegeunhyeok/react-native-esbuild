@@ -1,9 +1,9 @@
 /* eslint-disable quotes */
 import fs from 'node:fs/promises';
 import { minify as swcMinify } from '@swc/core';
+import { stripFlowWithSucrase } from '@react-native-esbuild/transformer';
 import type { BundleConfig } from '@react-native-esbuild/config';
 import { resolveFromRoot, wrapWithIIFE } from '../../helpers';
-import { stripFlowWithSucrase } from '../transformers';
 
 const cache: Record<'initialScripts', string | null> = {
   initialScripts: null,

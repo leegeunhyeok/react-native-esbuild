@@ -39,6 +39,7 @@
   "dependencies": {
     "@babel/core": "^7.22.10",
     "@react-native-esbuild/config": "workspace:^",
+    "@react-native-esbuild/transformer": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
     "@swc/core": "^1.3.77",
     "@swc/helpers": "^0.5.1",
