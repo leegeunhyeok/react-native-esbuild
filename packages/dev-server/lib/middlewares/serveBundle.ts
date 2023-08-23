@@ -65,7 +65,7 @@ const serveSourcemap = (
   response: ServerResponse,
 ): void => {
   bundler
-    .getSourcemap(bundleConfig)
+    .getSourcemap(bundleConfig, { disableRefresh: true })
     .then((result) => {
       response.setHeader('Access-Control-Allow-Origin', 'devtools://devtools');
       response.setHeader('Content-Type', 'application/json');
