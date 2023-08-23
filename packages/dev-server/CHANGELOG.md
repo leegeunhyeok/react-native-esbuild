@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.30](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.29...v0.1.0-alpha.30) (2023-08-23)
+
+
+### Features
+
+* disable live reload when request sourcemap ([6c93115](https://github.com/leegeunhyeok/react-native-esbuild/commit/6c93115bf0d3059c260569f8250f43a2b064c0b2))
+
+
+
 ## [0.1.0-alpha.29](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.28...v0.1.0-alpha.29) (2023-08-17)
 
 
