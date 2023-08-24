@@ -16,6 +16,7 @@ Promise.resolve(cli())
     const options = getOptions(argv);
 
     logger.setLogLevel(options.verbose ? 'debug' : 'info');
+    logger.setTimestampEnabled(options.timestamp);
     logger.debug('parsed options', options);
 
     const resetCache = async (): Promise<void> => {

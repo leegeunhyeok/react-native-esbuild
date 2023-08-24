@@ -8,6 +8,7 @@ export interface Argv {
 
 export interface CliOptionsBase {
   verbose: boolean;
+  timestamp: boolean;
   resetCache: boolean;
 }
 

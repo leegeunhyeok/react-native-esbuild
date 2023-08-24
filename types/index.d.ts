@@ -3,6 +3,7 @@ declare global {
   var self: Global & {
     logEnabled?: boolean;
     logLevel: 'debug' | 'log' | 'info' | 'warn' | 'error';
+    timestampEnabled: boolean;
   };
 }
 

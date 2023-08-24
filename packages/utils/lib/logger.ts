@@ -6,6 +6,7 @@ import type { LogLevel } from './types';
 import { isCI } from './env';
 
 self.logLevel = 'info';
+self.timestampEnabled = false;
 
 export class Logger {
   private COLOR_BY_LEVEL: Record<LogLevel, Color> = {
@@ -31,7 +32,34 @@ export class Logger {
   }
 
   private getMessage(messages: string[]): string {
-    return messages.filter(Boolean).join(' ').trimEnd() + EOL;
+    return `\r${this.getTimestamp()}${messages
+      .filter(Boolean)
+      .join(' ')
+      .trimEnd()}${EOL}`;
+  }
+
+  private getTimestamp(): string {
+    if (!self.timestampEnabled) return '';
+
+    // eg. "2023-05-09 18:33:19.232 "
+    const date = new Date();
+    return gray(
+      `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date
+        .getHours()
+        .toString()
+        .padStart(2, '0')}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}:${date
+        .getSeconds()
+        .toString()
+        .padStart(2, '0')}.${date
+        .getMilliseconds()
+        .toString()
+        .padStart(3, '0')} `,
+    );
   }
 
   private parseExtra(extra?: object): string {
@@ -65,6 +93,10 @@ export class Logger {
 
   public setLogLevel(level: LogLevel): void {
     self.logLevel = level;
+  }
+
+  public setTimestampEnabled(enable: boolean): void {
+    self.timestampEnabled = enable;
   }
 
   public debug(message: string, extra?: object): void {

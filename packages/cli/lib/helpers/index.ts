@@ -28,8 +28,15 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const dev = Boolean(argv.dev ?? process.env.NODE_ENV === 'development');
   const minify = Boolean(argv.minify ?? !dev);
   const verbose = typeof argv.verbose === 'boolean' ? argv.verbose : undefined;
+  const timestamp = argv.timestamp;
   const resetCache =
     typeof argv.resetCache === 'boolean' ? argv.resetCache : undefined;
+
+  const commonConfig = {
+    verbose,
+    resetCache,
+    timestamp,
+  };
 
   const bundleConfig: BundleConfig = {
     entry: entryFilePath,
@@ -43,10 +50,9 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
 
   return typeof argv.port === 'number'
     ? ({
-        verbose,
-        resetCache,
+        ...commonConfig,
         port: argv.port,
         host: argv.host,
       } as StartOptions)
-    : ({ bundleConfig, verbose, resetCache } as BuildOptions);
+    : ({ ...commonConfig, bundleConfig } as BuildOptions);
 }
