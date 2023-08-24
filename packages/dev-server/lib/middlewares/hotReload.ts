@@ -43,8 +43,7 @@ export const createHotReloadMiddleware = (
         const level = convertHmrLogLevel(message.level);
         clientLogger[level](message.data.join(' '));
 
-        // TODO: manage reporter to core
-        logger.debug('sending to reporter', message.data);
+        // TODO: manage reporter in core
         reporter?.({
           type: 'client_log',
           level,
