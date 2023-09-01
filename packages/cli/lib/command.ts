@@ -10,7 +10,7 @@ const commonOptions = {
     default: false,
   },
   timestamp: {
-    describe: 'print timestamp on log',
+    describe: 'print timestamp in log',
     type: 'boolean',
     default: false,
   },

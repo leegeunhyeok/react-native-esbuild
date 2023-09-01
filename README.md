@@ -131,6 +131,7 @@ rne start
 | `--host` | dev server host | `localhost` |
 | `--port` | dev server port | `8081` |
 | `--verbose` | show cli debug log | `false` |
+| `--timestamp` | print timestamp in log | `false` |
 | `--reset-cache` | reset transform cache | `false` |
 
 ## Bundle
@@ -151,6 +152,7 @@ rne bundle --platform=<platform> --bundle-output=<dest>
 | `--dev` | set as development environment | `true` |
 | `--minify` | enable minify | `false` |
 | `--verbose` | print all logs | `false` |
+| `--timestamp` | print timestamp in log | `false` |
 | `--reset-cache` | reset transform cache | `false` |
 
 ## Cache
