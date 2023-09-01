@@ -62,5 +62,11 @@ module.exports = {
         '@typescript-eslint/unbound-method': 'off',
       },
     },
+    {
+      files: ['**/*.config.[tj]s'],
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
   ],
 };
