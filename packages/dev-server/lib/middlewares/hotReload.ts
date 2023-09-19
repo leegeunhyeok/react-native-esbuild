@@ -12,7 +12,7 @@ import type {
 
 const getMessage = (data: Data): HmrClientMessage | null => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- from ws data
     const parsedData = JSON.parse(String(data));
     return 'type' in parsedData ? (parsedData as HmrClientMessage) : null;
   } catch (error) {

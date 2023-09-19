@@ -14,13 +14,12 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
   };
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires
-    config = require(path.resolve(
-      resolveDir,
-      'react-native-esbuild.config.js',
-    )).default;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires -- config file may not exist
+    config = require(
+      path.resolve(resolveDir, 'react-native-esbuild.config.js'),
+    ).default;
   } catch {
-    // empty
+    // noop
   }
 
   return config ? deepmerge(baseOptions, config) : baseOptions;

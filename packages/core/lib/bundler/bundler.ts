@@ -84,10 +84,15 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
        * `build-status-plugin` is required and must be placed first
        */
       createBuildStatusPlugin({
-        onStart: (context) => this.handleBuildStart(context),
-        onUpdate: (buildState, context) =>
-          this.handleBuildStateUpdate(buildState, context),
-        onEnd: (result, context) => this.handleBuildEnd(result, context),
+        onStart: (context) => {
+          this.handleBuildStart(context);
+        },
+        onUpdate: (buildState, context) => {
+          this.handleBuildStateUpdate(buildState, context);
+        },
+        onEnd: (result, context) => {
+          this.handleBuildEnd(result, context);
+        },
       }),
       ...this.plugins,
     ];
@@ -214,7 +219,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       logger.debug(`bundle task is now watching: (id: ${targetTaskId})`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- set() if not exist
     return this.buildTasks.get(targetTaskId)!;
   }
 

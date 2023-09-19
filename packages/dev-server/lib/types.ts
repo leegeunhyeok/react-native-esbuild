@@ -58,7 +58,7 @@ export interface LogMessage {
     | 'groupCollapsed'
     | 'groupEnd'
     | 'debug';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- follow metro types
   data: any[];
   mode: 'BRIDGE' | 'NOBRIDGE';
 }

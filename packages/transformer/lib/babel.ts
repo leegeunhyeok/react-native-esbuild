@@ -26,7 +26,9 @@ export const transformWithBabel: Transformer<TransformOptions> = async (
   }
 
   const { code: transformedCode } = await promisify<BabelFileResult>(
-    (handler) => transform(code, options, handler),
+    (handler) => {
+      transform(code, options, handler);
+    },
   );
 
   if (typeof transformedCode !== 'string') {

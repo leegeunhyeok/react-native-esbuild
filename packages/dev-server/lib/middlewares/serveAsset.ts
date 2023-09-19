@@ -18,7 +18,8 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
     if (
       !(typeof request.url === 'string' && request.url.startsWith(ASSET_PATH))
     ) {
-      return next();
+      next();
+      return;
     }
 
     const filename = url.parse(path.basename(request.url)).pathname;

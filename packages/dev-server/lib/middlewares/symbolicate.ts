@@ -16,12 +16,14 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
   return function symbolicateMiddleware(request, response, next) {
     if (!request.url) {
       logger.warn(`(${TAG}) request url is empty`);
-      return next();
+      next();
+      return;
     }
 
     const { pathname } = parse(request.url, true);
     if (!pathname?.endsWith('/symbolicate')) {
-      return next();
+      next();
+      return;
     }
 
     const stack = parseStackFromRawBody(request.rawBody);

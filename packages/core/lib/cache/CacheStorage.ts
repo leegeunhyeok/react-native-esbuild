@@ -32,7 +32,7 @@ export class CacheStorage {
 
   public get(storageKey: string): CacheController {
     if (this.caches.has(storageKey)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- has()
       return this.caches.get(storageKey)!;
     }
 

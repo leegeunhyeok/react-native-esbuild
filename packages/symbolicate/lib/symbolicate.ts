@@ -65,7 +65,7 @@ const originalPositionFor = (
       );
       return {
         ...targetFrame,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Object.entries
         ...(value ? { [targetKey]: value } : null),
       };
     },
@@ -101,7 +101,7 @@ const getCodeFrame = (
     const source = sourcemapConsumer.sourceContentFor(frame.file);
     const { lineNumber, column, file } = frame;
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment -- codeFrameColumns isn't well typed
       content: codeFrameColumns(
         source,
         {

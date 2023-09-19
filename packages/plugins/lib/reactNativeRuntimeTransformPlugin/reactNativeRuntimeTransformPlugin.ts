@@ -91,11 +91,16 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory =
             const context = { path: args.path, root };
 
             if (fullyTransformPackagesRegExp?.test(args.path)) {
-              // eslint-disable-next-line no-return-await
-              return await transformWithBabel(source, context, {
-                // follow babelrc of react-native project's root (same as metro)
-                babelrc: true,
-              });
+              const fullyTransformResult = await transformWithBabel(
+                source,
+                context,
+                {
+                  // follow babelrc of react-native project's root (same as metro)
+                  babelrc: true,
+                },
+              );
+
+              return fullyTransformResult;
             }
 
             if (
@@ -138,7 +143,6 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory =
             //     number + number        + string
             //
             const hash = cacheController.getCacheHash(
-              // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
               context.id + mtimeMs + args.path,
             );
 

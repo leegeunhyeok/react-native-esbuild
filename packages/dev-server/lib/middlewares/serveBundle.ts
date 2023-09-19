@@ -96,7 +96,7 @@ const parseBundleConfig = (
     };
   }
 
-  // eslint-disable-next-line no-nested-ternary
+  // eslint-disable-next-line no-nested-ternary -- allow nested ternary operator
   const type = pathname.endsWith('.bundle')
     ? BundleType.Bundle
     : pathname.endsWith('.map')
@@ -118,12 +118,14 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
   return function serveBundleMiddleware(request, response, next) {
     if (!request.url) {
       logger.warn(`(${TAG}) request url is empty`);
-      return next();
+      next();
+      return;
     }
 
     const { type, bundleConfig } = parseBundleConfig(request.url);
     if (type === BundleType.Unknown || bundleConfig === null) {
-      return next();
+      next();
+      return;
     }
 
     switch (type) {

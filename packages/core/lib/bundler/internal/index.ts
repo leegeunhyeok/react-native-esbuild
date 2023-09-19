@@ -1,4 +1,4 @@
-/* eslint-disable quotes */
+/* eslint-disable quotes -- allow using backtick */
 import fs from 'node:fs/promises';
 import { minify as swcMinify } from '@swc/core';
 import { stripFlowWithSucrase } from '@react-native-esbuild/transformer';
@@ -25,11 +25,10 @@ const getInjectVariables = (dev: boolean): string[] => [
 ];
 
 const getReactNativePolyfills = (root: string): string[] => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const getPolyfills = require(resolveFromRoot(
-    REACT_NATIVE_GET_POLYFILLS_PATH,
-    root,
-  )) as () => string[];
+  // eslint-disable-next-line @typescript-eslint/no-var-requires -- should dynamic require
+  const getPolyfills = require(
+    resolveFromRoot(REACT_NATIVE_GET_POLYFILLS_PATH, root),
+  ) as () => string[];
 
   return getPolyfills();
 };

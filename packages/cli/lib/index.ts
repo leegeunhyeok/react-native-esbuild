@@ -64,7 +64,9 @@ Promise.resolve(cli())
       }
     }
   })
-  .catch((error) => logger.error('cannot execute command', error as Error));
+  .catch((error) => {
+    logger.error('cannot execute command', error as Error);
+  });
 
 process
   .on('unhandledRejection', (reason, promise) => {

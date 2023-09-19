@@ -108,7 +108,7 @@ function assertSuffixPathResult(
   data: OnLoadArgs['pluginData'],
 ): asserts data is SuffixPathResult {
   if (
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- esbuild type
     !(typeof data.basename === 'string' && typeof data.extension === 'string')
   ) {
     throw new Error('invalid pluginData');
@@ -139,7 +139,7 @@ export async function resolveScaledAssets(
     const match = assetRegExp.exec(file);
     if (match) {
       const [, , scale] = match;
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- scale is nullable
       scaledAssets[scale ?? 1] = file;
     }
   }
@@ -157,6 +157,7 @@ export async function resolveScaledAssets(
     name: stripedBasename.replace(extension, ''),
     extension,
     type: extension.substring(1),
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare -- allow using default compare function
     scales: Object.keys(scaledAssets).map(parseFloat).sort(),
     httpServerLocation: path.join(ASSET_PATH, path.dirname(relativePath)),
     hash: md5(imageData),
@@ -176,8 +177,7 @@ export async function resolveAssetPath(
   // 1. check resolvedPath (image.png)
   // 2. if file is not exist, check suffixed path (image@1x.png)
   if (targetScale === 1) {
-    // eslint-disable-next-line no-return-await
-    return await fs
+    const result = await fs
       .stat(asset.path)
       .then(() => asset.path)
       .catch(() => {
@@ -187,6 +187,8 @@ export async function resolveAssetPath(
         );
         return fs.stat(suffixedPath).then(() => suffixedPath);
       });
+
+    return result;
   }
 
   return asset.path.replace(

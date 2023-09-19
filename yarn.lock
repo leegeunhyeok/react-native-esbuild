@@ -3708,6 +3708,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/cli@workspace:packages/cli"
   dependencies:
+    "@react-native-esbuild/config": "workspace:^"
     "@react-native-esbuild/core": "workspace:^"
     "@react-native-esbuild/dev-server": "workspace:^"
     "@react-native-esbuild/plugins": "workspace:^"

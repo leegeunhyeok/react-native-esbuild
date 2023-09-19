@@ -18,7 +18,7 @@ jest.mock('fs', () => ({
 
 jest.mock('image-size', () => ({
   imageSize: jest.fn().mockImplementation(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- test
     (_path, callback: (error: null, result: any) => void) => {
       callback(null, { width: 0, height: 0 });
     },

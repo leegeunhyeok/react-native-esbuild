@@ -89,7 +89,7 @@ export class ReactNativeEsbuildDevServer {
     this.messageSocketEndpoint = messageSocketEndpoint;
     this.eventsSocketEndpoint = eventsSocketEndpoint;
     this.inspectorProxy =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- InspectorProxy isn't well typed
       new InspectorProxy(root) as TypedInspectorProxy;
 
     this.bundler = new ReactNativeEsbuildBundler(root);
@@ -121,7 +121,7 @@ export class ReactNativeEsbuildDevServer {
       next();
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- for bind
     server.use(this.inspectorProxy.processRequest.bind(this.inspectorProxy));
     server.use(createServeAssetMiddleware(context));
     server.use(createServeBundleMiddleware(context));

@@ -1,5 +1,3 @@
-/* eslint-disable quotes */
-
 export const DEFAULT_ENTRY_POINT = 'index.js';
 export const DEFAULT_OUTFILE = 'main.jsbundle';
 export const DEFAULT_ASSETS_DIR = 'assets';
