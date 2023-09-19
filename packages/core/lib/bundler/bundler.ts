@@ -124,6 +124,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private handleBuildStart(context: PluginContext): void {
+    this.resetTask(context.id);
     this.emit('build-start', { id: context.id });
   }
 
@@ -207,6 +208,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         context,
         handler: createPromiseHandler(),
         status: 'pending',
+        buildCount: 0,
       });
       await context.watch();
       logger.debug(`bundle task is now watching: (id: ${targetTaskId})`);
@@ -214,6 +216,26 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.buildTasks.get(targetTaskId)!;
+  }
+
+  private resetTask(buildTaskId: number): void {
+    const targetTask = this.buildTasks.get(buildTaskId);
+    this.assertBuildTask(targetTask);
+    logger.debug(`reset task (id: ${buildTaskId})`, {
+      buildCount: targetTask.buildCount,
+    });
+
+    this.buildTasks.set(buildTaskId, {
+      // keep previous esbuild context
+      context: targetTask.context,
+      // set status to pending and using new promise instance only when stale
+      handler:
+        targetTask.buildCount === 0
+          ? targetTask.handler
+          : createPromiseHandler(),
+      status: 'pending',
+      buildCount: targetTask.buildCount + 1,
+    });
   }
 
   registerPlugin(plugin: ReturnType<EsbuildPluginFactory<unknown>>): this {

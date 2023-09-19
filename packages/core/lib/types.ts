@@ -11,6 +11,7 @@ export interface BuildTask {
   context: BuildContext;
   handler: PromiseHandler<BundleResult> | null;
   status: 'pending' | 'resolved';
+  buildCount: number;
 }
 
 export interface BundleResult {
