@@ -48,7 +48,7 @@ export function getEsbuildOptions(
        */
       'for-of': false,
     },
-    format: 'iife',
+    format: 'esm',
     bundle: true,
     sourcemap: true,
     minify,
