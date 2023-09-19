@@ -2,10 +2,7 @@ import http, { type Server as HTTPServer } from 'node:http';
 import { parse } from 'node:url';
 import type { WebSocketServer } from 'ws';
 import type { Server } from 'connect';
-import {
-  createDevServerMiddleware,
-  indexPageMiddleware,
-} from '@react-native-community/cli-server-api';
+import { createDevServerMiddleware } from '@react-native-community/cli-server-api';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { InspectorProxy } from 'metro-inspector-proxy';
 import {
@@ -13,6 +10,7 @@ import {
   createServeAssetMiddleware,
   createServeBundleMiddleware,
   createSymbolicateMiddleware,
+  createIndexPageMiddleware,
 } from '../middlewares';
 import { logger } from '../shared';
 import { DEFAULT_PORT, DEFAULT_HOST } from '../constants';
@@ -126,7 +124,7 @@ export class ReactNativeEsbuildDevServer {
     server.use(createServeAssetMiddleware(context));
     server.use(createServeBundleMiddleware(context));
     server.use(createSymbolicateMiddleware(context));
-    server.use(indexPageMiddleware);
+    server.use(createIndexPageMiddleware(context));
   }
 
   private setupWebSocketServers(): void {
