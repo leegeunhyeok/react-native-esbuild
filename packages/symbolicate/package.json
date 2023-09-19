@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/symbolicate",
-  "version": "0.1.0-alpha.29",
+  "version": "0.1.0-alpha.31",
   "description": "symbolicate utilities for @react-native-esbuild",
   "keywords": [
     "react-native",
