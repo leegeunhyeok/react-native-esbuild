@@ -37,9 +37,9 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^8.1.0",
     "@types/md5": "^2.3.2",
-    "esbuild": "^0.19.2"
+    "esbuild": "^0.19.3"
   },
   "dependencies": {
     "@react-native-esbuild/config": "workspace:^",

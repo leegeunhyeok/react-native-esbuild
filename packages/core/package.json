@@ -37,14 +37,14 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "dependencies": {
-    "@babel/core": "^7.22.10",
+    "@babel/core": "^7.22.20",
     "@react-native-esbuild/config": "workspace:^",
     "@react-native-esbuild/transformer": "workspace:^",
     "@react-native-esbuild/utils": "workspace:^",
-    "@swc/core": "^1.3.77",
-    "@swc/helpers": "^0.5.1",
+    "@swc/core": "^1.3.86",
+    "@swc/helpers": "^0.5.2",
     "deepmerge": "^4.3.1",
-    "esbuild": "^0.19.2",
+    "esbuild": "^0.19.3",
     "indent-string": "^5.0.0",
     "md5": "^2.3.0",
     "ora": "^7.0.1",
@@ -54,7 +54,7 @@
     "react-native": "^0.72.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^8.1.0",
     "@types/md5": "^2.3.2"
   }
 }
