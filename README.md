@@ -175,7 +175,7 @@ import {
 } from '@react-native-esbuild/core';
 import {
   createAssetRegisterPlugin,
-  createHermesTransformPlugin,
+  createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
 
@@ -196,7 +196,7 @@ const createMyPlugin: EsbuildPluginFactory<MyPluginConfigType> = (pluginConfig) 
 bundler
   .registerPlugin(createAssetRegisterPlugin())
   .registerPlugin(createSvgTransformPlugin())
-  .registerPlugin(createHermesTransformPlugin())
+  .registerPlugin(createReactNativeRuntimeTransformPlugin())
   // register custom esbuild plugin
   .registerPlugin(createMyPlugin(config));
 ```

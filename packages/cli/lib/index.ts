@@ -3,7 +3,7 @@ import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
 import {
   createAssetRegisterPlugin,
-  createHermesTransformPlugin,
+  createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import { cli } from './command';
@@ -38,7 +38,7 @@ Promise.resolve(cli())
         bundler
           .registerPlugin(createAssetRegisterPlugin())
           .registerPlugin(createSvgTransformPlugin())
-          .registerPlugin(createHermesTransformPlugin());
+          .registerPlugin(createReactNativeRuntimeTransformPlugin());
 
         return void server.listen();
       }
@@ -52,7 +52,7 @@ Promise.resolve(cli())
         bundler
           .registerPlugin(createAssetRegisterPlugin())
           .registerPlugin(createSvgTransformPlugin())
-          .registerPlugin(createHermesTransformPlugin());
+          .registerPlugin(createReactNativeRuntimeTransformPlugin());
 
         return void (await bundler.bundle(bundleConfig));
       }
