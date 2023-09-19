@@ -23,7 +23,7 @@ import type {
   PromiseHandler,
 } from '../types';
 import { BundlerEventEmitter } from './events';
-import { createBuildStatusPlugin } from './plugins';
+import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
 import {
   getGlobalVariables,
   getReactNativeInitializeCore,
@@ -94,6 +94,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
           this.handleBuildEnd(result, context);
         },
       }),
+      createMetafilePlugin(),
       ...this.plugins,
     ];
 
@@ -129,7 +130,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private handleBuildStart(context: PluginContext): void {
-    this.resetTask(context.id);
+    this.resetTask(context);
     this.emit('build-start', { id: context.id });
   }
 
@@ -223,7 +224,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return this.buildTasks.get(targetTaskId)!;
   }
 
-  private resetTask(buildTaskId: number): void {
+  private resetTask(context: PluginContext): void {
+    // task does not exist in bundle mode
+    if (context.mode === 'bundle') return;
+
+    const buildTaskId = context.id;
     const targetTask = this.buildTasks.get(buildTaskId);
     this.assertBuildTask(targetTask);
     logger.debug(`reset task (id: ${buildTaskId})`, {

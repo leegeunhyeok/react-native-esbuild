@@ -151,6 +151,7 @@ rne bundle --platform=<platform> --bundle-output=<dest>
 | `--assets-dest` | assets directory | |
 | `--dev` | set as development environment | `true` |
 | `--minify` | enable minify | `false` |
+| `--metafile` | Export [Esbuild metafile](https://esbuild.github.io/api/#metafile) | `false` |
 | `--verbose` | print all logs | `false` |
 | `--timestamp` | print timestamp in log | `false` |
 | `--reset-cache` | reset transform cache | `false` |

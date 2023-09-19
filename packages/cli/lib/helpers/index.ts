@@ -27,6 +27,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const platform = argv.platform as BundleConfig['platform'];
   const dev = Boolean(argv.dev ?? process.env.NODE_ENV === 'development');
   const minify = Boolean(argv.minify ?? !dev);
+  const metafile = Boolean(argv.metafile ?? false);
   const verbose = typeof argv.verbose === 'boolean' ? argv.verbose : undefined;
   const timestamp = argv.timestamp;
   const resetCache =
@@ -46,6 +47,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
     platform,
     dev,
     minify,
+    metafile,
   };
 
   return typeof argv.port === 'number'
