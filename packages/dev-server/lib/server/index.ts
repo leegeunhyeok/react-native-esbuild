@@ -159,8 +159,9 @@ export class ReactNativeEsbuildDevServer {
     this.bundler.on('build-start', hr.updateStart);
     this.bundler.on('build-end', ({ revisionId, additionalData }) => {
       // add additionalData `{ disableRefresh: true }` from `serve-asset-middleware`
-      if (additionalData?.disableRefresh) return;
-      hr.hotReload(revisionId);
+      if (!additionalData?.disableRefresh) {
+        hr.hotReload(revisionId);
+      }
       hr.updateDone();
     });
 

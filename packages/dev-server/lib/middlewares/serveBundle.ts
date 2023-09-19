@@ -41,7 +41,7 @@ const serveBundle = (
 
   bundler.on('build-status-change', bundleStatusChangeHandler);
   bundler
-    .getBundle(bundleConfig, { disableRefresh: true })
+    .getBundle(bundleConfig)
     .then((result) => {
       bundleResponse.endWithBundle(result.source, result.bundledAt);
     })
