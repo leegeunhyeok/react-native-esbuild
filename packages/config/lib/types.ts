@@ -19,6 +19,7 @@ export interface BundleConfig {
   assetsDir?: string;
   dev?: boolean;
   minify?: boolean;
+  metafile?: boolean;
   platform: BundlerSupportPlatform;
 }
 

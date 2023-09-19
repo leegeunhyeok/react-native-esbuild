@@ -87,6 +87,11 @@ export function cli(): Argv | Promise<Argv> {
             describe: 'enable minify',
             type: 'boolean',
           },
+          metafile: {
+            describe: 'make metafile.json file for esbuild analyze',
+            type: 'boolean',
+            default: false,
+          },
           ...commonOptions,
         })
         .demandOption(['output', 'platform'])

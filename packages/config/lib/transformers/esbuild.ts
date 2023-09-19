@@ -18,6 +18,7 @@ export function getEsbuildOptions(
     outfile = DEFAULT_OUTFILE,
     platform,
     minify,
+    metafile,
   } = bundleConfig;
 
   const platforms = [platform, 'native', 'react-native'];
@@ -52,6 +53,7 @@ export function getEsbuildOptions(
     bundle: true,
     sourcemap: true,
     minify,
+    metafile,
     logLevel: 'silent',
   };
 
