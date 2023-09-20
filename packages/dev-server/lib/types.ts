@@ -131,6 +131,12 @@ export interface ReportableEvent {
   mode: 'BRIDGE' | 'NOBRIDGE';
 }
 
+/**
+ * @see {@link https://github.com/react-native-community/cli/blob/v11.3.5/packages/cli-server-api/src/websocket/createEventsSocketEndpoint.ts#L18}
+ * @see {@link https://github.com/react-native-community/cli/blob/v11.3.5/packages/cli-server-api/src/websocket/createEventsSocketEndpoint.ts#L179}
+ */
+export type BroadcastCommand = 'reload' | 'devMenu';
+
 // TODO: convert to declare module 'metro-inspector-proxy' { ... }
 export interface TypedInspectorProxy {
   (projectRoot: string): TypedInspectorProxy;

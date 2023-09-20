@@ -6,8 +6,8 @@ import {
   createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
-import { cli } from './command';
-import { getCommand, getOptions } from './helpers';
+import { cli } from './cli';
+import { enableInteractiveMode, getCommand, getOptions } from './helpers';
 import { logger } from './shared';
 import type { StartOptions, BuildOptions } from './types';
 
@@ -40,7 +40,27 @@ Promise.resolve(cli())
           .registerPlugin(createSvgTransformPlugin())
           .registerPlugin(createReactNativeRuntimeTransformPlugin());
 
-        return void server.listen();
+        return void server.listen(() => {
+          if (
+            enableInteractiveMode((keyName) => {
+              switch (keyName) {
+                case 'r':
+                  server.broadcastCommand('reload');
+                  break;
+
+                case 'd':
+                  server.broadcastCommand('devMenu');
+                  break;
+              }
+            })
+          ) {
+            // eslint-disable-next-line quotes -- pass
+            logger.info(`› press 'r' to reload`);
+            // eslint-disable-next-line quotes -- pass
+            logger.info(`› press 'd' to open developer menu`);
+            process.stdout.write('\n');
+          }
+        });
       }
 
       case 'bundle': {

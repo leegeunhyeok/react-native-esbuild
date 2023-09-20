@@ -15,6 +15,7 @@ import {
 import { logger } from '../shared';
 import { DEFAULT_PORT, DEFAULT_HOST } from '../constants';
 import type {
+  BroadcastCommand,
   DevServerMiddlewareContext,
   DevServerOptions,
   TypedInspectorProxy,
@@ -22,6 +23,7 @@ import type {
 
 export class ReactNativeEsbuildDevServer {
   private initialized = false;
+  private wsInitialized = false;
   private devServerOptions: Required<DevServerOptions>;
   private bundler?: ReactNativeEsbuildBundler;
   private server?: HTTPServer;
@@ -95,6 +97,7 @@ export class ReactNativeEsbuildDevServer {
 
     logger.debug('create http server');
     this.server = http.createServer(middleware);
+    this.initialized = true;
 
     return { server: this, bundler: this.bundler };
   }
@@ -181,9 +184,11 @@ export class ReactNativeEsbuildDevServer {
         socket.destroy();
       }
     });
+
+    this.wsInitialized = true;
   }
 
-  listen(): HTTPServer {
+  listen(onListen?: () => void): HTTPServer {
     this.assertBundler(this.bundler);
     this.assertHTTPServer(this.server);
     const { host, port } = this.devServerOptions;
@@ -194,6 +199,17 @@ export class ReactNativeEsbuildDevServer {
       process.stdout.write('\n');
       logger.info(`dev server listening on http://${host}:${port}`);
       process.stdout.write('\n');
+
+      onListen?.();
     });
+  }
+
+  broadcastCommand(command: BroadcastCommand): void {
+    if (!this.wsInitialized) {
+      logger.warn('web socket is not initialized');
+      return;
+    }
+    logger.debug(`broadcasting '${command}' command`);
+    this.messageSocketEndpoint.broadcast(command);
   }
 }
