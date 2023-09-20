@@ -21,6 +21,7 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
       setup: (build): void => {
         const spinner = ora({
           color: 'yellow',
+          discardStdin: context.mode === 'bundle',
           prefixText: colors.bgYellow(colors.black(' » esbuild ')),
         });
 
