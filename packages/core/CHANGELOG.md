@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.32](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2023-09-20)
+
+### Features
+
+- **cli:** now support interactive mode ([e3195cb](https://github.com/leegeunhyeok/react-native-esbuild/commit/e3195cb09eca057b1541173ea6b7400710fcc39e)), closes [#12](https://github.com/leegeunhyeok/react-native-esbuild/issues/12)
+
+### Code Refactoring
+
+- logging build status ([f9941b7](https://github.com/leegeunhyeok/react-native-esbuild/commit/f9941b710ae29caa1e074ae733cb268b14d3128e))
+
 ## [0.1.0-alpha.31](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.30...v0.1.0-alpha.31) (2023-09-19)
 
 ### Features
