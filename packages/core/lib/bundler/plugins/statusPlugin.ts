@@ -45,6 +45,7 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         };
 
         build.onStart(() => {
+          logger.debug('esbuild.onStart');
           moduleResolved.clear();
           moduleLoaded = 0;
           handleUpdate();
@@ -68,6 +69,7 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         });
 
         build.onEnd((result: BuildResult) => {
+          logger.debug('esbuild.onEnd');
           const { warnings, errors } = result;
           const endTime = new Date().getTime() - (startTime?.getTime() ?? 0);
           const duration = colors.gray(`(${endTime / 1000}s)`);

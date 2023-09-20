@@ -157,8 +157,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     const currentTask = this.buildTasks.get(context.id);
     this.assertBuildTask(currentTask);
 
-    logger.info('preparing bundled result');
-
     const findFromOutputFile = (
       filename: string,
     ): (<T extends { path: string }>(args: T) => boolean) => {
