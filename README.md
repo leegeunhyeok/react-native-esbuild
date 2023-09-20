@@ -21,17 +21,17 @@
 
 # Features
 
-> ⚠️ This project is under development
+> [!WARNING]
+> This project is under development
 
 - ⚡️ Blazing Fast Build
 - 🌳 Tree Shaking
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
-- 🚀 Support Hermes environment
+- 🚀 Support Hermes runtime
 - ⭐️ Support Live Reload
 - 🐛 Support Debugging (Flipper, Chrome Debugger)
 - ~~🌍 Support Web~~ (WIP)
-- ~~🔥 Support Fabric~~ (WIP)
 
 # Setup
 
