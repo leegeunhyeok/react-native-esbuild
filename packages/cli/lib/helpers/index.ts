@@ -1,5 +1,6 @@
 import path from 'node:path';
 import readline from 'node:readline';
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import type { BundleConfig } from '@react-native-esbuild/config';
 import { logger } from '../shared';
 import type { Argv, StartOptions, BuildOptions } from '../types';
@@ -59,6 +60,11 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
         host: argv.host,
       } as StartOptions)
     : ({ ...commonConfig, bundleConfig } as BuildOptions);
+}
+
+export async function resetCache(): Promise<void> {
+  await ReactNativeEsbuildBundler.caches.clearAll();
+  logger.info('transform cache was reset');
 }
 
 export function enableInteractiveMode(
