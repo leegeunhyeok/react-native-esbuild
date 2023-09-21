@@ -29,8 +29,9 @@
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
 - 🚀 Support Hermes runtime
-- ⭐️ Support Live Reload
+- 🔄 Support Live Reload
 - 🐛 Support Debugging (Flipper, Chrome Debugger)
+- 🔥 New Architecture Ready
 - ~~🌍 Support Web~~ (WIP)
 
 # Setup
@@ -247,11 +248,11 @@ time yarn build:android --reset-cache
 time yarn build:ios --reset-cache
 
 # metro (with cache)
-time yarn metro:android
-time yarn metro:ios
+time yarn bundle:metro:android
+time yarn bundle:metro:ios
 # metro (without cache)
-time yarn metro:android --reset-cache
-time yarn metro:ios --reset-cache
+time yarn bundle:metro:android --reset-cache
+time yarn bundle:metro:ios --reset-cache
 ```
 
 # License
