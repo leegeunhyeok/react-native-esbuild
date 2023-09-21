@@ -1,7 +1,8 @@
 import { resetCache } from '../helpers';
+import type { Command } from '../types';
 
-export async function cache(subCommand: string): Promise<void> {
+export const cache: Command = async (_options, subCommand) => {
   if (subCommand === 'clean') {
     await resetCache();
   }
-}
+};

@@ -5,9 +5,9 @@ import {
   createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
-import type { BuildOptions } from '../types';
+import type { Command, BuildOptions } from '../types';
 
-export async function bundle(options: BuildOptions): Promise<void> {
+export const bundle: Command = async (options: BuildOptions) => {
   const { bundleConfig } = options;
   const bundler = new ReactNativeEsbuildBundler(
     bundleConfig.entry ? path.dirname(bundleConfig.entry) : process.cwd(),
@@ -19,4 +19,4 @@ export async function bundle(options: BuildOptions): Promise<void> {
     .registerPlugin(createReactNativeRuntimeTransformPlugin());
 
   await bundler.bundle(bundleConfig);
-}
+};

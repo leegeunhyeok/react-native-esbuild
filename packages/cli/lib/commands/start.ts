@@ -6,9 +6,10 @@ import {
 } from '@react-native-esbuild/plugins';
 import { enableInteractiveMode } from '../helpers';
 import { logger } from '../shared';
-import type { StartOptions } from '../types';
+import type { Command, StartOptions } from '../types';
 
-export function start(options: StartOptions): void {
+// eslint-disable-next-line @typescript-eslint/require-await -- no async task in start command yet
+export const start: Command<StartOptions> = async (options) => {
   const startOptions = options;
   const { bundler, server } = new ReactNativeEsbuildDevServer(
     startOptions,
@@ -40,4 +41,4 @@ export function start(options: StartOptions): void {
       process.stdout.write('\n');
     }
   });
-}
+};

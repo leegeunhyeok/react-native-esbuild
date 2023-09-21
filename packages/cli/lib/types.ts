@@ -20,3 +20,8 @@ export interface StartOptions extends CliOptionsBase {
 export interface BuildOptions extends CliOptionsBase {
   bundleConfig: BundleConfig;
 }
+
+export type Command<CommandOptions extends CliOptionsBase = CliOptionsBase> = (
+  options: CommandOptions,
+  subCommand?: string,
+) => Promise<void>;
