@@ -89,7 +89,12 @@ export const createHotReloadMiddleware = (
              */
             module: [
               -1,
-              '(global.__turboModuleProxy || global.nativeModuleProxy)["DevSettings"].reload();',
+              `(function () {
+                var moduleName = "DevSettings";
+                (global.__turboModuleProxy
+                  ? global.__turboModuleProxy(moduleName)
+                  : global.nativeModuleProxy[moduleName]).reload();
+              })();`,
             ],
             sourceMappingURL: null,
             sourceURL: null,
