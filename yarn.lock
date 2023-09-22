@@ -3639,6 +3639,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@react-native-esbuild/internal@workspace:packages/internal":
+  version: 0.0.0-use.local
+  resolution: "@react-native-esbuild/internal@workspace:packages/internal"
+  dependencies:
+    esbuild: ^0.19.3
+  languageName: unknown
+  linkType: soft
+
 "@react-native-esbuild/plugins@workspace:^, @react-native-esbuild/plugins@workspace:packages/plugins":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/plugins@workspace:packages/plugins"
