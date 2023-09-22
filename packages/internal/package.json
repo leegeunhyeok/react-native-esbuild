@@ -1,0 +1,42 @@
+{
+  "name": "@react-native-esbuild/internal",
+  "version": "0.1.0-alpha.32",
+  "description": "shared configs and helpers for internal of react-native",
+  "keywords": [
+    "react-native",
+    "rebuild"
+  ],
+  "author": "leegeunhyeok <dev.ghlee@gmail.com>",
+  "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
+  "license": "MIT",
+  "type": "commonjs",
+  "module": "lib/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
+  },
+  "scripts": {
+    "prepack": "yarn build",
+    "cleanup": "rimraf ./dist",
+    "build": "node build/index.js && tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.3"
+  }
+}
