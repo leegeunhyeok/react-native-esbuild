@@ -57,13 +57,39 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
         build.onResolve({ filter: assetExtensionsFilter }, async (args) => {
           if (args.pluginData) return null;
 
-          // resolve original path (eg. `image.png`)
-          let suffixedPathResult = getSuffixedPath(args.path);
+          /**
+           * Resolve assets flow
+           *
+           * 1. Resolve platform and scale suffixed asset (eg. `image@1x.ios.png`)
+           * 2. Resolve platform scale suffixed asset (eg. `image.ios.png`)
+           * 3. Resolve scale suffixed asset (eg. `image@1x.png`)
+           * 4. Resolve original asset (eg. `image.png`)
+           */
+
+          // 1
+          let suffixedPathResult = getSuffixedPath(args.path, {
+            scale: 1,
+            platform: context.platform,
+          });
           let resolveResult = await resolveAsset(suffixedPathResult, args);
 
+          // 2
           if (resolveResult.errors.length) {
-            // if cannot resolve asset, try resolve with suffixed path (eg. `image@1x.png`)
-            suffixedPathResult = getSuffixedPath(args.path, 1);
+            suffixedPathResult = getSuffixedPath(args.path, {
+              platform: context.platform,
+            });
+            resolveResult = await resolveAsset(suffixedPathResult, args);
+          }
+
+          // 3
+          if (resolveResult.errors.length) {
+            suffixedPathResult = getSuffixedPath(args.path, { scale: 1 });
+            resolveResult = await resolveAsset(suffixedPathResult, args);
+          }
+
+          // 4
+          if (resolveResult.errors.length) {
+            suffixedPathResult = getSuffixedPath(args.path);
             resolveResult = await resolveAsset(suffixedPathResult, args);
           }
 

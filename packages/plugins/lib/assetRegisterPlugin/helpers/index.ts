@@ -4,6 +4,7 @@ import { promisify } from 'node:util';
 import type { OnLoadArgs } from 'esbuild';
 import { imageSize } from 'image-size';
 import md5 from 'md5';
+import type { BundlerSupportPlatform } from '@react-native-esbuild/config';
 import {
   ASSET_PATH,
   getDevServerAssetPath,
@@ -26,14 +27,25 @@ const ANDROID_ASSET_QUALIFIER: Record<number, string> = {
   4: 'xxxhdpi',
 } as const;
 
-export function addScaleSuffix(
+export function addSuffix(
   basename: string,
   extension: string,
-  suffix: string | number,
+  options?: {
+    platform?: BundlerSupportPlatform | null;
+    scale?: string | number;
+  },
 ): string {
   return basename
-    .replace(new RegExp(`(@(\\d+)x)?${extension}$`), '')
-    .concat(`@${suffix}x${extension}`);
+    .replace(
+      new RegExp(
+        `(@(\\d+)x)?(${
+          options?.platform ? `.${options.platform}` : ''
+        })?${extension}$`,
+      ),
+      '',
+    )
+    .concat(options?.scale ? `@${options.scale}x` : '')
+    .concat(options?.platform ? `.${options.platform}${extension}` : extension);
 }
 
 /**
@@ -51,23 +63,32 @@ export function addScaleSuffix(
  */
 export function getSuffixedPath(
   assetPath: string,
-  scale?: AssetScale,
+  options?: {
+    scale?: AssetScale;
+    platform?: BundlerSupportPlatform | null;
+  },
 ): SuffixPathResult {
   // if `scale` present, append scale suffix to path
   // assetPath: '/path/to/assets/image.png'
-  // result: '/path/to/assets/image@{scale}x.png'
+  // result:
+  //   '/path/to/assets/image.png'
+  //   '/path/to/assets/image.{platform}.png'
+  //   '/path/to/assets/image@{scale}x.png'
+  //   '/path/to/assets/image@{scale}x.{platform}.png'
   const extension = path.extname(assetPath);
   const dirname = path.dirname(assetPath);
   const basename = path.basename(assetPath);
-  const suffixedBasename = scale
-    ? addScaleSuffix(basename, extension, scale)
-    : basename;
+  const suffixedBasename =
+    options?.scale || options?.platform
+      ? addSuffix(basename, extension, options)
+      : basename;
 
   return {
     dirname,
-    basename: suffixedBasename,
+    basename,
     extension,
     path: `${dirname}/${suffixedBasename}`,
+    platform: options?.platform ?? null,
   };
 }
 
@@ -121,26 +142,27 @@ export async function resolveScaledAssets(
 ): Promise<Asset> {
   assertSuffixPathResult(args.pluginData);
 
-  const { basename, extension } = args.pluginData;
+  const { basename, extension, platform } = args.pluginData;
   const relativePath = path.relative(context.root, args.path);
   const dirname = path.dirname(args.path);
   const filesInDir = await fs.readdir(dirname);
   const stripedBasename = basename.replace(
+    // strip exist scale suffix,
     new RegExp(`(@(\\d+)x)?${extension}$`),
     '',
   );
   const assetRegExp = new RegExp(
-    // strip exist scale suffix
-    `${stripedBasename}(@(\\d+)x)?${extension}$`,
+    `${stripedBasename}(@(\\d+)x)?${
+      platform ? `.${platform}${extension}` : extension
+    }$`,
   );
   const scaledAssets: Partial<Record<AssetScale, string>> = {};
 
   for (const file of filesInDir) {
     const match = assetRegExp.exec(file);
     if (match) {
-      const [, , scale] = match;
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- scale is nullable
-      scaledAssets[scale ?? 1] = file;
+      const [, , scale = 1] = match;
+      scaledAssets[scale] = file;
     }
   }
 
@@ -165,6 +187,7 @@ export async function resolveScaledAssets(
       width: dimensions?.width ?? 0,
       height: dimensions?.height ?? 0,
     },
+    platform,
   };
 }
 
@@ -172,7 +195,11 @@ export async function resolveAssetPath(
   asset: Asset,
   targetScale: number,
 ): Promise<string> {
-  const basename = path.basename(asset.path);
+  const suffixedPath = getSuffixedPath(asset.path, {
+    scale: targetScale as AssetScale,
+    platform: asset.platform,
+  }).path;
+
   // when scale is 1, filename can be `image.png` or `image@1x.png`
   // 1. check resolvedPath (image.png)
   // 2. if file is not exist, check suffixed path (image@1x.png)
@@ -180,21 +207,12 @@ export async function resolveAssetPath(
     const result = await fs
       .stat(asset.path)
       .then(() => asset.path)
-      .catch(() => {
-        const suffixedPath = asset.path.replace(
-          basename,
-          addScaleSuffix(basename, asset.extension, targetScale),
-        );
-        return fs.stat(suffixedPath).then(() => suffixedPath);
-      });
+      .catch(() => fs.stat(suffixedPath).then(() => suffixedPath));
 
     return result;
   }
 
-  return asset.path.replace(
-    basename,
-    addScaleSuffix(basename, asset.extension, targetScale),
-  );
+  return suffixedPath;
 }
 
 export async function copyAssetsToDevServer(
