@@ -28,10 +28,10 @@
 - 🌳 Tree Shaking
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
-- 🚀 Support Hermes runtime
+- 🔥 Support Hermes Runtime
 - 🔄 Support Live Reload
 - 🐛 Support Debugging (Flipper, Chrome Debugger)
-- 🔥 New Architecture Ready
+- ✨ New Architecture Ready
 - ~~🌍 Support Web~~ (WIP)
 
 # Setup
