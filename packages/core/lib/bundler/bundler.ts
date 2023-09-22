@@ -1,5 +1,8 @@
 import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
-import { colors, isCI } from '@react-native-esbuild/utils';
+import {
+  getGlobalVariables,
+  getReactNativeInitializeCore,
+} from '@react-native-esbuild/internal';
 import {
   loadConfig,
   setEnvironment,
@@ -9,8 +12,9 @@ import {
   type ReactNativeEsbuildConfig,
   type BundleConfig,
 } from '@react-native-esbuild/config';
+import { colors, isCI } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
-import { createPromiseHandler } from '../helpers';
+import { createPromiseHandler, getTransformedPreludeScript } from '../helpers';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
 import type {
@@ -25,11 +29,6 @@ import type {
 } from '../types';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
-import {
-  getGlobalVariables,
-  getReactNativeInitializeCore,
-  getInitializeScript,
-} from './internal';
 import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
@@ -89,7 +88,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       define: getGlobalVariables(bundleConfig),
       inject: [getReactNativeInitializeCore(this.root)],
       banner: {
-        js: await getInitializeScript(bundleConfig, this.root),
+        js: await getTransformedPreludeScript(bundleConfig, this.root),
       },
       write: mode === 'bundle',
     });

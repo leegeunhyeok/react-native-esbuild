@@ -1,4 +1,9 @@
-import { transform, type Options } from '@swc/core';
+import {
+  transform,
+  minify,
+  type Options,
+  type JsMinifyOptions,
+} from '@swc/core';
 import { getSwcOptions } from '@react-native-esbuild/config';
 import type { Transformer } from './types';
 
@@ -21,4 +26,18 @@ export const transformWithSwc: Transformer<Options> = async (
   }
 
   return transformedCode;
+};
+
+export const minifyWithSwc: Transformer<JsMinifyOptions> = async (
+  code,
+  _context,
+  customOptions,
+) => {
+  const { code: minifiedCode } = await minify(code, customOptions);
+
+  if (typeof minifiedCode !== 'string') {
+    throw new Error('swc minified source is empty');
+  }
+
+  return minifiedCode;
 };
