@@ -1,25 +1,14 @@
 import path from 'node:path';
 import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
-import {
-  DEFAULT_ENTRY_POINT,
-  DEFAULT_OUTFILE,
-  SOURCE_EXTENSIONS,
-  ASSET_EXTENSIONS,
-} from '../shares';
+import { SOURCE_EXTENSIONS, ASSET_EXTENSIONS } from '../shares';
 import type { BundleConfig } from '../types';
 
 export function getEsbuildOptions(
   bundleConfig: BundleConfig,
   customEsbuildOptions?: Partial<BuildOptions>,
 ): BuildOptions {
-  const {
-    entry = DEFAULT_ENTRY_POINT,
-    outfile = DEFAULT_OUTFILE,
-    platform,
-    minify,
-    metafile,
-  } = bundleConfig;
+  const { entry, outfile, platform, minify, metafile } = bundleConfig;
 
   const platforms = [platform, 'native', 'react-native'];
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);

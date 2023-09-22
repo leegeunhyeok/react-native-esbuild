@@ -15,7 +15,7 @@ exports[`getEsbuildOptions should match snapshot 1`] = `
   "entryPoints": [
     "index.js",
   ],
-  "format": "iife",
+  "format": "esm",
   "legalComments": "none",
   "loader": {
     ".3g2": "file",
@@ -55,6 +55,7 @@ exports[`getEsbuildOptions should match snapshot 1`] = `
     "main",
     "module",
   ],
+  "metafile": false,
   "minify": false,
   "outfile": "main.bundlejs",
   "resolveExtensions": [

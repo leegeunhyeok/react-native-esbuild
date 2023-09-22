@@ -3,9 +3,9 @@ import { colors, isCI } from '@react-native-esbuild/utils';
 import {
   loadConfig,
   setEnvironment,
+  combineWithDefaultBundleConfig,
   getEsbuildOptions,
   getIdByOptions,
-  DEFAULT_OUTFILE,
   type ReactNativeEsbuildConfig,
   type BundleConfig,
 } from '@react-native-esbuild/config';
@@ -21,6 +21,7 @@ import type {
   BundlerAdditionalData,
   BundleResult,
   PromiseHandler,
+  BundleRequestConfig,
 } from '../types';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
@@ -53,26 +54,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       throw new Error('plugin is not registered');
     }
 
-    const {
-      dev = true,
-      entry,
-      outfile,
-      sourcemap,
-      assetsDir,
-      minify,
-      platform,
-    } = bundleConfig;
-
-    setEnvironment(dev);
+    setEnvironment(bundleConfig.dev);
 
     const context: PluginContext = {
+      ...bundleConfig,
       id: this.identifyTaskByBundleConfig(bundleConfig),
-      entry,
-      outfile,
-      sourcemap,
-      assetsDir,
-      minify,
-      platform,
       root: this.root,
       config: this.config,
       mode,
@@ -109,12 +95,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     });
   }
 
-  private identifyTaskByBundleConfig({
-    platform,
-    dev = true,
-    minify = true,
-  }: BundleConfig): number {
-    return getIdByOptions({ platform, dev, minify });
+  private identifyTaskByBundleConfig(bundleConfig: BundleConfig): number {
+    return getIdByOptions(bundleConfig);
   }
 
   private assertBuildTask(task?: BuildTask): asserts task is BuildTask {
@@ -146,7 +128,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private handleBuildEnd(result: BuildResult, context: PluginContext): void {
     const bundleEndedAt = new Date();
-    const bundleFilename = context.outfile ?? DEFAULT_OUTFILE;
+    const bundleFilename = context.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const revisionId = bundleEndedAt.getTime().toString();
     const { outputFiles } = result;
@@ -252,21 +234,19 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   async bundle(
-    bundleConfig: BundleConfig,
+    bundleConfig: Partial<BundleConfig>,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildResult> {
     const buildOptions = await this.getBuildOptionsForBundler(
       'bundle',
-      bundleConfig,
+      combineWithDefaultBundleConfig(bundleConfig),
       additionalData,
     );
-    logger.debug('preparing bundle mode', { platform: bundleConfig.platform });
-    logger.debug('esbuild option', buildOptions);
     return esbuild.build(buildOptions);
   }
 
   async getBundle(
-    bundleConfig: BundleConfig,
+    bundleConfig: BundleRequestConfig,
     additionalData?: BundlerAdditionalData,
   ): Promise<{
     source: Uint8Array;
@@ -274,7 +254,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     revisionId: string;
   }> {
     const buildTask = await this.getOrCreateBundleTask(
-      bundleConfig,
+      combineWithDefaultBundleConfig(bundleConfig),
       additionalData,
     );
     this.assertTaskHandler(buildTask.handler);
@@ -289,7 +269,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   async getSourcemap(
-    bundleConfig: BundleConfig,
+    bundleConfig: BundleRequestConfig,
     additionalData?: BundlerAdditionalData,
   ): Promise<{
     sourcemap: Uint8Array;
@@ -297,7 +277,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     revisionId: string;
   }> {
     const buildTask = await this.getOrCreateBundleTask(
-      bundleConfig,
+      combineWithDefaultBundleConfig(bundleConfig),
       additionalData,
     );
     this.assertTaskHandler(buildTask.handler);

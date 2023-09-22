@@ -26,11 +26,7 @@ const serveBundle = (
   response: ServerResponse,
 ): void => {
   const bundleResponse = new BundleResponse(response, request.headers.accept);
-  const currentId = getIdByOptions({
-    dev: bundleConfig.dev,
-    minify: bundleConfig.minify,
-    platform: bundleConfig.platform,
-  });
+  const currentId = getIdByOptions(bundleConfig);
 
   const bundleStatusChangeHandler: BundlerEventListener<
     'build-status-change'

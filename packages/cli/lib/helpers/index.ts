@@ -42,7 +42,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
     timestamp,
   };
 
-  const bundleConfig: BundleConfig = {
+  const bundleConfig: Partial<BundleConfig> = {
     entry: entryFilePath,
     sourcemap: sourcemapPath,
     outfile: outputFilePath,
