@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/cli",
-  "version": "0.1.0-alpha.34",
+  "version": "0.1.0-alpha.35",
   "description": "cli tool for @react-native-esbuild",
   "keywords": [
     "react-native",
