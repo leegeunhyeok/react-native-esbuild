@@ -13,25 +13,19 @@ export interface ReactNativeEsbuildConfig {
 }
 
 export interface BundleConfig {
-  entry?: string;
-  outfile?: string;
+  platform: BundlerSupportPlatform;
+  entry: string;
+  outfile: string;
+  dev: boolean;
+  minify: boolean;
+  metafile: boolean;
   sourcemap?: string;
   assetsDir?: string;
-  dev?: boolean;
-  minify?: boolean;
-  metafile?: boolean;
-  platform: BundlerSupportPlatform;
 }
 
 export interface SwcPresetOptions {
   filename: string;
   root: string;
-}
-
-export interface IdParams {
-  platform: BundlerSupportPlatform;
-  dev: boolean;
-  minify: boolean;
 }
 
 export enum OptionFlag {

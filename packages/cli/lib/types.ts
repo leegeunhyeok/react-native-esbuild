@@ -18,7 +18,7 @@ export interface StartOptions extends CliOptionsBase {
 }
 
 export interface BuildOptions extends CliOptionsBase {
-  bundleConfig: BundleConfig;
+  bundleConfig: Partial<BundleConfig>;
 }
 
 export type Command<CommandOptions extends CliOptionsBase = CliOptionsBase> = (

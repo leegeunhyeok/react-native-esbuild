@@ -29,3 +29,8 @@ export interface SuffixPathResult {
   extension: string;
   path: string;
 }
+
+// react-native-runtime-transform-plugin
+export interface ReactNativeRuntimeTransformPluginConfig {
+  injectScriptPaths?: string[];
+}

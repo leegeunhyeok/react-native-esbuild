@@ -39,6 +39,13 @@ export interface PluginContext extends BundleConfig {
   additionalData?: BundlerAdditionalData;
 }
 
+export type BundleRequestConfig = Partial<
+  Pick<BundleConfig, 'dev' | 'minify'>
+> &
+  Pick<BundleConfig, 'platform'> & {
+    runModule: boolean;
+  };
+
 export interface PromiseHandler<Result> {
   task: Promise<Result>;
   resolver?: (val: Result) => void;

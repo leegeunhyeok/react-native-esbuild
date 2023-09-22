@@ -2,6 +2,12 @@ import { getIdByOptions } from '../core';
 import { getDevServerAssetPath } from '../server';
 import { OptionFlag } from '../../types';
 
+const BASE_OPTIONS = {
+  outfile: '',
+  entry: '',
+  metafile: false,
+} as const;
+
 describe('getDevServerAssetPath', () => {
   it('should match snapshot', () => {
     expect(getDevServerAssetPath()).toMatchSnapshot();
@@ -57,7 +63,7 @@ describe.each([
 
   describe(`platform: ${options.platform}, dev: ${dev}, minify: ${minify}`, () => {
     it(`should bitwise value is ${expected}`, () => {
-      expect(getIdByOptions(options)).toEqual(expected);
+      expect(getIdByOptions({ ...BASE_OPTIONS, ...options })).toEqual(expected);
     });
   });
 });

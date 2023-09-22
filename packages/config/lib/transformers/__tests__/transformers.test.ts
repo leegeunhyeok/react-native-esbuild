@@ -6,11 +6,13 @@ describe('getEsbuildOptions', () => {
   it('should match snapshot', () => {
     expect(
       getEsbuildOptions({
-        assetsDir: 'assets',
+        platform: 'android',
+        entry: 'index.js',
+        outfile: 'main.bundlejs',
         dev: true,
         minify: false,
-        outfile: 'main.bundlejs',
-        platform: 'android',
+        metafile: false,
+        assetsDir: 'assets',
       }),
     ).toMatchSnapshot();
   });
