@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.33](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2023-09-22)
+
+### Bug Fixes
+
+- live reload via turbo modules ([a45af96](https://github.com/leegeunhyeok/react-native-esbuild/commit/a45af96609c4b96c45e96cb7a1ab6fbad10f50c8))
+
+### Code Refactoring
+
+- change window to global object ([33e7763](https://github.com/leegeunhyeok/react-native-esbuild/commit/33e7763c87de2509d39e89f011fced65a9bfeae5))
+- update bundle config type ([274558e](https://github.com/leegeunhyeok/react-native-esbuild/commit/274558e958bf8c4b04abb58df5473d3470b38026))
+
 ## [0.1.0-alpha.32](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2023-09-20)
 
 ### Features
