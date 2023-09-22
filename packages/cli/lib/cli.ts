@@ -88,7 +88,7 @@ export function cli(): Argv | Promise<Argv> {
           },
           ...commonOptions,
         })
-        .demandOption(['output', 'platform'])
+        .demandOption(['bundle-output', 'platform'])
         .version(false)
         .help();
     })
