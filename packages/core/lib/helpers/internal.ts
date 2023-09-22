@@ -11,7 +11,14 @@ export async function getTransformedPreludeScript(
 ): Promise<string> {
   const context = { root, path: '' };
   const preludeScript = await getPreludeScript(bundleConfig, root);
-  const strippedScript = await stripFlowWithSucrase(preludeScript, context);
+
+  /**
+   * remove "use strict";
+   * @see {@link https://github.com/alangpierce/sucrase/issues/787#issuecomment-1483934492}
+   */
+  const strippedScript = (await stripFlowWithSucrase(preludeScript, context))
+    .replace(/"use strict";/, '')
+    .trim();
 
   return bundleConfig.minify
     ? minifyWithSwc(strippedScript, context, {
