@@ -14,8 +14,7 @@ const commonOptions = {
     type: 'boolean',
     default: false,
   },
-  resetCache: {
-    alias: 'reset-cache',
+  'reset-cache': {
     describe: 'reset transform cache',
     type: 'boolean',
     default: false,
@@ -30,8 +29,7 @@ export function cli(): Argv | Promise<Argv> {
     .command('start', 'start bundler with dev server', (yargs) => {
       yargs
         .options({
-          entry: {
-            alias: 'entry-file',
+          'entry-file': {
             type: 'string',
             describe: 'entry file path',
           },
@@ -53,28 +51,24 @@ export function cli(): Argv | Promise<Argv> {
     .command('bundle', 'bundle your application', (yargs) => {
       yargs
         .options({
-          entry: {
-            alias: 'entry-file',
-            type: 'string',
-            describe: 'entry file path',
-          },
           platform: {
             type: 'string',
             describe: 'platform for resolve modules',
             choices: ['android', 'ios', 'web'],
           },
-          output: {
-            alias: 'bundle-output',
+          'entry-file': {
+            type: 'string',
+            describe: 'entry file path',
+          },
+          'bundle-output': {
             type: 'string',
             describe: 'bundle output file destination',
           },
-          sourcemap: {
-            alias: 'sourcemap-output',
+          'sourcemap-output': {
             type: 'string',
             describe: 'sourcemap file destination',
           },
-          assets: {
-            alias: 'assets-dest',
+          'assets-dest': {
             type: 'string',
             describe: 'assets directory',
           },

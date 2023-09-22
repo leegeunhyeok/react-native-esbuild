@@ -17,16 +17,17 @@ export function resolvePath(filepath: string): string {
 }
 
 export function getOptions(argv: Argv): StartOptions | BuildOptions {
-  const entryFilePath = argv.entry
-    ? resolvePath(argv.entry as string)
+  const entryFilePath = argv['entry-file']
+    ? resolvePath(argv['entry-file'] as string)
     : undefined;
-  const sourcemapPath = argv.sourcemap
-    ? resolvePath(argv.sourcemap as string)
+  const sourcemapPath = argv['sourcemap-output']
+    ? resolvePath(argv['sourcemap-output'] as string)
     : undefined;
-  const outputFilePath = argv.output
-    ? resolvePath(argv.output as string)
+  const outputFilePath = argv['bundle-output']
+    ? resolvePath(argv['bundle-output'] as string)
     : undefined;
-  const assetsDir = typeof argv.assets === 'string' ? argv.assets : undefined;
+  const assetsDir =
+    typeof argv['assets-dest'] === 'string' ? argv['assets-dest'] : undefined;
   const platform = argv.platform as BundleConfig['platform'];
   const dev = Boolean(argv.dev ?? process.env.NODE_ENV === 'development');
   const minify = Boolean(argv.minify ?? !dev);
@@ -34,7 +35,7 @@ export function getOptions(argv: Argv): StartOptions | BuildOptions {
   const verbose = typeof argv.verbose === 'boolean' ? argv.verbose : undefined;
   const timestamp = argv.timestamp;
   const resetCache =
-    typeof argv.resetCache === 'boolean' ? argv.resetCache : undefined;
+    typeof argv['reset-cache'] === 'boolean' ? argv['reset-cache'] : undefined;
 
   const commonConfig = {
     verbose,
