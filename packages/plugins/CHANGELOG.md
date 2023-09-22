@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.34](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.33...v0.1.0-alpha.34) (2023-09-22)
+
+### Features
+
+- print log when assets-dest is not set ([978fb96](https://github.com/leegeunhyeok/react-native-esbuild/commit/978fb9689acb2f7c1fea8c6900930f593d6f564b))
+
 ## [0.1.0-alpha.33](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2023-09-22)
 
 ### Code Refactoring

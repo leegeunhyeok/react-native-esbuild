@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.34](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.33...v0.1.0-alpha.34) (2023-09-22)
+
+### Miscellaneous Chores
+
+- swc helper move to dependency ([264cb62](https://github.com/leegeunhyeok/react-native-esbuild/commit/264cb62f6b51fd00df64e9f6db71935c0fb4eada))
+
 ## [0.1.0-alpha.33](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2023-09-22)
 
 ### Code Refactoring

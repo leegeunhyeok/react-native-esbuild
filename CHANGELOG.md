@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.34](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.33...v0.1.0-alpha.34) (2023-09-22)
+
+### Features
+
+- print log when assets-dest is not set ([978fb96](https://github.com/leegeunhyeok/react-native-esbuild/commit/978fb9689acb2f7c1fea8c6900930f593d6f564b))
+
+### Miscellaneous Chores
+
+- swc helper move to dependency ([264cb62](https://github.com/leegeunhyeok/react-native-esbuild/commit/264cb62f6b51fd00df64e9f6db71935c0fb4eada))
+
+### Code Refactoring
+
+- **cli:** remove alias ([b5e31ad](https://github.com/leegeunhyeok/react-native-esbuild/commit/b5e31adc08149e5d52322cac114e897103148657))
+- update build summary log format ([76d29f0](https://github.com/leegeunhyeok/react-native-esbuild/commit/76d29f082adc7fddd42902425c6ab11338f1dce5))
+
 ## [0.1.0-alpha.33](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2023-09-22)
 
 ### Bug Fixes

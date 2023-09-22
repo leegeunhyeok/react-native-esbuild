@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.34](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.33...v0.1.0-alpha.34) (2023-09-22)
+
+### Code Refactoring
+
+- update build summary log format ([76d29f0](https://github.com/leegeunhyeok/react-native-esbuild/commit/76d29f082adc7fddd42902425c6ab11338f1dce5))
+
 ## [0.1.0-alpha.33](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2023-09-22)
 
 ### Code Refactoring
