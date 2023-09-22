@@ -1,5 +1,5 @@
 import path from 'node:path';
-import type { BuildResult } from 'esbuild';
+import type { BuildResult, Message } from 'esbuild';
 import ora from 'ora';
 import { colors } from '@react-native-esbuild/utils';
 import { logger } from '../../shared';
@@ -27,7 +27,12 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
 
         const filter = /.*/;
         const moduleResolved = new Set<string>();
-        const platformText = colors.gray(`[${context.platform}]`);
+        const platformText = colors.gray(
+          `[${[context.platform, context.dev ? 'dev' : null]
+            .filter(Boolean)
+            .join(', ')}]`,
+        );
+
         let startTime: Date | null = null;
         let moduleLoaded = 0;
 
@@ -42,6 +47,29 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
             context,
           );
           spinner.text = `${platformText} build in progress... (${loaded}/${resolved})`;
+        };
+
+        const print = (...messages: string[]): void => {
+          process.stdout.write(`${messages.join(' ')}\n`);
+        };
+
+        const printSummary = (
+          warnings: Message[],
+          errors: Message[],
+          duration: number,
+        ): void => {
+          print(colors.gray('╭───────────╯'));
+          print(
+            colors.gray('├─'),
+            colors.yellow(warnings.length.toString()),
+            colors.gray('warnings'),
+          );
+          print(
+            colors.gray('├─'),
+            colors.red(errors.length.toString()),
+            colors.gray('errors'),
+          );
+          print(colors.gray('╰─'), colors.cyan(`${duration / 1000}s\n`));
         };
 
         build.onStart(() => {
@@ -71,13 +99,8 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         build.onEnd((result: BuildResult) => {
           logger.debug('esbuild.onEnd');
           const { warnings, errors } = result;
-          const endTime = new Date().getTime() - (startTime?.getTime() ?? 0);
-          const duration = colors.gray(`(${endTime / 1000}s)`);
+          const duration = new Date().getTime() - (startTime?.getTime() ?? 0);
           spinner.clear();
-
-          const status = `(${colors.yellow(
-            warnings.length.toString(),
-          )} warnings, ${colors.red(errors.length.toString())} errors)`;
 
           warnings.forEach((warning) => {
             logger.warn(warning.text, undefined, warning.location ?? undefined);
@@ -88,8 +111,10 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
           });
 
           errors.length
-            ? spinner.fail(`${platformText} failed! ${status} ${duration}`)
-            : spinner.succeed(`${platformText} done! ${status} ${duration}`);
+            ? spinner.fail(`${platformText} failed!`)
+            : spinner.succeed(`${platformText} done!`);
+
+          printSummary(warnings, errors, duration);
 
           config?.onEnd(result, context);
         });
