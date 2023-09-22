@@ -1,8 +1,5 @@
 import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
-import {
-  getGlobalVariables,
-  getReactNativeInitializeCore,
-} from '@react-native-esbuild/internal';
+import { getGlobalVariables } from '@react-native-esbuild/internal';
 import {
   loadConfig,
   setEnvironment,
@@ -86,7 +83,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return getEsbuildOptions(bundleConfig, {
       plugins: plugins.map((plugin) => plugin(context)),
       define: getGlobalVariables(bundleConfig),
-      inject: [getReactNativeInitializeCore(this.root)],
       banner: {
         js: await getTransformedPreludeScript(bundleConfig, this.root),
       },
