@@ -1,2 +1,2 @@
 export * from './async';
-export * from './modules';
+export * from './internal';
