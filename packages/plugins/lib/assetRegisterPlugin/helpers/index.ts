@@ -231,9 +231,13 @@ export async function copyAssetsToDestination(
   context: PluginContext,
   assets: Asset[],
 ): Promise<void> {
-  const { assetsDir } = context;
+  const { assetsDir, mode } = context;
+  if (mode === 'watch') return;
 
-  if (!assetsDir || context.mode === 'watch') return;
+  if (!assetsDir) {
+    logger.warn('asset destination is not set');
+    return;
+  }
 
   const mkdirWithAssertPath = (targetPath: string): Promise<void> => {
     const dirname = path.dirname(targetPath);
