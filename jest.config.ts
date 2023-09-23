@@ -24,10 +24,24 @@ const config: JestConfigWithTsJest = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
+      displayName: '@react-native-esbuild/config',
+      preset: 'ts-jest',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/packages/config/**/*.test.ts'],
+      setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
+    },
+    {
       displayName: '@react-native-esbuild/dev-server',
       preset: 'ts-jest',
       testEnvironment: 'node',
       testMatch: ['<rootDir>/packages/dev-server/**/*.test.ts'],
+      setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
+    },
+    {
+      displayName: '@react-native-esbuild/internal',
+      preset: 'ts-jest',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/packages/internal/**/*.test.ts'],
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
@@ -59,7 +73,8 @@ const config: JestConfigWithTsJest = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
   ],
-  testPathIgnorePatterns: ['<rootDir>/example'],
+  testPathIgnorePatterns: ['node_modules/', 'example/*', '**/__tests__/*'],
+  collectCoverageFrom: ['packages/*/lib/**/*'],
 };
 
 export default config;
