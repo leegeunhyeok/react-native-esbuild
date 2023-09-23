@@ -108,14 +108,12 @@ describe('assetRegisterPlugin', () => {
   });
 
   describe('stripSuffix', () => {
-    let dirname: string;
     let filename: string;
     let extension: string;
     let scale: AssetScale;
     let platform: BundlerSupportPlatform;
 
     beforeEach(() => {
-      dirname = `/root${faker.system.directoryPath()}`;
       filename = faker.string.alphanumeric(10);
       extension = faker.helpers.arrayElement(['.png', '.jpg', '.jpeg', '.gif']);
       scale = faker.number.int({ min: 1, max: 3 }) as AssetScale;
@@ -180,13 +178,12 @@ describe('assetRegisterPlugin', () => {
   });
 
   describe('getSuffixedPath', () => {
-    let dirname: string;
     let filename: string;
     let extension: string;
     let pullPath: string;
 
     beforeEach(() => {
-      dirname = `/root${faker.system.directoryPath()}`;
+      const dirname = `/root${faker.system.directoryPath()}`;
       filename = faker.string.alphanumeric(10);
       extension = faker.helpers.arrayElement(['.png', '.jpg', '.jpeg', '.gif']);
       pullPath = `${dirname}/${filename}${extension}`;
