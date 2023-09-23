@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.36](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.35...v0.1.0-alpha.36) (2023-09-23)
+
+### Bug Fixes
+
+- **plugins:** resolve platform speficied assets ([2519196](https://github.com/leegeunhyeok/react-native-esbuild/commit/251919674008d4c9079f2d29e557319936100cd7))
+
 ## [0.1.0-alpha.35](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.34...v0.1.0-alpha.35) (2023-09-22)
 
 **Note:** Version bump only for package @react-native-esbuild/plugins
