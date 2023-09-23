@@ -11,7 +11,8 @@
   "scripts": {
     "prepare": "husky install",
     "commitlint": "commitlint",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint packages"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
