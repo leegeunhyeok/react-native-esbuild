@@ -8,3 +8,7 @@ node_modules/
 
 # yarn
 .yarn/install-state.gz
+
+# test
+report.json
+coverage/
