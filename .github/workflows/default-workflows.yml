@@ -1,0 +1,118 @@
+name: default-workflows
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  install-dependencies-and-caching:
+    if: contains(github.event.head_commit.message, 'skip ci') == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: actions/cache@v3
+        id: dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install Dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+
+  
+  build:
+    needs: [install-dependencies-and-caching]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: actions/cache@v3
+        id: dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install Dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: npx lerna run build
+
+  lint:
+    needs: [install-dependencies-and-caching, build]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: actions/cache@v3
+        id: dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install Dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: npx lerna run build
+
+      - run: yarn lint
+
+  unit-test-and-report-coverage:
+    needs: [install-dependencies-and-caching, build]
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: actions/cache@v3
+        id: dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install Dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: npx lerna run build
+
+      - uses: ArtiomTr/jest-coverage-report-action@v2.2.5
+        with:
+          package-manager: yarn
+          skip-step: install
