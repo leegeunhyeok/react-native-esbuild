@@ -3657,6 +3657,7 @@ __metadata:
     "@svgr/core": ^8.1.0
     "@svgr/plugin-jsx": ^8.1.0
     "@types/md5": ^2.3.2
+    deepmerge: ^4.3.1
     esbuild: ^0.19.3
     image-size: ^1.0.2
     md5: ^2.3.0

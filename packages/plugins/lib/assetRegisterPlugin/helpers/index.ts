@@ -7,11 +7,16 @@ import md5 from 'md5';
 import type { BundlerSupportPlatform } from '@react-native-esbuild/config';
 import {
   ASSET_PATH,
+  SUPPORT_PLATFORMS,
   getDevServerAssetPath,
 } from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
 import { logger } from '../../shared';
 import type { Asset, AssetScale, SuffixPathResult } from '../../types';
+
+const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(
+  (platform) => `.${platform}`,
+).join('|');
 
 const imageSizeOf = promisify(imageSize);
 
@@ -35,17 +40,16 @@ export function addSuffix(
     scale?: string | number;
   },
 ): string {
-  return basename
-    .replace(
-      new RegExp(
-        `(@(\\d+)x)?(${
-          options?.platform ? `.${options.platform}` : ''
-        })?${extension}$`,
-      ),
-      '',
-    )
+  return stripSuffix(basename, extension)
     .concat(options?.scale ? `@${options.scale}x` : '')
     .concat(options?.platform ? `.${options.platform}${extension}` : extension);
+}
+
+export function stripSuffix(basename: string, extension: string): string {
+  return basename.replace(
+    new RegExp(`(@(\\d+)x)?(${PLATFORM_SUFFIX_PATTERN})?${extension}`),
+    '',
+  );
 }
 
 /**
@@ -77,15 +81,14 @@ export function getSuffixedPath(
   //   '/path/to/assets/image@{scale}x.{platform}.png'
   const extension = path.extname(assetPath);
   const dirname = path.dirname(assetPath);
-  const basename = path.basename(assetPath);
-  const suffixedBasename =
-    options?.scale || options?.platform
-      ? addSuffix(basename, extension, options)
-      : basename;
+
+  // strip exist suffixes and add new options based suffixes
+  const strippedBasename = stripSuffix(path.basename(assetPath), extension);
+  const suffixedBasename = addSuffix(strippedBasename, extension, options);
 
   return {
     dirname,
-    basename,
+    basename: strippedBasename,
     extension,
     path: `${dirname}/${suffixedBasename}`,
     platform: options?.platform ?? null,
@@ -103,7 +106,10 @@ export function getAssetRegistrationScript({
   hash,
   httpServerLocation,
   dimensions,
-}: Asset): string {
+}: Pick<
+  Asset,
+  'name' | 'type' | 'scales' | 'hash' | 'httpServerLocation' | 'dimensions'
+>): string {
   return `
     module.exports = require('react-native/Libraries/Image/AssetRegistry').registerAsset(${JSON.stringify(
       {
@@ -113,8 +119,8 @@ export function getAssetRegistrationScript({
         scales,
         hash,
         httpServerLocation,
-        height: dimensions.height,
         width: dimensions.width,
+        height: dimensions.height,
       },
     )});
   `;
@@ -146,11 +152,7 @@ export async function resolveScaledAssets(
   const relativePath = path.relative(context.root, args.path);
   const dirname = path.dirname(args.path);
   const filesInDir = await fs.readdir(dirname);
-  const stripedBasename = basename.replace(
-    // strip exist scale suffix,
-    new RegExp(`(@(\\d+)x)?${extension}$`),
-    '',
-  );
+  const stripedBasename = stripSuffix(basename, extension);
   const assetRegExp = new RegExp(
     `${stripedBasename}(@(\\d+)x)?${
       platform ? `.${platform}${extension}` : extension
