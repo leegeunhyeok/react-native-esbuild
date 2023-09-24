@@ -41,23 +41,23 @@ export function cli(): RawArgv | Promise<RawArgv> {
           ...commonOptions,
           // dummy options
           watchFolders: {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'array',
           },
           assetPlugins: {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'array',
           },
           sourceExts: {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'array',
           },
           'max-workers': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'number',
           },
           transformer: {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
         })
@@ -106,43 +106,43 @@ export function cli(): RawArgv | Promise<RawArgv> {
           ...commonOptions,
           // dummy options
           transformer: {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
           'bundle-encoding': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
           'max-workers': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'number',
           },
           'sourcemap-sources-root': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
           'sourcemap-use-absolute-path': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'boolean',
           },
           'unstable-transform-profile': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
           'asset-catalog-dest': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
           'read-global-cache': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'boolean',
           },
           config: {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'string',
           },
           'generate-static-view-configs': {
-            describe: 'no-op (just for react-native cli compatibility)',
+            describe: 'no-op',
             type: 'boolean',
           },
         })
