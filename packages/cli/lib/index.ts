@@ -28,6 +28,11 @@ import type { BuildOptions, StartOptions } from './types';
     case 'cache':
       await Commands.cache(options, getCommand(argv, 1));
       break;
+
+    case 'ram-bundle':
+      // eslint-disable-next-line quotes -- message
+      logger.warn(`'ram-bundle' command is not supported`);
+      break;
   }
 })().catch((error) => {
   logger.error('cannot execute command', error as Error);

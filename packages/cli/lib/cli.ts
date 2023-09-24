@@ -44,6 +44,27 @@ export function cli(): RawArgv | Promise<RawArgv> {
             default: 8081,
           },
           ...commonOptions,
+          // dummy options
+          watchFolders: {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'array',
+          },
+          assetPlugins: {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'array',
+          },
+          sourceExts: {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'array',
+          },
+          'max-workers': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'number',
+          },
+          transformer: {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
         })
         .version(false)
         .help();
@@ -87,11 +108,53 @@ export function cli(): RawArgv | Promise<RawArgv> {
             default: false,
           },
           ...commonOptions,
+          // dummy options
+          transformer: {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
+          'bundle-encoding': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
+          'max-workers': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'number',
+          },
+          'sourcemap-sources-root': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
+          'sourcemap-use-absolute-path': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'boolean',
+          },
+          'unstable-transform-profile': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
+          'asset-catalog-dest': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
+          'read-global-cache': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'boolean',
+          },
+          config: {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'string',
+          },
+          'generate-static-view-configs': {
+            describe: 'no-op (just for react-native cli compatibility)',
+            type: 'boolean',
+          },
         })
         .demandOption(['bundle-output', 'platform'])
         .version(false)
         .help();
     })
+    .command('ram-bundle', '')
     .command('cache', 'manage transform cache', (yargs) => {
       yargs
         .command('clean', 'clear all transform cache')
