@@ -1,6 +1,6 @@
 import type { BundleConfig } from '@react-native-esbuild/config';
 
-export interface Argv {
+export interface RawArgv {
   [x: string]: unknown;
   _: (string | number)[];
   $0: string;

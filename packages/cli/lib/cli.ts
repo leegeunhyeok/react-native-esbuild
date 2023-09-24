@@ -1,7 +1,7 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { VERSION } from './constants';
-import type { Argv } from './types';
+import type { RawArgv } from './types';
 
 const commonOptions = {
   verbose: {
@@ -21,7 +21,7 @@ const commonOptions = {
   },
 } as const;
 
-export function cli(): Argv | Promise<Argv> {
+export function cli(): RawArgv | Promise<RawArgv> {
   return yargs(hideBin(process.argv))
     .scriptName('rne')
     .version(VERSION)

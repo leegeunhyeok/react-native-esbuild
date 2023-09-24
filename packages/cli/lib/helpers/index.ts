@@ -1,12 +1,43 @@
 import path from 'node:path';
 import readline from 'node:readline';
+import { z } from 'zod';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
-import type { BundleConfig } from '@react-native-esbuild/config';
+import { SUPPORT_PLATFORMS } from '@react-native-esbuild/config';
+import { type BundleConfig } from '@react-native-esbuild/config';
 import { logger } from '../shared';
-import type { Argv, StartOptions, BuildOptions } from '../types';
+import type { RawArgv, StartOptions, BuildOptions } from '../types';
 
-export function getCommand<Argv extends { _: (string | number)[] }>(
-  argv: Argv,
+const cliArgvSchema = z.object({
+  /**
+   * type infer issue with using map
+   * ```ts
+   * // not work
+   * z.union(SUPPORT_PLATFORMS.map(z.literal)),
+   * ```
+   */
+  platform: z
+    .union([
+      z.literal(SUPPORT_PLATFORMS[0]),
+      z.literal(SUPPORT_PLATFORMS[1]),
+      z.literal(SUPPORT_PLATFORMS[2]),
+    ])
+    .optional(),
+  dev: z.boolean().optional(),
+  minify: z.boolean().optional(),
+  metafile: z.boolean().optional(),
+  verbose: z.boolean().optional(),
+  timestamp: z.boolean().optional(),
+  port: z.number().optional(),
+  host: z.string().optional(),
+  'entry-file': z.string().optional(),
+  'sourcemap-output': z.string().optional(),
+  'bundle-output': z.string().optional(),
+  'assets-dest': z.string().optional(),
+  'reset-cache': z.boolean().optional(),
+});
+
+export function getCommand<RawArgv extends { _: (string | number)[] }>(
+  argv: RawArgv,
   position = 0,
 ): string {
   return argv._[position].toString();
@@ -16,26 +47,25 @@ export function resolvePath(filepath: string): string {
   return path.resolve(process.cwd(), filepath);
 }
 
-export function getOptions(argv: Argv): StartOptions | BuildOptions {
+export function getOptions(rawArgv: RawArgv): StartOptions | BuildOptions {
+  const argv = cliArgvSchema.parse(rawArgv);
   const entryFilePath = argv['entry-file']
-    ? resolvePath(argv['entry-file'] as string)
+    ? resolvePath(argv['entry-file'])
     : undefined;
   const sourcemapPath = argv['sourcemap-output']
-    ? resolvePath(argv['sourcemap-output'] as string)
+    ? resolvePath(argv['sourcemap-output'])
     : undefined;
   const outputFilePath = argv['bundle-output']
-    ? resolvePath(argv['bundle-output'] as string)
+    ? resolvePath(argv['bundle-output'])
     : undefined;
-  const assetsDir =
-    typeof argv['assets-dest'] === 'string' ? argv['assets-dest'] : undefined;
-  const platform = argv.platform as BundleConfig['platform'];
-  const dev = Boolean(argv.dev ?? process.env.NODE_ENV === 'development');
-  const minify = Boolean(argv.minify ?? !dev);
-  const metafile = Boolean(argv.metafile ?? false);
-  const verbose = typeof argv.verbose === 'boolean' ? argv.verbose : undefined;
+  const assetsDir = argv['assets-dest'];
+  const platform = argv.platform;
+  const dev = argv.dev ?? process.env.NODE_ENV === 'development';
+  const minify = argv.minify;
+  const metafile = argv.metafile;
+  const verbose = argv.verbose;
   const timestamp = argv.timestamp;
-  const resetCache =
-    typeof argv['reset-cache'] === 'boolean' ? argv['reset-cache'] : undefined;
+  const resetCache = argv['reset-cache'];
 
   const commonConfig = {
     verbose,
