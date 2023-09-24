@@ -1,6 +1,5 @@
 import path from 'node:path';
 import type { BuildResult } from 'esbuild';
-import { logger } from '../../../shared';
 import type { EsbuildPluginFactory, PluginContext } from '../../../types';
 import { StatusLogger } from './StatusLogger';
 
@@ -22,7 +21,6 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         const filter = /.*/;
 
         build.onStart(() => {
-          logger.debug('esbuild.onStart');
           statusLogger.setup();
           config?.onStart(context);
         });
@@ -42,7 +40,6 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
         });
 
         build.onEnd((result: BuildResult) => {
-          logger.debug('esbuild.onEnd');
           statusLogger.summary(result);
           config?.onEnd(result, context);
         });

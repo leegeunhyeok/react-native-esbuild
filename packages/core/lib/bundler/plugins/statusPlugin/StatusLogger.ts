@@ -1,6 +1,6 @@
 import type { BuildResult } from 'esbuild';
 import ora, { type Ora } from 'ora';
-import { colors } from '@react-native-esbuild/utils';
+import { colors, isTTY } from '@react-native-esbuild/utils';
 import type { PluginContext } from '../../../types';
 
 export class StatusLogger {
@@ -26,9 +26,11 @@ export class StatusLogger {
   private statusUpdate(): void {
     const resolved = this.resolvedModules.size;
     const loaded = this.loadedModules;
-    this.spinner.text = `${this.platformText} build in progress... ${(
-      (loaded / resolved) * 100 || 0
-    ).toFixed(2)}% (${loaded}/${resolved})`;
+    if (isTTY()) {
+      this.spinner.text = `${this.platformText} build in progress... ${(
+        (loaded / resolved) * 100 || 0
+      ).toFixed(2)}% (${loaded}/${resolved})`;
+    }
   }
 
   private print(...messages: string[]): void {
