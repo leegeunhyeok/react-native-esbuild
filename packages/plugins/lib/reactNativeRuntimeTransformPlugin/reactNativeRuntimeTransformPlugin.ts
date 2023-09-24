@@ -1,29 +1,24 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { OnLoadArgs, OnLoadResult } from 'esbuild';
+import type { OnLoadResult } from 'esbuild';
 import {
   ReactNativeEsbuildBundler as Bundler,
   type EsbuildPluginFactory,
 } from '@react-native-esbuild/core';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
-import {
-  stripFlowWithSucrase,
-  transformWithBabel,
-  transformWithSwc,
-} from '@react-native-esbuild/transformer';
 import { logger } from '../shared';
 import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
+import {
+  TransformFlowBuilder,
+  type TransformFlow,
+  type FlowRunner,
+} from './TransformFlowBuilder';
+import {
+  getTransformedCodeFromCache,
+  writeTransformedCodeToCache,
+} from './helpers';
 
 const NAME = 'react-native-runtime-transform-plugin';
-
-const isFlow = (source: string, path: string): boolean => {
-  return (
-    path.endsWith('.js') &&
-    ['@flow', '@noflow'].some((flowSyntaxToken) =>
-      source.includes(flowSyntaxToken),
-    )
-  );
-};
 
 export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
   ReactNativeRuntimeTransformPluginConfig
@@ -32,188 +27,68 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
     return {
       name: NAME,
       setup: (build): void => {
-        const localState = { initializeCoreInjected: false };
-        const injectScriptPaths = [
-          getReactNativeInitializeCore(context.root),
-          ...(config?.injectScriptPaths ?? []),
-        ];
         const cacheController = Bundler.caches.get(context.id.toString());
         const cacheEnabled = context.config.cache ?? true;
-        const root = context.root;
         const {
           stripFlowPackageNames = [],
           fullyTransformPackageNames = [],
           additionalTransformRules,
         } = context.config.transformer ?? {};
-        const entryFile = path.resolve(root, context.entry);
+        const additionalBabelRules = additionalTransformRules?.babel ?? [];
+        const additionalSwcRules = additionalTransformRules?.swc ?? [];
+        const injectScriptPaths = [
+          getReactNativeInitializeCore(context.root),
+          ...(config?.injectScriptPaths ?? []),
+        ];
 
-        const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
-          ? new RegExp(`/node_modules/(?:${stripFlowPackageNames.join('|')})/`)
-          : undefined;
+        const onBeforeTransform: FlowRunner = async (
+          code,
+          args,
+          sharedData,
+        ) => {
+          if (!cacheEnabled) return { code, done: false };
 
-        const fullyTransformPackagesRegExp = fullyTransformPackageNames.length
-          ? new RegExp(
-              `node_modules/(?:${fullyTransformPackageNames.join('|')})/`,
-            )
-          : undefined;
+          const {
+            code: cachedCode,
+            hash,
+            mtimeMs,
+          } = await getTransformedCodeFromCache(cacheController, args, context);
 
-        const combineInjectScripts = (
-          code: string,
-          injectScriptPaths: string[],
-        ): string => {
-          return [
-            injectScriptPaths.map((modulePath) => `import '${modulePath}';`),
-            code,
-          ].join('\n');
+          sharedData.hash = hash;
+          sharedData.mtimeMs = mtimeMs;
+
+          return { code: cachedCode ?? code, done: Boolean(cachedCode) };
         };
 
-        const getTransformedCodeFromCache = async (
-          key: string,
-          modifiedAt: number,
-        ): Promise<string | null> => {
-          if (!cacheEnabled) return null;
-
-          const inMemoryCache = cacheController.readFromMemory(key);
-
-          // 1. find cache from memory
-          if (inMemoryCache) {
-            if (inMemoryCache.modifiedAt === modifiedAt) {
-              // file is not modified, using cache data
-              return inMemoryCache.data;
-            }
-
-            return null;
-          }
-
-          const fsCache = await cacheController.readFromFileSystem(key);
-
-          // 2. find cache from fils system
-          if (fsCache) {
-            cacheController.writeToMemory(key, {
-              data: fsCache,
-              modifiedAt,
-            });
-            return fsCache;
-          }
-
-          // 3. cache not found
-          return null;
-        };
-
-        const applyAdditionalTransform = async (
-          source: string,
-          args: OnLoadArgs,
-        ): Promise<string> => {
-          if (!additionalTransformRules) return source;
-          const transformContext = { path: args.path, root };
-
-          if (additionalTransformRules.babel?.length) {
-            for await (const rule of additionalTransformRules.babel) {
-              if (rule.test(args.path, source)) {
-                // eslint-disable-next-line no-param-reassign -- allow
-                source = await transformWithBabel(
-                  source,
-                  transformContext,
-                  typeof rule.options === 'function'
-                    ? rule.options(args.path, source)
-                    : rule.options,
-                );
-              }
-            }
-          }
-
-          if (additionalTransformRules.swc?.length) {
-            for await (const rule of additionalTransformRules.swc) {
-              if (rule.test(args.path, source)) {
-                // eslint-disable-next-line no-param-reassign -- allow
-                source = await transformWithSwc(
-                  source,
-                  transformContext,
-                  typeof rule.options === 'function'
-                    ? rule.options(args.path, source)
-                    : rule.options,
-                );
-              }
-            }
-          }
-
-          return source;
-        };
-
-        const transformSource = async (
-          args: OnLoadArgs,
-          cacheConfig: { modifiedAt: number; hash: string },
-        ): Promise<string> => {
-          let source = await fs.readFile(args.path, { encoding: 'utf-8' });
-          const transformContext = { path: args.path, root };
-
-          // if target file is entry, inject initializeCore into top
-          if (!localState.initializeCoreInjected && entryFile === args.path) {
-            source = combineInjectScripts(source, injectScriptPaths);
-            localState.initializeCoreInjected = true;
-          }
-
-          if (fullyTransformPackagesRegExp?.test(args.path)) {
-            const fullyTransformResult = await transformWithBabel(
-              source,
-              transformContext,
-              {
-                // follow babelrc of react-native project's root (same as metro)
-                babelrc: true,
-              },
+        const onAfterTransform: FlowRunner = async (code, _args, shared) => {
+          if (cacheEnabled && shared.hash && shared.mtimeMs) {
+            await writeTransformedCodeToCache(
+              cacheController,
+              code,
+              shared.hash,
+              shared.mtimeMs,
             );
-
-            return fullyTransformResult;
           }
-
-          if (
-            stripFlowPackageNamesRegExp?.test(args.path) ||
-            isFlow(source, args.path)
-          ) {
-            source = await stripFlowWithSucrase(source, transformContext);
-          }
-
-          // apply additional transform
-          source = await applyAdditionalTransform(source, args);
-
-          // transform source target to es5
-          source = await transformWithSwc(source, transformContext);
-
-          if (cacheEnabled) {
-            cacheController.writeToMemory(cacheConfig.hash, {
-              data: source,
-              modifiedAt: cacheConfig.modifiedAt,
-            });
-            await cacheController.writeToFileSystem(cacheConfig.hash, source);
-          }
-
-          return source;
+          return { code, done: true };
         };
+
+        let transformFlow: TransformFlow;
+        const transformFlowBuilder = new TransformFlowBuilder(context)
+          .setInjectScripts(injectScriptPaths)
+          .setFullyTransformPackages(fullyTransformPackageNames)
+          .setStripFlowPackages(stripFlowPackageNames)
+          .setAdditionalBabelTransformRules(additionalBabelRules)
+          .setAdditionalSwcTransformRules(additionalSwcRules)
+          .onStart(onBeforeTransform)
+          .onEnd(onAfterTransform);
 
         build.onStart(() => {
-          // reset local states
-          localState.initializeCoreInjected = false;
+          transformFlow = transformFlowBuilder.build();
         });
 
         build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
-          const { mtimeMs } = await fs.stat(args.path);
-
-          /**
-           * `id` is combined value (platform, dev, minify)
-           * use `id` as filesystem hash key generation
-           *
-           * md5(id + modified time + file path) = cache key
-           *     number + number        + string
-           */
-          const hash = cacheController.getCacheHash(
-            context.id + mtimeMs + args.path,
-          );
-
           return {
-            contents:
-              (cacheEnabled &&
-                (await getTransformedCodeFromCache(hash, mtimeMs))) ||
-              (await transformSource(args, { hash, modifiedAt: mtimeMs })),
+            contents: await transformFlow.transform(args),
             loader: 'js',
           } as OnLoadResult;
         });

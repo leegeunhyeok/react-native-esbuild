@@ -58,11 +58,11 @@ export interface ReactNativeEsbuildConfig {
       /**
        * Custom Babel rules
        */
-      babel?: CustomTransformRuleBase<BabelTransformOptions>[];
+      babel?: BabelTransformRule[];
       /**
        * Custom Swc rules
        */
-      swc?: CustomTransformRuleBase<SwcTransformOptions>[];
+      swc?: SwcTransformRule[];
     };
   };
   /**
@@ -81,6 +81,9 @@ interface CustomTransformRuleBase<T> {
    */
   options: T | ((path: string, code: string) => T);
 }
+
+export type BabelTransformRule = CustomTransformRuleBase<BabelTransformOptions>;
+export type SwcTransformRule = CustomTransformRuleBase<SwcTransformOptions>;
 
 export type BundleMode = 'bundle' | 'watch';
 export type InternalCaller = 'dev-server';
