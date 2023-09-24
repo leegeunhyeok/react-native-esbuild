@@ -245,7 +245,7 @@ describe('assetRegisterPlugin', () => {
       });
     });
 
-    describe('when both `scale` and `platform` are present', () => {
+    describe('when both `platform` and `scale` are present', () => {
       let platform: BundlerSupportPlatform;
       let scale: AssetScale;
       let suffixPathResult: SuffixPathResult;

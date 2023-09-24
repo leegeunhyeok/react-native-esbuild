@@ -164,12 +164,13 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
         build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
           const { mtimeMs } = await fs.stat(args.path);
 
-          // `id` is combined value (platform, dev, minify)
-          // use `id` as filesystem hash key generation
-          //
-          // md5(id + modified time + file path) = cache key
-          //     number + number        + string
-          //
+          /**
+           * `id` is combined value (platform, dev, minify)
+           * use `id` as filesystem hash key generation
+           *
+           * md5(id + modified time + file path) = cache key
+           *     number + number        + string
+           */
           const hash = cacheController.getCacheHash(
             context.id + mtimeMs + args.path,
           );

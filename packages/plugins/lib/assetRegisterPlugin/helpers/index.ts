@@ -53,16 +53,20 @@ export function stripSuffix(basename: string, extension: string): string {
 }
 
 /**
- * add scale suffix to asset path
+ * add suffix to asset path
  *
  * ```js
  * // assetPath input
  * '/path/to/assets/image.png'
  *
- * // suffixed by `scale`
+ * // `platform` suffixed
+ * '/path/to/assets/image.android.png'
+ *
+ * // `scale` suffixed
  * '/path/to/assets/image@1x.png'
- * '/path/to/assets/image@2x.png'
- * '/path/to/assets/image@3x.png'
+ *
+ * // both `platform` and `scale` suffixed
+ * '/path/to/assets/image@1x.android.png'
  * ```
  */
 export function getSuffixedPath(
@@ -96,6 +100,8 @@ export function getSuffixedPath(
 }
 
 /**
+ * get asset registration script
+ *
  * @see {@link https://github.com/facebook/metro/blob/v0.78.0/packages/metro/src/Bundler/util.js#L29-L57}
  * @see {@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/Image/RelativeImageStub.js}
  */
@@ -202,9 +208,9 @@ export async function resolveAssetPath(
     platform: asset.platform,
   }).path;
 
-  // when scale is 1, filename can be `image.png` or `image@1x.png`
-  // 1. check resolvedPath (image.png)
-  // 2. if file is not exist, check suffixed path (image@1x.png)
+  // when scale is 1, filename can be suffixed(platform, scale) or plain(`image.png`)
+  // 1. resolve plain asset first(`image.png`)
+  // 2. if file is not exist, resolve suffixed path
   if (targetScale === 1) {
     const result = await fs
       .stat(asset.path)
@@ -217,6 +223,9 @@ export async function resolveAssetPath(
   return suffixedPath;
 }
 
+/**
+ * copy assets to dev server asset directory
+ */
 export async function copyAssetsToDevServer(
   context: PluginContext,
   assets: Asset[],
@@ -245,6 +254,8 @@ export async function copyAssetsToDevServer(
 }
 
 /**
+ * copy assets to platform specified destination
+ *
  * @see {@link https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/assetPathUtils.ts}
  */
 export async function copyAssetsToDestination(
