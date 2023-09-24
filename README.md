@@ -46,38 +46,18 @@ yarn add -D @react-native-esbuild/cli
 
 ## Android
 
-```bash
-# using npm
-npm install -D @react-native/gradle-plugin
-
-# using yarn
-yarn add -D @react-native/gradle-plugin
-```
-
-Go to `android/settings.gradle`.
-
-If `react-native-gradle-plugin` already included, replace to `@react-native/gradle-plugin`
+Open `android/app/build.gradle` and add configuration.
 
 ```diff
-- includeBuild('../node_modules/react-native-gradle-plugin')
-+ includeBuild('../node_modules/@react-native/gradle-plugin')
-```
+// >= 0.71.x
+react {
++ cliFile = file("../node_modules/@react-native-esbuild/cli/dist/index.js")
+}
 
-Go to `node_modules/@react-native/gradle-plugin/src/main/kotlin/com/facebook/react/TaskConfiguration.kt`
-
-```diff
-// The location of the cli.js file for React Native
-
-- val cliFile = detectedCliFile(config)
-+ val cliFile = File(config.root.dir("node_modules/@react-native-esbuild/cli/dist/index.js").get().asFile.absolutePath)
-```
-
-and then sync gradle project.
-
-If you want to keep those changes in your environment, checkout [patch-package](https://github.com/ds300/patch-package).
-
-```bash
-patch-package @react-native/gradle-plugin
+// <= 0.70.x
+project.ext.react = [
++ cliPath: "../../node_modules/@react-native-esbuild/cli/dist/index.js"
+]
 ```
 
 ## iOS
