@@ -174,14 +174,15 @@ exports.default = {
 
 ## New Architecture
 
-This section for environment that enable New Architecture.
+> [!WARNING]  
+> [New Architecture](https://reactnative.dev/docs/the-new-architecture/landing-page) is experimental.
 
 ### Reanimated 
 
 > ReferenceError: Property 'nativeFabricUIManager' doesn't exist
 
 - Some [issue](https://github.com/leegeunhyeok/react-native-esbuild/issues/16#issuecomment-1730042378) on `react-native-reanimated` + `Fabric`
-- To resolve(temporary solution), open `node_modules/react-native-reanimated/src/reanimated2/fabricUtils.ts` and change `react-native/Libraries/Renderer/shims/ReactFabric` to lazy require.
+- To resolve(temporary solution), open `node_modules/react-native-reanimated/src/reanimated2/fabricUtils.ts` and change `react-native/Libraries/Renderer/shims/ReactFabric` to inline lazy require.
 
 ```diff
 let findHostInstance_DEPRECATED: (ref: React.Component) => HostInstance;
