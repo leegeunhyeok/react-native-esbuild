@@ -1,8 +1,9 @@
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   cache: true,
+  timestampFormat: '',
   transformer: {
     convertSvg: true,
     stripFlowPackageNames: ['react-native'],

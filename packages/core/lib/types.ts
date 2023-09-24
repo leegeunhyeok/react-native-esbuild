@@ -1,8 +1,67 @@
 import type { BuildContext, Plugin } from 'esbuild';
-import type {
-  ReactNativeEsbuildConfig,
-  BundleConfig,
-} from '@react-native-esbuild/config';
+import type { TransformOptions as BabelTransformOptions } from '@babel/core';
+import type { Options as SwcTransformOptions } from '@swc/core';
+import type { BundleConfig } from '@react-native-esbuild/config';
+
+export interface ReactNativeEsbuildConfig {
+  /**
+   * Enable cache.
+   *
+   * Defaults to `true`
+   */
+  cache?: boolean;
+  /**
+   * Field names for resolve package's modules.
+   *
+   * Defaults to `['react-native', 'browser', 'main', 'module']`
+   *
+   * @see Documentation {@link https://esbuild.github.io/api/#main-fields}
+   */
+  mainFields?: string[];
+  /**
+   * transform configurations
+   */
+  transformer?: {
+    /**
+     * If `true`, convert svg assets to `react-native-svg` based component
+     */
+    convertSvg?: boolean;
+    /**
+     * Strip flow syntax.
+     *
+     * Defaults to `['react-native']`
+     */
+    stripFlowPackageNames?: string[];
+    /**
+     * Transform with babel using `metro-react-native-babel-preset` (slow)
+     */
+    fullyTransformPackageNames?: string[];
+    /**
+     * Additional transform rules. This rules will be applied before phase of transform to es5.
+     */
+    additionalTransformRules?: {
+      /**
+       * Custom Babel rules
+       */
+      babel?: CustomTransformRuleBase<BabelTransformOptions>[];
+      /**
+       * Custom Swc rules
+       */
+      swc?: CustomTransformRuleBase<SwcTransformOptions>[];
+    };
+  };
+}
+
+interface CustomTransformRuleBase<T> {
+  /**
+   * Predicator for transform
+   */
+  test: (path: string, code: string) => boolean;
+  /**
+   * Transformer options
+   */
+  options: T | ((path: string, code: string) => T);
+}
 
 export type BundleMode = 'bundle' | 'watch';
 export type InternalCaller = 'dev-server';

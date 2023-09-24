@@ -3,56 +3,6 @@ import type { Options as SwcTransformOptions } from '@swc/core';
 
 export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
-// common
-export interface ReactNativeEsbuildConfig {
-  /**
-   * Enable cache.
-   *
-   * Defaults to `true`
-   */
-  cache?: boolean;
-  /**
-   * Field names for resolve package's modules.
-   *
-   * Defaults to `['react-native', 'browser', 'main', 'module']`
-   *
-   * @see Documentation {@link https://esbuild.github.io/api/#main-fields}
-   */
-  mainFields?: string[];
-  /**
-   * transform configurations
-   */
-  transformer?: {
-    /**
-     * If `true`, convert svg assets to `react-native-svg` based component
-     */
-    convertSvg?: boolean;
-    /**
-     * Strip flow syntax.
-     *
-     * Defaults to `['react-native']`
-     */
-    stripFlowPackageNames?: string[];
-    /**
-     * Transform with babel using `metro-react-native-babel-preset` (slow)
-     */
-    fullyTransformPackageNames?: string[];
-    /**
-     * Additional transform rules. This rules will be applied before phase of transform to es5.
-     */
-    additionalTransformRules?: {
-      /**
-       * Custom Babel rules
-       */
-      babel?: CustomBabelTransformRule[];
-      /**
-       * Custom Swc rules
-       */
-      swc?: CustomSwcTransformRule[];
-    };
-  };
-}
-
 export interface BundleConfig {
   platform: BundlerSupportPlatform;
   entry: string;

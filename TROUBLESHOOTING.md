@@ -42,7 +42,7 @@
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -57,7 +57,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -72,7 +72,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -87,7 +87,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -102,7 +102,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -132,7 +132,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -148,7 +148,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {
@@ -163,7 +163,7 @@ exports.default = {
 // <rootDir>/react-native-esbuild.config.js
 
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {
   transformer: {

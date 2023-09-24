@@ -81,7 +81,7 @@ File location: `<rootDir>/react-native-esbuild.js`
 
 ```js
 /**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
  */
 exports.default = {};
 ```

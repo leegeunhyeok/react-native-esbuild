@@ -38,7 +38,7 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           ...(config?.injectScriptPaths ?? []),
         ];
         const cacheController = Bundler.caches.get(context.id.toString());
-        const cacheEnabled = self.cache;
+        const cacheEnabled = context.config.cache ?? true;
         const root = context.root;
         const {
           stripFlowPackageNames = [],

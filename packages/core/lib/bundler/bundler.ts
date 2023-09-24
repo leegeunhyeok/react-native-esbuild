@@ -1,29 +1,33 @@
 import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
 import { getGlobalVariables } from '@react-native-esbuild/internal';
 import {
-  loadConfig,
   setEnvironment,
   combineWithDefaultBundleConfig,
   getEsbuildOptions,
   getIdByOptions,
-  type ReactNativeEsbuildConfig,
   type BundleConfig,
 } from '@react-native-esbuild/config';
 import { colors, isCI } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
-import { createPromiseHandler, getTransformedPreludeScript } from '../helpers';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
 import type {
-  EsbuildPluginFactory,
-  PluginContext,
-  BundleMode,
+  ReactNativeEsbuildConfig,
   BuildTask,
+  BundleMode,
   BundlerAdditionalData,
   BundleResult,
-  PromiseHandler,
   BundleRequestConfig,
+  PromiseHandler,
+  EsbuildPluginFactory,
+  PluginContext,
 } from '../types';
+import {
+  getConfig,
+  loadConfig,
+  createPromiseHandler,
+  getTransformedPreludeScript,
+} from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
 import { printLogo } from './logo';
@@ -34,11 +38,23 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
 
+  public static initialize(): void {
+    const config = loadConfig(process.cwd());
+
+    if (!config.mainFields?.includes('react-native')) {
+      logger.warn('`react-native` not found in `mainFields`');
+    }
+
+    if (!config.transformer?.stripFlowPackageNames?.includes('react-native')) {
+      logger.warn('`react-native` not found in `stripFlowPackageNames`');
+    }
+  }
+
   constructor(private root: string = process.cwd()) {
     super();
     if (isCI()) colors.disable();
     printLogo();
-    this.config = loadConfig(this.root);
+    this.config = getConfig();
     this.setupConfig();
   }
 
@@ -52,8 +68,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     ) {
       logger.warn('`react-native` not found in `stripFlowPackageNames`');
     }
-
-    self.cache = this.config.cache ?? true;
   }
 
   private async getBuildOptionsForBundler(
