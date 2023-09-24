@@ -61,7 +61,7 @@ export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
  */
 export class BundleResponse {
   private static CRLF = '\r\n';
-  private static THROTTLE_DELAY = 100;
+  private static THROTTLE_DELAY = 10;
   private isSupportMultipart: boolean;
   private previousProgress = 0;
   private boundary: string;

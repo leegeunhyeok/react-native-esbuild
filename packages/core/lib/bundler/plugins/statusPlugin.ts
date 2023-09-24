@@ -46,7 +46,11 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
             },
             context,
           );
-          spinner.text = `${platformText} build in progress... (${loaded}/${resolved})`;
+
+          spinner.text = `${platformText} build in progress... ${(
+            (loaded / resolved) *
+            100
+          ).toFixed(2)}% (${loaded}/${resolved})`;
         };
 
         const print = (...messages: string[]): void => {
