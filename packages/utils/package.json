@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
+    "dayjs": "^1.11.10",
     "node-self": "^1.0.2"
   }
 }

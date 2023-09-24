@@ -3693,6 +3693,7 @@ __metadata:
   resolution: "@react-native-esbuild/utils@workspace:packages/utils"
   dependencies:
     colors: ^1.4.0
+    dayjs: ^1.11.10
     esbuild: ^0.19.3
     node-self: ^1.0.2
   languageName: unknown
@@ -6499,6 +6500,13 @@ __metadata:
   version: 3.0.3
   resolution: "dateformat@npm:3.0.3"
   checksum: ca4911148abb09887bd9bdcd632c399b06f3ecad709a18eb594d289a1031982f441e08e281db77ffebcb2cbcbfa1ac578a7cbfbf8743f41009aa5adc1846ed34
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.10":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: a6b5a3813b8884f5cd557e2e6b7fa569f4c5d0c97aca9558e38534af4f2d60daafd3ff8c2000fed3435cfcec9e805bcebd99f90130c6d1c5ef524084ced588c4
   languageName: node
   linkType: hard
 
