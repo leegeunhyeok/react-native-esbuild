@@ -75,8 +75,8 @@ export class Logger {
   }
 
   private parseError(error?: Error): string {
-    if (!error) return '';
-    return error.message + (error.stack ? `\n${error.stack}` : '');
+    if (!error?.stack) return '';
+    return `\n${error.stack}`;
   }
 
   private getLevelTag(level: LogLevel): string {

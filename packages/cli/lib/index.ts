@@ -47,6 +47,6 @@ process
     process.exit(1);
   })
   .on('uncaughtException', (error) => {
-    logger.error('uncaught Exception thrown', error);
+    logger.error('uncaught exception thrown', error);
     process.exit(1);
   });
