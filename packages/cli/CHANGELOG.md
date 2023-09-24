@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.39](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2023-09-24)
+
+### Features
+
+- improve logs on interactive mode ([34c5f33](https://github.com/leegeunhyeok/react-native-esbuild/commit/34c5f331071eecf1e980068c63582a82e7b6c75d))
+
+### Code Refactoring
+
+- add logger config ([5a26157](https://github.com/leegeunhyeok/react-native-esbuild/commit/5a261577d2b9374d7a054fc32d2e2b78ecf7f812))
+- error logging format ([14dc80b](https://github.com/leegeunhyeok/react-native-esbuild/commit/14dc80b742a6de6e6dd19fe6b0999ce2851a85b6))
+
 ## [0.1.0-alpha.38](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2023-09-24)
 
 ### Features

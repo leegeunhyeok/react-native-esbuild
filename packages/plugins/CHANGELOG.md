@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.39](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2023-09-24)
+
+### Code Refactoring
+
+- modularization transform plugin ([e099e62](https://github.com/leegeunhyeok/react-native-esbuild/commit/e099e62678e176bb4f219c0031329722055e8cf7))
+- move bundler config types to core pacakge ([0924b6f](https://github.com/leegeunhyeok/react-native-esbuild/commit/0924b6f04fe59c538d18d5f49abaedc3a61df61d))
+
 ## [0.1.0-alpha.38](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2023-09-24)
 
 ### Features

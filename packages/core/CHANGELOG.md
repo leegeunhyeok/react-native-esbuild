@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.39](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2023-09-24)
+
+### Features
+
+- **core:** add reporter config ([23a7854](https://github.com/leegeunhyeok/react-native-esbuild/commit/23a78548a4faa31f76ae2b015336ad912b4a7bf6))
+- improve build status logs ([fad15a5](https://github.com/leegeunhyeok/react-native-esbuild/commit/fad15a51fae4c2bbfdef5276338011ab3278a1aa))
+- skip interactive message when not in tty ([098d0c6](https://github.com/leegeunhyeok/react-native-esbuild/commit/098d0c666577a4e88b6c5cc193ff6c59c5923682))
+
+### Code Refactoring
+
+- add logger config ([5a26157](https://github.com/leegeunhyeok/react-native-esbuild/commit/5a261577d2b9374d7a054fc32d2e2b78ecf7f812))
+- **core:** event based client log reporter ([84fe917](https://github.com/leegeunhyeok/react-native-esbuild/commit/84fe917abb8cec0ebcafb0c8afcd2fdfa33a184e))
+- **core:** modulize build status plugin ([d078c4c](https://github.com/leegeunhyeok/react-native-esbuild/commit/d078c4c4123c7eaaf8d6d1fcda80544014052729))
+- modularization transform plugin ([e099e62](https://github.com/leegeunhyeok/react-native-esbuild/commit/e099e62678e176bb4f219c0031329722055e8cf7))
+- move bundler config types to core pacakge ([0924b6f](https://github.com/leegeunhyeok/react-native-esbuild/commit/0924b6f04fe59c538d18d5f49abaedc3a61df61d))
+- rename getConfig to getConfigFromGlobal ([6089254](https://github.com/leegeunhyeok/react-native-esbuild/commit/608925414bc787222fb0c7118253670bed5ba53f))
+
 ## [0.1.0-alpha.38](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2023-09-24)
 
 ### Features

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.39](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2023-09-24)
+
+### Features
+
+- improve build status logs ([fad15a5](https://github.com/leegeunhyeok/react-native-esbuild/commit/fad15a51fae4c2bbfdef5276338011ab3278a1aa))
+
+### Code Refactoring
+
+- **core:** event based client log reporter ([84fe917](https://github.com/leegeunhyeok/react-native-esbuild/commit/84fe917abb8cec0ebcafb0c8afcd2fdfa33a184e))
+
 ## [0.1.0-alpha.38](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2023-09-24)
 
 ### Code Refactoring
