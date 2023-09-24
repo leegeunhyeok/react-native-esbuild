@@ -77,6 +77,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         );
         break;
     }
+
+    // send event to custom reporter
+    this.config.reporter?.(event);
   }
 
   private async getBuildOptionsForBundler(

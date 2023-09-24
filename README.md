@@ -89,71 +89,78 @@ exports.default = {};
 <details>
   <summary>Configuration details</summary>
 
-```ts
-interface ReactNativeEsbuildConfig {
-  /**
-   * Enable cache.
-   *
-   * Defaults to `true`
-   */
-  cache?: boolean;
-  /**
-   * Field names for resolve package's modules.
-   *
-   * Defaults to `['react-native', 'browser', 'main', 'module']`
-   */
-  mainFields?: string[];
-  /**
-   * Logger configurations
-   */
-  logger?: {
+  [Type definitions](https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/core/lib/types.ts)
+
+  ```ts
+  interface ReactNativeEsbuildConfig {
     /**
-     * Enable client log.
+     * Enable cache.
      *
      * Defaults to `true`
      */
-    enabled?: boolean;
+    cache?: boolean;
     /**
-     * Print timestamp with log when format is specified.
+     * Field names for resolve package's modules.
      *
-     * Defaults to `null`
+     * Defaults to `['react-native', 'browser', 'main', 'module']`
      */
-    timestamp?: string | null;
-  };
-  /**
-   * Transformer configurations
-   */
-  transformer?: {
+    mainFields?: string[];
     /**
-     * If `true`, convert svg assets to `react-native-svg` based component
+     * Logger configurations
      */
-    convertSvg?: boolean;
-    /**
-     * Strip flow syntax.
-     *
-     * Defaults to `['react-native']`
-     */
-    stripFlowPackageNames?: string[];
-    /**
-     * Transform with babel using `metro-react-native-babel-preset` (slow)
-     */
-    fullyTransformPackageNames?: string[];
-    /**
-     * Additional transform rules. This rules will be applied before phase of transform to es5.
-     */
-    additionalTransformRules?: {
+    logger?: {
       /**
-       * Custom Babel rules
+       * Enable client log.
+       *
+       * Defaults to `true`
        */
-      babel?: CustomTransformRuleBase<BabelTransformOptions>[];
+      enabled?: boolean;
       /**
-       * Custom Swc rules
+       * Print timestamp with log when format is specified.
+       *
+       * Defaults to `null`
        */
-      swc?: CustomTransformRuleBase<SwcTransformOptions>[];
+      timestamp?: string | null;
     };
-  };
-}
-```
+    /**
+     * Transformer configurations
+     */
+    transformer?: {
+      /**
+       * If `true`, convert svg assets to `react-native-svg` based component
+       */
+      convertSvg?: boolean;
+      /**
+       * Strip flow syntax.
+       *
+       * Defaults to `['react-native']`
+       */
+      stripFlowPackageNames?: string[];
+      /**
+       * Transform with babel using `metro-react-native-babel-preset` (slow)
+       */
+      fullyTransformPackageNames?: string[];
+      /**
+       * Additional transform rules. This rules will be applied before phase of transform to es5.
+       */
+      additionalTransformRules?: {
+        /**
+         * Custom Babel rules
+         */
+        babel?: CustomTransformRuleBase<BabelTransformOptions>[];
+        /**
+         * Custom Swc rules
+         */
+        swc?: CustomTransformRuleBase<SwcTransformOptions>[];
+      };
+    };
+    /**
+     * Client event receiver
+     */
+    reporter?: (event: ReportableEvent) => void;
+  }
+  ```
+
 </details>
 
 > [!IMPORTANT]  

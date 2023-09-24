@@ -65,6 +65,10 @@ export interface ReactNativeEsbuildConfig {
       swc?: CustomTransformRuleBase<SwcTransformOptions>[];
     };
   };
+  /**
+   * Client event receiver
+   */
+  reporter?: (event: ReportableEvent) => void;
 }
 
 interface CustomTransformRuleBase<T> {
