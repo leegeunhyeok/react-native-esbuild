@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.38](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2023-09-24)
+
+### Features
+
+- **cli:** add options for react-native cli compatibility ([9c18fff](https://github.com/leegeunhyeok/react-native-esbuild/commit/9c18fffe537a8a810e41aab045cad3b1eba3a661))
+
+### Code Refactoring
+
+- cli option types ([4d7c346](https://github.com/leegeunhyeok/react-native-esbuild/commit/4d7c3468ccb509215164bc29cf5c6d0c265b67f1))
+
 ## [0.1.0-alpha.37](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.36...v0.1.0-alpha.37) (2023-09-23)
 
 **Note:** Version bump only for package @react-native-esbuild/cli

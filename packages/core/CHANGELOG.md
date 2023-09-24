@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.38](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2023-09-24)
+
+### Features
+
+- improve configurations ([79c9a68](https://github.com/leegeunhyeok/react-native-esbuild/commit/79c9a687b63ed52244e2dc2f4a7a50f6e5983afd))
+
 ## [0.1.0-alpha.37](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.36...v0.1.0-alpha.37) (2023-09-23)
 
 **Note:** Version bump only for package @react-native-esbuild/core
