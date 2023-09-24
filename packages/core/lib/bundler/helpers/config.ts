@@ -47,7 +47,7 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
   return config;
 }
 
-export function getConfig(): ReactNativeEsbuildConfig {
+export function getConfigFromGlobal(): ReactNativeEsbuildConfig {
   if (!self._config) {
     throw new Error('could not get configuration');
   }

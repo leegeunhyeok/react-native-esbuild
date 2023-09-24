@@ -23,8 +23,8 @@ import type {
   PluginContext,
 } from '../types';
 import {
-  getConfig,
   loadConfig,
+  getConfigFromGlobal,
   createPromiseHandler,
   getTransformedPreludeScript,
 } from './helpers';
@@ -57,7 +57,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   constructor(private root: string = process.cwd()) {
     super();
-    this.config = getConfig();
+    this.config = getConfigFromGlobal();
     printLogo();
   }
 
