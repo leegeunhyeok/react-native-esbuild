@@ -51,7 +51,7 @@ Open `android/app/build.gradle` and add configuration.
 ```diff
 // >= 0.71.x
 react {
-+ cliFile = file("../node_modules/@react-native-esbuild/cli/dist/index.js")
++ cliFile = file("../../node_modules/@react-native-esbuild/cli/dist/index.js")
 }
 
 // <= 0.70.x
