@@ -61,6 +61,7 @@ export function cli(): RawArgv | Promise<RawArgv> {
             type: 'string',
           },
         })
+        .strictOptions()
         .version(false)
         .help();
     })
@@ -146,6 +147,7 @@ export function cli(): RawArgv | Promise<RawArgv> {
           },
         })
         .demandOption(['bundle-output', 'platform'])
+        .strictOptions()
         .version(false)
         .help();
     })
