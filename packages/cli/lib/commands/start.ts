@@ -25,19 +25,23 @@ export const start: Command<StartOptions> = async (options) => {
       enableInteractiveMode((keyName) => {
         switch (keyName) {
           case 'r':
+            // eslint-disable-next-line quotes -- allow
+            logger.info(`sending 'reload' command...`);
             server.broadcastCommand('reload');
             break;
 
           case 'd':
+            // eslint-disable-next-line quotes -- allow
+            logger.info(`sending 'devMenu' command...`);
             server.broadcastCommand('devMenu');
             break;
         }
       })
     ) {
       // eslint-disable-next-line quotes -- pass
-      logger.info(`› press 'r' to reload`);
+      logger.info(`> press 'r' to reload`);
       // eslint-disable-next-line quotes -- pass
-      logger.info(`› press 'd' to open developer menu`);
+      logger.info(`> press 'd' to open developer menu`);
       process.stdout.write('\n');
     }
   });
