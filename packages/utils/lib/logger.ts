@@ -1,13 +1,13 @@
 import 'node-self';
 import { EOL } from 'node:os';
 import dayjs from 'dayjs';
-import { gray, cyan, green, yellow, red, magenta, bold, disable } from 'colors';
+import { gray, cyan, green, yellow, red, magenta, bold } from 'colors';
 import type { Color } from 'colors';
 import type { LogLevel } from './types';
-import { isCI } from './env';
 
+self.logEnabled = false;
 self.logLevel = 'info';
-self.timestampEnabled = false;
+self.logTimestampFormat = null;
 
 export class Logger {
   private COLOR_BY_LEVEL: Record<LogLevel, Color> = {
@@ -18,32 +18,48 @@ export class Logger {
     error: red,
   };
 
+  public static enable(): void {
+    self.logEnabled = true;
+  }
+
+  public static disable(): void {
+    self.logEnabled = false;
+  }
+
+  public static setLogLevel(level: LogLevel): void {
+    self.logLevel = level;
+  }
+
+  public static setTimestampFormat(format: string | null): void {
+    self.logTimestampFormat = format;
+  }
+
   constructor(private scope: string) {
-    isCI() && disable();
+    // empty
   }
 
   private stdout(...messages: string[]): void {
-    if (self.logEnabled === false) return;
+    if (!self.logEnabled) return;
     process.stdout.write(this.getMessage(messages));
   }
 
   private stderr(...messages: string[]): void {
-    if (self.logEnabled === false) return;
+    if (!self.logEnabled) return;
     process.stderr.write(this.getMessage(messages));
   }
 
   private getMessage(messages: string[]): string {
-    return `\r${this.getTimestamp()} ${messages
+    return `\r${this.getTimestamp()}${messages
       .filter(Boolean)
       .join(' ')
       .trimEnd()}${EOL}`;
   }
 
   private getTimestamp(): string {
-    if (!self.timestampEnabled) return '';
+    if (!self.logTimestampFormat) return '';
 
-    // eg. "2023-05-09 18:33:19.232"
-    return gray(dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'));
+    // eg. "2023-05-09 18:33:19.232 " (has extra padding)
+    return `${gray(dayjs().format(self.logTimestampFormat))} `;
   }
 
   private parseExtra(extra?: object): string {
@@ -65,22 +81,6 @@ export class Logger {
 
   private getLevelTag(level: LogLevel): string {
     return bold(this.COLOR_BY_LEVEL[level](level));
-  }
-
-  public enable(): void {
-    self.logEnabled = true;
-  }
-
-  public disable(): void {
-    self.logEnabled = false;
-  }
-
-  public setLogLevel(level: LogLevel): void {
-    self.logLevel = level;
-  }
-
-  public setTimestampEnabled(enable: boolean): void {
-    self.timestampEnabled = enable;
   }
 
   public debug(message: string, extra?: object): void {

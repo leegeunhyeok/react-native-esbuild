@@ -1,3 +1,5 @@
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import { Logger } from '@react-native-esbuild/utils';
 import { cli } from './cli';
 import * as Commands from './commands';
 import { getCommand, getOptions, resetCache } from './helpers';
@@ -5,11 +7,12 @@ import { logger } from './shared';
 import type { BuildOptions, StartOptions } from './types';
 
 (async function main() {
+  ReactNativeEsbuildBundler.initialize();
+
   const argv = await cli();
   const options = getOptions(argv);
 
-  logger.setLogLevel(options.verbose ? 'debug' : 'info');
-  logger.setTimestampEnabled(options.timestamp);
+  Logger.setLogLevel(options.verbose ? 'debug' : 'info');
   logger.debug('parsed options', options);
 
   if (options.resetCache) {

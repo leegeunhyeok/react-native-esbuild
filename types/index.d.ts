@@ -5,9 +5,9 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow
     _config: any; // BundlerConfig in @react-native-esbuild/core
     // logger
-    logEnabled?: boolean;
+    logEnabled: boolean;
     logLevel: 'debug' | 'log' | 'info' | 'warn' | 'error';
-    timestampEnabled: boolean;
+    logTimestampFormat: string | null;
   };
 }
 

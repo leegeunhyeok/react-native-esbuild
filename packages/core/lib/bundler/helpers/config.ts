@@ -13,6 +13,10 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
      * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
      */
     mainFields: ['react-native', 'browser', 'main', 'module'],
+    logger: {
+      enabled: true,
+      timestamp: null,
+    },
     transformer: {
       stripFlowPackageNames: ['react-native'],
     },
@@ -35,7 +39,10 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
     : baseConfig;
 
   // assign config to global context
-  self._config = config;
+  Object.defineProperty(self, '_config', {
+    value: config,
+    writable: false,
+  });
 
   return config;
 }

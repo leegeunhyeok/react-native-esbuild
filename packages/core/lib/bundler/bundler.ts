@@ -7,7 +7,7 @@ import {
   getIdByOptions,
   type BundleConfig,
 } from '@react-native-esbuild/config';
-import { colors, isCI } from '@react-native-esbuild/utils';
+import { Logger, colors, isCI, isTTY } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
@@ -39,7 +39,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
 
   public static initialize(): void {
+    if (isCI() || !isTTY()) colors.disable();
+
     const config = loadConfig(process.cwd());
+
+    config.logger?.enabled ?? true ? Logger.enable() : Logger.disable();
+    Logger.setTimestampFormat(config.logger?.timestamp ?? null);
 
     if (!config.mainFields?.includes('react-native')) {
       logger.warn('`react-native` not found in `mainFields`');
@@ -52,22 +57,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   constructor(private root: string = process.cwd()) {
     super();
-    if (isCI()) colors.disable();
-    printLogo();
     this.config = getConfig();
-    this.setupConfig();
-  }
-
-  private setupConfig(): void {
-    if (!this.config.mainFields?.includes('react-native')) {
-      logger.warn('`react-native` not found in `mainFields`');
-    }
-
-    if (
-      !this.config.transformer?.stripFlowPackageNames?.includes('react-native')
-    ) {
-      logger.warn('`react-native` not found in `stripFlowPackageNames`');
-    }
+    printLogo();
   }
 
   private async getBuildOptionsForBundler(

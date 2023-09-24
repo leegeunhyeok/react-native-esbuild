@@ -2,8 +2,10 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { z } from 'zod';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
-import { SUPPORT_PLATFORMS } from '@react-native-esbuild/config';
-import { type BundleConfig } from '@react-native-esbuild/config';
+import {
+  SUPPORT_PLATFORMS,
+  type BundleConfig,
+} from '@react-native-esbuild/config';
 import { logger } from '../shared';
 import type { RawArgv, StartOptions, BuildOptions } from '../types';
 
@@ -26,7 +28,6 @@ const cliArgvSchema = z.object({
   minify: z.boolean().optional(),
   metafile: z.boolean().optional(),
   verbose: z.boolean().optional(),
-  timestamp: z.boolean().optional(),
   port: z.number().optional(),
   host: z.string().optional(),
   'entry-file': z.string().optional(),
@@ -64,13 +65,11 @@ export function getOptions(rawArgv: RawArgv): StartOptions | BuildOptions {
   const minify = argv.minify;
   const metafile = argv.metafile;
   const verbose = argv.verbose;
-  const timestamp = argv.timestamp;
   const resetCache = argv['reset-cache'];
 
   const commonConfig = {
     verbose,
     resetCache,
-    timestamp,
   };
 
   const bundleConfig: Partial<BundleConfig> = {

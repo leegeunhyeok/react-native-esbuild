@@ -3,7 +3,9 @@
  */
 exports.default = {
   cache: true,
-  timestampFormat: '',
+  logger: {
+    timestamp: 'YYYY-MM-DD HH:mm:ss.SSS',
+  },
   transformer: {
     convertSvg: true,
     stripFlowPackageNames: ['react-native'],

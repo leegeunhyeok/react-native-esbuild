@@ -14,12 +14,27 @@ export interface ReactNativeEsbuildConfig {
    * Field names for resolve package's modules.
    *
    * Defaults to `['react-native', 'browser', 'main', 'module']`
-   *
-   * @see Documentation {@link https://esbuild.github.io/api/#main-fields}
    */
   mainFields?: string[];
   /**
-   * transform configurations
+   * Logger configurations
+   */
+  logger?: {
+    /**
+     * Enable client log.
+     *
+     * Defaults to `true`
+     */
+    enabled?: boolean;
+    /**
+     * Print timestamp with log when format is specified.
+     *
+     * Defaults to `null`
+     */
+    timestamp?: string | null;
+  };
+  /**
+   * Transformer configurations
    */
   transformer?: {
     /**

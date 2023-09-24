@@ -90,7 +90,7 @@ exports.default = {};
   <summary>Configuration details</summary>
 
 ```ts
-export interface ReactNativeEsbuildConfig {
+interface ReactNativeEsbuildConfig {
   /**
    * Enable cache.
    *
@@ -101,12 +101,27 @@ export interface ReactNativeEsbuildConfig {
    * Field names for resolve package's modules.
    *
    * Defaults to `['react-native', 'browser', 'main', 'module']`
-   *
-   * @see Documentation {@link https://esbuild.github.io/api/#main-fields}
    */
   mainFields?: string[];
   /**
-   * transform configurations
+   * Logger configurations
+   */
+  logger?: {
+    /**
+     * Enable client log.
+     *
+     * Defaults to `true`
+     */
+    enabled?: boolean;
+    /**
+     * Print timestamp with log when format is specified.
+     *
+     * Defaults to `null`
+     */
+    timestamp?: string | null;
+  };
+  /**
+   * Transformer configurations
    */
   transformer?: {
     /**
@@ -115,7 +130,7 @@ export interface ReactNativeEsbuildConfig {
     convertSvg?: boolean;
     /**
      * Strip flow syntax.
-     * 
+     *
      * Defaults to `['react-native']`
      */
     stripFlowPackageNames?: string[];
@@ -130,11 +145,11 @@ export interface ReactNativeEsbuildConfig {
       /**
        * Custom Babel rules
        */
-      babel?: CustomBabelTransformRule[];
+      babel?: CustomTransformRuleBase<BabelTransformOptions>[];
       /**
        * Custom Swc rules
        */
-      swc?: CustomSwcTransformRule[];
+      swc?: CustomTransformRuleBase<SwcTransformOptions>[];
     };
   };
 }
@@ -162,7 +177,6 @@ rne start
 | `--host` | dev server host | `localhost` |
 | `--port` | dev server port | `8081` |
 | `--verbose` | show cli debug log | `false` |
-| `--timestamp` | print timestamp in log | `false` |
 | `--reset-cache` | reset transform cache | `false` |
 
 ## Bundle
@@ -184,7 +198,6 @@ rne bundle --platform=<platform> --bundle-output=<dest>
 | `--minify` | enable minify | `false` |
 | `--metafile` | Export [Esbuild metafile](https://esbuild.github.io/api/#metafile) | `false` |
 | `--verbose` | print all logs | `false` |
-| `--timestamp` | print timestamp in log | `false` |
 | `--reset-cache` | reset transform cache | `false` |
 
 ## Cache

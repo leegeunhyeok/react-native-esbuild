@@ -9,11 +9,6 @@ const commonOptions = {
     type: 'boolean',
     default: false,
   },
-  timestamp: {
-    describe: 'print timestamp in log',
-    type: 'boolean',
-    default: false,
-  },
   'reset-cache': {
     describe: 'reset transform cache',
     type: 'boolean',
