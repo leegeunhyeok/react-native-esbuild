@@ -196,46 +196,12 @@ Manage transform cache
 rne cache clear
 ```
 
-# Customize
-
-## Plugins
-
-```ts
-import {
-  ReactNativeEsbuildBundler,
-  type EsbuildPluginFactory,
-} from '@react-native-esbuild/core';
-import {
-  createAssetRegisterPlugin,
-  createReactNativeRuntimeTransformPlugin,
-  createSvgTransformPlugin,
-} from '@react-native-esbuild/plugins';
-
-const bundler = new ReactNativeEsbuildBundler(/* bundler config */);
-
-const createMyPlugin: EsbuildPluginFactory<MyPluginConfigType> = (pluginConfig) => {
-  return function myPlugin (context) {
-    return {
-      // implement your custom esbuild plugin here
-      name: 'your-custom-esbuild-plugin',
-      setup: (build): void {
-        // ...
-      },
-    },
-  };
-};
-
-bundler
-  .registerPlugin(createAssetRegisterPlugin())
-  .registerPlugin(createSvgTransformPlugin())
-  .registerPlugin(createReactNativeRuntimeTransformPlugin())
-  // register custom esbuild plugin
-  .registerPlugin(createMyPlugin(config));
-```
-
 # Development
 
 ```bash
+# install dependencies and run build
+yarn && lerna run build
+
 # in example directory,
 # run example application (start @react-native-esbuild/dev-server)
 yarn start
