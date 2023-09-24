@@ -39,6 +39,21 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     if (isCI()) colors.disable();
     printLogo();
     this.config = loadConfig(this.root);
+    this.setupConfig();
+  }
+
+  private setupConfig(): void {
+    if (!this.config.mainFields?.includes('react-native')) {
+      logger.warn('`react-native` not found in `mainFields`');
+    }
+
+    if (
+      !this.config.transformer?.stripFlowPackageNames?.includes('react-native')
+    ) {
+      logger.warn('`react-native` not found in `stripFlowPackageNames`');
+    }
+
+    self.cache = this.config.cache ?? true;
   }
 
   private async getBuildOptionsForBundler(
@@ -81,6 +96,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     ];
 
     return getEsbuildOptions(bundleConfig, {
+      mainFields: this.config.mainFields,
       plugins: plugins.map((plugin) => plugin(context)),
       define: getGlobalVariables(bundleConfig),
       banner: {

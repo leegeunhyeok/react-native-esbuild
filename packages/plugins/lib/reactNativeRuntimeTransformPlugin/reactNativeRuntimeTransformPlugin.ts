@@ -38,13 +38,13 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           ...(config?.injectScriptPaths ?? []),
         ];
         const cacheController = Bundler.caches.get(context.id.toString());
-        const cacheEnabled = context.dev;
+        const cacheEnabled = self.cache;
         const root = context.root;
         const {
           stripFlowPackageNames = [],
           fullyTransformPackageNames = [],
-          customTransformRules = [],
-        } = context.config.transform;
+          additionalTransformRules,
+        } = context.config.transformer ?? {};
         const entryFile = path.resolve(root, context.entry);
 
         const stripFlowPackageNamesRegExp = stripFlowPackageNames.length
@@ -100,6 +100,46 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           return null;
         };
 
+        const applyAdditionalTransform = async (
+          source: string,
+          args: OnLoadArgs,
+        ): Promise<string> => {
+          if (!additionalTransformRules) return source;
+          const transformContext = { path: args.path, root };
+
+          if (additionalTransformRules.babel?.length) {
+            for await (const rule of additionalTransformRules.babel) {
+              if (rule.test(args.path, source)) {
+                // eslint-disable-next-line no-param-reassign -- allow
+                source = await transformWithBabel(
+                  source,
+                  transformContext,
+                  typeof rule.options === 'function'
+                    ? rule.options(args.path, source)
+                    : rule.options,
+                );
+              }
+            }
+          }
+
+          if (additionalTransformRules.swc?.length) {
+            for await (const rule of additionalTransformRules.swc) {
+              if (rule.test(args.path, source)) {
+                // eslint-disable-next-line no-param-reassign -- allow
+                source = await transformWithSwc(
+                  source,
+                  transformContext,
+                  typeof rule.options === 'function'
+                    ? rule.options(args.path, source)
+                    : rule.options,
+                );
+              }
+            }
+          }
+
+          return source;
+        };
+
         const transformSource = async (
           args: OnLoadArgs,
           cacheConfig: { modifiedAt: number; hash: string },
@@ -133,14 +173,8 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
             source = await stripFlowWithSucrase(source, transformContext);
           }
 
-          for await (const rule of customTransformRules) {
-            if (rule.test(args.path, source)) {
-              source = await transformWithBabel(source, transformContext, {
-                babelrc: false,
-                plugins: rule.plugins,
-              });
-            }
-          }
+          // apply additional transform
+          source = await applyAdditionalTransform(source, args);
 
           // transform source target to es5
           source = await transformWithSwc(source, transformContext);
@@ -175,12 +209,11 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
             context.id + mtimeMs + args.path,
           );
 
-          const cache = await getTransformedCodeFromCache(hash, mtimeMs);
-
           return {
-            contents: cache
-              ? cache
-              : await transformSource(args, { hash, modifiedAt: mtimeMs }),
+            contents:
+              (cacheEnabled &&
+                (await getTransformedCodeFromCache(hash, mtimeMs))) ||
+              (await transformSource(args, { hash, modifiedAt: mtimeMs })),
             loader: 'js',
           } as OnLoadResult;
         });

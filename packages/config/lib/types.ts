@@ -1,14 +1,55 @@
-import type { PluginItem } from '@babel/core';
+import type { TransformOptions as BabelTransformOptions } from '@babel/core';
+import type { Options as SwcTransformOptions } from '@swc/core';
 
 export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
 // common
 export interface ReactNativeEsbuildConfig {
-  transform: {
-    svgr?: boolean;
+  /**
+   * Enable cache.
+   *
+   * Defaults to `true`
+   */
+  cache?: boolean;
+  /**
+   * Field names for resolve package's modules.
+   *
+   * Defaults to `['react-native', 'browser', 'main', 'module']`
+   *
+   * @see Documentation {@link https://esbuild.github.io/api/#main-fields}
+   */
+  mainFields?: string[];
+  /**
+   * transform configurations
+   */
+  transformer?: {
+    /**
+     * If `true`, convert svg assets to `react-native-svg` based component
+     */
+    convertSvg?: boolean;
+    /**
+     * Strip flow syntax.
+     *
+     * Defaults to `['react-native']`
+     */
     stripFlowPackageNames?: string[];
+    /**
+     * Transform with babel using `metro-react-native-babel-preset` (slow)
+     */
     fullyTransformPackageNames?: string[];
-    customTransformRules?: CustomTransformRule[];
+    /**
+     * Additional transform rules. This rules will be applied before phase of transform to es5.
+     */
+    additionalTransformRules?: {
+      /**
+       * Custom Babel rules
+       */
+      babel?: CustomBabelTransformRule[];
+      /**
+       * Custom Swc rules
+       */
+      swc?: CustomSwcTransformRule[];
+    };
   };
 }
 
@@ -38,7 +79,19 @@ export enum OptionFlag {
 }
 
 // transformers
-export interface CustomTransformRule {
-  test: (path: string, source: string) => boolean;
-  plugins: PluginItem[];
+export interface CustomTransformRuleBase<T> {
+  /**
+   * Predicator for transform
+   */
+  test: (path: string, code: string) => boolean;
+  /**
+   * Transformer options
+   */
+  options: T | ((path: string, code: string) => T);
 }
+
+export type CustomBabelTransformRule =
+  CustomTransformRuleBase<BabelTransformOptions>;
+
+export type CustomSwcTransformRule =
+  CustomTransformRuleBase<SwcTransformOptions>;

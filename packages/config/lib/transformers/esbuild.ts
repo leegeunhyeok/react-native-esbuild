@@ -14,11 +14,6 @@ export function getEsbuildOptions(
   const extensions = SOURCE_EXTENSIONS.concat(ASSET_EXTENSIONS);
 
   const baseOptions: BuildOptions = {
-    /**
-     * mainFields
-     * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
-     */
-    mainFields: ['react-native', 'browser', 'main', 'module'],
     entryPoints: [entry],
     outfile,
     sourceRoot: path.dirname(entry),

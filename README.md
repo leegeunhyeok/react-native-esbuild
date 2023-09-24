@@ -44,29 +44,6 @@ npm install -D install @react-native-esbuild/cli
 yarn add -D @react-native-esbuild/cli
 ```
 
-
-```js
-// <project-root>/react-native-esbuild.config.js
-
-/**
- * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
- */
-exports.default = {
-  transform: {
-    // convert `.svg` assets to `react-native-svg` based component using `@svgr/core`
-    svgr: true,
-    // strip flow syntax
-    stripFlowPackageNames: ['react-native'],
-    // fully transform based on `metro-react-native-babel-preset` (slow)
-    fullyTransformPackageNames: [],
-    // custom babel transform rules
-    customTransformRules: [],
-  },
-};
-```
-
-If you looking for more configurations, go to [CONFIGURATIONS.md](./CONFIGURATIONS.md).
-
 ## Android
 
 ```bash
@@ -117,6 +94,79 @@ REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
 
 /bin/sh -c "$WITH_ENVIRONMENT $REACT_NATIVE_XCODE"
 ```
+
+## Configurations
+
+File location: `<rootDir>/react-native-esbuild.js`
+
+```js
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {};
+```
+
+<details>
+  <summary>Configuration details</summary>
+
+```ts
+export interface ReactNativeEsbuildConfig {
+  /**
+   * Enable cache.
+   *
+   * Defaults to `true`
+   */
+  cache?: boolean;
+  /**
+   * Field names for resolve package's modules.
+   *
+   * Defaults to `['react-native', 'browser', 'main', 'module']`
+   *
+   * @see Documentation {@link https://esbuild.github.io/api/#main-fields}
+   */
+  mainFields?: string[];
+  /**
+   * transform configurations
+   */
+  transformer?: {
+    /**
+     * If `true`, convert svg assets to `react-native-svg` based component
+     */
+    convertSvg?: boolean;
+    /**
+     * Strip flow syntax.
+     * 
+     * Defaults to `['react-native']`
+     */
+    stripFlowPackageNames?: string[];
+    /**
+     * Transform with babel using `metro-react-native-babel-preset` (slow)
+     */
+    fullyTransformPackageNames?: string[];
+    /**
+     * Additional transform rules. This rules will be applied before phase of transform to es5.
+     */
+    additionalTransformRules?: {
+      /**
+       * Custom Babel rules
+       */
+      babel?: CustomBabelTransformRule[];
+      /**
+       * Custom Swc rules
+       */
+      swc?: CustomSwcTransformRule[];
+    };
+  };
+}
+```
+</details>
+
+> [!IMPORTANT]  
+> If you've some issues on build, go to troubleshooting guide
+
+- [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+
+# Commands
 
 ## Start
 

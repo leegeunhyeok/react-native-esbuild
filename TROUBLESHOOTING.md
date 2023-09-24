@@ -1,5 +1,177 @@
 # Troubleshooting
 
+- [On Build Time](#on-build-time)
+- [On Runtime](#on-runtime)
+- [Configurations for 3rd Party Libraries](#configurations-for-3rd-party-libraries)
+- [New Architecture](#new-architecture)
+
+## On Build Time
+
+- Try build with `--reset-cache` flag
+- When `Syntax Error` occurs
+  - Target library may be using [Flow](https://flow.org) for type checking.
+  - Add the package name to `stripFlowPackageNames` in configuration file.
+- When unknown error occurs
+  - Add target package name to `fullyTransformPackageNames` in configuration file.
+- Please [report issue](https://github.com/leegeunhyeok/react-native-esbuild/issues) and share demo code for reproduce the issue.
+
+## On Runtime
+
+> [!WARNING]  
+> It's hard to determine the cause (too many reasons).
+> 
+> Please [report issue](https://github.com/leegeunhyeok/react-native-esbuild/issues) and share demo code for reproduce the issue.
+
+## Configurations for 3rd Party Libraries
+
+> [!NOTE]  
+> If you're using packages below and you've some build issues, follow the configurations.
+
+- [@gorhom/bottom-sheet](#gorhombottom-sheet)
+- [@react-native-community/datetimepicker](#react-native-communitydatetimepicker)
+- [react-native-google-publisher-tag](#react-native-google-publisher-tag)
+- [react-native-modal-datetime-picker](#react-native-modal-datetime-picker)
+- [react-native-reanimated](#react-native-reanimated)
+- [react-native-scrollable-tab-view](#react-native-scrollable-tab-view)
+- [react-native-video](#react-native-video)
+- [rn-fetch-blob](#rn-fetch-blob)
+
+### @gorhom/bottom-sheet
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    fullyTransformPackageNames: ['@gorhom/bottom-sheet'],
+  },
+};
+```
+
+### @react-native-community/datetimepicker
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    stripFlowPackageNames: ['@react-native-community/datetimepicker'],
+  },
+};
+```
+
+### react-native-google-publisher-tag
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    stripFlowPackageNames: ['react-native-google-publisher-tag'],
+  },
+};
+```
+
+### react-native-modal-datetime-picker
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    stripFlowPackageNames: ['react-native-modal-datetime-pick'],
+  },
+};
+```
+
+### react-native-reanimated
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    additionalTransformRules: {
+      babel: [
+        {
+          test: (path, code) => {
+            return (
+              /node_modules\/react-native-reanimated\//.test(path) ||
+              code.includes('react-native-reanimated')
+            );
+          },
+          options: {
+            plugins: ['react-native-reanimated/plugin'],
+            babelrc: false,
+          },
+        },
+      ],
+    },
+  },
+};
+```
+
+### react-native-scrollable-tab-view
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    stripFlowPackageNames: ['react-native-scrollable-tab-view'],
+  },
+};
+```
+
+
+### react-native-video
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    stripFlowPackageNames: ['react-native-video'],
+  },
+};
+```
+
+### rn-fetch-blob
+
+```js
+// <rootDir>/react-native-esbuild.config.js
+
+/**
+ * @type {import('@react-native-esbuild/config').ReactNativeEsbuildConfig}
+ */
+exports.default = {
+  transformer: {
+    stripFlowPackageNames: ['rn-fetch-blob'],
+  },
+};
+```
+
 ## New Architecture
 
 This section for environment that enable New Architecture.

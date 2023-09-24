@@ -49,12 +49,6 @@ exports[`getEsbuildOptions should match snapshot 1`] = `
     ".woff2": "file",
   },
   "logLevel": "silent",
-  "mainFields": [
-    "react-native",
-    "browser",
-    "main",
-    "module",
-  ],
   "metafile": false,
   "minify": false,
   "outfile": "main.bundlejs",

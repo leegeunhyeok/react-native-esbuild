@@ -26,11 +26,11 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
     return {
       name: NAME,
       setup: (build): void => {
-        const { svgr = false } = context.config.transform;
+        const { convertSvg = false } = context.config.transformer ?? {};
         const { assetExtensions = ASSET_EXTENSIONS } = config;
         const filteredAssetExtensions = assetExtensions.filter((extension) =>
-          // if using svgr, ignore .svg file
-          svgr ? extension !== '.svg' : true,
+          // if using svgr, ignore svg assets for file loader
+          convertSvg ? extension !== '.svg' : true,
         );
         const assetExtensionsFilter = new RegExp(
           `.(${filteredAssetExtensions.join('|')})$`,

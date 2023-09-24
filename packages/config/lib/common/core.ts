@@ -7,8 +7,17 @@ import { DEFAULT_ENTRY_POINT, DEFAULT_OUTFILE } from '../shares';
 export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
   let config: ReactNativeEsbuildConfig | undefined;
 
-  const baseOptions: ReactNativeEsbuildConfig = {
-    transform: {},
+  // Base config
+  const baseConfig: ReactNativeEsbuildConfig = {
+    cache: true,
+    /**
+     * mainFields
+     * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
+     */
+    mainFields: ['react-native', 'browser', 'main', 'module'],
+    transformer: {
+      stripFlowPackageNames: ['react-native'],
+    },
   };
 
   try {
@@ -17,10 +26,15 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
       path.resolve(resolveDir, 'react-native-esbuild.config.js'),
     ).default;
   } catch {
-    // noop
+    // could not resolve configuration file
   }
 
-  return config ? deepmerge(baseOptions, config) : baseOptions;
+  return config
+    ? deepmerge(baseConfig, config, {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- deepmerge typing
+        arrayMerge: (_destinationArray, sourceArray) => sourceArray,
+      })
+    : baseConfig;
 }
 
 export function combineWithDefaultBundleConfig(

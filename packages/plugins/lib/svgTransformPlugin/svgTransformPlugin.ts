@@ -12,7 +12,7 @@ export const createSvgTransformPlugin: EsbuildPluginFactory = () => {
     return {
       name: NAME,
       setup: (build): void => {
-        if (!(context.config.transform.svgr ?? false)) {
+        if (!(context.config.transformer?.convertSvg ?? false)) {
           return;
         }
 
