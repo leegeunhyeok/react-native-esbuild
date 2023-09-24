@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { BuildResult } from 'esbuild';
-import { logger } from '../../shared';
-import type { EsbuildPluginFactory } from '../../types';
+import { logger } from '../../../shared';
+import type { EsbuildPluginFactory } from '../../../types';
 
 const NAME = 'metafile-plugin';
 
