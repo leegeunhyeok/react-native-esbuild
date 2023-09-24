@@ -7,6 +7,7 @@ import {
   getIdByOptions,
   type BundleConfig,
 } from '@react-native-esbuild/config';
+import type { LogLevel } from '@react-native-esbuild/utils';
 import { Logger, colors, isCI, isTTY } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { logger } from '../shared';
@@ -21,6 +22,7 @@ import type {
   PromiseHandler,
   EsbuildPluginFactory,
   PluginContext,
+  ReportableEvent,
 } from '../types';
 import {
   loadConfig,
@@ -35,6 +37,7 @@ import { printLogo } from './logo';
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
   private config: ReactNativeEsbuildConfig;
+  private appLogger = new Logger('app');
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
 
@@ -58,7 +61,22 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   constructor(private root: string = process.cwd()) {
     super();
     this.config = getConfigFromGlobal();
+    this.on('report', (event) => {
+      this.broadcastToReporter(event);
+    });
     printLogo();
+  }
+
+  private broadcastToReporter(event: ReportableEvent): void {
+    // default reporter (for logging)
+    switch (event.type) {
+      case 'client_log':
+        this.appLogger[event.level as LogLevel](
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- LogMessage in dev-server
+          (event.data as any[]).join(' '),
+        );
+        break;
+    }
   }
 
   private async getBuildOptionsForBundler(

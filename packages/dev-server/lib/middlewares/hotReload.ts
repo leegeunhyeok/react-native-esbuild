@@ -1,5 +1,6 @@
 import { Server, type WebSocket, type MessageEvent, type Data } from 'ws';
-import { clientLogger, logger } from '../shared';
+import type { ClientLogEvent } from '@react-native-esbuild/core';
+import { logger } from '../shared';
 import { convertHmrLogLevel } from '../helpers';
 import type {
   HotReloadMiddleware,
@@ -7,7 +8,6 @@ import type {
   HmrUpdateDoneMessage,
   HmrUpdateMessage,
   HmrUpdateStartMessage,
-  ReportableEvent,
 } from '../types';
 
 const getMessage = (data: Data): HmrClientMessage | null => {
@@ -20,9 +20,11 @@ const getMessage = (data: Data): HmrClientMessage | null => {
   }
 };
 
-export const createHotReloadMiddleware = (
-  reporter?: (event: ReportableEvent) => void,
-): HotReloadMiddleware => {
+export const createHotReloadMiddleware = ({
+  onLog,
+}: {
+  onLog?: (event: ClientLogEvent) => void;
+}): HotReloadMiddleware => {
   const server = new Server({ noServer: true });
   let connectedSocket: WebSocket | null = null;
 
@@ -40,13 +42,9 @@ export const createHotReloadMiddleware = (
      */
     switch (message.type) {
       case 'log': {
-        const level = convertHmrLogLevel(message.level);
-        clientLogger[level](message.data.join(' '));
-
-        // TODO: manage reporter in core
-        reporter?.({
+        onLog?.({
           type: 'client_log',
-          level,
+          level: convertHmrLogLevel(message.level),
           data: message.data,
           mode: 'BRIDGE',
         });

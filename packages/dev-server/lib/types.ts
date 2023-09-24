@@ -104,32 +104,6 @@ export interface HmrModule {
   sourceMappingURL: string | null;
   sourceURL: string | null;
 }
-/**
- * Event reportable event types
- *
- * @see {@link https://github.com/facebook/metro/blob/v0.78.0/packages/metro/src/lib/reporting.js#L36}
- */
-export interface ReportableEvent {
-  type: 'client_log';
-  level:
-    | 'trace'
-    | 'info'
-    | 'warn'
-    /**
-     * In react-native, ReportableEvent['level'] does not defined `error` type.
-     * But, flipper supports the `error` type.
-     *
-     * @see {@link https://github.com/facebook/flipper/blob/v0.211.0/desktop/flipper-common/src/server-types.tsx#L76}
-     */
-    | 'error'
-    | 'log'
-    | 'group'
-    | 'groupCollapsed'
-    | 'groupEnd'
-    | 'debug';
-  data: unknown[];
-  mode: 'BRIDGE' | 'NOBRIDGE';
-}
 
 /**
  * @see {@link https://github.com/react-native-community/cli/blob/v11.3.5/packages/cli-server-api/src/websocket/createEventsSocketEndpoint.ts#L18}

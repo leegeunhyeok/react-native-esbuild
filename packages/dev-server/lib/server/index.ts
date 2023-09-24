@@ -137,11 +137,12 @@ export class ReactNativeEsbuildDevServer {
       throw new Error('server is not initialized');
     }
 
-    const { server: hotReloadWss, ...hr } = createHotReloadMiddleware(
-      (event) => {
+    const { server: hotReloadWss, ...hr } = createHotReloadMiddleware({
+      onLog: (event) => {
         this.eventsSocketEndpoint.reportEvent(event);
+        this.bundler?.emit('report', event);
       },
-    );
+    });
 
     const inspectorProxyWss = this.inspectorProxy.createWebSocketListeners(
       this.server,

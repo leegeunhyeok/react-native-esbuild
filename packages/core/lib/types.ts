@@ -136,3 +136,32 @@ export type Transformer<Options> = (
   context: { path: string; root: string },
   customOption?: Options,
 ) => string | Promise<string>;
+
+export type ReportableEvent = ClientLogEvent;
+
+/**
+ * Event reportable event types
+ *
+ * @see {@link https://github.com/facebook/metro/blob/v0.78.0/packages/metro/src/lib/reporting.js#L36}
+ */
+export interface ClientLogEvent {
+  type: 'client_log';
+  level:
+    | 'trace'
+    | 'info'
+    | 'warn'
+    /**
+     * In react-native, ReportableEvent['level'] does not defined `error` type.
+     * But, flipper supports the `error` type.
+     *
+     * @see {@link https://github.com/facebook/flipper/blob/v0.211.0/desktop/flipper-common/src/server-types.tsx#L76}
+     */
+    | 'error'
+    | 'log'
+    | 'group'
+    | 'groupCollapsed'
+    | 'groupEnd'
+    | 'debug';
+  data: unknown[];
+  mode: 'BRIDGE' | 'NOBRIDGE';
+}
