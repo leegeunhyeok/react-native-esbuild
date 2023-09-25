@@ -254,11 +254,11 @@ Read [ARCHITECTURE.md](./ARCHITECTURE.md).
 # in `example` directory
 
 # react-native-esbuild (with cache)
-time yarn build:android
-time yarn build:ios
+time yarn bundle:android
+time yarn bundle:ios
 # react-native-esbuild (without cache)
-time yarn build:android --reset-cache
-time yarn build:ios --reset-cache
+time yarn bundle:android --reset-cache
+time yarn bundle:ios --reset-cache
 
 # metro (with cache)
 time yarn bundle:metro:android
