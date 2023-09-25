@@ -14,7 +14,7 @@ export const loadConfig = (resolveDir: string): ReactNativeEsbuildConfig => {
      */
     mainFields: ['react-native', 'browser', 'main', 'module'],
     logger: {
-      enabled: true,
+      disabled: false,
       timestamp: null,
     },
     transformer: {

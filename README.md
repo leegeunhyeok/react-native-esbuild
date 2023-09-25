@@ -107,11 +107,11 @@ exports.default = {};
      */
     logger?: {
       /**
-       * Enable client log.
+       * Disable client log.
        *
-       * Defaults to `true`
+       * Defaults to `false`
        */
-      enabled?: boolean;
+      disabled?: boolean;
       /**
        * Print timestamp with log when format is specified.
        *

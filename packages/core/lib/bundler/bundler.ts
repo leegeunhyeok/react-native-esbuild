@@ -46,7 +46,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     const config = loadConfig(process.cwd());
 
-    config.logger?.enabled ?? true ? Logger.enable() : Logger.disable();
+    config.logger?.disabled ?? false ? Logger.disable() : Logger.enable();
     Logger.setTimestampFormat(config.logger?.timestamp ?? null);
 
     if (!config.mainFields?.includes('react-native')) {
