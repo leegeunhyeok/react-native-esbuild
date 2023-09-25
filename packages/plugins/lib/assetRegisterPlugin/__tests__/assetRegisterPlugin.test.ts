@@ -7,14 +7,14 @@ import {
   SUPPORT_PLATFORMS,
   type BundlerSupportPlatform,
 } from '@react-native-esbuild/config';
+import type { AssetScale } from '@react-native-esbuild/internal';
 import {
   addSuffix,
   stripSuffix,
   getSuffixedPath,
   resolveScaledAssets,
-  getAssetRegistrationScript,
 } from '../helpers';
-import type { AssetScale, SuffixPathResult } from '../../types';
+import type { SuffixPathResult } from '../../types';
 
 jest.mock('fs', () => ({
   promises: {
@@ -406,28 +406,6 @@ describe('assetRegisterPlugin', () => {
         expect(res.scales.length).toEqual(1);
         expect(res.scales.includes(1)).toBeTruthy();
       });
-    });
-  });
-
-  describe('getAssetRegistrationScript', () => {
-    let assetRegistrationScript: string;
-
-    beforeEach(() => {
-      assetRegistrationScript = getAssetRegistrationScript({
-        name: 'image',
-        type: 'png',
-        scales: [1, 2, 3],
-        hash: 'hash',
-        httpServerLocation: '/image.png',
-        dimensions: {
-          width: 0,
-          height: 0,
-        },
-      });
-    });
-
-    it('should match snapshot', () => {
-      expect(assetRegistrationScript).toMatchSnapshot();
     });
   });
 });

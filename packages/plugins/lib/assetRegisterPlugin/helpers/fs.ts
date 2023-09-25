@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getDevServerAssetPath } from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
+import type { Asset } from '@react-native-esbuild/internal';
 import { logger } from '../../shared';
-import type { Asset } from '../../types';
 import { getDevServerBasePath, resolveAssetPath } from './path';
 
 /**

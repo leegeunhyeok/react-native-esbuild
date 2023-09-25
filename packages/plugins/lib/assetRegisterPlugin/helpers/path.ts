@@ -7,7 +7,8 @@ import md5 from 'md5';
 import type { BundlerSupportPlatform } from '@react-native-esbuild/config';
 import { ASSET_PATH, SUPPORT_PLATFORMS } from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
-import type { Asset, AssetScale, SuffixPathResult } from '../../types';
+import type { Asset, AssetScale } from '@react-native-esbuild/internal';
+import type { SuffixPathResult } from '../../types';
 
 const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(
   (platform) => `.${platform}`,

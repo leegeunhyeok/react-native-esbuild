@@ -1,16 +1,15 @@
 import path from 'node:path';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
 import type { EsbuildPluginFactory } from '@react-native-esbuild/core';
+import {
+  getAssetRegistrationScript,
+  type Asset,
+} from '@react-native-esbuild/internal';
 import { ASSET_EXTENSIONS } from '@react-native-esbuild/config';
-import type {
-  Asset,
-  AssetRegisterPluginConfig,
-  SuffixPathResult,
-} from '../types';
+import type { AssetRegisterPluginConfig, SuffixPathResult } from '../types';
 import {
   copyAssetsToDestination,
   copyAssetsToDevServer,
-  getAssetRegistrationScript,
   getSuffixedPath,
   resolveScaledAssets,
 } from './helpers';
