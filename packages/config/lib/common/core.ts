@@ -39,6 +39,17 @@ export const getIdByOptions = ({
   return value;
 };
 
+/**
+ * helper for resolve environment mismatch issue.
+ *
+ * run bundler with `production` environment, but babel's env is still `development`.
+ * in this case, run bundle after build it will be occurs unexpected errors.
+ *
+ * for eg. `react-native-reanimated` using babel plugin for transform.
+ *         it follow babel environment, but main source(by esbuild) isn't.
+ *
+ * @see {@link https://github.com/babel/babel/blob/v7.23.0/packages/babel-core/src/config/helpers/environment.ts#L2}
+ */
 export const setEnvironment = (isDev: boolean): void => {
   const env = isDev ? 'development' : 'production';
   process.env.NODE_ENV = env;
