@@ -3695,6 +3695,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/utils@workspace:packages/utils"
   dependencies:
+    "@faker-js/faker": ^8.1.0
     colors: ^1.4.0
     dayjs: ^1.11.10
     esbuild: ^0.19.3
