@@ -90,8 +90,7 @@ export class TransformFlowBuilder {
         ].join('\n');
       };
 
-      // eslint-disable-next-line @typescript-eslint/require-await -- allow
-      transformFlow.addFlow(async (code, args) => {
+      transformFlow.addFlow((code, args) => {
         return {
           code:
             args.path === entryFile
@@ -145,7 +144,7 @@ export class TransformFlowBuilder {
           stripFlowPackageNamesRegExp.test(args.path) ||
           isFlow(code, args.path)
         ) {
-          // eslint-disable-next-line no-param-reassign -- allow
+          // eslint-disable-next-line no-param-reassign -- allow reassign
           code = await stripFlowWithSucrase(
             code,
             this.getTransformContext(args),
@@ -161,7 +160,7 @@ export class TransformFlowBuilder {
       transformFlow.addFlow(async (code, args) => {
         for await (const rule of this.additionalBabelRules) {
           if (rule.test(args.path, code)) {
-            // eslint-disable-next-line no-param-reassign -- allow
+            // eslint-disable-next-line no-param-reassign -- allow reassign
             code = await transformWithBabel(
               code,
               this.getTransformContext(args),
@@ -180,7 +179,7 @@ export class TransformFlowBuilder {
       transformFlow.addFlow(async (code, args) => {
         for await (const rule of this.additionalSwcRules) {
           if (rule.test(args.path, code)) {
-            // eslint-disable-next-line no-param-reassign -- allow
+            // eslint-disable-next-line no-param-reassign -- allow reassign
             code = await transformWithSwc(
               code,
               this.getTransformContext(args),
@@ -244,7 +243,7 @@ export class TransformFlow {
 
     const result = await this.flow.reduce(
       (prev, curr) => {
-        return prev.then((prevResult) =>
+        return Promise.resolve(prev).then((prevResult) =>
           prevResult.done
             ? Promise.resolve({ code: prevResult.code, done: true })
             : curr(prevResult.code, args, sharedData),
@@ -261,7 +260,7 @@ export type FlowRunner = (
   code: string,
   args: OnLoadArgs,
   sharedData: FlowSharedData,
-) => Promise<TransformResult>;
+) => Promise<TransformResult> | TransformResult;
 
 interface TransformResult {
   code: string;
