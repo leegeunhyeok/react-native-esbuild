@@ -5,7 +5,7 @@ import {
   symbolicateStackTrace,
 } from '@react-native-esbuild/symbolicate';
 import { logger } from '../shared';
-import { parseBundleConfigFromSearchParams } from '../helpers';
+import { parseBundleConfigFromRequestUrl } from '../helpers';
 import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'symbolicate-middleware';
@@ -33,22 +33,32 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
       throw new Error('unable to processing');
     }
 
-    const { query } = parse(targetStack.file, true);
-    const bundleConfig = parseBundleConfigFromSearchParams(query);
+    try {
+      const { bundleConfig } = parseBundleConfigFromRequestUrl(
+        targetStack.file,
+      );
 
-    bundler
-      .getSourcemap(bundleConfig)
-      .then(({ sourcemap }) => symbolicateStackTrace(sourcemap, stack))
-      .then((symbolicateResult) => {
-        response.writeHead(200).end(JSON.stringify(symbolicateResult));
-      })
-      .catch((errorOrSignal) => {
-        if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
-          logger.error('bundle result is empty');
-        } else {
-          logger.error('symbolicate error', errorOrSignal as Error);
-        }
-        response.writeHead(500).end();
-      });
+      if (!bundleConfig) {
+        throw new Error();
+      }
+
+      bundler
+        .getSourcemap(bundleConfig)
+        .then(({ sourcemap }) => symbolicateStackTrace(sourcemap, stack))
+        .then((symbolicateResult) => {
+          response.writeHead(200).end(JSON.stringify(symbolicateResult));
+        })
+        .catch((errorOrSignal) => {
+          if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
+            logger.error('bundle result is empty');
+          } else {
+            logger.error('symbolicate error', errorOrSignal as Error);
+          }
+          response.writeHead(500).end();
+        });
+    } catch (error) {
+      logger.error('invalid payload');
+      response.writeHead(400).end();
+    }
   };
 };

@@ -1,13 +1,14 @@
 import { Server, type WebSocket, type MessageEvent, type Data } from 'ws';
 import type { ClientLogEvent } from '@react-native-esbuild/core';
+import type { LogLevel } from '@react-native-esbuild/utils';
 import { logger } from '../shared';
-import { convertHmrLogLevel } from '../helpers';
 import type {
   HotReloadMiddleware,
   HmrClientMessage,
   HmrUpdateDoneMessage,
   HmrUpdateMessage,
   HmrUpdateStartMessage,
+  LogMessage,
 } from '../types';
 
 const getMessage = (data: Data): HmrClientMessage | null => {
@@ -19,6 +20,19 @@ const getMessage = (data: Data): HmrClientMessage | null => {
     return null;
   }
 };
+
+export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
+  switch (level) {
+    case 'group':
+    case 'groupCollapsed':
+    case 'groupEnd':
+    case 'trace':
+      return 'log';
+
+    default:
+      return level;
+  }
+}
 
 export const createHotReloadMiddleware = ({
   onLog,

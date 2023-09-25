@@ -6,6 +6,12 @@ import type {
 import type { Server as WebSocketServer } from 'ws';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
+export enum BundleRequestType {
+  Unknown,
+  Bundle,
+  Sourcemap,
+}
+
 export interface DevServerOptions {
   port?: number;
   host?: string;

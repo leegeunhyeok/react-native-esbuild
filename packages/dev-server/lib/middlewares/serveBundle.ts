@@ -1,4 +1,3 @@
-import { parse } from 'node:url';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type {
   BundlerEventListener,
@@ -7,17 +6,11 @@ import type {
 import { BundleTaskSignal } from '@react-native-esbuild/core';
 import { getIdByOptions } from '@react-native-esbuild/config';
 import type { ParsedBundleConfig } from '../helpers';
-import { parseBundleConfigFromSearchParams, BundleResponse } from '../helpers';
+import { BundleResponse, parseBundleConfigFromRequestUrl } from '../helpers';
 import { logger } from '../shared';
-import type { DevServerMiddlewareCreator } from '../types';
+import { BundleRequestType, type DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'serve-bundle-middleware';
-
-enum BundleType {
-  Unknown,
-  Bundle,
-  Sourcemap,
-}
 
 const serveBundle = (
   bundler: ReactNativeEsbuildBundler,
@@ -77,37 +70,6 @@ const serveSourcemap = (
     });
 };
 
-const parseBundleConfig = (
-  url: string,
-): {
-  type: BundleType;
-  bundleConfig: ParsedBundleConfig | null;
-} => {
-  const { pathname, query } = parse(url, true);
-
-  if (typeof pathname !== 'string') {
-    return {
-      type: BundleType.Unknown,
-      bundleConfig: null,
-    };
-  }
-
-  // eslint-disable-next-line no-nested-ternary -- allow nested ternary operator
-  const type = pathname.endsWith('.bundle')
-    ? BundleType.Bundle
-    : pathname.endsWith('.map')
-    ? BundleType.Sourcemap
-    : BundleType.Unknown;
-
-  return {
-    type,
-    bundleConfig:
-      type === BundleType.Unknown
-        ? null
-        : parseBundleConfigFromSearchParams(query),
-  };
-};
-
 export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
   bundler,
 }) => {
@@ -118,18 +80,18 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       return;
     }
 
-    const { type, bundleConfig } = parseBundleConfig(request.url);
-    if (type === BundleType.Unknown || bundleConfig === null) {
+    const { type, bundleConfig } = parseBundleConfigFromRequestUrl(request.url);
+    if (type === BundleRequestType.Unknown || bundleConfig === null) {
       next();
       return;
     }
 
     switch (type) {
-      case BundleType.Bundle:
+      case BundleRequestType.Bundle:
         serveBundle(bundler, bundleConfig, request, response);
         break;
 
-      case BundleType.Sourcemap:
+      case BundleRequestType.Sourcemap:
         serveSourcemap(bundler, bundleConfig, request, response);
         break;
     }
