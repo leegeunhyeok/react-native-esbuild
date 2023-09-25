@@ -2,7 +2,7 @@ import path from 'node:path';
 import deepmerge from 'deepmerge';
 import type { ReactNativeEsbuildConfig } from '../../types';
 
-export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
+export const loadConfig = (resolveDir: string): ReactNativeEsbuildConfig => {
   let config: ReactNativeEsbuildConfig | undefined;
 
   // Base config
@@ -45,11 +45,11 @@ export function loadConfig(resolveDir: string): ReactNativeEsbuildConfig {
   });
 
   return config;
-}
+};
 
-export function getConfigFromGlobal(): ReactNativeEsbuildConfig {
+export const getConfigFromGlobal = (): ReactNativeEsbuildConfig => {
   if (!self._config) {
     throw new Error('could not get configuration');
   }
   return self._config as ReactNativeEsbuildConfig;
-}
+};

@@ -21,10 +21,10 @@ const ANDROID_ASSET_QUALIFIER: Record<number, string> = {
 /**
  * copy assets to dev server asset directory
  */
-export async function copyAssetsToDevServer(
+export const copyAssetsToDevServer = async (
   context: PluginContext,
   assets: Asset[],
-): Promise<void> {
+): Promise<void> => {
   if (context.mode === 'bundle') return;
 
   const devServerAssetPath = getDevServerAssetPath();
@@ -46,17 +46,17 @@ export async function copyAssetsToDevServer(
   });
 
   await Promise.all(assetCopyTasks);
-}
+};
 
 /**
  * copy assets to platform specified destination
  *
  * @see {@link https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/assetPathUtils.ts}
  */
-export async function copyAssetsToDestination(
+export const copyAssetsToDestination = async (
   context: PluginContext,
   assets: Asset[],
-): Promise<void> {
+): Promise<void> => {
   const { assetsDir, mode } = context;
   if (mode === 'watch') return;
 
@@ -134,4 +134,4 @@ export async function copyAssetsToDestination(
       ).then(() => void 0);
     }),
   ).then(() => void 0);
-}
+};

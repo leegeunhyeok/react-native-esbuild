@@ -5,10 +5,10 @@ import {
 } from '@react-native-esbuild/transformer';
 import type { BundleConfig } from '@react-native-esbuild/config';
 
-export async function getTransformedPreludeScript(
+export const getTransformedPreludeScript = async (
   bundleConfig: BundleConfig,
   root: string,
-): Promise<string> {
+): Promise<string> => {
   const context = { root, path: '' };
   const preludeScript = await getPreludeScript(bundleConfig, root);
 
@@ -27,4 +27,4 @@ export async function getTransformedPreludeScript(
         sourceMap: false,
       })
     : strippedScript;
-}
+};

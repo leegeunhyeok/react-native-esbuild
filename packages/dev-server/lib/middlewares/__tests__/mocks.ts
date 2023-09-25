@@ -23,17 +23,17 @@ interface MockedBundlerParams {
   hasError: boolean;
 }
 
-export function getMockedRequest({
+export const getMockedRequest = ({
   url,
   headers = { accept: '' },
-}: MockedRequestParams): IncomingMessage {
+}: MockedRequestParams): IncomingMessage => {
   return {
     url,
     headers,
   } as IncomingMessage;
-}
+};
 
-export function getMockedResponse(): ServerResponse {
+export const getMockedResponse = (): ServerResponse => {
   const response = {
     setHeader: jest.fn().mockImplementation(() => response),
     writeHead: jest.fn().mockImplementation(() => response),
@@ -41,13 +41,13 @@ export function getMockedResponse(): ServerResponse {
   } as unknown as ServerResponse;
 
   return response;
-}
+};
 
-export function getMockedFileHandler({
+export const getMockedFileHandler = ({
   data,
   size,
   isDirectory,
-}: MockedFileHandlerParams): FileHandle {
+}: MockedFileHandlerParams): FileHandle => {
   return {
     stat: jest.fn().mockReturnValue({
       size,
@@ -56,12 +56,12 @@ export function getMockedFileHandler({
     readFile: jest.fn().mockReturnValue(Promise.resolve(data)),
     close: jest.fn().mockReturnValue(Promise.resolve()),
   } as unknown as FileHandle;
-}
+};
 
-export function getMockedBundler({
+export const getMockedBundler = ({
   bundle,
   hasError,
-}: MockedBundlerParams): ReactNativeEsbuildBundler {
+}: MockedBundlerParams): ReactNativeEsbuildBundler => {
   return {
     getBundle: jest
       .fn()
@@ -73,4 +73,4 @@ export function getMockedBundler({
     on: jest.fn(),
     off: jest.fn(),
   } as unknown as ReactNativeEsbuildBundler;
-}
+};

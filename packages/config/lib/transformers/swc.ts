@@ -2,10 +2,10 @@ import deepmerge from 'deepmerge';
 import type { EsParserConfig, Options, TsParserConfig } from '@swc/core';
 import type { SwcPresetOptions } from '../types';
 
-export function getSwcOptions(
+export const getSwcOptions = (
   options: SwcPresetOptions,
   customSwcOptions?: Partial<Options>,
-): Options {
+): Options => {
   const isTS = /\.tsx?$/.test(options.filename);
   const parseOption = isTS
     ? ({
@@ -38,4 +38,4 @@ export function getSwcOptions(
   return customSwcOptions
     ? deepmerge(baseOptions, customSwcOptions)
     : baseOptions;
-}
+};

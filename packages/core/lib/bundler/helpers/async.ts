@@ -1,6 +1,6 @@
 import type { PromiseHandler } from '../../types';
 
-export function createPromiseHandler<Result>(): PromiseHandler<Result> {
+export const createPromiseHandler = <Result>(): PromiseHandler<Result> => {
   let resolver: PromiseHandler<Result>['resolver'] | undefined;
   let rejecter: PromiseHandler<Result>['rejecter'] | undefined;
 
@@ -10,4 +10,4 @@ export function createPromiseHandler<Result>(): PromiseHandler<Result> {
   });
 
   return { task, resolver, rejecter };
-}
+};

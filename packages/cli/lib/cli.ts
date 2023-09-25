@@ -16,7 +16,7 @@ const commonOptions = {
   },
 } as const;
 
-export function cli(): RawArgv | Promise<RawArgv> {
+export const cli = (): RawArgv | Promise<RawArgv> => {
   return yargs(hideBin(process.argv))
     .scriptName('rne')
     .version(VERSION)
@@ -162,4 +162,4 @@ export function cli(): RawArgv | Promise<RawArgv> {
     .demandCommand()
     .strictCommands()
     .help().argv;
-}
+};

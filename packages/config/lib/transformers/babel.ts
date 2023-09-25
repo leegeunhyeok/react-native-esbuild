@@ -1,10 +1,10 @@
 import deepmerge from 'deepmerge';
 import type { TransformOptions } from '@babel/core';
 
-export function getBabelOptions(
+export const getBabelOptions = (
   rootDir: string,
   customBabelOptions?: Partial<TransformOptions>,
-): TransformOptions {
+): TransformOptions => {
   const baseOptions: TransformOptions = {
     minified: false,
     compact: false,
@@ -15,4 +15,4 @@ export function getBabelOptions(
   return customBabelOptions
     ? deepmerge(baseOptions, customBabelOptions)
     : baseOptions;
-}
+};

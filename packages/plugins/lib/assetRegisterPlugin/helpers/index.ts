@@ -7,7 +7,7 @@ import type { Asset } from '../../types';
  * @see {@link https://github.com/facebook/metro/blob/v0.78.0/packages/metro/src/Bundler/util.js#L29-L57}
  * @see {@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/Image/RelativeImageStub.js}
  */
-export function getAssetRegistrationScript({
+export const getAssetRegistrationScript = ({
   name,
   type,
   scales,
@@ -17,7 +17,7 @@ export function getAssetRegistrationScript({
 }: Pick<
   Asset,
   'name' | 'type' | 'scales' | 'hash' | 'httpServerLocation' | 'dimensions'
->): string {
+>): string => {
   return `
     module.exports = require('react-native/Libraries/Image/AssetRegistry').registerAsset(${JSON.stringify(
       {
@@ -32,7 +32,7 @@ export function getAssetRegistrationScript({
       },
     )});
   `;
-}
+};
 
 export * from './fs';
 export * from './path';

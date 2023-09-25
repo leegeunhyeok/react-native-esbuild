@@ -6,7 +6,7 @@ import { getCommand, getOptions, resetCache } from './helpers';
 import { logger } from './shared';
 import type { BuildOptions, StartOptions } from './types';
 
-(async function main() {
+(async () => {
   ReactNativeEsbuildBundler.initialize();
 
   const argv = await cli();

@@ -15,25 +15,25 @@ const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(
 
 const imageSizeOf = promisify(imageSize);
 
-export function addSuffix(
+export const addSuffix = (
   basename: string,
   extension: string,
   options?: {
     platform?: BundlerSupportPlatform | null;
     scale?: string | number;
   },
-): string {
+): string => {
   return stripSuffix(basename, extension)
     .concat(options?.scale ? `@${options.scale}x` : '')
     .concat(options?.platform ? `.${options.platform}${extension}` : extension);
-}
+};
 
-export function stripSuffix(basename: string, extension: string): string {
+export const stripSuffix = (basename: string, extension: string): string => {
   return basename.replace(
     new RegExp(`(@(\\d+)x)?(${PLATFORM_SUFFIX_PATTERN})?${extension}`),
     '',
   );
-}
+};
 
 /**
  * add suffix to asset path
@@ -52,13 +52,13 @@ export function stripSuffix(basename: string, extension: string): string {
  * '/path/to/assets/image@1x.android.png'
  * ```
  */
-export function getSuffixedPath(
+export const getSuffixedPath = (
   assetPath: string,
   options?: {
     scale?: AssetScale;
     platform?: BundlerSupportPlatform | null;
   },
-): SuffixPathResult {
+): SuffixPathResult => {
   // if `scale` present, append scale suffix to path
   // assetPath: '/path/to/assets/image.png'
   // result:
@@ -80,12 +80,12 @@ export function getSuffixedPath(
     path: `${dirname}/${suffixedBasename}`,
     platform: options?.platform ?? null,
   };
-}
+};
 
-export function getDevServerBasePath(asset: Asset): string {
+export const getDevServerBasePath = (asset: Asset): string => {
   const basePath = asset.httpServerLocation;
   return basePath.at(0) === '/' ? basePath.substring(1) : basePath;
-}
+};
 
 function assertSuffixPathResult(
   data: OnLoadArgs['pluginData'],
@@ -98,10 +98,10 @@ function assertSuffixPathResult(
   }
 }
 
-export async function resolveScaledAssets(
+export const resolveScaledAssets = async (
   context: PluginContext,
   args: OnLoadArgs,
-): Promise<Asset> {
+): Promise<Asset> => {
   assertSuffixPathResult(args.pluginData);
 
   const { basename, extension, platform } = args.pluginData;
@@ -147,12 +147,12 @@ export async function resolveScaledAssets(
     },
     platform,
   };
-}
+};
 
-export async function resolveAssetPath(
+export const resolveAssetPath = async (
   asset: Asset,
   targetScale: number,
-): Promise<string> {
+): Promise<string> => {
   const suffixedPath = getSuffixedPath(asset.path, {
     scale: targetScale as AssetScale,
     platform: asset.platform,
@@ -171,4 +171,4 @@ export async function resolveAssetPath(
   }
 
   return suffixedPath;
-}
+};

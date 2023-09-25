@@ -37,18 +37,15 @@ const cliArgvSchema = z.object({
   'reset-cache': z.boolean().optional(),
 });
 
-export function getCommand<RawArgv extends { _: (string | number)[] }>(
+export const getCommand = <RawArgv extends { _: (string | number)[] }>(
   argv: RawArgv,
   position = 0,
-): string {
-  return argv._[position].toString();
-}
+): string => argv._[position].toString();
 
-export function resolvePath(filepath: string): string {
-  return path.resolve(process.cwd(), filepath);
-}
+export const resolvePath = (filepath: string): string =>
+  path.resolve(process.cwd(), filepath);
 
-export function getOptions(rawArgv: RawArgv): StartOptions | BuildOptions {
+export const getOptions = (rawArgv: RawArgv): StartOptions | BuildOptions => {
   const argv = cliArgvSchema.parse(rawArgv);
   const entryFilePath = argv['entry-file']
     ? resolvePath(argv['entry-file'])
@@ -90,16 +87,16 @@ export function getOptions(rawArgv: RawArgv): StartOptions | BuildOptions {
         host: argv.host,
       } as StartOptions)
     : ({ ...commonConfig, bundleConfig } as BuildOptions);
-}
+};
 
-export async function resetCache(): Promise<void> {
+export const resetCache = async (): Promise<void> => {
   await ReactNativeEsbuildBundler.caches.clearAll();
   logger.info('transform cache was reset');
-}
+};
 
-export function enableInteractiveMode(
+export const enableInteractiveMode = (
   onKeypress?: (keyName: string) => void,
-): boolean {
+): boolean => {
   if (
     !(process.stdin.isTTY && typeof process.stdin.setRawMode === 'function')
   ) {
@@ -139,4 +136,4 @@ export function enableInteractiveMode(
   );
 
   return true;
-}
+};

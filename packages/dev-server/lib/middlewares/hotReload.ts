@@ -21,7 +21,7 @@ const getMessage = (data: Data): HmrClientMessage | null => {
   }
 };
 
-export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
+export const convertHmrLogLevel = (level: LogMessage['level']): LogLevel => {
   switch (level) {
     case 'group':
     case 'groupCollapsed':
@@ -32,7 +32,7 @@ export function convertHmrLogLevel(level: LogMessage['level']): LogLevel {
     default:
       return level;
   }
-}
+};
 
 export const createHotReloadMiddleware = ({
   onLog,

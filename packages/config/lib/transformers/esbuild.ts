@@ -4,10 +4,10 @@ import type { BuildOptions } from 'esbuild';
 import { SOURCE_EXTENSIONS, ASSET_EXTENSIONS } from '../shares';
 import type { BundleConfig } from '../types';
 
-export function getEsbuildOptions(
+export const getEsbuildOptions = (
   bundleConfig: BundleConfig,
   customEsbuildOptions?: Partial<BuildOptions>,
-): BuildOptions {
+): BuildOptions => {
   const { entry, outfile, platform, minify, metafile } = bundleConfig;
 
   const platforms = [platform, 'native', 'react-native'];
@@ -42,4 +42,4 @@ export function getEsbuildOptions(
   };
 
   return deepmerge(baseOptions, customEsbuildOptions ?? {});
-}
+};
