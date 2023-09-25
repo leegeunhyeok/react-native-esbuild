@@ -41,39 +41,6 @@ npm install -D install @react-native-esbuild/cli
 yarn add -D @react-native-esbuild/cli
 ```
 
-## Android
-
-Open `android/app/build.gradle` and add configuration.
-
-```diff
-// >= 0.71.x
-react {
-+ cliFile = file("../../node_modules/@react-native-esbuild/cli/dist/index.js")
-}
-
-// <= 0.70.x
-project.ext.react = [
-+ cliPath: "../../node_modules/@react-native-esbuild/cli/dist/index.js"
-]
-```
-
-## iOS
-
-Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and add `CLI_PATH` environment variable.
-
-```diff
-set -e
-
-+ CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
-# If you need to build from command line or external environment
-+ export CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
-
-WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
-REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
-
-/bin/sh -c "$WITH_ENVIRONMENT $REACT_NATIVE_XCODE"
-```
-
 ## Configurations
 
 File location: `<rootDir>/react-native-esbuild.js`
@@ -166,6 +133,39 @@ exports.default = {};
 > If you've some issues on build, go to troubleshooting guide
 
 - [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+
+## Android
+
+Open `android/app/build.gradle` and add configuration.
+
+```diff
+// >= 0.71.x
+react {
++ cliFile = file("../../node_modules/@react-native-esbuild/cli/dist/index.js")
+}
+
+// <= 0.70.x
+project.ext.react = [
++ cliPath: "../../node_modules/@react-native-esbuild/cli/dist/index.js"
+]
+```
+
+## iOS
+
+Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and add `CLI_PATH` environment variable.
+
+```diff
+set -e
+
++ CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
+# If you need to build from command line or external environment
++ export CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
+
+WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
+REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
+
+/bin/sh -c "$WITH_ENVIRONMENT $REACT_NATIVE_XCODE"
+```
 
 # Commands
 
