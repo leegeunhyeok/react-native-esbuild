@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/plugins",
-  "version": "0.1.0-alpha.39",
+  "version": "0.1.0-beta.0",
   "description": "plugins for @react-native-esbuild",
   "keywords": [
     "react-native",

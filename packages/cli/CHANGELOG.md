@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.0](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.39...v0.1.0-beta.0) (2023-09-25)
+
+### Features
+
+- **cli:** strict mode enabled ([7ac4110](https://github.com/leegeunhyeok/react-native-esbuild/commit/7ac4110523dea4add998cee4119cee8dadb423bb))
+
+### Code Refactoring
+
+- change description of no-op options ([4b50901](https://github.com/leegeunhyeok/react-native-esbuild/commit/4b50901c43cb765532a18a3177cf2029e9986539))
+- change function declaration to arrow function ([9aeae13](https://github.com/leegeunhyeok/react-native-esbuild/commit/9aeae1368cdfde8d998b85ebfd609be13b05a50f))
+- cli helpers ([70115b3](https://github.com/leegeunhyeok/react-native-esbuild/commit/70115b36dc4f65210d95291900ab1c60bcd00ea4))
+- update eslint directive comments ([f43db6b](https://github.com/leegeunhyeok/react-native-esbuild/commit/f43db6bbef36f087d0371ac7e1696acb24c6080d))
+
+### Build System
+
+- set packages as external ([dd4417f](https://github.com/leegeunhyeok/react-native-esbuild/commit/dd4417fe07c7bd87357246914743067343fdeccb)), closes [#22](https://github.com/leegeunhyeok/react-native-esbuild/issues/22)
+
 ## [0.1.0-alpha.39](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2023-09-24)
 
 ### Features

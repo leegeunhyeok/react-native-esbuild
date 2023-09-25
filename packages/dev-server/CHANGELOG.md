@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.0](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.39...v0.1.0-beta.0) (2023-09-25)
+
+### Code Refactoring
+
+- change function declaration to arrow function ([9aeae13](https://github.com/leegeunhyeok/react-native-esbuild/commit/9aeae1368cdfde8d998b85ebfd609be13b05a50f))
+- modulization helpers ([b2eea03](https://github.com/leegeunhyeok/react-native-esbuild/commit/b2eea036c479a8ad7bb5fcf8bf07524109b087d2))
+
+### Build System
+
+- set packages as external ([dd4417f](https://github.com/leegeunhyeok/react-native-esbuild/commit/dd4417fe07c7bd87357246914743067343fdeccb)), closes [#22](https://github.com/leegeunhyeok/react-native-esbuild/issues/22)
+
 ## [0.1.0-alpha.39](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2023-09-24)
 
 ### Features
