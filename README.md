@@ -65,6 +65,8 @@ Open XCode, go to `Build Target > Build Phases > Bundle React Native code and im
 set -e
 
 + CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
+# If you need to build from command line or external environment
++ export CLI_PATH="../node_modules/@react-native-esbuild/cli/dist/index.js"
 
 WITH_ENVIRONMENT="../node_modules/react-native/scripts/xcode/with-environment.sh"
 REACT_NATIVE_XCODE="../node_modules/react-native/scripts/react-native-xcode.sh"
