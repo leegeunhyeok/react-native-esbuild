@@ -1,11 +1,3 @@
 # `@react-native-esbuild/symbolicate`
 
-> TODO: description
-
-## Usage
-
-```
-const sourceMap = require('@react-native-esbuild/symbolicate');
-
-// TODO: DEMONSTRATE API
-```
+> Symbolicate helpers for @react-native-esbuild
