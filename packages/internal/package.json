@@ -41,6 +41,6 @@
     "esbuild": "^0.19.3"
   },
   "dependencies": {
-    "indent-string": "^5.0.0"
+    "indent-string": "^4.0.0"
   }
 }

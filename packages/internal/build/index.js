@@ -5,5 +5,5 @@ const buildOptions = getEsbuildBaseOptions(__dirname);
 
 esbuild.build(buildOptions).catch((error) => {
   console.error(error);
-  process.exit(-1);
+  process.exit(1);
 });
