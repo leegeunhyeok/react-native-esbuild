@@ -73,7 +73,12 @@ const config: JestConfigWithTsJest = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
   ],
-  testPathIgnorePatterns: ['node_modules/', 'example/*', '**/__tests__/*'],
+  testPathIgnorePatterns: [
+    'node_modules/',
+    'docs/*',
+    'example/*',
+    '**/__tests__/*',
+  ],
   collectCoverageFrom: ['packages/*/lib/**/*'],
 };
 
