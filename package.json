@@ -2,6 +2,7 @@
   "name": "react-native-esbuild",
   "private": true,
   "workspaces": [
+    "docs",
     "example",
     "packages/*"
   ],

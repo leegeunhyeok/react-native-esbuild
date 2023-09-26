@@ -1,2 +1,5 @@
 # library bundles
 **/dist/*
+
+# docusaurus
+docs
