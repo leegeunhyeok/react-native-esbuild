@@ -35,7 +35,7 @@
 
 # Getting Started
 
-Go to [documentation](https://rne.geundung.dev)
+Go to [documentation](https://react-native-esbuild.vercel.app)
 
 # Development
 
