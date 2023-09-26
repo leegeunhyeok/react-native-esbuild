@@ -12,6 +12,8 @@ slug: /
 </div>
 
 <div style={{ textAlign: 'center' }}>
+  <img alt="npm" src="https://img.shields.io/npm/v/@react-native-esbuild/core?color=000000&style=flat-square"/>
+  <br/>
 React Native Esbuild is the Esbuild based bundler for React Native.<br/>
 Developed by <a href="https://github.com/leegeunhyeok">Geunhyeok LEE (@leegeunhyeok)</a>
 </div>
@@ -29,12 +31,12 @@ Developed by <a href="https://github.com/leegeunhyeok">Geunhyeok LEE (@leegeunhy
 
 ## Architecture
 
-### Transformer
-
 - [Esbuild](https://esbuild.github.io): for transform source and bundling (minify, mangle, tree shaking)
 - [Swc](https://swc.rs): for transform source to es5
 - [Sucrase](https://github.com/alangpierce/sucrase): for strip flow syntax
 - [Babel](https://babeljs.io): for transform with plugins
+
+<details><summary>Transformer</summary>
 
 ```mermaid
 flowchart TD
@@ -69,7 +71,9 @@ flowchart TD
     SWC --> DONE([End])
 ```
 
-### Caching
+</details>
+
+<details><summary>Cache</summary>
 
 ```mermaid
 flowchart TD
@@ -100,3 +104,5 @@ writeToMemory -.-> writeToFileSystem
 writeToFileSystem -.-> DONE
 writeToMemory --> DONE
 ```
+
+</details>
