@@ -7,8 +7,9 @@ slug: /package-presets
 # Presets for packages
 
 If you are using the package, follow the configuration below.
+(apply preset configuration to `react-native-esbuild.config.js`)
 
-Can't find the package in the list? Please leave the package information in an [issue](https://github.com/leegeunhyeok/react-native-esbuild/issues).
+> Can't find the package in the list? Please leave the package information in an [issue](https://github.com/leegeunhyeok/react-native-esbuild/issues).
 
 ## @gorhom/bottom-sheet
 

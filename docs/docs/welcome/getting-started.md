@@ -73,7 +73,7 @@ flowchart TD
 
 </details>
 
-<details><summary>Cache</summary>
+<details><summary>Caching</summary>
 
 ```mermaid
 flowchart TD

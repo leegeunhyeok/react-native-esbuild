@@ -8,7 +8,7 @@ slug: /installation
 
 ```bash
 # using npm
-npm install -D install @react-native-esbuild/cli
+npm install -D @react-native-esbuild/cli
 
 # using yarn
 yarn add -D @react-native-esbuild/cli
