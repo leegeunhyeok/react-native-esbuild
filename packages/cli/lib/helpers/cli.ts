@@ -2,8 +2,10 @@ import path from 'node:path';
 import { z } from 'zod';
 import {
   SUPPORT_PLATFORMS,
-  type BundleConfig,
+  type BundleOptions,
 } from '@react-native-esbuild/config';
+import { colors } from '@react-native-esbuild/utils';
+import { logger } from '../shared';
 import type { RawArgv, StartOptions, BuildOptions } from '../types';
 
 const cliArgvSchema = z.object({
@@ -61,12 +63,12 @@ export const getOptions = (rawArgv: RawArgv): StartOptions | BuildOptions => {
   const verbose = argv.verbose;
   const resetCache = argv['reset-cache'];
 
-  const commonConfig = {
+  const commonOptions = {
     verbose,
     resetCache,
   };
 
-  const bundleConfig: Partial<BundleConfig> = {
+  const bundleOptions: Partial<BundleOptions> = {
     entry: entryFilePath,
     sourcemap: sourcemapPath,
     outfile: outputFilePath,
@@ -79,9 +81,21 @@ export const getOptions = (rawArgv: RawArgv): StartOptions | BuildOptions => {
 
   return typeof argv.port === 'number'
     ? ({
-        ...commonConfig,
+        ...commonOptions,
         port: argv.port,
         host: argv.host,
       } as StartOptions)
-    : ({ ...commonConfig, bundleConfig } as BuildOptions);
+    : ({ ...commonOptions, bundleOptions } as BuildOptions);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any
+export const printDebugOptions = <T extends Record<string, any>>(
+  options: T,
+): void => {
+  Object.entries(options).forEach(([key, value], index, entries) => {
+    const isLast = entries.length - 1 === index;
+    const pipe = `${isLast ? '╰' : '├'}─`;
+    const keyValue = `${key}: ${JSON.stringify(value)}`;
+    logger.debug(colors.gray(`${pipe} ${keyValue}${isLast ? '\n' : ''}`));
+  });
 };

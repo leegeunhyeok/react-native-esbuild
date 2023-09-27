@@ -2,10 +2,10 @@ import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
 import { getGlobalVariables } from '@react-native-esbuild/internal';
 import {
   setEnvironment,
-  combineWithDefaultBundleConfig,
+  combineWithDefaultBundleOptions,
   getEsbuildOptions,
   getIdByOptions,
-  type BundleConfig,
+  type BundleOptions,
 } from '@react-native-esbuild/config';
 import type { LogLevel } from '@react-native-esbuild/utils';
 import { Logger, colors, isCI, isTTY } from '@react-native-esbuild/utils';
@@ -13,12 +13,12 @@ import { CacheStorage } from '../cache';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
 import type {
-  ReactNativeEsbuildConfig,
+  Config,
   BuildTask,
   BundleMode,
   BundlerAdditionalData,
   BundleResult,
-  BundleRequestConfig,
+  BundleRequestOptions,
   PromiseHandler,
   EsbuildPluginFactory,
   PluginContext,
@@ -36,7 +36,7 @@ import { printLogo } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
-  private config: ReactNativeEsbuildConfig;
+  private config: Config;
   private appLogger = new Logger('app');
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
@@ -84,18 +84,18 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private async getBuildOptionsForBundler(
     mode: BundleMode,
-    bundleConfig: BundleConfig,
+    bundleOptions: BundleOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildOptions> {
     if (!this.plugins.length) {
       throw new Error('plugin is not registered');
     }
 
-    setEnvironment(bundleConfig.dev);
+    setEnvironment(bundleOptions.dev);
 
     const context: PluginContext = {
-      ...bundleConfig,
-      id: this.identifyTaskByBundleConfig(bundleConfig),
+      ...bundleOptions,
+      id: this.identifyTaskByBundleOptions(bundleOptions),
       root: this.root,
       config: this.config,
       mode,
@@ -121,19 +121,19 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       ...this.plugins,
     ];
 
-    return getEsbuildOptions(bundleConfig, {
+    return getEsbuildOptions(bundleOptions, {
       mainFields: this.config.mainFields,
       plugins: plugins.map((plugin) => plugin(context)),
-      define: getGlobalVariables(bundleConfig),
+      define: getGlobalVariables(bundleOptions),
       banner: {
-        js: await getTransformedPreludeScript(bundleConfig, this.root),
+        js: await getTransformedPreludeScript(bundleOptions, this.root),
       },
       write: mode === 'bundle',
     });
   }
 
-  private identifyTaskByBundleConfig(bundleConfig: BundleConfig): number {
-    return getIdByOptions(bundleConfig);
+  private identifyTaskByBundleOptions(bundleOptions: BundleOptions): number {
+    return getIdByOptions(bundleOptions);
   }
 
   private assertBuildTask(task?: BuildTask): asserts task is BuildTask {
@@ -214,16 +214,16 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private async getOrCreateBundleTask(
-    bundleConfig: BundleConfig,
+    bundleOptions: BundleOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildTask> {
-    const targetTaskId = this.identifyTaskByBundleConfig(bundleConfig);
+    const targetTaskId = this.identifyTaskByBundleOptions(bundleOptions);
 
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
       const buildOptions = await this.getBuildOptionsForBundler(
         'watch',
-        bundleConfig,
+        bundleOptions,
         additionalData,
       );
       const context = await esbuild.context(buildOptions);
@@ -271,19 +271,19 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   async bundle(
-    bundleConfig: Partial<BundleConfig>,
+    bundleOptions: Partial<BundleOptions>,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildResult> {
     const buildOptions = await this.getBuildOptionsForBundler(
       'bundle',
-      combineWithDefaultBundleConfig(bundleConfig),
+      combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
     return esbuild.build(buildOptions);
   }
 
   async getBundle(
-    bundleConfig: BundleRequestConfig,
+    bundleOptions: BundleRequestOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<{
     source: Uint8Array;
@@ -291,7 +291,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     revisionId: string;
   }> {
     const buildTask = await this.getOrCreateBundleTask(
-      combineWithDefaultBundleConfig(bundleConfig),
+      combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
     this.assertTaskHandler(buildTask.handler);
@@ -306,7 +306,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   async getSourcemap(
-    bundleConfig: BundleRequestConfig,
+    bundleOptions: BundleRequestOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<{
     sourcemap: Uint8Array;
@@ -314,7 +314,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     revisionId: string;
   }> {
     const buildTask = await this.getOrCreateBundleTask(
-      combineWithDefaultBundleConfig(bundleConfig),
+      combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
     this.assertTaskHandler(buildTask.handler);

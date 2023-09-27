@@ -5,8 +5,8 @@ import type {
 } from '@react-native-esbuild/core';
 import { BundleTaskSignal } from '@react-native-esbuild/core';
 import { getIdByOptions } from '@react-native-esbuild/config';
-import type { ParsedBundleConfig } from '../helpers';
-import { BundleResponse, parseBundleConfigFromRequestUrl } from '../helpers';
+import type { ParsedBundleOptions } from '../helpers';
+import { BundleResponse, parseBundleOptionsFromRequestUrl } from '../helpers';
 import { logger } from '../shared';
 import { BundleRequestType, type DevServerMiddlewareCreator } from '../types';
 
@@ -14,12 +14,12 @@ const TAG = 'serve-bundle-middleware';
 
 const serveBundle = (
   bundler: ReactNativeEsbuildBundler,
-  bundleConfig: ParsedBundleConfig,
+  bundleOptions: ParsedBundleOptions,
   request: IncomingMessage,
   response: ServerResponse,
 ): void => {
   const bundleResponse = new BundleResponse(response, request.headers.accept);
-  const currentId = getIdByOptions(bundleConfig);
+  const currentId = getIdByOptions(bundleOptions);
 
   const bundleStatusChangeHandler: BundlerEventListener<
     'build-status-change'
@@ -30,7 +30,7 @@ const serveBundle = (
 
   bundler.on('build-status-change', bundleStatusChangeHandler);
   bundler
-    .getBundle(bundleConfig)
+    .getBundle(bundleOptions)
     .then((result) => {
       bundleResponse.endWithBundle(result.source, result.bundledAt);
     })
@@ -49,12 +49,12 @@ const serveBundle = (
 
 const serveSourcemap = (
   bundler: ReactNativeEsbuildBundler,
-  bundleConfig: ParsedBundleConfig,
+  bundleOptions: ParsedBundleOptions,
   _request: IncomingMessage,
   response: ServerResponse,
 ): void => {
   bundler
-    .getSourcemap(bundleConfig, { disableRefresh: true })
+    .getSourcemap(bundleOptions, { disableRefresh: true })
     .then((result) => {
       response.setHeader('Access-Control-Allow-Origin', 'devtools://devtools');
       response.setHeader('Content-Type', 'application/json');
@@ -80,19 +80,21 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       return;
     }
 
-    const { type, bundleConfig } = parseBundleConfigFromRequestUrl(request.url);
-    if (type === BundleRequestType.Unknown || bundleConfig === null) {
+    const { type, bundleOptions } = parseBundleOptionsFromRequestUrl(
+      request.url,
+    );
+    if (type === BundleRequestType.Unknown || bundleOptions === null) {
       next();
       return;
     }
 
     switch (type) {
       case BundleRequestType.Bundle:
-        serveBundle(bundler, bundleConfig, request, response);
+        serveBundle(bundler, bundleOptions, request, response);
         break;
 
       case BundleRequestType.Sourcemap:
-        serveSourcemap(bundler, bundleConfig, request, response);
+        serveSourcemap(bundler, bundleOptions, request, response);
         break;
     }
   };

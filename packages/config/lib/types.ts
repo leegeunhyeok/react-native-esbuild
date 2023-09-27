@@ -3,7 +3,7 @@ import type { Options as SwcTransformOptions } from '@swc/core';
 
 export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
-export interface BundleConfig {
+export interface BundleOptions {
   platform: BundlerSupportPlatform;
   entry: string;
   outfile: string;

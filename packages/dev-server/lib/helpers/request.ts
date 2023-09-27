@@ -2,7 +2,7 @@ import { parse } from 'node:url';
 import { z } from 'zod';
 import { BundleRequestType } from '../types';
 
-export type ParsedBundleConfig = z.infer<typeof bundleSearchParamSchema>;
+export type ParsedBundleOptions = z.infer<typeof bundleSearchParamSchema>;
 
 const toBoolean = (val: z.infer<typeof boolean>): boolean => val === 'true';
 
@@ -22,21 +22,21 @@ const bundleSearchParamSchema = z
   })
   .required();
 
-export const parseBundleConfigFromRequestUrl = (
+export const parseBundleOptionsFromRequestUrl = (
   requestUrl: string | undefined,
 ): {
   type: BundleRequestType;
-  bundleConfig: ParsedBundleConfig | null;
+  bundleOptions: ParsedBundleOptions | null;
 } => {
   if (!requestUrl) {
-    return { type: BundleRequestType.Unknown, bundleConfig: null };
+    return { type: BundleRequestType.Unknown, bundleOptions: null };
   }
 
   const { pathname, query } = parse(requestUrl, true);
   if (typeof pathname !== 'string') {
     return {
       type: BundleRequestType.Unknown,
-      bundleConfig: null,
+      bundleOptions: null,
     };
   }
 
@@ -49,7 +49,7 @@ export const parseBundleConfigFromRequestUrl = (
 
   return {
     type,
-    bundleConfig:
+    bundleOptions:
       type === BundleRequestType.Unknown
         ? null
         : bundleSearchParamSchema.parse(query),

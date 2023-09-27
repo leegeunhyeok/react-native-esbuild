@@ -1,9 +1,9 @@
 import type { BuildContext, Plugin } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type { Options as SwcTransformOptions } from '@swc/core';
-import type { BundleConfig } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/config';
 
-export interface ReactNativeEsbuildConfig {
+export interface Config {
   /**
    * Enable cache.
    *
@@ -21,7 +21,7 @@ export interface ReactNativeEsbuildConfig {
    */
   logger?: {
     /**
-     * Disable client log.
+     * Disable log.
      *
      * Defaults to `false`
      */
@@ -112,20 +112,20 @@ export type EsbuildPluginFactory<PluginConfig = void> = (
 
 export type BundlerAdditionalData = Record<string, unknown>;
 
-export interface PluginContext extends BundleConfig {
+export interface PluginContext extends BundleOptions {
   id: number;
   root: string;
-  config: ReactNativeEsbuildConfig;
+  config: Config;
   mode: BundleMode;
   additionalData?: BundlerAdditionalData;
 }
 
-export type BundleRequestConfig = Partial<
-  Pick<BundleConfig, 'dev' | 'minify'>
-> &
-  Pick<BundleConfig, 'platform'> & {
-    runModule: boolean;
-  };
+export interface BundleRequestOptions {
+  dev?: BundleOptions['dev'];
+  minify?: BundleOptions['minify'];
+  platform: BundleOptions['platform'];
+  runModule: boolean;
+}
 
 export interface PromiseHandler<Result> {
   task: Promise<Result>;

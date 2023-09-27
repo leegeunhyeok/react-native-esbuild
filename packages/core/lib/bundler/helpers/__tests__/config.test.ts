@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { loadConfig, getConfigFromGlobal } from '../config';
-import type { ReactNativeEsbuildConfig } from '../../../types';
+import type { Config } from '../../../types';
 
 describe('config helpers', () => {
   describe('loadConfig', () => {
@@ -35,7 +35,7 @@ describe('config helpers', () => {
     });
 
     describe('when call after load', () => {
-      let config: ReactNativeEsbuildConfig;
+      let config: Config;
 
       beforeEach(() => {
         config = loadConfig(faker.system.filePath());

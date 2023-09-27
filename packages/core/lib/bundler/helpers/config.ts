@@ -1,12 +1,12 @@
 import path from 'node:path';
 import deepmerge from 'deepmerge';
-import type { ReactNativeEsbuildConfig } from '../../types';
+import type { Config } from '../../types';
 
-export const loadConfig = (resolveDir: string): ReactNativeEsbuildConfig => {
-  let config: ReactNativeEsbuildConfig | undefined;
+export const loadConfig = (resolveDir: string): Config => {
+  let config: Config | undefined;
 
   // Base config
-  const baseConfig: ReactNativeEsbuildConfig = {
+  const baseConfig: Config = {
     cache: true,
     /**
      * mainFields
@@ -47,9 +47,9 @@ export const loadConfig = (resolveDir: string): ReactNativeEsbuildConfig => {
   return config;
 };
 
-export const getConfigFromGlobal = (): ReactNativeEsbuildConfig => {
+export const getConfigFromGlobal = (): Config => {
   if (!self._config) {
     throw new Error('could not get configuration');
   }
-  return self._config as ReactNativeEsbuildConfig;
+  return self._config as Config;
 };

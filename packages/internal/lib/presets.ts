@@ -1,6 +1,6 @@
 /* eslint-disable quotes -- allow using backtick */
 import fs from 'node:fs/promises';
-import type { BundleConfig } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/config';
 import { resolveFromRoot, wrapWithIIFE } from './helpers';
 import type { Asset } from './types';
 
@@ -46,14 +46,14 @@ export const getReactNativeInitializeCore = (root: string): string => {
 export const getGlobalVariables = ({
   dev = true,
   platform,
-}: BundleConfig): Record<string, string> => ({
+}: BundleOptions): Record<string, string> => ({
   __DEV__: JSON.stringify(dev),
   global: platform === 'web' ? 'window' : 'global',
   'process.env.NODE_ENV': JSON.stringify(getNodeEnv(dev)),
 });
 
 export const getPreludeScript = async (
-  { dev = true }: BundleConfig,
+  { dev = true }: BundleOptions,
   root: string,
 ): Promise<string> => {
   const polyfills = await getReactNativePolyfills(root);

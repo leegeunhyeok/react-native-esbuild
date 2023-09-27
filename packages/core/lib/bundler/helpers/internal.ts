@@ -3,14 +3,14 @@ import {
   stripFlowWithSucrase,
   minifyWithSwc,
 } from '@react-native-esbuild/transformer';
-import type { BundleConfig } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/config';
 
 export const getTransformedPreludeScript = async (
-  bundleConfig: BundleConfig,
+  bundleOptions: BundleOptions,
   root: string,
 ): Promise<string> => {
   const context = { root, path: '' };
-  const preludeScript = await getPreludeScript(bundleConfig, root);
+  const preludeScript = await getPreludeScript(bundleOptions, root);
 
   /**
    * remove "use strict";
@@ -20,7 +20,7 @@ export const getTransformedPreludeScript = async (
     .replace(/"use strict";/, '')
     .trim();
 
-  return bundleConfig.minify
+  return bundleOptions.minify
     ? minifyWithSwc(strippedScript, context, {
         compress: true,
         mangle: true,

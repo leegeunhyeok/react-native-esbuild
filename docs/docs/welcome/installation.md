@@ -20,15 +20,15 @@ Create `react-native-esbuild.js` to project root.
 
 ```js
 /**
- * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').Config}
  */
 exports.default = {};
 ```
 
-<details><summary>Detailed Configuration</summary>
+<details><summary>Config</summary>
 
 ```ts
-interface ReactNativeEsbuildConfig {
+interface Config {
   /**
    * Enable cache.
    *
@@ -94,6 +94,39 @@ interface ReactNativeEsbuildConfig {
    * Client event receiver
    */
   reporter?: (event: ReportableEvent) => void;
+}
+
+
+interface CustomTransformRuleBase<T> {
+  /**
+   * Predicator for transform
+   */
+  test: (path: string, code: string) => boolean;
+  /**
+   * Transformer options
+   */
+  options: T | ((path: string, code: string) => T);
+}
+
+type BabelTransformRule = CustomTransformRuleBase<BabelTransformOptions>;
+type SwcTransformRule = CustomTransformRuleBase<SwcTransformOptions>;
+
+type ReportableEvent = ClientLogEvent;
+
+interface ClientLogEvent {
+  type: 'client_log';
+  level:
+    | 'trace'
+    | 'info'
+    | 'warn'
+    | 'error'
+    | 'log'
+    | 'group'
+    | 'groupCollapsed'
+    | 'groupEnd'
+    | 'debug';
+  data: unknown[];
+  mode: 'BRIDGE' | 'NOBRIDGE';
 }
 ```
 

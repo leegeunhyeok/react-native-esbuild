@@ -1,4 +1,4 @@
-import type { BundleConfig } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/config';
 
 export interface RawArgv {
   [x: string]: unknown;
@@ -17,7 +17,7 @@ export interface StartOptions extends CliOptionsBase {
 }
 
 export interface BuildOptions extends CliOptionsBase {
-  bundleConfig: Partial<BundleConfig>;
+  bundleOptions: Partial<BundleOptions>;
 }
 
 export type Command<CommandOptions extends CliOptionsBase = CliOptionsBase> = (

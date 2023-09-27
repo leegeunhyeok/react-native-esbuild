@@ -1,10 +1,10 @@
 import { OptionFlag } from '../types';
-import type { BundleConfig } from '../types';
+import type { BundleOptions } from '../types';
 import { DEFAULT_ENTRY_POINT, DEFAULT_OUTFILE } from '../shares';
 
-export const combineWithDefaultBundleConfig = (
-  options: Partial<BundleConfig>,
-): BundleConfig => {
+export const combineWithDefaultBundleOptions = (
+  options: Partial<BundleOptions>,
+): BundleOptions => {
   if (!options.platform) {
     throw new Error('platform is required');
   }
@@ -24,7 +24,7 @@ export const getIdByOptions = ({
   platform,
   dev,
   minify,
-}: Pick<BundleConfig, 'platform' | 'dev' | 'minify'>): number => {
+}: Pick<BundleOptions, 'platform' | 'dev' | 'minify'>): number => {
   let value = OptionFlag.None; // = 0
 
   // platform

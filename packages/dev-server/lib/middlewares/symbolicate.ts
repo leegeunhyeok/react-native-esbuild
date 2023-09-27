@@ -5,7 +5,7 @@ import {
   symbolicateStackTrace,
 } from '@react-native-esbuild/symbolicate';
 import { logger } from '../shared';
-import { parseBundleConfigFromRequestUrl } from '../helpers';
+import { parseBundleOptionsFromRequestUrl } from '../helpers';
 import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'symbolicate-middleware';
@@ -34,16 +34,16 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
     }
 
     try {
-      const { bundleConfig } = parseBundleConfigFromRequestUrl(
+      const { bundleOptions } = parseBundleOptionsFromRequestUrl(
         targetStack.file,
       );
 
-      if (!bundleConfig) {
+      if (!bundleOptions) {
         throw new Error();
       }
 
       bundler
-        .getSourcemap(bundleConfig)
+        .getSourcemap(bundleOptions)
         .then(({ sourcemap }) => symbolicateStackTrace(sourcemap, stack))
         .then((symbolicateResult) => {
           response.writeHead(200).end(JSON.stringify(symbolicateResult));

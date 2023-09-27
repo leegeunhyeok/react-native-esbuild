@@ -8,9 +8,9 @@ import {
 import type { Command, BuildOptions } from '../types';
 
 export const bundle: Command = async (options: BuildOptions) => {
-  const { bundleConfig } = options;
+  const { bundleOptions } = options;
   const bundler = new ReactNativeEsbuildBundler(
-    bundleConfig.entry ? path.dirname(bundleConfig.entry) : process.cwd(),
+    bundleOptions.entry ? path.dirname(bundleOptions.entry) : process.cwd(),
   );
 
   bundler
@@ -18,5 +18,5 @@ export const bundle: Command = async (options: BuildOptions) => {
     .registerPlugin(createSvgTransformPlugin())
     .registerPlugin(createReactNativeRuntimeTransformPlugin());
 
-  await bundler.bundle(bundleConfig);
+  await bundler.bundle(bundleOptions);
 };

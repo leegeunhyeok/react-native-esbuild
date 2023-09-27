@@ -1,5 +1,5 @@
 /**
- * @type {import('@react-native-esbuild/core').ReactNativeEsbuildConfig}
+ * @type {import('@react-native-esbuild/core').Config}
  */
 exports.default = {
   cache: true,
