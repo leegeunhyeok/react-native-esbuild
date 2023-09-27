@@ -7,7 +7,6 @@ import {
   getIdByOptions,
   type BundleOptions,
 } from '@react-native-esbuild/config';
-import type { LogLevel } from '@react-native-esbuild/utils';
 import { Logger, colors, isCI, isTTY } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { logger } from '../shared';
@@ -70,12 +69,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   private broadcastToReporter(event: ReportableEvent): void {
     // default reporter (for logging)
     switch (event.type) {
-      case 'client_log':
-        this.appLogger[event.level as LogLevel](
+      case 'client_log': {
+        this.appLogger[event.level as keyof Logger](
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- LogMessage in dev-server
           (event.data as any[]).join(' '),
         );
         break;
+      }
     }
 
     // send event to custom reporter
