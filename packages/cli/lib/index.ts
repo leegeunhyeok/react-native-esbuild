@@ -13,7 +13,6 @@ import type { BuildOptions, StartOptions } from './types';
   const options = getOptions(argv);
 
   Logger.setLogLevel(options.verbose ? 'debug' : 'info');
-  logger.debug('parsed options', options);
 
   if (options.resetCache) {
     await resetCache();

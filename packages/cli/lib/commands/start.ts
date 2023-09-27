@@ -5,15 +5,17 @@ import {
   createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
-import { enableInteractiveMode } from '../helpers';
+import { enableInteractiveMode, printDebugOptions } from '../helpers';
 import { logger } from '../shared';
 import type { Command, StartOptions } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/require-await -- no async task in start command yet
 export const start: Command<StartOptions> = async (options) => {
-  const startOptions = options;
+  logger.debug('start options');
+  printDebugOptions(options);
+
   const { bundler, server } = new ReactNativeEsbuildDevServer(
-    startOptions,
+    options,
   ).initialize();
 
   bundler

@@ -9,14 +9,20 @@ const LOGO = `
            e88"   e88"
 `;
 
-const LABEL = ' » esbuild ';
+const LABEL = ' » Esbuild ';
 const DESCRIPTION = 'An extremely fast bundler';
 
 export const printLogo = (): void => {
-  isTTY() && process.stdout.write(`${colors.yellow(LOGO)}\n`);
-  process.stdout.write(
-    [colors.bgYellow(colors.black(LABEL)), colors.gray(DESCRIPTION), '\n'].join(
-      ' ',
-    ),
-  );
+  if (isTTY()) {
+    process.stdout.write(`${colors.yellow(LOGO)}\n`);
+    process.stdout.write(
+      [
+        colors.bgYellow(colors.black(LABEL)),
+        colors.gray(DESCRIPTION),
+        '\n',
+      ].join(' '),
+    );
+  } else {
+    process.stdout.write(`Esbuild - ${DESCRIPTION}\n`);
+  }
 };

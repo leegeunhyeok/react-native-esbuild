@@ -43,6 +43,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   public static initialize(): void {
     if (isCI() || !isTTY()) colors.disable();
+    printLogo();
 
     const config = loadConfig(process.cwd());
 
@@ -64,7 +65,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.on('report', (event) => {
       this.broadcastToReporter(event);
     });
-    printLogo();
   }
 
   private broadcastToReporter(event: ReportableEvent): void {

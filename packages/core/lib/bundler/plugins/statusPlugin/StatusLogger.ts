@@ -19,13 +19,15 @@ export class StatusLogger {
     this.spinner = ora({
       color: 'yellow',
       discardStdin: context.mode === 'bundle',
-      prefixText: colors.bgYellow(colors.black(' » esbuild ')),
+      prefixText: colors.bgYellow(colors.black(' » Esbuild ')),
     });
   }
 
   private statusUpdate(): void {
     const resolved = this.resolvedModules.size;
     const loaded = this.loadedModules;
+
+    // Enable interactive message when only in a TTY environment
     if (isTTY()) {
       this.spinner.text = `${this.platformText} build in progress... ${(
         (loaded / resolved) * 100 || 0
@@ -56,30 +58,43 @@ export class StatusLogger {
   setup(): void {
     this.resolvedModules.clear();
     this.loadedModules = 0;
-    this.spinner.start();
     this.buildStartedAt = new Date().getTime();
     this.statusUpdate();
+
+    isTTY()
+      ? this.spinner.start()
+      : this.print(`${this.platformText} build in progress...`);
   }
 
   summary({ warnings, errors }: BuildResult): void {
-    const duration = new Date().getTime() - this.buildStartedAt;
+    const duration = (new Date().getTime() - this.buildStartedAt) / 1000;
 
-    errors.length
-      ? this.spinner.fail(`${this.platformText} failed!`)
-      : this.spinner.succeed(`${this.platformText} done!`);
+    if (isTTY()) {
+      errors.length
+        ? this.spinner.fail(`${this.platformText} failed!`)
+        : this.spinner.succeed(`${this.platformText} done!`);
 
-    this.spinner.clear();
-    this.print(colors.gray('╭───────────╯'));
-    this.print(
-      colors.gray('├─'),
-      colors.yellow(warnings.length.toString()),
-      colors.gray('warnings'),
-    );
-    this.print(
-      colors.gray('├─'),
-      colors.red(errors.length.toString()),
-      colors.gray('errors'),
-    );
-    this.print(colors.gray('╰─'), colors.cyan(`${duration / 1000}s\n`));
+      this.spinner.clear();
+      this.print(colors.gray('╭───────────╯'));
+      this.print(
+        colors.gray('├─'),
+        colors.yellow(warnings.length.toString()),
+        colors.gray('warnings'),
+      );
+      this.print(
+        colors.gray('├─'),
+        colors.red(errors.length.toString()),
+        colors.gray('errors'),
+      );
+      this.print(colors.gray('╰─'), colors.cyan(`${duration}s\n`));
+    } else {
+      errors.length
+        ? this.print(`${this.platformText} failed!`)
+        : this.print(`${this.platformText} done!`);
+
+      this.print(`> ${warnings.length} warnings`);
+      this.print(`> ${errors.length} errors`);
+      this.print(`> ${duration}s`);
+    }
   }
 }
