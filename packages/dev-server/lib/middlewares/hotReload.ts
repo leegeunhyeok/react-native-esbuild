@@ -7,7 +7,6 @@ import type {
   HmrUpdateDoneMessage,
   HmrUpdateMessage,
   HmrUpdateStartMessage,
-  LogMessage,
 } from '../types';
 
 const getMessage = (data: Data): HmrClientMessage | null => {
@@ -17,21 +16,6 @@ const getMessage = (data: Data): HmrClientMessage | null => {
     return 'type' in parsedData ? (parsedData as HmrClientMessage) : null;
   } catch (error) {
     return null;
-  }
-};
-
-export const convertHmrLogLevel = (
-  level: LogMessage['level'],
-): ClientLogEvent['level'] => {
-  switch (level) {
-    // TODO: need to support
-    case 'group':
-    case 'groupCollapsed':
-    case 'groupEnd':
-      return 'log';
-
-    default:
-      return level;
   }
 };
 
@@ -59,7 +43,7 @@ export const createHotReloadMiddleware = ({
       case 'log': {
         onLog?.({
           type: 'client_log',
-          level: convertHmrLogLevel(message.level),
+          level: message.level,
           data: message.data,
           mode: 'BRIDGE',
         });

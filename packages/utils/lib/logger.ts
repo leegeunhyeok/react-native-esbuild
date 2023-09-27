@@ -34,6 +34,7 @@ export class Logger {
     [LogLevel.Warn]: yellow,
     [LogLevel.Error]: red,
   };
+  private groupDepth = 0;
 
   public static enable(): void {
     self.logEnabled = true;
@@ -119,6 +120,19 @@ export class Logger {
   private getLevelTag(level: LogLevel): string {
     return bold(Logger.COLOR_BY_LEVEL[level](this.getTagStringByLevel(level)));
   }
+  private getGroupPadding(options?: {
+    padding?: string;
+    last?: string;
+  }): string {
+    const { padding = '│', last } = options ?? {};
+    if (this.groupDepth === 0 && last) return last;
+    if (this.groupDepth === 0) return '';
+    const paddingArray = new Array(this.groupDepth).fill(padding);
+
+    if (last) paddingArray[paddingArray.length - 1] = last;
+
+    return gray(paddingArray.join(''));
+  }
 
   public setLogLevel(level: LogLevel): void {
     this.logLevel = level;
@@ -128,6 +142,7 @@ export class Logger {
     if (this.logLevel > LogLevel.Trace) return;
 
     this.stdout(
+      this.getGroupPadding(),
       this.getLevelTag(LogLevel.Trace),
       magenta(this.scope),
       message,
@@ -139,6 +154,7 @@ export class Logger {
     if (this.logLevel > LogLevel.Debug) return;
 
     this.stdout(
+      this.getGroupPadding(),
       this.getLevelTag(LogLevel.Debug),
       magenta(this.scope),
       message,
@@ -150,6 +166,7 @@ export class Logger {
     if (this.logLevel > LogLevel.Log) return;
 
     this.stdout(
+      this.getGroupPadding(),
       this.getLevelTag(LogLevel.Log),
       magenta(this.scope),
       message,
@@ -161,6 +178,7 @@ export class Logger {
     if (this.logLevel > LogLevel.Info) return;
 
     this.stdout(
+      this.getGroupPadding(),
       this.getLevelTag(LogLevel.Info),
       magenta(this.scope),
       message,
@@ -172,6 +190,7 @@ export class Logger {
     if (this.logLevel > LogLevel.Warn) return;
 
     this.stderr(
+      this.getGroupPadding(),
       this.getLevelTag(LogLevel.Warn),
       magenta(this.scope),
       message,
@@ -182,11 +201,22 @@ export class Logger {
 
   public error(message: string, error?: Error, extra?: object): void {
     this.stderr(
+      this.getGroupPadding(),
       this.getLevelTag(LogLevel.Error),
       magenta(this.scope),
       message,
       this.parseError(error),
       this.parseExtra(extra),
     );
+  }
+
+  public group(...label: string[]): void {
+    ++this.groupDepth;
+    this.stdout(this.getGroupPadding({ last: '╭─' }), ...label);
+  }
+
+  public groupEnd(): void {
+    this.stdout(this.getGroupPadding({ last: '╰───◯' }));
+    --this.groupDepth;
   }
 }

@@ -76,6 +76,15 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     // default reporter (for logging)
     switch (event.type) {
       case 'client_log': {
+        if (event.level === 'group' || event.level === 'groupCollapsed') {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument -- allow any
+          this.appLogger.group(...(event.data as any[]));
+          return;
+        } else if (event.level === 'groupEnd') {
+          this.appLogger.groupEnd();
+          return;
+        }
+
         this.appLogger[event.level as keyof Logger](
           // @ts-expect-error this.appLogger[event.logger] is logger function
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any
