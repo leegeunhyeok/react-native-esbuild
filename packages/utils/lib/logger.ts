@@ -26,7 +26,7 @@ self.logLevel = LogLevel.Info;
 self.logTimestampFormat = null;
 
 export class Logger {
-  private COLOR_BY_LEVEL: Record<LogLevel, Color> = {
+  private static COLOR_BY_LEVEL: Record<LogLevel, Color> = {
     [LogLevel.Trace]: gray,
     [LogLevel.Debug]: gray,
     [LogLevel.Info]: cyan,
@@ -43,7 +43,7 @@ export class Logger {
     self.logEnabled = false;
   }
 
-  public static setLogLevel(level: LogLevel): void {
+  public static setGlobalLogLevel(level: LogLevel): void {
     self.logLevel = level;
   }
 
@@ -51,9 +51,10 @@ export class Logger {
     self.logTimestampFormat = format;
   }
 
-  constructor(private scope: string) {
-    // empty
-  }
+  constructor(
+    private scope: string,
+    private logLevel: LogLevel = self.logLevel,
+  ) {}
 
   private stdout(...messages: string[]): void {
     if (!self.logEnabled) return;
@@ -116,11 +117,15 @@ export class Logger {
   }
 
   private getLevelTag(level: LogLevel): string {
-    return bold(this.COLOR_BY_LEVEL[level](this.getTagStringByLevel(level)));
+    return bold(Logger.COLOR_BY_LEVEL[level](this.getTagStringByLevel(level)));
+  }
+
+  public setLogLevel(level: LogLevel): void {
+    this.logLevel = level;
   }
 
   public trace(message: string, extra?: object): void {
-    if (self.logLevel > LogLevel.Trace) return;
+    if (this.logLevel > LogLevel.Trace) return;
 
     this.stdout(
       this.getLevelTag(LogLevel.Trace),
@@ -131,7 +136,7 @@ export class Logger {
   }
 
   public debug(message: string, extra?: object): void {
-    if (self.logLevel > LogLevel.Debug) return;
+    if (this.logLevel > LogLevel.Debug) return;
 
     this.stdout(
       this.getLevelTag(LogLevel.Debug),
@@ -142,7 +147,7 @@ export class Logger {
   }
 
   public log(message: string, extra?: object): void {
-    if (self.logLevel > LogLevel.Log) return;
+    if (this.logLevel > LogLevel.Log) return;
 
     this.stdout(
       this.getLevelTag(LogLevel.Log),
@@ -153,7 +158,7 @@ export class Logger {
   }
 
   public info(message: string, extra?: object): void {
-    if (self.logLevel > LogLevel.Info) return;
+    if (this.logLevel > LogLevel.Info) return;
 
     this.stdout(
       this.getLevelTag(LogLevel.Info),
@@ -164,7 +169,7 @@ export class Logger {
   }
 
   public warn(message: string, error?: Error, extra?: object): void {
-    if (self.logLevel > LogLevel.Warn) return;
+    if (this.logLevel > LogLevel.Warn) return;
 
     this.stderr(
       this.getLevelTag(LogLevel.Warn),

@@ -12,7 +12,7 @@ import type { BuildOptions, StartOptions } from './types';
   const argv = await cli();
   const options = getOptions(argv);
 
-  Logger.setLogLevel(options.verbose ? LogLevel.Debug : LogLevel.Info);
+  Logger.setGlobalLogLevel(options.verbose ? LogLevel.Debug : LogLevel.Info);
 
   if (options.resetCache) {
     await resetCache();

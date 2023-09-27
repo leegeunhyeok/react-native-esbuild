@@ -7,7 +7,13 @@ import {
   getIdByOptions,
   type BundleOptions,
 } from '@react-native-esbuild/config';
-import { Logger, colors, isCI, isTTY } from '@react-native-esbuild/utils';
+import {
+  Logger,
+  LogLevel,
+  colors,
+  isCI,
+  isTTY,
+} from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { logger } from '../shared';
 import { BundleTaskSignal } from '../types';
@@ -36,7 +42,7 @@ import { printLogo } from './logo';
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
   private config: Config;
-  private appLogger = new Logger('app');
+  private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
 
@@ -71,7 +77,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     switch (event.type) {
       case 'client_log': {
         this.appLogger[event.level as keyof Logger](
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- LogMessage in dev-server
+          // @ts-expect-error this.appLogger[event.logger] is logger function
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any
           (event.data as any[]).join(' '),
         );
         break;
