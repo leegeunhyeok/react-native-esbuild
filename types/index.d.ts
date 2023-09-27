@@ -6,7 +6,7 @@ declare global {
     _config: any; // BundlerConfig in @react-native-esbuild/core
     // logger
     logEnabled: boolean;
-    logLevel: 'debug' | 'log' | 'info' | 'warn' | 'error';
+    logLevel: number;
     logTimestampFormat: string | null;
   };
 }

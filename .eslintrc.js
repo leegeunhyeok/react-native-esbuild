@@ -40,6 +40,7 @@ module.exports = {
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/no-throw-literal': 'off',
+        '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       },
     },
     {

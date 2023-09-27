@@ -1,6 +1,5 @@
 import { Server, type WebSocket, type MessageEvent, type Data } from 'ws';
 import type { ClientLogEvent } from '@react-native-esbuild/core';
-import type { LogLevel } from '@react-native-esbuild/utils';
 import { logger } from '../shared';
 import type {
   HotReloadMiddleware,
@@ -21,12 +20,14 @@ const getMessage = (data: Data): HmrClientMessage | null => {
   }
 };
 
-export const convertHmrLogLevel = (level: LogMessage['level']): LogLevel => {
+export const convertHmrLogLevel = (
+  level: LogMessage['level'],
+): ClientLogEvent['level'] => {
   switch (level) {
+    // TODO: need to support
     case 'group':
     case 'groupCollapsed':
     case 'groupEnd':
-    case 'trace':
       return 'log';
 
     default:

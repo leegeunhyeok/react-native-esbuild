@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Logger } from '../logger';
+import { LogLevel, Logger } from '../logger';
 
 describe('logger', () => {
   let logger: Logger;
@@ -49,7 +49,7 @@ describe('logger', () => {
 
     describe('when log level is set to info', () => {
       beforeAll(() => {
-        Logger.setLogLevel('info');
+        Logger.setLogLevel(LogLevel.Info);
       });
 
       describe('when print debug level log', () => {
@@ -73,9 +73,9 @@ describe('logger', () => {
       });
     });
 
-    describe('when log level is set to info', () => {
+    describe('when log level is set to debug', () => {
       beforeAll(() => {
-        Logger.setLogLevel('debug');
+        Logger.setLogLevel(LogLevel.Debug);
       });
 
       describe('when print debug level log', () => {

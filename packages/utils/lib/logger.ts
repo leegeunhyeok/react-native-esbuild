@@ -1,21 +1,38 @@
 import 'node-self';
 import { EOL } from 'node:os';
 import dayjs from 'dayjs';
-import { gray, cyan, green, yellow, red, magenta, bold } from 'colors';
-import type { Color } from 'colors';
-import type { LogLevel } from './types';
+import {
+  gray,
+  cyan,
+  green,
+  yellow,
+  red,
+  magenta,
+  bold,
+  type Color,
+} from 'colors';
+
+export enum LogLevel {
+  Trace,
+  Debug,
+  Log,
+  Info,
+  Warn,
+  Error,
+}
 
 self.logEnabled = false;
-self.logLevel = 'info';
+self.logLevel = LogLevel.Info;
 self.logTimestampFormat = null;
 
 export class Logger {
   private COLOR_BY_LEVEL: Record<LogLevel, Color> = {
-    debug: gray,
-    info: cyan,
-    log: green,
-    warn: yellow,
-    error: red,
+    [LogLevel.Trace]: gray,
+    [LogLevel.Debug]: gray,
+    [LogLevel.Info]: cyan,
+    [LogLevel.Log]: green,
+    [LogLevel.Warn]: yellow,
+    [LogLevel.Error]: red,
   };
 
   public static enable(): void {
@@ -79,15 +96,45 @@ export class Logger {
     return `\n${error.stack}`;
   }
 
+  private getTagStringByLevel(level: LogLevel): string {
+    switch (true) {
+      case level === LogLevel.Trace:
+        return 'trace';
+      case level === LogLevel.Debug:
+        return 'debug';
+      case level === LogLevel.Log:
+        return 'log';
+      case level === LogLevel.Info:
+        return 'info';
+      case level === LogLevel.Warn:
+        return 'warn';
+      case level === LogLevel.Error:
+        return 'error';
+      default:
+        return '';
+    }
+  }
+
   private getLevelTag(level: LogLevel): string {
-    return bold(this.COLOR_BY_LEVEL[level](level));
+    return bold(this.COLOR_BY_LEVEL[level](this.getTagStringByLevel(level)));
+  }
+
+  public trace(message: string, extra?: object): void {
+    if (self.logLevel > LogLevel.Trace) return;
+
+    this.stdout(
+      this.getLevelTag(LogLevel.Trace),
+      magenta(this.scope),
+      message,
+      this.parseExtra(extra),
+    );
   }
 
   public debug(message: string, extra?: object): void {
-    if (self.logLevel !== 'debug') return;
+    if (self.logLevel > LogLevel.Debug) return;
 
     this.stdout(
-      this.getLevelTag('debug'),
+      this.getLevelTag(LogLevel.Debug),
       magenta(this.scope),
       message,
       this.parseExtra(extra),
@@ -95,12 +142,10 @@ export class Logger {
   }
 
   public log(message: string, extra?: object): void {
-    if (['warn', 'error'].some((level) => level === self.logLevel)) {
-      return;
-    }
+    if (self.logLevel > LogLevel.Log) return;
 
     this.stdout(
-      this.getLevelTag('log'),
+      this.getLevelTag(LogLevel.Log),
       magenta(this.scope),
       message,
       this.parseExtra(extra),
@@ -108,10 +153,10 @@ export class Logger {
   }
 
   public info(message: string, extra?: object): void {
-    if (['warn', 'error'].some((level) => level === self.logLevel)) return;
+    if (self.logLevel > LogLevel.Info) return;
 
     this.stdout(
-      this.getLevelTag('info'),
+      this.getLevelTag(LogLevel.Info),
       magenta(this.scope),
       message,
       this.parseExtra(extra),
@@ -119,10 +164,10 @@ export class Logger {
   }
 
   public warn(message: string, error?: Error, extra?: object): void {
-    if (['error'].some((level) => level === self.logLevel)) return;
+    if (self.logLevel > LogLevel.Warn) return;
 
     this.stderr(
-      this.getLevelTag('warn'),
+      this.getLevelTag(LogLevel.Warn),
       magenta(this.scope),
       message,
       this.parseError(error),
@@ -132,7 +177,7 @@ export class Logger {
 
   public error(message: string, error?: Error, extra?: object): void {
     this.stderr(
-      this.getLevelTag('error'),
+      this.getLevelTag(LogLevel.Error),
       magenta(this.scope),
       message,
       this.parseError(error),
