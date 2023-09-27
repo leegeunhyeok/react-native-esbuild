@@ -49,7 +49,7 @@ describe('logger', () => {
 
     describe('when log level is set to info', () => {
       beforeAll(() => {
-        Logger.setLogLevel(LogLevel.Info);
+        logger.setLogLevel(LogLevel.Info);
       });
 
       describe('when print debug level log', () => {
@@ -75,7 +75,7 @@ describe('logger', () => {
 
     describe('when log level is set to debug', () => {
       beforeAll(() => {
-        Logger.setLogLevel(LogLevel.Debug);
+        logger.setLogLevel(LogLevel.Debug);
       });
 
       describe('when print debug level log', () => {
