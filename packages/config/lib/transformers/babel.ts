@@ -10,6 +10,7 @@ export const getBabelOptions = (
     compact: false,
     sourceMaps: false,
     root: rootDir,
+    highlightCode: !process.stdin.isTTY,
   };
 
   return customBabelOptions

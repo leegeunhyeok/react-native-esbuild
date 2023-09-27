@@ -3,6 +3,7 @@
 exports[`getBabelOptions should match snapshot 1`] = `
 {
   "compact": false,
+  "highlightCode": true,
   "minified": false,
   "root": "/root",
   "sourceMaps": false,

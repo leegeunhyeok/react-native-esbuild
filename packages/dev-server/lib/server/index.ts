@@ -71,9 +71,6 @@ export class ReactNativeEsbuildDevServer {
     }
 
     const root = process.cwd();
-    logger.debug('setup dev server', this.devServerOptions);
-    logger.debug('create bundler instance');
-
     const {
       middleware,
       debuggerProxyEndpoint,

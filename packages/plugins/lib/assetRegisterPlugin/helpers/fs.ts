@@ -65,6 +65,8 @@ export const copyAssetsToDestination = async (
     return;
   }
 
+  logger.debug('copy assets to target destination');
+
   const mkdirWithAssertPath = (targetPath: string): Promise<void> => {
     const dirname = path.dirname(targetPath);
     return fs
@@ -84,8 +86,6 @@ export const copyAssetsToDestination = async (
               asset.httpServerLocation,
               path.basename(from),
             );
-
-            logger.debug('copying asset', { from, to });
 
             await mkdirWithAssertPath(to);
             return fs.copyFile(from, to);
@@ -118,7 +118,6 @@ export const copyAssetsToDestination = async (
           if (isDrawable && scale === 1) {
             const from = asset.path;
             const to = `${assetsDir}/drawable/${assetName}`;
-            logger.debug('copying asset', { from, to });
 
             await mkdirWithAssertPath(to);
             await fs.copyFile(from, to);
@@ -126,7 +125,6 @@ export const copyAssetsToDestination = async (
 
           const from = await resolveAssetPath(asset, scale);
           const to = `${assetsDir}/${resourceDir}/${assetName}`;
-          logger.debug('copying asset', { from, to });
 
           await mkdirWithAssertPath(to);
           await fs.copyFile(from, to);
