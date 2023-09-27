@@ -78,7 +78,31 @@ const config = {
       },
       footer: {
         style: 'dark',
-        copyright: `Copyright © ${new Date().getFullYear()} Geunhyeok LEE, Inc. Built with Docusaurus.`,
+        links: [
+          {
+            title: 'Docs',
+            items: [
+              {
+                href: '/',
+                label: 'Getting Started',
+              },
+              {
+                href: '/installation',
+                label: 'Installation',
+              },
+            ],
+          },
+          {
+            items: [
+              {
+                href: 'https://github.com/leegeunhyeok/react-native-esbuild',
+                label: 'GitHub',
+              },
+            ],
+          },
+          // ... other links
+        ],
+        copyright: `Copyright © ${new Date().getFullYear()} Geunhyeok LEE`,
       },
       prism: {
         theme: lightCodeTheme,
