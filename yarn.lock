@@ -6468,6 +6468,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/analytics@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@vercel/analytics@npm:1.0.2"
+  checksum: 5f596db6ed3c959057927985ffc6394ab12f9a5e9e9c65d00a33f1ffb3a7ced95d63f33b31e746939e50c0284d7999b90e9ed5d3d1e8b0d37a135219fd93a6e4
+  languageName: node
+  linkType: hard
+
 "@vercel/style-guide@npm:^5.0.1":
   version: 5.0.1
   resolution: "@vercel/style-guide@npm:5.0.1"
@@ -10081,6 +10088,7 @@ __metadata:
     "@docusaurus/theme-mermaid": ^2.4.3
     "@mdx-js/react": ^1.6.22
     "@tsconfig/docusaurus": ^1.0.5
+    "@vercel/analytics": ^1.0.2
     clsx: ^1.2.1
     prism-react-renderer: ^1.3.5
     react: ^17.0.2
