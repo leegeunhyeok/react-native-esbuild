@@ -6,7 +6,9 @@ slug: /trouble-shooting/new-architecture
 
 # New Architecture
 
-> ⚠️ [New Architecture](https://reactnative.dev/docs/the-new-architecture/landing-page) is experimental.
+:::warning
+[New Architecture](https://reactnative.dev/docs/the-new-architecture/landing-page) is experimental.
+:::
 
 ## react-native-reanimated
 
