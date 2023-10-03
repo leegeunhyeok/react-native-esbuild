@@ -20,6 +20,7 @@ import { BundleTaskSignal } from '../types';
 import type {
   Config,
   BuildTask,
+  BuildStatus,
   BundleMode,
   BundlerAdditionalData,
   BundleResult,
@@ -179,10 +180,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private handleBuildStateUpdate(
-    buildState: {
-      loaded: number;
-      resolved: number;
-    },
+    buildState: BuildStatus,
     context: PluginContext,
   ): void {
     this.emit('build-status-change', { id: context.id, ...buildState });

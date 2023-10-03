@@ -23,9 +23,9 @@ const serveBundle = (
 
   const bundleStatusChangeHandler: BundlerEventListener<
     'build-status-change'
-  > = ({ id, loaded, resolved }) => {
+  > = ({ id, loaded, total }) => {
     if (id !== currentId) return;
-    bundleResponse.writeBundleState(loaded, resolved);
+    bundleResponse.writeBundleState(loaded, total);
   };
 
   bundler.on('build-status-change', bundleStatusChangeHandler);

@@ -1,16 +1,17 @@
 import path from 'node:path';
 import type { BuildResult } from 'esbuild';
-import type { EsbuildPluginFactory, PluginContext } from '../../../types';
+import type {
+  EsbuildPluginFactory,
+  PluginContext,
+  BuildStatus,
+} from '../../../types';
 import { StatusLogger } from './StatusLogger';
 
 const NAME = 'build-status-plugin';
 
 export const createBuildStatusPlugin: EsbuildPluginFactory<{
   onStart: (context: PluginContext) => void;
-  onUpdate: (
-    buildState: { resolved: number; loaded: number },
-    context: PluginContext,
-  ) => void;
+  onUpdate: (buildState: BuildStatus, context: PluginContext) => void;
   onEnd: (result: BuildResult, context: PluginContext) => void;
 }> = (config) => {
   return function buildStatusPlugin(context) {
@@ -19,8 +20,13 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
       setup: (build): void => {
         const statusLogger = new StatusLogger(context);
         const filter = /.*/;
+        let statusLoaded = false;
 
-        build.onStart(() => {
+        build.onStart(async () => {
+          if (!statusLoaded) {
+            await statusLogger.loadStatus();
+            statusLoaded = true;
+          }
           statusLogger.setup();
           config?.onStart(context);
         });
@@ -41,6 +47,7 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
 
         build.onEnd((result: BuildResult) => {
           statusLogger.summary(result);
+          statusLogger.persistStatus();
           config?.onEnd(result, context);
         });
       },

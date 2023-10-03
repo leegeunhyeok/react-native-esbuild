@@ -176,3 +176,10 @@ export interface ClientLogEvent {
   data: unknown[];
   mode: 'BRIDGE' | 'NOBRIDGE';
 }
+
+// StatusLogger
+export interface BuildStatus {
+  total: number;
+  resolved: number;
+  loaded: number;
+}
