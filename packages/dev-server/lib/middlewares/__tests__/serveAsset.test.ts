@@ -21,7 +21,9 @@ describe('serve-asset-middleware', () => {
         host: 'localhost',
         port: 8081,
       },
-      bundler: {} as ReactNativeEsbuildBundler,
+      bundler: {
+        getRoot: jest.fn().mockReturnValue('/root'),
+      } as unknown as ReactNativeEsbuildBundler,
     });
   });
 

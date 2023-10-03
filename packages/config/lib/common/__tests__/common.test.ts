@@ -10,7 +10,7 @@ const BASE_OPTIONS = {
 
 describe('getDevServerAssetPath', () => {
   it('should match snapshot', () => {
-    expect(getDevServerAssetPath()).toMatchSnapshot();
+    expect(getDevServerAssetPath('/root')).toMatchSnapshot();
   });
 });
 

@@ -352,4 +352,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       revisionId,
     };
   }
+
+  getConfig(): Config {
+    return this.config;
+  }
+
+  getRoot(): string {
+    return this.root;
+  }
 }

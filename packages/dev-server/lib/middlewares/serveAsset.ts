@@ -12,7 +12,7 @@ import type { DevServerMiddlewareCreator } from '../types';
 const TAG = 'serve-asset-middleware';
 
 export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
-  _context,
+  context,
 ) => {
   return function serveAssetMiddleware(request, response, next) {
     if (
@@ -29,7 +29,10 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
       return response.writeHead(400).end();
     }
 
-    const filepath = path.join(getDevServerAssetPath(), filename);
+    const filepath = path.join(
+      getDevServerAssetPath(context.bundler.getRoot()),
+      filename,
+    );
     let fileHandle: FileHandle | undefined;
 
     fs.open(filepath, 'r')
