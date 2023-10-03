@@ -1,7 +1,7 @@
 ---
-title: Custom Transform
+title: Custom Transformation
 sidebar_position: 2
-slug: /configuration/custom-transform
+slug: /configuration/custom-transformation
 ---
 
 # Custom Transform

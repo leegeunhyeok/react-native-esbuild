@@ -17,6 +17,10 @@ export interface Config {
    */
   mainFields?: string[];
   /**
+   * Additional Esbuild plugins.
+   */
+  plugins?: Plugin[];
+  /**
    * Logger configurations
    */
   logger?: {

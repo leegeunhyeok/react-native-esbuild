@@ -6,7 +6,7 @@ slug: /configuration/basic
 
 # Basic Configuration
 
-## Configuration file
+## Configuration
 
 `<projectRoot>/react-native-esbuild.js`
 
@@ -33,26 +33,32 @@ export.default = {
 };
 ```
 
-### config.cache
+### cache
 
 Enable cache.
 
 Defaults to `true`
 
-### config.mainFields
+### mainFields
 
 Field names for resolve package's modules.
 
 Defaults to `['react-native', 'browser', 'main', 'module']`
 
-### config.logger
+### plugins
+
+Additional Esbuild plugins.
+
+For more details, go to [Custom Plugins](/configuration/custom-plugins)
+
+### logger
 
 Logger configurations.
 
 - `logger.disabled`: Disable client log (Defaults to `false`)
 - `logger.timestamp`: Print timestamp with log when format is specified (Defaults to `null`)
 
-### config.transformer
+### transformer
 
 Transformer configurations.
 
@@ -63,7 +69,7 @@ Transformer configurations.
   This may slow down code transformation
   :::
 - `transformer.additionalTransformRules`: Additional transform rules. This rules will be applied before phase of transform to es5
-  - For more details, go to [/configuration/custom-transform]
+  - For more details, go to [Custom Transformation](/configuration/custom-transformation)
 
 ## Types
 
@@ -83,6 +89,10 @@ interface Config {
    * Defaults to `['react-native', 'browser', 'main', 'module']`
    */
   mainFields?: string[];
+  /**
+   * Additional Esbuild plugins.
+   */
+  plugins?: EsbuildPlugin[];
   /**
    * Logger configurations
    */

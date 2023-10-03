@@ -139,7 +139,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     return getEsbuildOptions(bundleOptions, {
       mainFields: this.config.mainFields,
-      plugins: plugins.map((plugin) => plugin(context)),
+      plugins: [
+        // plugin factories
+        ...plugins.map((plugin) => plugin(context)),
+        // additional plugins from configuration
+        ...(this.config.plugins ?? []),
+      ],
       define: getGlobalVariables(bundleOptions),
       banner: {
         js: await getTransformedPreludeScript(bundleOptions, this.root),
