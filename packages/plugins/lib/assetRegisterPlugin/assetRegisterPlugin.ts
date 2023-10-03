@@ -5,7 +5,7 @@ import {
   getAssetRegistrationScript,
   type Asset,
 } from '@react-native-esbuild/internal';
-import { ASSET_EXTENSIONS } from '@react-native-esbuild/config';
+import { ASSET_EXTENSIONS } from '@react-native-esbuild/internal';
 import type { AssetRegisterPluginConfig, SuffixPathResult } from '../types';
 import {
   copyAssetsToDestination,

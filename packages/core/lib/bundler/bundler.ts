@@ -34,6 +34,8 @@ import {
   getConfigFromGlobal,
   createPromiseHandler,
   getTransformedPreludeScript,
+  getResolveExtensionsOption,
+  getLoaderOption,
 } from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
@@ -139,16 +141,18 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     return getEsbuildOptions(bundleOptions, {
       mainFields: this.config.mainFields,
+      resolveExtensions: getResolveExtensionsOption(bundleOptions),
+      loader: getLoaderOption(),
+      define: getGlobalVariables(bundleOptions),
+      banner: {
+        js: await getTransformedPreludeScript(bundleOptions, this.root),
+      },
       plugins: [
         // plugin factories
         ...plugins.map((plugin) => plugin(context)),
         // additional plugins from configuration
         ...(this.config.plugins ?? []),
       ],
-      define: getGlobalVariables(bundleOptions),
-      banner: {
-        js: await getTransformedPreludeScript(bundleOptions, this.root),
-      },
       write: mode === 'bundle',
     });
   }
