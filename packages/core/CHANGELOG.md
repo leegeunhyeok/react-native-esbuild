@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.1](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.0...v0.1.0-beta.1) (2023-10-03)
+
+### ⚠ BREAKING CHANGES
+
+- change `enabled` option to `disabled`
+
+### Features
+
+- add esbuild plugin configuration ([c7ef4d2](https://github.com/leegeunhyeok/react-native-esbuild/commit/c7ef4d2e9fd095b2e3cf6cca779367dbfe42156d))
+- change enabled option to disabled ([09a3820](https://github.com/leegeunhyeok/react-native-esbuild/commit/09a382007092eb9b6cf6c0d287622cfe52a2b78b))
+- each logger now has its own level ([3baca7e](https://github.com/leegeunhyeok/react-native-esbuild/commit/3baca7ef9c4d8820b2cf932858027a56674940d7))
+- improve build progress ([cfd9ed8](https://github.com/leegeunhyeok/react-native-esbuild/commit/cfd9ed82ed31c1b49ece5a32275cd8b24f21f14f))
+- improve logging ([7f93e19](https://github.com/leegeunhyeok/react-native-esbuild/commit/7f93e19a82dbadd80529356041a126698e99bcac)), closes [#26](https://github.com/leegeunhyeok/react-native-esbuild/issues/26)
+- print logo when is tty environment ([a5f1a4f](https://github.com/leegeunhyeok/react-native-esbuild/commit/a5f1a4f24c17b91d3d4a6c3108576954c9599026))
+- support grouped console log ([a1e7a44](https://github.com/leegeunhyeok/react-native-esbuild/commit/a1e7a4461b94e2bef33e7cfe02e614c3628445a7)), closes [#28](https://github.com/leegeunhyeok/react-native-esbuild/issues/28)
+
+### Code Refactoring
+
+- logger levels ([cf0e79c](https://github.com/leegeunhyeok/react-native-esbuild/commit/cf0e79cffb4965e42bcd4ee5182677e988208a9a))
+- move extension constants to internal package ([be450bd](https://github.com/leegeunhyeok/react-native-esbuild/commit/be450bdfda652aa380f8873cc0b8fcc824551ad0))
+- rename config types to options ([7512fae](https://github.com/leegeunhyeok/react-native-esbuild/commit/7512faeb3f7a19365bbf7f9c2ed929e7abe4f538))
+- root based local cache directory ([b30e324](https://github.com/leegeunhyeok/react-native-esbuild/commit/b30e32423cf626dcaed123f4b1d55abdc726e677))
+
 ## [0.1.0-beta.0](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.39...v0.1.0-beta.0) (2023-09-25)
 
 ### Code Refactoring

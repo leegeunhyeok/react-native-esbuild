@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.1](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.0...v0.1.0-beta.1) (2023-10-03)
+
+### Features
+
+- add getBuildStatusCachePath ([57dd3b4](https://github.com/leegeunhyeok/react-native-esbuild/commit/57dd3b4b2cb1a9a046241c7b61c2f09f72385851))
+- improve logging ([7f93e19](https://github.com/leegeunhyeok/react-native-esbuild/commit/7f93e19a82dbadd80529356041a126698e99bcac)), closes [#26](https://github.com/leegeunhyeok/react-native-esbuild/issues/26)
+
+### Code Refactoring
+
+- move extension constants to internal package ([be450bd](https://github.com/leegeunhyeok/react-native-esbuild/commit/be450bdfda652aa380f8873cc0b8fcc824551ad0))
+- rename config types to options ([7512fae](https://github.com/leegeunhyeok/react-native-esbuild/commit/7512faeb3f7a19365bbf7f9c2ed929e7abe4f538))
+- root based local cache directory ([b30e324](https://github.com/leegeunhyeok/react-native-esbuild/commit/b30e32423cf626dcaed123f4b1d55abdc726e677))
+
 ## [0.1.0-beta.0](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-alpha.39...v0.1.0-beta.0) (2023-09-25)
 
 ### Miscellaneous Chores
