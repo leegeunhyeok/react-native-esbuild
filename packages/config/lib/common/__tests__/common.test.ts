@@ -1,5 +1,8 @@
-import { getIdByOptions } from '../core';
-import { getDevServerAssetPath } from '../server';
+import {
+  getIdByOptions,
+  getDevServerAssetPath,
+  getBuildStatusCachePath,
+} from '../core';
 import { OptionFlag } from '../../types';
 
 const BASE_OPTIONS = {
@@ -8,11 +11,7 @@ const BASE_OPTIONS = {
   metafile: false,
 } as const;
 
-describe('getDevServerAssetPath', () => {
-  it('should match snapshot', () => {
-    expect(getDevServerAssetPath('/root')).toMatchSnapshot();
-  });
-});
+const ROOT_DIR = '/root';
 
 describe.each([
   [
@@ -65,5 +64,17 @@ describe.each([
     it(`should bitwise value is ${expected}`, () => {
       expect(getIdByOptions({ ...BASE_OPTIONS, ...options })).toEqual(expected);
     });
+  });
+});
+
+describe('getDevServerAssetPath', () => {
+  it('should match snapshot', () => {
+    expect(getDevServerAssetPath(ROOT_DIR)).toMatchSnapshot();
+  });
+});
+
+describe('getBuildStatusCachePath', () => {
+  it('should match snapshot', () => {
+    expect(getBuildStatusCachePath(ROOT_DIR)).toMatchSnapshot();
   });
 });

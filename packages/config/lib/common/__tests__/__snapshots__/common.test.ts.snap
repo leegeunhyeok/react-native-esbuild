@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getDevServerAssetPath should match snapshot 1`] = `"/user/.rne/assets"`;
+exports[`getBuildStatusCachePath should match snapshot 1`] = `"/root/.rne/build-status.json"`;
+
+exports[`getDevServerAssetPath should match snapshot 1`] = `"/root/.rne/assets"`;

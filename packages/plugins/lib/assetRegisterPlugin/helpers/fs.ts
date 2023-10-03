@@ -27,7 +27,7 @@ export const copyAssetsToDevServer = async (
 ): Promise<void> => {
   if (context.mode === 'bundle') return;
 
-  const devServerAssetPath = getDevServerAssetPath();
+  const devServerAssetPath = getDevServerAssetPath(context.root);
 
   // cleanup asset cache directory
   await fs

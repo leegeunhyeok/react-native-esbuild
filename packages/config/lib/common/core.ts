@@ -1,6 +1,11 @@
+import path from 'node:path';
 import { OptionFlag } from '../types';
 import type { BundleOptions } from '../types';
-import { DEFAULT_ENTRY_POINT, DEFAULT_OUTFILE } from '../shares';
+import {
+  DEFAULT_ENTRY_POINT,
+  DEFAULT_OUTFILE,
+  LOCAL_CACHE_DIR,
+} from '../shares';
 
 export const combineWithDefaultBundleOptions = (
   options: Partial<BundleOptions>,
@@ -54,4 +59,15 @@ export const setEnvironment = (isDev: boolean): void => {
   const env = isDev ? 'development' : 'production';
   process.env.NODE_ENV = env;
   process.env.BABEL_ENV = env;
+};
+
+export const ASSET_PATH = 'assets';
+export const STATUS_CACHE_FILE = 'build-status.json';
+
+export const getDevServerAssetPath = (root: string): string => {
+  return path.resolve(root, LOCAL_CACHE_DIR, ASSET_PATH);
+};
+
+export const getBuildStatusCachePath = (root: string): string => {
+  return path.resolve(root, LOCAL_CACHE_DIR, STATUS_CACHE_FILE);
 };
