@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.2](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2023-10-04)
+
+### Features
+
+- improve error handling ([aab9a75](https://github.com/leegeunhyeok/react-native-esbuild/commit/aab9a754a79f5ac2d6e8ea60d5198815f23ad037)), closes [#13](https://github.com/leegeunhyeok/react-native-esbuild/issues/13)
+
+### Code Refactoring
+
+- update cli command descriptions ([ed48fe6](https://github.com/leegeunhyeok/react-native-esbuild/commit/ed48fe6bde9bc88c50645ffdb6c86312ba18df27))
+
 ## [0.1.0-beta.1](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.0...v0.1.0-beta.1) (2023-10-03)
 
 ### Features
