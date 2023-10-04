@@ -76,6 +76,22 @@ export class StatusLogger {
   summary({ warnings, errors }: BuildResult): void {
     const duration = (new Date().getTime() - this.buildStartedAt) / 1000;
 
+    warnings.forEach((warning, index) => {
+      logger.warn(
+        `#${index + 1} ${warning.text}`,
+        undefined,
+        warning.location ?? undefined,
+      );
+    });
+
+    errors.forEach((error, index) => {
+      logger.error(
+        `#${index + 1} ${error.text}`,
+        undefined,
+        error.location ?? undefined,
+      );
+    });
+
     if (isTTY()) {
       errors.length
         ? this.spinner.fail(`${this.platformText} failed!`)
