@@ -22,7 +22,7 @@ export enum LogLevel {
 }
 
 self.logEnabled = false;
-self.logLevel = LogLevel.Info;
+self.logLevel = LogLevel.Trace;
 self.logTimestampFormat = null;
 
 export class Logger {
@@ -54,7 +54,7 @@ export class Logger {
 
   constructor(
     private scope: string,
-    private logLevel: LogLevel = self.logLevel,
+    private logLevel?: LogLevel,
   ) {}
 
   private stdout(...messages: string[]): void {
@@ -134,12 +134,16 @@ export class Logger {
     return gray(paddingArray.join(''));
   }
 
+  public getLogLevel(): LogLevel {
+    return this.logLevel ?? self.logLevel;
+  }
+
   public setLogLevel(level: LogLevel): void {
     this.logLevel = level;
   }
 
   public trace(message: string, extra?: object): void {
-    if (this.logLevel > LogLevel.Trace) return;
+    if (this.getLogLevel() > LogLevel.Trace) return;
 
     this.stdout(
       this.getGroupPadding(),
@@ -151,7 +155,7 @@ export class Logger {
   }
 
   public debug(message: string, extra?: object): void {
-    if (this.logLevel > LogLevel.Debug) return;
+    if (this.getLogLevel() > LogLevel.Debug) return;
 
     this.stdout(
       this.getGroupPadding(),
@@ -163,7 +167,7 @@ export class Logger {
   }
 
   public log(message: string, extra?: object): void {
-    if (this.logLevel > LogLevel.Log) return;
+    if (this.getLogLevel() > LogLevel.Log) return;
 
     this.stdout(
       this.getGroupPadding(),
@@ -175,7 +179,7 @@ export class Logger {
   }
 
   public info(message: string, extra?: object): void {
-    if (this.logLevel > LogLevel.Info) return;
+    if (this.getLogLevel() > LogLevel.Info) return;
 
     this.stdout(
       this.getGroupPadding(),
@@ -187,7 +191,7 @@ export class Logger {
   }
 
   public warn(message: string, error?: Error, extra?: object): void {
-    if (this.logLevel > LogLevel.Warn) return;
+    if (this.getLogLevel() > LogLevel.Warn) return;
 
     this.stderr(
       this.getGroupPadding(),
