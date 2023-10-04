@@ -87,7 +87,8 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
         request.url,
       );
       if (type === BundleRequestType.Unknown || bundleOptions === null) {
-        throw new Error();
+        next();
+        return;
       }
 
       switch (type) {
