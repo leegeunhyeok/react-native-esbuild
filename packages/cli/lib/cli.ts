@@ -26,15 +26,15 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
         .options({
           'entry-file': {
             type: 'string',
-            describe: 'entry file path',
+            describe: 'set the entry file path',
           },
           host: {
-            describe: 'dev server host',
+            describe: 'set the server host',
             type: 'string',
             default: 'localhost',
           },
           port: {
-            describe: 'dev server port',
+            describe: 'set the server port',
             type: 'number',
             default: 8081,
           },
@@ -70,24 +70,26 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
         .options({
           platform: {
             type: 'string',
-            describe: 'platform for resolve modules',
+            describe: 'set the target platform for resolve modules',
             choices: ['android', 'ios', 'web'],
           },
           'entry-file': {
             type: 'string',
-            describe: 'entry file path',
+            describe: 'set the entry file path',
           },
           'bundle-output': {
             type: 'string',
-            describe: 'bundle output file destination',
+            describe: 'specify the path to store the resulting bundle',
           },
           'sourcemap-output': {
             type: 'string',
-            describe: 'sourcemap file destination',
+            describe:
+              'specify the path to store the source map file for the resulting bundle',
           },
           'assets-dest': {
             type: 'string',
-            describe: 'assets directory',
+            describe:
+              'specify the directory path for storing assets referenced in the bundle',
           },
           dev: {
             type: 'boolean',
@@ -99,7 +101,7 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
             type: 'boolean',
           },
           metafile: {
-            describe: 'make metafile.json file for esbuild analyze',
+            describe: 'export Esbuild metafile to working directory',
             type: 'boolean',
             default: false,
           },
