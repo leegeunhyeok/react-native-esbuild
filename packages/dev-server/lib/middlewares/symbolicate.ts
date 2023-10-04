@@ -44,20 +44,29 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
 
       bundler
         .getSourcemap(bundleOptions)
-        .then(({ sourcemap }) => symbolicateStackTrace(sourcemap, stack))
+        .then(({ sourcemap }) =>
+          symbolicateStackTrace(sourcemap, stack).catch((error) => {
+            logger.debug('unable to symbolicate stack trace', {
+              error: error as Error,
+            });
+            return { stack: [], codeFrame: null };
+          }),
+        )
         .then((symbolicateResult) => {
           response.writeHead(200).end(JSON.stringify(symbolicateResult));
         })
         .catch((errorOrSignal) => {
           if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
-            logger.error('bundle result is empty');
+            logger.warn('bundle result is empty');
+          } else if (errorOrSignal === BundleTaskSignal.InvalidTask) {
+            logger.warn('bundle task is invalid');
           } else {
             logger.error('symbolicate error', errorOrSignal as Error);
           }
           response.writeHead(500).end();
         });
     } catch (error) {
-      logger.error('invalid payload');
+      logger.warn('invalid symbolicate request');
       response.writeHead(400).end();
     }
   };

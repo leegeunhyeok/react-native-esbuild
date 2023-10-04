@@ -108,6 +108,7 @@ export interface BundleResult {
 
 export enum BundleTaskSignal {
   EmptyOutput,
+  InvalidTask,
 }
 
 export type EsbuildPluginFactory<PluginConfig = void> = (

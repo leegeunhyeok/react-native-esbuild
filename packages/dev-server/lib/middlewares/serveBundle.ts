@@ -37,6 +37,8 @@ const serveBundle = (
     .catch((errorOrSignal) => {
       if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
         logger.error('bundle result is empty');
+      } else if (errorOrSignal === BundleTaskSignal.InvalidTask) {
+        logger.error('bundle task is invalid');
       } else {
         logger.error('unable to get bundle', errorOrSignal as Error);
       }
@@ -80,22 +82,26 @@ export const createServeBundleMiddleware: DevServerMiddlewareCreator = ({
       return;
     }
 
-    const { type, bundleOptions } = parseBundleOptionsFromRequestUrl(
-      request.url,
-    );
-    if (type === BundleRequestType.Unknown || bundleOptions === null) {
-      next();
-      return;
-    }
+    try {
+      const { type, bundleOptions } = parseBundleOptionsFromRequestUrl(
+        request.url,
+      );
+      if (type === BundleRequestType.Unknown || bundleOptions === null) {
+        throw new Error();
+      }
 
-    switch (type) {
-      case BundleRequestType.Bundle:
-        serveBundle(bundler, bundleOptions, request, response);
-        break;
+      switch (type) {
+        case BundleRequestType.Bundle:
+          serveBundle(bundler, bundleOptions, request, response);
+          break;
 
-      case BundleRequestType.Sourcemap:
-        serveSourcemap(bundler, bundleOptions, request, response);
-        break;
+        case BundleRequestType.Sourcemap:
+          serveSourcemap(bundler, bundleOptions, request, response);
+          break;
+      }
+    } catch (error) {
+      logger.warn('invalid bundle request');
+      response.writeHead(400).end();
     }
   };
 };

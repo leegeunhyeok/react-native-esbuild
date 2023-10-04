@@ -44,16 +44,16 @@ describe('serve-asset-middleware', () => {
 
     beforeEach(() => {
       response = getMockedResponse();
+      middleware(
+        getMockedRequest({ url: 'main.bundle?platform=unknown' }),
+        response,
+        jest.fn(),
+      );
     });
 
-    it('should throw error', () => {
-      expect(() => {
-        middleware(
-          getMockedRequest({ url: 'main.bundle?platform=unknown' }),
-          response,
-          jest.fn(),
-        );
-      }).toThrow();
+    it('should response with 400', () => {
+      expect(response.writeHead).toBeCalledWith(400);
+      expect(response.end).toBeCalled();
     });
   });
 
