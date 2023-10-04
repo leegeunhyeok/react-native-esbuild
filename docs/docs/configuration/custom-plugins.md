@@ -1,7 +1,7 @@
 ---
 title: Custom Plugins
 sidebar_position: 3
-slug: /configuration/plugins
+slug: /configuration/custom-plugins
 ---
 
 # Custom Plugins
