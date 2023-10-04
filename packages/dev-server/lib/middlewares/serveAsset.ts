@@ -16,7 +16,10 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
 ) => {
   return function serveAssetMiddleware(request, response, next) {
     if (
-      !(typeof request.url === 'string' && request.url.startsWith(ASSET_PATH))
+      !(
+        typeof request.url === 'string' &&
+        request.url.startsWith(`/${ASSET_PATH}`)
+      )
     ) {
       next();
       return;

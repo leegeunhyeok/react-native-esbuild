@@ -33,7 +33,7 @@ describe('serve-asset-middleware', () => {
     let next: jest.Mock;
 
     beforeEach(() => {
-      request = getMockedRequest({ url: undefined });
+      request = getMockedRequest({ url: '' });
       response = getMockedResponse();
       next = jest.fn();
       middleware(request, response, next);
@@ -52,7 +52,7 @@ describe('serve-asset-middleware', () => {
 
     beforeEach(() => {
       assetRequestUrl = path.join(ASSET_PATH, faker.system.fileName());
-      request = getMockedRequest({ url: assetRequestUrl });
+      request = getMockedRequest({ url: `/${assetRequestUrl}` });
       response = getMockedResponse();
       next = jest.fn();
     });
