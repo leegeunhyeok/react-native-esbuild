@@ -2,7 +2,12 @@ import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { LogLevel, Logger } from '@react-native-esbuild/utils';
 import { cli } from './cli';
 import * as Commands from './commands';
-import { getCommand, getOptions, resetCache } from './helpers';
+import {
+  getCommand,
+  getOptions,
+  resetCache,
+  handleUncaughtException,
+} from './helpers';
 import { logger } from './shared';
 import type { BuildOptions, StartOptions } from './types';
 
@@ -49,6 +54,8 @@ process
     process.exit(1);
   })
   .on('uncaughtException', (error) => {
-    logger.error('uncaught exception thrown', error);
+    if (!handleUncaughtException(error)) {
+      logger.error('uncaught exception thrown', error);
+    }
     process.exit(1);
   });

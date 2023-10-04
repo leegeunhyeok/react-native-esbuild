@@ -133,5 +133,9 @@ export const createHotReloadMiddleware = ({
     logger.debug('HMR web socket was connected');
   });
 
+  server.on('error', (error) => {
+    logger.error('HMR web socket server error', error);
+  });
+
   return { server, hotReload, updateStart, updateDone };
 };

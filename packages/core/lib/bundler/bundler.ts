@@ -171,7 +171,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     handler?: PromiseHandler<BundleResult> | null,
   ): asserts handler is PromiseHandler<BundleResult> {
     if (handler) return;
-    throw new Error('unable to get task handler');
+    throw BundleTaskSignal.InvalidTask;
   }
 
   private handleBuildStart(context: PluginContext): void {

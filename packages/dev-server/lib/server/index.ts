@@ -183,6 +183,11 @@ export class ReactNativeEsbuildDevServer {
       }
     });
 
+    this.server.on('error', (error) => {
+      logger.error('http server error', error);
+      process.exit(-1);
+    });
+
     this.wsInitialized = true;
   }
 
