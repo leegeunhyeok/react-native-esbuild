@@ -199,7 +199,6 @@ export class ReactNativeEsbuildDevServer {
     return this.server.listen(port, () => {
       this.setupWebSocketServers();
 
-      process.stdout.write('\n');
       logger.info(`dev server listening on http://${host}:${port}`);
       process.stdout.write('\n');
 

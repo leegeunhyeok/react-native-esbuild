@@ -1,4 +1,5 @@
 import { colors, isTTY } from '@react-native-esbuild/utils';
+import pkg from '../../package.json';
 
 const LOGO = `
            "88e   "88e
@@ -25,4 +26,15 @@ export const printLogo = (): void => {
   } else {
     process.stdout.write(`Esbuild - ${DESCRIPTION}\n`);
   }
+};
+
+export const printVersion = (): void => {
+  const paddingForCenterAlign = new Array(
+    Math.floor(18 - pkg.version.length / 2),
+  )
+    .fill(' ')
+    .join('');
+  process.stdout.write(
+    `${isTTY() ? paddingForCenterAlign : ''}v${pkg.version}\n\n`,
+  );
 };

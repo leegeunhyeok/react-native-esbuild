@@ -40,7 +40,7 @@ import {
 } from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
-import { printLogo } from './logo';
+import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
@@ -52,6 +52,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static initialize(): void {
     if (isCI() || !isTTY()) colors.disable();
     printLogo();
+    printVersion();
 
     const config = loadConfig(process.cwd());
 
