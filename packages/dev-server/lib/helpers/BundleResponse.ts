@@ -10,7 +10,8 @@ export class BundleResponse {
   private static CRLF = '\r\n';
   private static THROTTLE_DELAY = 10;
   private isSupportMultipart: boolean;
-  private previousProgress = 0;
+  private done = 0;
+  private total = 0;
   private boundary: string;
   private throttleTimer: NodeJS.Timeout | null = null;
 
@@ -72,18 +73,19 @@ export class BundleResponse {
    * ```
    */
   writeBundleState(done: number, total: number): void {
+    const previousProgress = this.done / this.total;
     const currentProgress = done / total;
+    this.done = done;
+    this.total = total;
 
     if (
       total < 10 ||
       !this.isSupportMultipart ||
       this.throttleTimer !== null ||
-      this.previousProgress >= currentProgress
+      previousProgress >= currentProgress
     ) {
       return;
     }
-
-    this.previousProgress = currentProgress;
 
     this.writeChunk(
       {
@@ -114,6 +116,12 @@ export class BundleResponse {
    */
   endWithBundle(bundle: Uint8Array, modifiedAt: Date): void {
     if (this.isSupportMultipart) {
+      this.writeChunk(
+        {
+          'Content-Type': 'application/json',
+        },
+        JSON.stringify({ done: this.total, total: this.total }),
+      );
       this.writeChunk(
         {
           'X-Metro-Files-Changed-Count': String(0),
