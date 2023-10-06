@@ -12,6 +12,23 @@ import { BundleRequestType, type DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'serve-bundle-middleware';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Error or BundleTaskSignal
+const handleBundleError = (errorOrSignal: any): void => {
+  switch (errorOrSignal) {
+    case BundleTaskSignal.EmptyOutput:
+      logger.error('bundle result is empty');
+      break;
+    case BundleTaskSignal.InvalidTask:
+      logger.error('bundle task is invalid');
+      break;
+    case BundleTaskSignal.BuildFailed:
+      logger.error('build failed');
+      break;
+    default:
+      logger.error('unable to get bundle', errorOrSignal as Error);
+  }
+};
+
 const serveBundle = (
   bundler: ReactNativeEsbuildBundler,
   bundleOptions: ParsedBundleOptions,
@@ -35,13 +52,7 @@ const serveBundle = (
       bundleResponse.endWithBundle(result.source, result.bundledAt);
     })
     .catch((errorOrSignal) => {
-      if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
-        logger.error('bundle result is empty');
-      } else if (errorOrSignal === BundleTaskSignal.InvalidTask) {
-        logger.error('bundle task is invalid');
-      } else {
-        logger.error('unable to get bundle', errorOrSignal as Error);
-      }
+      handleBundleError(errorOrSignal);
       bundleResponse.endWithError();
     })
     .finally(() => {
@@ -63,11 +74,7 @@ const serveSourcemap = (
       response.writeHead(200).end(result.sourcemap);
     })
     .catch((errorOrSignal) => {
-      if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
-        logger.error('bundle result is empty');
-      } else {
-        logger.error('unable to get sourcemap', errorOrSignal as Error);
-      }
+      handleBundleError(errorOrSignal);
       response.writeHead(500).end();
     });
 };

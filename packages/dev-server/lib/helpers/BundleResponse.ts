@@ -1,5 +1,6 @@
 import type { ServerResponse } from 'node:http';
 import { logger } from '../shared';
+import type { SerializableData } from '../types';
 
 /**
  * Send bundle task status and write bundle to client
@@ -9,6 +10,8 @@ import { logger } from '../shared';
 export class BundleResponse {
   private static CRLF = '\r\n';
   private static THROTTLE_DELAY = 10;
+  private static SUCCESS_STATUS = 200;
+  private static FAILURE_STATUS = 500;
   private isSupportMultipart: boolean;
   private done = 0;
   private total = 0;
@@ -22,7 +25,7 @@ export class BundleResponse {
     const isSupportMultipart = accept?.includes('multipart/mixed') ?? false;
     const boundary = new Date().getTime().toString();
     if (isSupportMultipart) {
-      response.writeHead(200, {
+      response.writeHead(BundleResponse.SUCCESS_STATUS, {
         'Content-Type': `multipart/mixed; boundary="${boundary}"`,
       });
     } else {
@@ -34,8 +37,11 @@ export class BundleResponse {
 
   private writeChunk(
     headers: Record<string, string>,
-    data: string | Buffer | Uint8Array,
-    isLast?: boolean,
+    data?: SerializableData,
+    endConfig?: {
+      status: number;
+      data?: SerializableData;
+    },
   ): void {
     if (this.response.writableEnded) {
       return;
@@ -50,11 +56,11 @@ export class BundleResponse {
         CRLF +
         CRLF,
     );
-    this.response.write(data);
+    data && this.response.write(data);
 
-    if (isLast) {
+    if (endConfig) {
       this.response.write(`${CRLF}--${this.boundary}--${CRLF}`);
-      this.response.end();
+      this.response.end(endConfig.data);
     }
   }
 
@@ -130,7 +136,7 @@ export class BundleResponse {
           'Last-Modified': modifiedAt.toUTCString(),
         },
         bundle,
-        true,
+        { status: BundleResponse.SUCCESS_STATUS },
       );
     } else {
       this.response.setHeader('Content-Type', 'application/javascript');
@@ -138,7 +144,28 @@ export class BundleResponse {
     }
   }
 
-  endWithError(): void {
-    this.response.writeHead(500).end();
+  endWithError(error?: Error): void {
+    const errorData = JSON.stringify({
+      type: error?.name ?? 'InternalError',
+      message: error?.message ?? 'internal error',
+      errors: [],
+    });
+
+    if (this.isSupportMultipart) {
+      this.writeChunk(
+        {
+          'Content-Type': 'application/json',
+          'X-Http-Status': BundleResponse.FAILURE_STATUS.toString(),
+        },
+        undefined,
+        {
+          status: BundleResponse.FAILURE_STATUS,
+          data: errorData,
+        },
+      );
+    } else {
+      this.response.setHeader('Content-Type', 'application/json');
+      this.response.writeHead(500).end(errorData);
+    }
   }
 }

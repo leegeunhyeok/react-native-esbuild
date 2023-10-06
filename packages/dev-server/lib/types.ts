@@ -117,6 +117,8 @@ export interface HmrModule {
  */
 export type BroadcastCommand = 'reload' | 'devMenu';
 
+export type SerializableData = string | Buffer | Uint8Array;
+
 // TODO: convert to declare module 'metro-inspector-proxy' { ... }
 export interface TypedInspectorProxy {
   (projectRoot: string): TypedInspectorProxy;
