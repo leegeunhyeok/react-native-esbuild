@@ -93,7 +93,9 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           } as OnLoadResult;
         });
 
-        build.onEnd(async () => {
+        build.onEnd(async (args) => {
+          if (args.errors.length) return;
+
           if (!(build.initialOptions.outfile && context.sourcemap)) {
             logger.debug('outfile or sourcemap path is not specified');
             return;

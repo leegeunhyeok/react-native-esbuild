@@ -99,17 +99,21 @@ export interface BuildTask {
   buildCount: number;
 }
 
-export interface BundleResult {
-  source: Uint8Array;
-  sourcemap: Uint8Array;
-  bundledAt: Date;
-  revisionId: string;
+export type BundleResult = BundleSuccessResult | BundleFailureResult;
+
+export interface BundleSuccessResult {
+  result: {
+    source: Uint8Array;
+    sourcemap: Uint8Array;
+    bundledAt: Date;
+    revisionId: string;
+  };
+  error: null;
 }
 
-export enum BundleTaskSignal {
-  EmptyOutput,
-  InvalidTask,
-  BuildFailed,
+export interface BundleFailureResult {
+  result: null;
+  error: Error;
 }
 
 export type EsbuildPluginFactory<PluginConfig = void> = (

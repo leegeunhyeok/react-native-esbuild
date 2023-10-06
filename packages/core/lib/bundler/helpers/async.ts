@@ -1,12 +1,14 @@
-import type { PromiseHandler } from '../../types';
+import type { BundleResult, PromiseHandler } from '../../types';
 
-export const createPromiseHandler = <Result>(): PromiseHandler<Result> => {
-  let resolver: PromiseHandler<Result>['resolver'] | undefined;
-  let rejecter: PromiseHandler<Result>['rejecter'] | undefined;
+export const createPromiseHandler = (): PromiseHandler<BundleResult> => {
+  let resolver: PromiseHandler<BundleResult>['resolver'] | undefined;
+  let rejecter: PromiseHandler<BundleResult>['rejecter'] | undefined;
 
-  const task = new Promise<Result>((resolve, reject) => {
+  const task = new Promise<BundleResult>((resolve, _reject) => {
     resolver = resolve;
-    rejecter = reject;
+    rejecter = (reason: Error) => {
+      resolve({ result: null, error: reason });
+    };
   });
 
   return { task, resolver, rejecter };

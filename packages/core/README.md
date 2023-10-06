@@ -19,5 +19,4 @@ await bundler.bundle(bundleOptions);
 
 // using `esbuildContext.watch()` (in-memory output for dev-server)
 await bundler.getBundle(bundleOptions);
-await bundler.getSourcemap(bundleOptions);
 ```

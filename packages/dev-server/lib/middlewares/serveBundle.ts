@@ -1,31 +1,33 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type {
-  BundlerEventListener,
-  ReactNativeEsbuildBundler,
+import {
+  ReactNativeEsbuildError,
+  ReactNativeEsbuildErrorCode,
+  type BundlerEventListener,
+  type ReactNativeEsbuildBundler,
 } from '@react-native-esbuild/core';
-import { BundleTaskSignal } from '@react-native-esbuild/core';
 import { getIdByOptions } from '@react-native-esbuild/config';
-import type { ParsedBundleOptions } from '../helpers';
 import { BundleResponse, parseBundleOptionsFromRequestUrl } from '../helpers';
 import { logger } from '../shared';
 import { BundleRequestType, type DevServerMiddlewareCreator } from '../types';
+import type { ParsedBundleOptions } from '../helpers';
 
 const TAG = 'serve-bundle-middleware';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Error or BundleTaskSignal
-const handleBundleError = (errorOrSignal: any): void => {
-  switch (errorOrSignal) {
-    case BundleTaskSignal.EmptyOutput:
-      logger.error('bundle result is empty');
-      break;
-    case BundleTaskSignal.InvalidTask:
-      logger.error('bundle task is invalid');
-      break;
-    case BundleTaskSignal.BuildFailed:
-      logger.error('build failed');
-      break;
-    default:
-      logger.error('unable to get bundle', errorOrSignal as Error);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
+const handleError = (error: any): void => {
+  if (error instanceof ReactNativeEsbuildError) {
+    switch (error.code) {
+      case ReactNativeEsbuildErrorCode.InvalidTask:
+        logger.error('bundle task is invalid');
+        break;
+      case ReactNativeEsbuildErrorCode.BuildFailure:
+        logger.error('build failed');
+        break;
+      default:
+        logger.error('internal error', error as Error);
+    }
+  } else {
+    logger.error('unable to get bundle', error as Error);
   }
 };
 
@@ -48,11 +50,12 @@ const serveBundle = (
   bundler.on('build-status-change', bundleStatusChangeHandler);
   bundler
     .getBundle(bundleOptions)
-    .then((result) => {
+    .then(({ result, error }) => {
+      if (error) throw error;
       bundleResponse.endWithBundle(result.source, result.bundledAt);
     })
-    .catch((errorOrSignal) => {
-      handleBundleError(errorOrSignal);
+    .catch((error) => {
+      handleError(error);
       bundleResponse.endWithError();
     })
     .finally(() => {
@@ -67,14 +70,15 @@ const serveSourcemap = (
   response: ServerResponse,
 ): void => {
   bundler
-    .getSourcemap(bundleOptions, { disableRefresh: true })
-    .then((result) => {
+    .getBundle(bundleOptions, { disableRefresh: true })
+    .then(({ result, error }) => {
+      if (error) throw error;
       response.setHeader('Access-Control-Allow-Origin', 'devtools://devtools');
       response.setHeader('Content-Type', 'application/json');
       response.writeHead(200).end(result.sourcemap);
     })
-    .catch((errorOrSignal) => {
-      handleBundleError(errorOrSignal);
+    .catch((error) => {
+      handleError(error);
       response.writeHead(500).end();
     });
 };

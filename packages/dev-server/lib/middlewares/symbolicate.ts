@@ -1,5 +1,8 @@
 import { parse } from 'node:url';
-import { BundleTaskSignal } from '@react-native-esbuild/core';
+import {
+  ReactNativeEsbuildError,
+  ReactNativeEsbuildErrorCode,
+} from '@react-native-esbuild/core';
 import {
   parseStackFromRawBody,
   symbolicateStackTrace,
@@ -9,6 +12,24 @@ import { parseBundleOptionsFromRequestUrl } from '../helpers';
 import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'symbolicate-middleware';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
+const handleError = (error: any): void => {
+  if (error instanceof ReactNativeEsbuildError) {
+    switch (error.code) {
+      case ReactNativeEsbuildErrorCode.InvalidTask:
+        logger.error('bundle task is invalid');
+        break;
+      case ReactNativeEsbuildErrorCode.BuildFailure:
+        logger.error('build failed');
+        break;
+      default:
+        logger.error('internal error', error as Error);
+    }
+  } else {
+    logger.error('symbolicate error', error as Error);
+  }
+};
 
 export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
   bundler,
@@ -43,26 +64,23 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
       }
 
       bundler
-        .getSourcemap(bundleOptions)
-        .then(({ sourcemap }) =>
-          symbolicateStackTrace(sourcemap, stack).catch((error) => {
-            logger.debug('unable to symbolicate stack trace', {
-              error: error as Error,
-            });
-            return { stack: [], codeFrame: null };
-          }),
-        )
+        .getBundle(bundleOptions)
+        .then(({ result, error }) => {
+          if (error) throw error;
+          return symbolicateStackTrace(result.sourcemap, stack).catch(
+            (error) => {
+              logger.debug('unable to symbolicate stack trace', {
+                error: error as Error,
+              });
+              return { stack: [], codeFrame: null };
+            },
+          );
+        })
         .then((symbolicateResult) => {
           response.writeHead(200).end(JSON.stringify(symbolicateResult));
         })
-        .catch((errorOrSignal) => {
-          if (errorOrSignal === BundleTaskSignal.EmptyOutput) {
-            logger.warn('bundle result is empty');
-          } else if (errorOrSignal === BundleTaskSignal.InvalidTask) {
-            logger.warn('bundle task is invalid');
-          } else {
-            logger.error('symbolicate error', errorOrSignal as Error);
-          }
+        .catch((error) => {
+          handleError(error);
           response.writeHead(500).end();
         });
     } catch (error) {

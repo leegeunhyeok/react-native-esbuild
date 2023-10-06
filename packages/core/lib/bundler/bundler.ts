@@ -16,7 +16,6 @@ import {
 } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { logger } from '../shared';
-import { BundleTaskSignal } from '../types';
 import type {
   Config,
   BuildTask,
@@ -40,6 +39,7 @@ import {
 } from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
+import { ReactNativeEsbuildError, ReactNativeEsbuildErrorCode } from './errors';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
@@ -107,10 +107,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     bundleOptions: BundleOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildOptions> {
-    if (!this.plugins.length) {
-      throw new Error('plugin is not registered');
-    }
-
     setEnvironment(bundleOptions.dev);
 
     const context: PluginContext = {
@@ -165,14 +161,20 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private assertBuildTask(task?: BuildTask): asserts task is BuildTask {
     if (task) return;
-    throw new Error('unable to get build task');
+    throw new ReactNativeEsbuildError(
+      'unable to get build task',
+      ReactNativeEsbuildErrorCode.InvalidTask,
+    );
   }
 
   private assertTaskHandler(
     handler?: PromiseHandler<BundleResult> | null,
   ): asserts handler is PromiseHandler<BundleResult> {
     if (handler) return;
-    throw BundleTaskSignal.InvalidTask;
+    throw new ReactNativeEsbuildError(
+      'invalid task handler',
+      ReactNativeEsbuildErrorCode.InvalidTask,
+    );
   }
 
   private handleBuildStart(context: PluginContext): void {
@@ -191,7 +193,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     data: { result: BuildResult; success: boolean },
     context: PluginContext,
   ): void {
-    if (!data.success) {
+    // exit when error occurs in bundle mode
+    if (!data.success && context.mode === 'bundle') {
       process.exit(1);
     }
     const bundleEndedAt = new Date();
@@ -214,22 +217,30 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     };
 
     try {
+      if (!data.success) {
+        throw new ReactNativeEsbuildError(
+          'build failed',
+          ReactNativeEsbuildErrorCode.BuildFailure,
+        );
+      }
+
       const bundleOutput = outputFiles.find(findFromOutputFile(bundleFilename));
       const bundleSourcemapOutput = outputFiles.find(
         findFromOutputFile(bundleSourcemapFilename),
       );
 
       if (!(bundleOutput && bundleSourcemapOutput)) {
-        logger.warn('cannot found bundle and sourcemap');
-        currentTask.handler?.rejecter?.(BundleTaskSignal.EmptyOutput);
-        return;
+        throw new ReactNativeEsbuildError('empty bundle result');
       }
 
       currentTask.handler?.resolver?.({
-        source: bundleOutput.contents,
-        sourcemap: bundleSourcemapOutput.contents,
-        bundledAt: bundleEndedAt,
-        revisionId,
+        result: {
+          source: bundleOutput.contents,
+          sourcemap: bundleSourcemapOutput.contents,
+          bundledAt: bundleEndedAt,
+          revisionId,
+        },
+        error: null,
       });
     } catch (error) {
       currentTask.handler?.rejecter?.(error);
@@ -278,6 +289,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     const buildTaskId = context.id;
     const targetTask = this.buildTasks.get(buildTaskId);
     this.assertBuildTask(targetTask);
+    logger.debug(buildTaskId.toString());
     logger.debug(`reset task (id: ${buildTaskId})`, {
       buildCount: targetTask.buildCount,
     });
@@ -315,47 +327,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   async getBundle(
     bundleOptions: BundleRequestOptions,
     additionalData?: BundlerAdditionalData,
-  ): Promise<{
-    source: Uint8Array;
-    bundledAt: Date;
-    revisionId: string;
-  }> {
+  ): Promise<BundleResult> {
     const buildTask = await this.getOrCreateBundleTask(
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
     this.assertTaskHandler(buildTask.handler);
-
-    const { source, bundledAt, revisionId } = await buildTask.handler.task;
-
-    return {
-      source,
-      bundledAt,
-      revisionId,
-    };
-  }
-
-  async getSourcemap(
-    bundleOptions: BundleRequestOptions,
-    additionalData?: BundlerAdditionalData,
-  ): Promise<{
-    sourcemap: Uint8Array;
-    bundledAt: Date;
-    revisionId: string;
-  }> {
-    const buildTask = await this.getOrCreateBundleTask(
-      combineWithDefaultBundleOptions(bundleOptions),
-      additionalData,
-    );
-    this.assertTaskHandler(buildTask.handler);
-
-    const { sourcemap, bundledAt, revisionId } = await buildTask.handler.task;
-
-    return {
-      sourcemap,
-      bundledAt,
-      revisionId,
-    };
+    return buildTask.handler.task;
   }
 
   getConfig(): Config {
