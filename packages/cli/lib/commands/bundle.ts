@@ -4,6 +4,7 @@ import {
   createAssetRegisterPlugin,
   createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
+  createReactNativeWebPlugin,
 } from '@react-native-esbuild/plugins';
 import type { BundleOptions } from '@react-native-esbuild/config';
 import { printDebugOptions } from '../helpers';
@@ -30,10 +31,17 @@ export const bundle: Command = async (argv) => {
     bundleOptions.entry ? path.dirname(bundleOptions.entry) : process.cwd(),
   );
 
-  bundler
-    .registerPlugin(createAssetRegisterPlugin())
-    .registerPlugin(createSvgTransformPlugin())
-    .registerPlugin(createReactNativeRuntimeTransformPlugin());
+  // @TODO: remove registerPlugin and add plugin presets (plugin preset builder)
+  if (bundleOptions.platform !== 'web') {
+    bundler.registerPlugin(createAssetRegisterPlugin());
+  }
 
-  await bundler.bundle(bundleOptions);
+  bundler
+    .registerPlugin(createSvgTransformPlugin())
+    .registerPlugin(createReactNativeRuntimeTransformPlugin())
+    .registerPlugin(createReactNativeWebPlugin());
+
+  await bundler.bundle(bundleOptions).catch(() => {
+    process.exit(1);
+  });
 };

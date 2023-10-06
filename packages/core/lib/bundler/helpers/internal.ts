@@ -45,7 +45,11 @@ export const getResolveExtensionsOption = (
    * 2. `.native.ext`
    * 3. `.ext`
    */
-  return [bundleOptions.platform, 'native', 'react-native']
+  return [
+    bundleOptions.platform,
+    ...(bundleOptions.platform === 'web' ? [] : ['native', 'react-native']),
+  ]
+    .filter(Boolean)
     .map((platform) => extensions.map((ext) => `.${platform}${ext}`))
     .concat(extensions)
     .flat();

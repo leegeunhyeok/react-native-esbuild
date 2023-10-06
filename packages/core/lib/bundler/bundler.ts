@@ -1,4 +1,9 @@
-import esbuild, { type BuildOptions, type BuildResult } from 'esbuild';
+import path from 'node:path';
+import esbuild, {
+  type BuildOptions,
+  type BuildResult,
+  type ServeResult,
+} from 'esbuild';
 import { getGlobalVariables } from '@react-native-esbuild/internal';
 import {
   setEnvironment,
@@ -6,6 +11,7 @@ import {
   getEsbuildOptions,
   getIdByOptions,
   type BundleOptions,
+  getDevServerPublicPath,
 } from '@react-native-esbuild/config';
 import {
   Logger,
@@ -36,6 +42,7 @@ import {
   getTransformedPreludeScript,
   getResolveExtensionsOption,
   getLoaderOption,
+  getEsbuildWebConfig,
 } from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
@@ -109,8 +116,19 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   ): Promise<BuildOptions> {
     setEnvironment(bundleOptions.dev);
 
+    const webSpecifiedOptions =
+      bundleOptions.platform === 'web'
+        ? getEsbuildWebConfig(mode, this.root, bundleOptions)
+        : null;
+
+    if (webSpecifiedOptions) {
+      bundleOptions.outfile =
+        webSpecifiedOptions.outfile ?? path.basename(bundleOptions.entry);
+    }
+
     const context: PluginContext = {
       ...bundleOptions,
+
       id: this.identifyTaskByBundleOptions(bundleOptions),
       root: this.root,
       config: this.config,
@@ -151,7 +169,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         // additional plugins from configuration
         ...(this.config.plugins ?? []),
       ],
-      write: mode === 'bundle',
+      write: mode === 'bundle' || bundleOptions.platform === 'web',
+      ...webSpecifiedOptions,
     });
   }
 
@@ -322,6 +341,27 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       additionalData,
     );
     return esbuild.build(buildOptions);
+  }
+
+  async serve(
+    bundleOptions: Partial<BundleOptions>,
+    additionalData?: BundlerAdditionalData,
+  ): Promise<ServeResult> {
+    if (bundleOptions.platform !== 'web') {
+      throw new ReactNativeEsbuildError(
+        'serve mode is only available on web platform',
+      );
+    }
+
+    const buildTask = await this.getOrCreateBundleTask(
+      combineWithDefaultBundleOptions(bundleOptions),
+      additionalData,
+    );
+    this.assertTaskHandler(buildTask.handler);
+
+    return buildTask.context.serve({
+      servedir: getDevServerPublicPath(this.root),
+    });
   }
 
   async getBundle(

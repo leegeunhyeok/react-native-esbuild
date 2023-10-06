@@ -28,6 +28,15 @@ export interface ServeCommandArgv {
   bundleOptions: Partial<BundleOptions>;
 }
 
+export interface ServeCommandArgv {
+  serveOptions: {
+    host?: string;
+    port?: number;
+    template?: string;
+  };
+  bundleOptions: Partial<BundleOptions>;
+}
+
 export interface BundleCommandArgv {
   bundleOptions: Partial<BundleOptions>;
 }

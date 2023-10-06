@@ -70,7 +70,42 @@ export interface Config {
     };
   };
   /**
-   * Client event receiver
+   * Web configurations
+   */
+  web?: {
+    /**
+     * Index page template file path
+     */
+    template?: string;
+    /**
+     * Placeholders for replacement
+     *
+     * ```js
+     * // web.placeholders
+     * { placeholder_name: 'Hello, world!' };
+     * ```
+     *
+     * will be replaced to
+     *
+     * ```html
+     * <!-- before -->
+     * <tag>{{placeholder_name}}</tag>
+     *
+     * <!-- after -->
+     * <tag>Hello, world!</tag>
+     * ```
+     *
+     * ---
+     *
+     * Reserved placeholder name
+     *
+     * - `root`: root tag id
+     * - `script`: bundled script path
+     */
+    placeholders?: Record<string, string>;
+  };
+  /**
+   * Client event receiver (only work on native)
    */
   reporter?: (event: ReportableEvent) => void;
 }

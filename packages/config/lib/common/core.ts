@@ -19,8 +19,8 @@ export const combineWithDefaultBundleOptions = (
     platform: options.platform,
     minify: options.minify ?? false,
     dev: options.dev ?? true,
-    entry: options.entry ?? DEFAULT_ENTRY_POINT,
-    outfile: options.outfile ?? DEFAULT_OUTFILE,
+    entry: path.resolve(options.entry ?? DEFAULT_ENTRY_POINT),
+    outfile: path.resolve(options.outfile ?? DEFAULT_OUTFILE),
     metafile: options.metafile ?? false,
   };
 };
@@ -62,10 +62,15 @@ export const setEnvironment = (isDev: boolean): void => {
 };
 
 export const ASSET_PATH = 'assets';
+export const PUBLIC_PATH = 'public';
 export const STATUS_CACHE_FILE = 'build-status.json';
 
 export const getDevServerAssetPath = (root: string): string => {
   return path.resolve(root, LOCAL_CACHE_DIR, ASSET_PATH);
+};
+
+export const getDevServerPublicPath = (root: string): string => {
+  return path.resolve(root, LOCAL_CACHE_DIR, PUBLIC_PATH);
 };
 
 export const getBuildStatusCachePath = (root: string): string => {

@@ -24,6 +24,8 @@ export const startArgvSchema = z.object({
 export const serveArgvSchema = z.object({
   host: z.string().optional(),
   port: z.number().optional(),
+  dev: z.boolean().optional(),
+  minify: z.boolean().optional(),
   template: z.string().transform(resolvePath).optional(),
   'entry-file': z.string().transform(resolvePath).optional(),
 });

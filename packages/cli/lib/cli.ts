@@ -61,6 +61,43 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
         .version(false)
         .help();
     })
+    .command('serve', 'serve bundle', (yargs) => {
+      yargs
+        .options({
+          'entry-file': {
+            type: 'string',
+            describe: 'set the entry file path',
+            default: 'index',
+          },
+          host: {
+            describe: 'set the server host',
+            type: 'string',
+            default: 'localhost',
+          },
+          port: {
+            describe: 'set the server port',
+            type: 'number',
+            default: 8081,
+          },
+          template: {
+            describe: 'set the template html',
+            type: 'string',
+          },
+          dev: {
+            type: 'boolean',
+            describe: 'set as development environment',
+            default: true,
+          },
+          minify: {
+            describe: 'enable minify',
+            type: 'boolean',
+          },
+          ...commonOptions,
+        })
+        .strictOptions()
+        .version(false)
+        .help();
+    })
     .command('bundle', 'bundle your application', (yargs) => {
       yargs
         .options({
@@ -72,6 +109,7 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
           'entry-file': {
             type: 'string',
             describe: 'set the entry file path',
+            default: 'index',
           },
           'bundle-output': {
             type: 'string',

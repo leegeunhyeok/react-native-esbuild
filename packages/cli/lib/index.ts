@@ -23,6 +23,10 @@ import { logger } from './shared';
       await Commands.start(argv);
       break;
 
+    case 'serve':
+      await Commands.serve(argv);
+      break;
+
     case 'bundle':
       await Commands.bundle(argv);
       break;
