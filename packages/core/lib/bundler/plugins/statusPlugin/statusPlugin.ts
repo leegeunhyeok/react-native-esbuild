@@ -12,7 +12,13 @@ const NAME = 'build-status-plugin';
 export const createBuildStatusPlugin: EsbuildPluginFactory<{
   onStart: (context: PluginContext) => void;
   onUpdate: (buildState: BuildStatus, context: PluginContext) => void;
-  onEnd: (result: BuildResult, context: PluginContext) => void;
+  onEnd: (
+    data: {
+      result: BuildResult;
+      success: boolean;
+    },
+    context: PluginContext,
+  ) => void;
 }> = (config) => {
   return function buildStatusPlugin(context) {
     return {
@@ -45,10 +51,10 @@ export const createBuildStatusPlugin: EsbuildPluginFactory<{
           return null;
         });
 
-        build.onEnd((result: BuildResult) => {
-          statusLogger.summary(result);
-          statusLogger.persistStatus();
-          config?.onEnd(result, context);
+        build.onEnd(async (result: BuildResult) => {
+          const success = await statusLogger.summary(result);
+          await statusLogger.persistStatus();
+          config?.onEnd({ result, success }, context);
         });
       },
     };

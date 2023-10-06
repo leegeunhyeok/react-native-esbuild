@@ -118,7 +118,9 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
           },
         );
 
-        build.onEnd(async () => {
+        build.onEnd(async (result) => {
+          // skip copying assets on build failure
+          if (result.errors.length) return;
           await copyAssetsToDevServer(context, assets);
           await copyAssetsToDestination(context, assets);
         });

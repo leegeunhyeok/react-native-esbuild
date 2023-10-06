@@ -187,12 +187,18 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.emit('build-status-change', { id: context.id, ...buildState });
   }
 
-  private handleBuildEnd(result: BuildResult, context: PluginContext): void {
+  private handleBuildEnd(
+    data: { result: BuildResult; success: boolean },
+    context: PluginContext,
+  ): void {
+    if (!data.success) {
+      process.exit(1);
+    }
     const bundleEndedAt = new Date();
     const bundleFilename = context.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const revisionId = bundleEndedAt.getTime().toString();
-    const { outputFiles } = result;
+    const { outputFiles } = data.result;
 
     // `outputFiles` available when only `write: false`
     if (outputFiles === undefined) return;

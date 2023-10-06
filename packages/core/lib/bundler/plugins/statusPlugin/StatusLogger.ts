@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { BuildResult } from 'esbuild';
+import esbuild, { type BuildResult, type Message } from 'esbuild';
 import ora, { type Ora } from 'ora';
 import { getBuildStatusCachePath } from '@react-native-esbuild/config';
 import { colors, isTTY } from '@react-native-esbuild/utils';
@@ -45,6 +45,25 @@ export class StatusLogger {
     process.stdout.write(`${messages.join(' ')}\n`);
   }
 
+  private async printMessages(
+    messages: Message[],
+    kind: 'warning' | 'error',
+  ): Promise<void> {
+    const formattedMessages = await esbuild
+      .formatMessages(messages, { kind, color: isTTY() })
+      .catch((error) => {
+        logger.error('unable to format error messages', error as Error);
+        return null;
+      });
+
+    if (formattedMessages !== null) {
+      formattedMessages.forEach((message) => {
+        kind === 'warning' ? logger.warn(message) : logger.error(message);
+        this.print(''); // trailing new line
+      });
+    }
+  }
+
   getStatus(): BuildStatus {
     return {
       total: this.totalModuleCount,
@@ -73,27 +92,15 @@ export class StatusLogger {
       : this.print(`${this.platformText} build in progress...`);
   }
 
-  summary({ warnings, errors }: BuildResult): void {
+  async summary({ warnings, errors }: BuildResult): Promise<boolean> {
     const duration = (new Date().getTime() - this.buildStartedAt) / 1000;
+    const isSuccess = errors.length === 0;
 
-    warnings.forEach((warning, index) => {
-      logger.warn(
-        `#${index + 1} ${warning.text}`,
-        undefined,
-        warning.location ?? undefined,
-      );
-    });
-
-    errors.forEach((error, index) => {
-      logger.error(
-        `#${index + 1} ${error.text}`,
-        undefined,
-        error.location ?? undefined,
-      );
-    });
+    await this.printMessages(warnings, 'warning');
+    await this.printMessages(errors, 'error');
 
     if (isTTY()) {
-      errors.length
+      isSuccess
         ? this.spinner.fail(`${this.platformText} failed!`)
         : this.spinner.succeed(`${this.platformText} done!`);
 
@@ -111,7 +118,7 @@ export class StatusLogger {
       );
       this.print(colors.gray('╰─'), colors.cyan(`${duration}s\n`));
     } else {
-      errors.length
+      isSuccess
         ? this.print(`${this.platformText} failed!`)
         : this.print(`${this.platformText} done!`);
 
@@ -119,6 +126,8 @@ export class StatusLogger {
       this.print(`> ${errors.length} errors`);
       this.print(`> ${duration}s`);
     }
+
+    return isSuccess;
   }
 
   loadStatus(): Promise<void> {
