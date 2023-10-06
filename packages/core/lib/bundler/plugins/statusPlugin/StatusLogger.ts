@@ -5,6 +5,7 @@ import ora, { type Ora } from 'ora';
 import { getBuildStatusCachePath } from '@react-native-esbuild/config';
 import { colors, isTTY } from '@react-native-esbuild/utils';
 import { logger } from '../../../shared';
+import { ESBUILD_LABEL } from '../../logo';
 import type { BuildStatus, PluginContext } from '../../../types';
 import { fromTemplate, getSummaryTemplate } from './templates';
 
@@ -25,7 +26,7 @@ export class StatusLogger {
     this.spinner = ora({
       color: 'yellow',
       discardStdin: context.mode === 'bundle',
-      prefixText: colors.bgYellow(colors.black(' » Esbuild ')),
+      prefixText: colors.bgYellow(colors.black(ESBUILD_LABEL)),
     });
   }
 
