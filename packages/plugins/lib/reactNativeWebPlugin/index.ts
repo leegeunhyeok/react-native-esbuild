@@ -1,0 +1,1 @@
+export { createReactNativeWebPlugin } from './reactNativeWebPlugin';

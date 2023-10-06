@@ -1,9 +1,9 @@
 /* eslint-disable quotes -- allow quote in template literal */
-import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
+import { ReactNativeAppServer } from '@react-native-esbuild/dev-server';
 import {
   createAssetRegisterPlugin,
-  createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
+  createReactNativeRuntimeTransformPlugin,
 } from '@react-native-esbuild/plugins';
 import { enableInteractiveMode, printDebugOptions } from '../helpers';
 import { logger } from '../shared';
@@ -21,14 +21,12 @@ export const start: Command = async (argv) => {
   logger.debug('start options');
   printDebugOptions({ entry, ...serveOptions });
 
-  const { bundler, server } = new ReactNativeEsbuildDevServer(
-    serveOptions,
-  ).initialize();
-
-  bundler
-    .registerPlugin(createAssetRegisterPlugin())
-    .registerPlugin(createSvgTransformPlugin())
-    .registerPlugin(createReactNativeRuntimeTransformPlugin());
+  const server = new ReactNativeAppServer(serveOptions).setup((bundler) => {
+    bundler
+      .registerPlugin(createAssetRegisterPlugin())
+      .registerPlugin(createSvgTransformPlugin())
+      .registerPlugin(createReactNativeRuntimeTransformPlugin());
+  });
 
   server.listen(() => {
     if (

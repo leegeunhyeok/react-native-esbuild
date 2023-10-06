@@ -1,6 +1,11 @@
 import path from 'node:path';
 import deepmerge from 'deepmerge';
-import type { Config } from '../../types';
+import type { BuildOptions } from 'esbuild';
+import {
+  getDevServerPublicPath,
+  type BundleOptions,
+} from '@react-native-esbuild/config';
+import type { BundleMode, Config } from '../../types';
 
 export const loadConfig = (resolveDir: string): Config => {
   let config: Config | undefined;
@@ -19,6 +24,9 @@ export const loadConfig = (resolveDir: string): Config => {
     },
     transformer: {
       stripFlowPackageNames: ['react-native'],
+    },
+    web: {
+      template: path.resolve(__filename, '../../static/templates/index.html'),
     },
   };
 
@@ -52,4 +60,17 @@ export const getConfigFromGlobal = (): Config => {
     throw new Error('could not get configuration');
   }
   return self._config as Config;
+};
+
+export const getEsbuildWebConfig = (
+  mode: BundleMode,
+  root: string,
+  bundleOptions: BundleOptions,
+): BuildOptions => {
+  return {
+    format: 'iife',
+    // cannot use both `outfile` and `outdir`
+    outdir: mode === 'bundle' ? undefined : getDevServerPublicPath(root),
+    outfile: mode === 'bundle' ? bundleOptions.outfile : undefined,
+  };
 };

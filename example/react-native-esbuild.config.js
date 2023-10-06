@@ -20,7 +20,10 @@ exports.default = {
             );
           },
           options: {
-            plugins: ['react-native-reanimated/plugin'],
+            plugins: [
+              '@babel/plugin-transform-export-namespace-from',
+              'react-native-reanimated/plugin',
+            ],
             babelrc: false,
           },
         },

@@ -1,5 +1,4 @@
 import 'node-self';
-import { EOL } from 'node:os';
 import dayjs from 'dayjs';
 import {
   gray,
@@ -71,14 +70,14 @@ export class Logger {
     return `\r${this.getTimestamp()}${messages
       .filter(Boolean)
       .join(' ')
-      .trimEnd()}${EOL}`;
+      .trimEnd()}\n`;
   }
 
   private getTimestamp(): string {
     if (!self.logTimestampFormat) return '';
 
     // eg. "2023-05-09 18:33:19.232 " (has extra padding)
-    return `${gray(dayjs().format(self.logTimestampFormat))} `;
+    return `${gray(dayjs().format(self.logTimestampFormat as string))} `;
   }
 
   private parseExtra(extra?: object): string {
@@ -135,7 +134,7 @@ export class Logger {
   }
 
   public getLogLevel(): LogLevel {
-    return this.logLevel ?? self.logLevel;
+    return this.logLevel ?? (self.logLevel as LogLevel);
   }
 
   public setLogLevel(level: LogLevel): void {
