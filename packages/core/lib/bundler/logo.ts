@@ -10,6 +10,9 @@ const LOGO = `
            e88"   e88"
 `;
 
+// center column of `LOGO`
+const LOGO_CENTER_X = 18;
+
 export const ESBUILD_LABEL = ' » esbuild ';
 const DESCRIPTION = 'An extremely fast bundler';
 
@@ -30,7 +33,7 @@ export const printLogo = (): void => {
 
 export const printVersion = (): void => {
   const paddingForCenterAlign = new Array(
-    Math.floor(18 - pkg.version.length / 2),
+    Math.floor(LOGO_CENTER_X - pkg.version.length / 2),
   )
     .fill(' ')
     .join('');
