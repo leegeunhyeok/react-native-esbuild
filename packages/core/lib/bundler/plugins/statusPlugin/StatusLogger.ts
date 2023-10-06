@@ -6,6 +6,7 @@ import { getBuildStatusCachePath } from '@react-native-esbuild/config';
 import { colors, isTTY } from '@react-native-esbuild/utils';
 import { logger } from '../../../shared';
 import type { BuildStatus, PluginContext } from '../../../types';
+import { fromTemplate, getSummaryTemplate } from './templates';
 
 export class StatusLogger {
   private platformText: string;
@@ -99,33 +100,26 @@ export class StatusLogger {
     await this.printMessages(warnings, 'warning');
     await this.printMessages(errors, 'error');
 
+    const resultText = isSuccess
+      ? `${this.platformText} done!`
+      : `${this.platformText} failed!`;
+
     if (isTTY()) {
       isSuccess
-        ? this.spinner.fail(`${this.platformText} failed!`)
-        : this.spinner.succeed(`${this.platformText} done!`);
-
+        ? this.spinner.succeed(resultText)
+        : this.spinner.fail(resultText);
       this.spinner.clear();
-      this.print(colors.gray('╭───────────╯'));
-      this.print(
-        colors.gray('├─'),
-        colors.yellow(warnings.length.toString()),
-        colors.gray('warnings'),
-      );
-      this.print(
-        colors.gray('├─'),
-        colors.red(errors.length.toString()),
-        colors.gray('errors'),
-      );
-      this.print(colors.gray('╰─'), colors.cyan(`${duration}s\n`));
     } else {
-      isSuccess
-        ? this.print(`${this.platformText} failed!`)
-        : this.print(`${this.platformText} done!`);
-
-      this.print(`> ${warnings.length} warnings`);
-      this.print(`> ${errors.length} errors`);
-      this.print(`> ${duration}s`);
+      this.print(resultText);
     }
+
+    this.print(
+      fromTemplate(getSummaryTemplate(), {
+        warnings: colors.yellow(warnings.length.toString()),
+        errors: colors.red(errors.length.toString()),
+        duration: colors.cyan(duration.toString()),
+      }),
+    );
 
     return isSuccess;
   }
