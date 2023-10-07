@@ -26,7 +26,6 @@ rne start
 
 | Option | Description | Default value |
 |:--|:--|:--|
-| `--entry-file` | Set the entry file path | `index.js` |
 | `--host` | Set the server host | `localhost` |
 | `--port` | Set the server port | `8081` |
 | `--verbose` | Print all logs | `false` |

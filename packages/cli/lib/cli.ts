@@ -24,10 +24,6 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
     .command('start', 'start bundler with dev server', (yargs) => {
       yargs
         .options({
-          'entry-file': {
-            type: 'string',
-            describe: 'set the entry file path',
-          },
           host: {
             describe: 'set the server host',
             type: 'string',
