@@ -13,6 +13,7 @@ export enum BundleRequestType {
 }
 
 export interface DevServerOptions {
+  root?: string;
   port?: number;
   host?: string;
 }

@@ -40,6 +40,7 @@ export class ReactNativeEsbuildDevServer {
 
   constructor(devServerOptions: DevServerOptions) {
     this.devServerOptions = {
+      root: devServerOptions.root ?? process.cwd(),
       port: devServerOptions.port ?? DEFAULT_PORT,
       host: devServerOptions.host ?? DEFAULT_HOST,
     };
@@ -70,7 +71,6 @@ export class ReactNativeEsbuildDevServer {
       return { server: this, bundler: this.bundler };
     }
 
-    const root = process.cwd();
     const {
       middleware,
       debuggerProxyEndpoint,
@@ -87,9 +87,9 @@ export class ReactNativeEsbuildDevServer {
     this.eventsSocketEndpoint = eventsSocketEndpoint;
     this.inspectorProxy =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- InspectorProxy isn't well typed
-      new InspectorProxy(root) as TypedInspectorProxy;
+      new InspectorProxy(this.devServerOptions.root) as TypedInspectorProxy;
 
-    this.bundler = new ReactNativeEsbuildBundler(root);
+    this.bundler = new ReactNativeEsbuildBundler(this.devServerOptions.root);
     this.setupMiddlewares(middleware);
 
     logger.debug('create http server');
