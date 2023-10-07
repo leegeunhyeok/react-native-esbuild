@@ -5,12 +5,24 @@ import {
   createReactNativeRuntimeTransformPlugin,
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
-import { logger } from '../shared';
-import type { Command, BuildOptions } from '../types';
+import type { BundleOptions } from '@react-native-esbuild/config';
 import { printDebugOptions } from '../helpers';
+import { bundleArgvSchema } from '../schema';
+import { logger } from '../shared';
+import type { Command } from '../types';
 
-export const bundle: Command = async (options: BuildOptions) => {
-  const { bundleOptions } = options;
+export const bundle: Command = async (argv) => {
+  const bundleArgv = bundleArgvSchema.parse(argv);
+  const bundleOptions: Partial<BundleOptions> = {
+    entry: bundleArgv['entry-file'],
+    sourcemap: bundleArgv['sourcemap-output'],
+    outfile: bundleArgv['bundle-output'],
+    assetsDir: bundleArgv['assets-dest'],
+    platform: bundleArgv.platform,
+    dev: bundleArgv.dev,
+    minify: bundleArgv.minify,
+    metafile: bundleArgv.metafile,
+  };
   logger.debug('bundle options');
   printDebugOptions(bundleOptions);
 

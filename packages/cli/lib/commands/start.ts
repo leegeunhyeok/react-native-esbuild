@@ -7,15 +7,22 @@ import {
 } from '@react-native-esbuild/plugins';
 import { enableInteractiveMode, printDebugOptions } from '../helpers';
 import { logger } from '../shared';
-import type { Command, StartOptions } from '../types';
+import { startArgvSchema } from '../schema';
+import type { Command } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/require-await -- no async task in start command yet
-export const start: Command<StartOptions> = async (options) => {
+export const start: Command = async (argv) => {
+  const startArgv = startArgvSchema.parse(argv);
+  const entry = startArgv['entry-file'];
+  const serveOptions = {
+    host: startArgv.host,
+    port: startArgv.port,
+  };
   logger.debug('start options');
-  printDebugOptions(options);
+  printDebugOptions({ entry, ...serveOptions });
 
   const { bundler, server } = new ReactNativeEsbuildDevServer(
-    options,
+    serveOptions,
   ).initialize();
 
   bundler

@@ -2,44 +2,39 @@ import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { LogLevel, Logger } from '@react-native-esbuild/utils';
 import { cli } from './cli';
 import * as Commands from './commands';
-import {
-  getCommand,
-  getOptions,
-  resetCache,
-  handleUncaughtException,
-} from './helpers';
+import { getCommand, resetCache, handleUncaughtException } from './helpers';
+import { baseArgvSchema } from './schema';
 import { logger } from './shared';
-import type { BuildOptions, StartOptions } from './types';
 
 (async () => {
   ReactNativeEsbuildBundler.initialize();
 
   const argv = await cli();
-  const options = getOptions(argv);
+  const options = baseArgvSchema.parse(argv);
 
   Logger.setGlobalLogLevel(options.verbose ? LogLevel.Debug : LogLevel.Info);
 
-  if (options.resetCache) {
+  if (options['reset-cache']) {
     await resetCache();
   }
 
   switch (getCommand(argv)) {
     case 'start':
-      await Commands.start(options as StartOptions);
+      await Commands.start(argv);
       break;
 
     case 'bundle':
-      await Commands.bundle(options as BuildOptions);
+      await Commands.bundle(argv);
       break;
 
     case 'cache':
-      await Commands.cache(options, getCommand(argv, 1));
+      await Commands.cache(argv, getCommand(argv, 1));
       break;
 
     case 'ram-bundle':
       // eslint-disable-next-line quotes -- message
       logger.warn(`'ram-bundle' command is not supported`);
-      break;
+      process.exit(1);
   }
 })().catch((error) => {
   logger.error('cannot execute command', error as Error);

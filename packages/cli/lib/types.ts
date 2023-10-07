@@ -6,21 +6,30 @@ export interface RawArgv {
   $0: string;
 }
 
-export interface CliOptionsBase {
+export interface BaseOptions {
   verbose: boolean;
   resetCache: boolean;
 }
 
-export interface StartOptions extends CliOptionsBase {
-  port?: number;
-  host?: string;
-}
-
-export interface BuildOptions extends CliOptionsBase {
+export interface StartCommandArgv {
+  startOptions: {
+    host?: string;
+    port?: number;
+  };
   bundleOptions: Partial<BundleOptions>;
 }
 
-export type Command<CommandOptions extends CliOptionsBase = CliOptionsBase> = (
-  options: CommandOptions,
-  subCommand?: string,
-) => Promise<void>;
+export interface ServeCommandArgv {
+  serveOptions: {
+    host?: string;
+    port?: number;
+    template?: string;
+  };
+  bundleOptions: Partial<BundleOptions>;
+}
+
+export interface BundleCommandArgv {
+  bundleOptions: Partial<BundleOptions>;
+}
+
+export type Command = (argv: RawArgv, subCommand?: string) => Promise<void>;

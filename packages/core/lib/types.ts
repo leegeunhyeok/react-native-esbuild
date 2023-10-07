@@ -131,6 +131,7 @@ export interface PluginContext extends BundleOptions {
 }
 
 export interface BundleRequestOptions {
+  entry?: BundleOptions['entry'];
   dev?: BundleOptions['dev'];
   minify?: BundleOptions['minify'];
   platform: BundleOptions['platform'];
