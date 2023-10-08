@@ -33,6 +33,8 @@
 - 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready
 
+👉 See a demo application built with a web target [here](https://rne-web-demo.vercel.app).
+
 # Getting Started
 
 Go to [documentation](https://react-native-esbuild.vercel.app)

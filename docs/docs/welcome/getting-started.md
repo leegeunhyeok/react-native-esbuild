@@ -30,6 +30,8 @@ Developed by <a href="https://github.com/leegeunhyeok">Geunhyeok LEE (@leegeunhy
 - 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready
 
+👉 See a demo application built with a web target [here](https://rne-web-demo.vercel.app).
+
 ## Motivation
 
 > A Modern Bundler for React Native that supports all platforms.

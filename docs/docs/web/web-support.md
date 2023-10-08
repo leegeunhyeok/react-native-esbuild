@@ -6,7 +6,7 @@ slug: /web
 
 React Native Esbuild supports all platforms, including Web.
 
-visit demo web application [here](https://rne-web-demo.vercel.app).
+See a demo application built with a web target [here](https://rne-web-demo.vercel.app).
 
 ## Setup
 
