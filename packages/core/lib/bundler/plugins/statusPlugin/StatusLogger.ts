@@ -37,9 +37,13 @@ export class StatusLogger {
     // Enable interactive message when only in a TTY environment
     if (isTTY()) {
       this.totalModuleCount = Math.max(resolved, this.totalModuleCount);
-      this.spinner.text = `${this.platformText} build in progress... ${(
-        (loaded / this.totalModuleCount) * 100 || 0
-      ).toFixed(2)}% (${loaded}/${resolved})`;
+      const percent = Math.min(
+        (loaded / this.totalModuleCount) * 100 || 0,
+        100,
+      );
+      this.spinner.text = `${
+        this.platformText
+      } build in progress... ${percent.toFixed(2)}% (${loaded}/${resolved})`;
     }
   }
 
