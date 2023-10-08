@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2023-10-08)
+
+### Features
+
+- improve warning and error log format ([3c174a6](https://github.com/leegeunhyeok/react-native-esbuild/commit/3c174a6ca9aa85743bcbd3c933c1415afc84613f))
+- web support ([1723b0c](https://github.com/leegeunhyeok/react-native-esbuild/commit/1723b0c6b30e1c1bb1f5781cc11a093822a60f3d)), closes [#36](https://github.com/leegeunhyeok/react-native-esbuild/issues/36)
+
+### Bug Fixes
+
+- preserving esbuild bundle context ([43c9053](https://github.com/leegeunhyeok/react-native-esbuild/commit/43c9053febee7b7f8bf622256d1625b2e6b82dc6))
+
 ## [0.1.0-beta.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2023-10-04)
 
 **Note:** Version bump only for package @react-native-esbuild/plugins

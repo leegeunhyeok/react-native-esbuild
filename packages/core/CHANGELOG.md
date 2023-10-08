@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2023-10-08)
+
+### Features
+
+- add bundle progress limit up to 100 ([9383c8a](https://github.com/leegeunhyeok/react-native-esbuild/commit/9383c8a4b4db21c2366026eeb8102ef3e692a2f1))
+- improve warning and error log format ([3c174a6](https://github.com/leegeunhyeok/react-native-esbuild/commit/3c174a6ca9aa85743bcbd3c933c1415afc84613f))
+- print warnings and errors after build ([0a4aa3e](https://github.com/leegeunhyeok/react-native-esbuild/commit/0a4aa3e3b713e321537e42051c7b54680805a365))
+- web support ([1723b0c](https://github.com/leegeunhyeok/react-native-esbuild/commit/1723b0c6b30e1c1bb1f5781cc11a093822a60f3d)), closes [#36](https://github.com/leegeunhyeok/react-native-esbuild/issues/36)
+
+### Bug Fixes
+
+- invalid error response on multipart type ([c65897b](https://github.com/leegeunhyeok/react-native-esbuild/commit/c65897b861862b1e4d2d4abc22fe034e70905af4))
+- preserving esbuild bundle context ([43c9053](https://github.com/leegeunhyeok/react-native-esbuild/commit/43c9053febee7b7f8bf622256d1625b2e6b82dc6))
+
+### Code Refactoring
+
+- add summary log templates ([515121a](https://github.com/leegeunhyeok/react-native-esbuild/commit/515121ab7dc443cb99e2c615a41bd4cf188053fc))
+- **cli:** parse arfv using zod ([159e6b0](https://github.com/leegeunhyeok/react-native-esbuild/commit/159e6b080589383834d8b5b8f8d4578b6265837d))
+- exports esbuild label ([0bc7905](https://github.com/leegeunhyeok/react-native-esbuild/commit/0bc7905878d90b9afadb9af16db93965fcf9915a))
+- literal column value to constant ([66740bb](https://github.com/leegeunhyeok/react-native-esbuild/commit/66740bb03aabb4586af21035924600e2b5804f52))
+
 ## [0.1.0-beta.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2023-10-04)
 
 **Note:** Version bump only for package @react-native-esbuild/core

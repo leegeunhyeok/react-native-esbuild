@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2023-10-08)
+
+### Features
+
+- remove entry-file option of start command ([0d91a4d](https://github.com/leegeunhyeok/react-native-esbuild/commit/0d91a4d49f3f6360f184a931e03af5fba6e141fd))
+- web support ([1723b0c](https://github.com/leegeunhyeok/react-native-esbuild/commit/1723b0c6b30e1c1bb1f5781cc11a093822a60f3d)), closes [#36](https://github.com/leegeunhyeok/react-native-esbuild/issues/36)
+
+### Code Refactoring
+
+- **cli:** parse arfv using zod ([159e6b0](https://github.com/leegeunhyeok/react-native-esbuild/commit/159e6b080589383834d8b5b8f8d4578b6265837d))
+
 ## [0.1.0-beta.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2023-10-04)
 
 **Note:** Version bump only for package @react-native-esbuild/cli

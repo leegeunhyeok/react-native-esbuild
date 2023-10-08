@@ -10272,7 +10272,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dripsy@npm:^4.3.3":
+"dripsy@npm:4.3.3":
   version: 4.3.3
   resolution: "dripsy@npm:4.3.3"
   dependencies:
@@ -10281,6 +10281,18 @@ __metadata:
     stable-hash: ^0.0.2
     ts-toolbelt: ^9.6.0
   checksum: 59da2af86e425a4673f19c85e128f1c61a55a3433ff5673c8b562bf1d45e2573e408171ccb6572d2fecc1e36a59a42cd9f19a66a0b1e0ae32289362a6b188fe0
+  languageName: node
+  linkType: hard
+
+"dripsy@patch:dripsy@npm%3A4.3.3#./.yarn/patches/dripsy-npm-4.3.3-1f30149dd8.patch::locator=react-native-esbuild%40workspace%3A.":
+  version: 4.3.3
+  resolution: "dripsy@patch:dripsy@npm%3A4.3.3#./.yarn/patches/dripsy-npm-4.3.3-1f30149dd8.patch::version=4.3.3&hash=77355f&locator=react-native-esbuild%40workspace%3A."
+  dependencies:
+    "@expo/html-elements": ^0.2.0
+    "@theme-ui/css": ^0.4.0-rc.1
+    stable-hash: ^0.0.2
+    ts-toolbelt: ^9.6.0
+  checksum: f9f0b7e749523f6e1843f58ebf2f8001d90a76b42c9ab632837c9d5e9554480e2bf56da011d8211688b5f9fb44cd1615abe81cb2634f2c2e026e8eb5fd184f09
   languageName: node
   linkType: hard
 
