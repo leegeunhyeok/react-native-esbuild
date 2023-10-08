@@ -4,7 +4,7 @@
   "description": "shared configs and helpers for internal of react-native",
   "keywords": [
     "react-native",
-    "rebuild"
+    "esbuild"
   ],
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
