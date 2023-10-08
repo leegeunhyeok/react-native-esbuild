@@ -8,10 +8,11 @@ slug: /configuration/custom-plugins
 
 You can add additional [Esbuild plugins](https://esbuild.github.io/plugins).
 
-Add plugins to `plugins`.
+Add plugins to `plugins` in configuration.
 
-```ts
-{
+```js
+// react-native-esbuild.config.js
+exports.default = {
   plugins: [someEsbuildPlugin];
 };
 ```

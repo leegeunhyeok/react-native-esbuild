@@ -6,7 +6,7 @@ slug: /native-setup/android
 
 # Android
 
-## Set custom cli
+## Set Custom CLI
 
 Open `android/app/build.gradle` and add configuration.
 

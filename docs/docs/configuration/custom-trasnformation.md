@@ -11,7 +11,8 @@ slug: /configuration/custom-transformation
 Add transform rules to `transformer.additionalTransformRules.babel`.
 
 ```ts
-{
+// react-native-esbuild.config.js
+exports.default = {
   transformer: {
     additionalTransformRules: {
       babel: [
@@ -24,7 +25,6 @@ Add transform rules to `transformer.additionalTransformRules.babel`.
           test: (path: string, code: string) => {
             return shouldApplyTransformation;
           },
-
           /**
            * Babel options
            **/
@@ -42,8 +42,9 @@ Add transform rules to `transformer.additionalTransformRules.babel`.
 
 Add transform rules to `transformer.additionalTransformRules.swc`.
 
-```js
-{
+```ts
+// react-native-esbuild.config.js
+exports.default = {
   transformer: {
     additionalTransformRules: {
       swc: [
@@ -56,7 +57,6 @@ Add transform rules to `transformer.additionalTransformRules.swc`.
           test: (path: string, code: string) => {
             return shouldApplyTransformation;
           },
-
           /**
            * Swc options
            **/
@@ -73,7 +73,8 @@ Add transform rules to `transformer.additionalTransformRules.swc`.
 ## Usage
 
 ```js
-{
+// react-native-esbuild.config.js
+exports.default = {
   transformer: {
     additionalTransformRules: {
       babel: [

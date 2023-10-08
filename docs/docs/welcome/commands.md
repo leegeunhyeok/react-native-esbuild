@@ -18,7 +18,7 @@ The following commands are compatible.
 
 ## Start
 
-Start the development server.
+Start the development server for Native(Android, iOS).
 
 ```bash
 rne start
@@ -28,6 +28,25 @@ rne start
 |:--|:--|:--|
 | `--host` | Set the server host | `localhost` |
 | `--port` | Set the server port | `8081` |
+| `--verbose` | Print all logs | `false` |
+| `--reset-cache` | Reset transform cache | `false` |
+
+## Serve
+
+Start the development server for Web.
+
+```bash
+rne serve
+```
+
+| Option | Description | Default value |
+|:--|:--|:--|
+| `--entry-file` | Set the entry file path | `index.web.js`, `index.js` |
+| `--host` | Set the server host | `localhost` |
+| `--port` | Set the server port | `8081` |
+| `--template` | Set the template file path | Path to [default template](/web#default-template) |
+| `--dev` | Set as development environment | `true` |
+| `--minify` | Enable minify | `false` |
 | `--verbose` | Print all logs | `false` |
 | `--reset-cache` | Reset transform cache | `false` |
 
@@ -41,7 +60,7 @@ rne bundle --platform=<android | ios> --bundle-output=path
 
 | Option | Description | Default value |
 |:--|:--|:--|
-| `--entry-file` | Set the entry file path | `index.js` |
+| `--entry-file` | Set the entry file path | `index.<platform>.js`, `index.native.js`, `index.react-native.js`, `index.js` |
 | `--platform` | (Required) Set the target platform for resolve modules | |
 | `--bundle-output` | (Required) Specify the path to store the resulting bundle | |
 | `--sourcemap-output` | Specify the path to store the source map file for the resulting bundle | |

@@ -14,20 +14,33 @@ slug: /
 <div style={{ textAlign: 'center' }}>
   <img alt="npm" src="https://img.shields.io/npm/v/@react-native-esbuild/core?color=000000&style=flat-square"/>
   <br/>
-React Native Esbuild is the Esbuild based bundler for React Native.<br/>
+  An extremely fast bundler + React Native<br/>
 Developed by <a href="https://github.com/leegeunhyeok">Geunhyeok LEE (@leegeunhyeok)</a>
 </div>
 
 ## Highlights
 
 - ⚡️ Blazing Fast Build
-- 🌳 Support Tree Shaking
+- 🌳 Supports Tree Shaking
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
-- 🔥 Support Hermes Runtime
-- 🔄 Support Live Reload
-- 🐛 Support Debugging(Flipper, Chrome Debugger)
+- 🔥 Supports Hermes Runtime
+- 🔄 Supports Live Reload
+- 🐛 Supports Debugging(Flipper, Chrome Debugger)
+- 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready
+
+## Motivation
+
+> A Modern Bundler for React Native that supports all platforms.
+
+React Native is a great application development framework based on the JavaScript ecosystem(including React community).
+
+The JavaScript ecosystem is strong enough on its own, but React Native is mostly focused on developing native(Android, iOS) applications.
+
+That's why I've developed a modern bundler that supports all platforms to take full advantage of React Native's strengths.
+
+It aims to build for all platforms with just one bundler without complicated setup and provide a good DX(Development Experience).
 
 ## Architecture
 
