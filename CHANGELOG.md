@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.41](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-alpha.41) (2023-10-08)
+
+### Features
+
+- add root option to dev server ([cd8681b](https://github.com/leegeunhyeok/react-native-esbuild/commit/cd8681b9b62121939c33ea31dd6630bafdf611c6))
+- improve warning and error log format ([3c174a6](https://github.com/leegeunhyeok/react-native-esbuild/commit/3c174a6ca9aa85743bcbd3c933c1415afc84613f))
+- print warnings and errors after build ([0a4aa3e](https://github.com/leegeunhyeok/react-native-esbuild/commit/0a4aa3e3b713e321537e42051c7b54680805a365))
+
+### Bug Fixes
+
+- invalid error response on multipart type ([c65897b](https://github.com/leegeunhyeok/react-native-esbuild/commit/c65897b861862b1e4d2d4abc22fe034e70905af4))
+- preserving esbuild bundle context ([43c9053](https://github.com/leegeunhyeok/react-native-esbuild/commit/43c9053febee7b7f8bf622256d1625b2e6b82dc6))
+
+### Miscellaneous Chores
+
+- test ([900ea82](https://github.com/leegeunhyeok/react-native-esbuild/commit/900ea82ee5027ce1e798c63770c86096e62012c5))
+
+### Code Refactoring
+
+- add summary log templates ([515121a](https://github.com/leegeunhyeok/react-native-esbuild/commit/515121ab7dc443cb99e2c615a41bd4cf188053fc))
+- exports esbuild label ([0bc7905](https://github.com/leegeunhyeok/react-native-esbuild/commit/0bc7905878d90b9afadb9af16db93965fcf9915a))
+- literal column value to constant ([66740bb](https://github.com/leegeunhyeok/react-native-esbuild/commit/66740bb03aabb4586af21035924600e2b5804f52))
+
+### Build System
+
+- **deps:** bump postcss from 8.4.30 to 8.4.31 ([#33](https://github.com/leegeunhyeok/react-native-esbuild/issues/33)) ([9c93f17](https://github.com/leegeunhyeok/react-native-esbuild/commit/9c93f173f3ef0df44502e062202230c9c53b5e07))
+- **deps:** bump zod from 3.22.2 to 3.22.3 ([#35](https://github.com/leegeunhyeok/react-native-esbuild/issues/35)) ([275ac8b](https://github.com/leegeunhyeok/react-native-esbuild/commit/275ac8b32d381d9c98af65234f0c7e5fda82a694))
+
 ## [0.1.0-beta.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2023-10-04)
 
 ### Bug Fixes

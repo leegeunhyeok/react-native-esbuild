@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.41](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-alpha.41) (2023-10-08)
+
+### Features
+
+- add root option to dev server ([cd8681b](https://github.com/leegeunhyeok/react-native-esbuild/commit/cd8681b9b62121939c33ea31dd6630bafdf611c6))
+
+### Bug Fixes
+
+- invalid error response on multipart type ([c65897b](https://github.com/leegeunhyeok/react-native-esbuild/commit/c65897b861862b1e4d2d4abc22fe034e70905af4))
+- preserving esbuild bundle context ([43c9053](https://github.com/leegeunhyeok/react-native-esbuild/commit/43c9053febee7b7f8bf622256d1625b2e6b82dc6))
+
+### Miscellaneous Chores
+
+- test ([900ea82](https://github.com/leegeunhyeok/react-native-esbuild/commit/900ea82ee5027ce1e798c63770c86096e62012c5))
+
 ## [0.1.0-beta.3](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2023-10-04)
 
 ### Bug Fixes

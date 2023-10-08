@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/core",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-alpha.41",
   "description": "core of @react-native-esbuild",
   "keywords": [
     "react-native",
