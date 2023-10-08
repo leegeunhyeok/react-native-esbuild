@@ -1,5 +1,9 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import {
+  DEFAULT_ENTRY_POINT,
+  DEFAULT_WEB_ENTRY_POINT,
+} from '@react-native-esbuild/config';
 import { VERSION } from './constants';
 import type { RawArgv } from './types';
 
@@ -67,7 +71,7 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
           'entry-file': {
             type: 'string',
             describe: 'set the entry file path',
-            default: 'index',
+            default: DEFAULT_WEB_ENTRY_POINT,
           },
           host: {
             describe: 'set the server host',
@@ -109,7 +113,7 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
           'entry-file': {
             type: 'string',
             describe: 'set the entry file path',
-            default: 'index',
+            default: DEFAULT_ENTRY_POINT,
           },
           'bundle-output': {
             type: 'string',

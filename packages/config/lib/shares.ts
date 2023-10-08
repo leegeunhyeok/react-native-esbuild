@@ -1,4 +1,5 @@
-export const DEFAULT_ENTRY_POINT = 'index';
+export const DEFAULT_ENTRY_POINT = 'index.js';
+export const DEFAULT_WEB_ENTRY_POINT = 'index.web.js';
 export const DEFAULT_OUTFILE = 'main.jsbundle';
 export const DEFAULT_ASSETS_DIR = 'assets';
 
