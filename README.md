@@ -24,14 +24,14 @@
 > This project is under development
 
 - ⚡️ Blazing Fast Build
-- 🌳 Tree Shaking
+- 🌳 Supports Tree Shaking
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
-- 🔥 Support Hermes Runtime
-- 🔄 Support Live Reload
-- 🐛 Support Debugging (Flipper, Chrome Debugger)
+- 🔥 Supports Hermes Runtime
+- 🔄 Supports Live Reload
+- 🐛 Supports Debugging(Flipper, Chrome Debugger)
+- 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready
-- ~~🌍 Support Web~~ (WIP)
 
 # Getting Started
 

@@ -6,7 +6,7 @@ slug: /native-setup/ios
 
 # iOS
 
-## Set custom cli
+## Set Custom CLI
 
 Open XCode, go to `Build Target > Build Phases > Bundle React Native code and images` and add `CLI_PATH` environment variable.
 

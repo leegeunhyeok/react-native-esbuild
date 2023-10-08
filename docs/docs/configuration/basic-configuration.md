@@ -20,7 +20,7 @@ exports.default = {};
 By default, follow the configuration below.
 
 ```js
-export.default = {
+exports.default = {
   cache: true,
   mainFields: ['react-native', 'browser', 'main', 'module'],
   logger: {
@@ -29,6 +29,9 @@ export.default = {
   },
   transformer: {
     stripFlowPackageNames: ['react-native'],
+  },
+  web: {
+    template: '<path to default template>',
   },
 };
 ```
@@ -141,6 +144,40 @@ interface Config {
        */
       swc?: CustomTransformRuleBase<SwcTransformOptions>[];
     };
+  };
+  /**
+   * Web configurations
+   */
+  web?: {
+    /**
+     * Index page template file path
+     */
+    template?: string;
+    /**
+     * Placeholders for replacement
+     *
+     * ```js
+     * // web.placeholders
+     * { placeholder_name: 'Hello, world!' };
+     * ```
+     *
+     * will be replaced to
+     *
+     * ```html
+     * <!-- in template -->
+     * <tag>{{placeholder_name}}</tag>
+     *
+     * <!-- result -->
+     * <tag>Hello, world!</tag>
+     * ```
+     *
+     * ---
+     *
+     * Reserved placeholder names. It will be overridden your placeholders
+     *
+     * - `_bundle`: bundled script path
+     */
+    placeholders?: Record<string, string>;
   };
   /**
    * Client event receiver

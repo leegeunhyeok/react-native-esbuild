@@ -4,12 +4,12 @@ sidebar_position: 1
 slug: /package-presets
 ---
 
-# Presets for packages
+# Presets
 
-If you are using the package, follow the configuration below.
-(apply preset configuration to `react-native-esbuild.config.js`)
+If you are using 3rd party packages, follow the configuration below.
+(apply configuration to `react-native-esbuild.config.js`)
 
-> Can't find the package in the list? Please leave the package information in an [issue](https://github.com/leegeunhyeok/react-native-esbuild/issues).
+> Can't find the package in the list? Please report the package information to [GitHub Issues](https://github.com/leegeunhyeok/react-native-esbuild/issues).
 
 ## @gorhom/bottom-sheet
 
@@ -75,6 +75,40 @@ exports.default = {
   },
 };
 ```
+
+<details><summary>for Web</summary>
+
+To build for web, follow the preset below ([Reference](https://docs.swmansion.com/react-native-reanimated/docs/guides/web-support))
+
+```js
+exports.default = {
+  transformer: {
+    additionalTransformRules: {
+      babel: [
+        {
+          test: (path, code) => {
+            return (
+              /node_modules\/react-native-reanimated\//.test(path) ||
+              code.includes('react-native-reanimated')
+            );
+          },
+          options: {
+            plugins: [
+              // add @babel/plugin-transform-export-namespace-from
+              '@babel/plugin-transform-export-namespace-from',
+              'react-native-reanimated/plugin',
+            ],
+            babelrc: false,
+          },
+        },
+      ],
+    },
+  },
+};
+```
+
+</details>
+
 
 ## react-native-scrollable-tab-view
 

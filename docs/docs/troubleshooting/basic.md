@@ -4,7 +4,7 @@ sidebar_position: 1
 slug: /trouble-shooting/basics
 ---
 
-# Troubleshooting basics
+# Troubleshooting
 
 ## On build time
 
