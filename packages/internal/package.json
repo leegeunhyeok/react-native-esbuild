@@ -37,7 +37,7 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
-    "@react-native-esbuild/config": "workspace:^",
+    "@react-native-esbuild/config": "workspace:*",
     "esbuild": "^0.19.3"
   },
   "dependencies": {

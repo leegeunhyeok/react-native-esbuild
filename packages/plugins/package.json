@@ -43,11 +43,11 @@
     "esbuild": "^0.19.3"
   },
   "dependencies": {
-    "@react-native-esbuild/config": "workspace:^",
-    "@react-native-esbuild/core": "workspace:^",
-    "@react-native-esbuild/internal": "workspace:^",
-    "@react-native-esbuild/transformer": "workspace:^",
-    "@react-native-esbuild/utils": "workspace:^",
+    "@react-native-esbuild/config": "workspace:*",
+    "@react-native-esbuild/core": "workspace:*",
+    "@react-native-esbuild/internal": "workspace:*",
+    "@react-native-esbuild/transformer": "workspace:*",
+    "@react-native-esbuild/utils": "workspace:*",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "image-size": "^1.0.2",

@@ -39,11 +39,11 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "dependencies": {
-    "@react-native-esbuild/config": "workspace:^",
-    "@react-native-esbuild/core": "workspace:^",
-    "@react-native-esbuild/dev-server": "workspace:^",
-    "@react-native-esbuild/plugins": "workspace:^",
-    "@react-native-esbuild/utils": "workspace:^",
+    "@react-native-esbuild/config": "workspace:*",
+    "@react-native-esbuild/core": "workspace:*",
+    "@react-native-esbuild/dev-server": "workspace:*",
+    "@react-native-esbuild/plugins": "workspace:*",
+    "@react-native-esbuild/utils": "workspace:*",
     "yargs": "^17.7.2",
     "zod": "^3.22.2"
   },
