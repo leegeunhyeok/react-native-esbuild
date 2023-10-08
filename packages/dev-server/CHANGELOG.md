@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.40](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.2...v0.1.0-alpha.40) (2023-10-08)
+
+### Bug Fixes
+
+- serve-bundle middleware ([ccc51c3](https://github.com/leegeunhyeok/react-native-esbuild/commit/ccc51c395dcf1f061f02a67e6259979471a60647))
+
+### Miscellaneous Chores
+
+- test ([5055fb5](https://github.com/leegeunhyeok/react-native-esbuild/commit/5055fb54b900ef65116b078590097c9a907971ae))
+
 ## [0.1.0-beta.2](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2023-10-04)
 
 ### Features

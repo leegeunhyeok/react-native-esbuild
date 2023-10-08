@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/utils",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-alpha.40",
   "description": "utilities for @react-native-esbuild",
   "keywords": [
     "react-native",
