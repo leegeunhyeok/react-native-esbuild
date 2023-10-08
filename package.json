@@ -10,10 +10,12 @@
     "hoistingLimits": "workspaces"
   },
   "scripts": {
+    "postinstall": "lerna run build",
     "prepare": "husky install",
     "commitlint": "commitlint",
     "test": "jest",
-    "lint": "eslint packages"
+    "lint": "eslint packages",
+    "example": "yarn --cwd example"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
