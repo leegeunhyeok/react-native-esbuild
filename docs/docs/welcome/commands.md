@@ -55,7 +55,7 @@ rne serve
 Build the bundle for the provided JavaScript entry file.
 
 ```bash
-rne bundle --platform=<android | ios> --bundle-output=path
+rne bundle --platform=<android | ios | web> --bundle-output=path/to/bundle
 ```
 
 | Option | Description | Default value |
