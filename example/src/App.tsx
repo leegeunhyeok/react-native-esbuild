@@ -6,7 +6,9 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import { useFlipper } from '@react-navigation/devtools';
+import { DripsyProvider } from 'dripsy';
 import { RootStackNavigator } from './navigators';
+import { themeLight } from './theme';
 
 export function App(): JSX.Element {
   const navigationRef = useNavigationContainerRef();
@@ -20,9 +22,11 @@ export function App(): JSX.Element {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <NavigationContainer ref={navigationRef}>
-          <RootStackNavigator />
-        </NavigationContainer>
+        <DripsyProvider theme={themeLight}>
+          <NavigationContainer ref={navigationRef}>
+            <RootStackNavigator />
+          </NavigationContainer>
+        </DripsyProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

@@ -1,29 +1,25 @@
 import React, { type PropsWithChildren } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { styled, View, H2 } from 'dripsy';
 
 type SectionProps = PropsWithChildren<{
   title?: string;
   delay?: number;
 }>;
 
+const SectionContainer = styled(View)({
+  marginTop: '$04',
+  gap: '$02',
+});
+
+const SectionTitle = styled(H2, {
+  defaultVariant: 'text.primary',
+})();
+
 export function Section({ children, title }: SectionProps): JSX.Element {
   return (
-    <View style={styles.sectionContainer}>
-      {title ? <Text style={styles.sectionTitle}>{title}</Text> : null}
+    <SectionContainer>
+      {title ? <SectionTitle>{title}</SectionTitle> : null}
       {children}
-    </View>
+    </SectionContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-    gap: 8,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#222',
-  },
-});

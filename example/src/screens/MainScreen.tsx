@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { Container, View, H1, P } from 'dripsy';
 import { Fade, Button } from '../components';
 import type { RootStackProps } from '../navigators/types';
-import SvgEsbuildLogo from '../assets/esbuild.svg';
+import LogoSvg from '../assets/logo.svg';
 
 export function MainScreen({
   navigation,
@@ -13,18 +13,19 @@ export function MainScreen({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Container>
       <Fade style={styles.contentArea} delay={500}>
-        <SvgEsbuildLogo width={120} height={120} />
-        <Text style={styles.title}>React Native Esbuild</Text>
-        <Text style={styles.subTitle}>
+        <LogoSvg width={120} height={120} />
+        <H1>React Native Esbuild</H1>
+        <P style={styles.subTitle}>
           ⚡️ An extremely fast bundler{'\n'}+{'\n'}React Native
-        </Text>
+        </P>
       </Fade>
       <Fade delay={750}>
         <Button label="Getting Started" onPress={handlePressStartButton} />
       </Fade>
-    </SafeAreaView>
+      <View sx={{ marginBottom: '$04' }} />
+    </Container>
   );
 }
 

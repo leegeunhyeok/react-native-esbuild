@@ -3450,6 +3450,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/html-elements@npm:^0.2.0":
+  version: 0.2.2
+  resolution: "@expo/html-elements@npm:0.2.2"
+  checksum: c3b754f8a32bf1705fa9330b058d52e003b6572ad2c7752aff7b1085c0a43aa59d3483d9f7e2e2aab5715f29401972a589b6081cff017cf690c06f6e9820269c
+  languageName: node
+  linkType: hard
+
 "@faker-js/faker@npm:^8.1.0":
   version: 8.1.0
   resolution: "@faker-js/faker@npm:8.1.0"
@@ -5647,6 +5654,15 @@ __metadata:
   dependencies:
     defer-to-connect: ^1.0.1
   checksum: 4d9158061c5f397c57b4988cde33a163244e4f02df16364f103971957a32886beb104d6180902cbe8b38cb940e234d9f98a4e486200deca621923f62f50a06fe
+  languageName: node
+  linkType: hard
+
+"@theme-ui/css@npm:^0.4.0-rc.1":
+  version: 0.4.0-rc.13
+  resolution: "@theme-ui/css@npm:0.4.0-rc.13"
+  dependencies:
+    csstype: ^2.5.7
+  checksum: fedcdcf30e7ac2a605fb423b0f9b1588395273e8413b75f9f38bcb13411b505ebf976c2a58a4f4b32239a70e1c7568d6af9611268d71b947f68746b6fb6d2501
   languageName: node
   linkType: hard
 
@@ -9262,6 +9278,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"csstype@npm:^2.5.7":
+  version: 2.6.21
+  resolution: "csstype@npm:2.6.21"
+  checksum: 2ce8bc832375146eccdf6115a1f8565a27015b74cce197c35103b4494955e9516b246140425ad24103864076aa3e1257ac9bab25a06c8d931dd87a6428c9dccf
+  languageName: node
+  linkType: hard
+
 "csstype@npm:^3.0.2":
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
@@ -10249,6 +10272,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dripsy@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "dripsy@npm:4.3.3"
+  dependencies:
+    "@expo/html-elements": ^0.2.0
+    "@theme-ui/css": ^0.4.0-rc.1
+    stable-hash: ^0.0.2
+    ts-toolbelt: ^9.6.0
+  checksum: 59da2af86e425a4673f19c85e128f1c61a55a3433ff5673c8b562bf1d45e2573e408171ccb6572d2fecc1e36a59a42cd9f19a66a0b1e0ae32289362a6b188fe0
+  languageName: node
+  linkType: hard
+
 "duplexer3@npm:^0.1.4":
   version: 0.1.5
   resolution: "duplexer3@npm:0.1.5"
@@ -11224,6 +11259,7 @@ __metadata:
     "@types/react": ^18.0.24
     "@types/react-test-renderer": ^18.0.0
     babel-jest: ^29.2.1
+    dripsy: ^4.3.3
     jest: ^29.7.0
     metro-react-native-babel-preset: 0.76.8
     react: 18.2.0
@@ -20825,6 +20861,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stable-hash@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "stable-hash@npm:0.0.2"
+  checksum: c4d1c2d5e947c9c95b034f7d1948e0208006a5c39bf0c5dc570402a7c5dd1d341ad5f7f6d6642f6a1271f0f19d63534a5c291fcc546092f0360e85c376fc5e2d
+  languageName: node
+  linkType: hard
+
 "stable@npm:^0.1.8":
   version: 0.1.8
   resolution: "stable@npm:0.1.8"
@@ -21690,6 +21733,13 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: 090adff1302ab20bd3486e6b4799e90f97726ed39e02b39e566f8ab674fd5bd5f727f43615debbfc580d33c6d9d1c6b1b3ce7d8e3cca3e20530a145ffa232c35
+  languageName: node
+  linkType: hard
+
+"ts-toolbelt@npm:^9.6.0":
+  version: 9.6.0
+  resolution: "ts-toolbelt@npm:9.6.0"
+  checksum: 9f35fd95d895a5d32ea9fd2e532a695b0bae6cbff6832b77292efa188a0ed1ed6e54f63f74a8920390f3d909a7a3adb20a144686372a8e78b420246a9bd3d58a
   languageName: node
   linkType: hard
 

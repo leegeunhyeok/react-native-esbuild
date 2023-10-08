@@ -39,5 +39,8 @@
     "typescript": "^5.2.2"
   },
   "prettier": "@vercel/style-guide/prettier",
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "resolutions": {
+    "dripsy@^4.3.3": "patch:dripsy@npm%3A4.3.3#./.yarn/patches/dripsy-npm-4.3.3-1f30149dd8.patch"
+  }
 }
