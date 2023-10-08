@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2023-10-08)
+
+**Note:** Version bump only for package @react-native-esbuild/symbolicate
+
 ## [0.1.0-beta.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2023-10-08)
 
 **Note:** Version bump only for package @react-native-esbuild/symbolicate

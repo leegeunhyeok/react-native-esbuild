@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2023-10-08)
+
+### Bug Fixes
+
+- default entry file path ([1e96aee](https://github.com/leegeunhyeok/react-native-esbuild/commit/1e96aee7542232d3bc829bccbecb5e2ec4e834fa))
+
+### Miscellaneous Chores
+
+- fix keywords ([83c635d](https://github.com/leegeunhyeok/react-native-esbuild/commit/83c635d2e0cf0570513bf6b5a25b816ded976abc))
+
 ## [0.1.0-beta.4](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2023-10-08)
 
 ### Features
