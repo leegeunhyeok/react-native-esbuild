@@ -1,5 +1,6 @@
 import { parse } from 'node:url';
 import { z } from 'zod';
+import type { BundleOptions } from '@react-native-esbuild/config';
 import { BundleRequestType } from '../types';
 
 export type ParsedBundleOptions = z.infer<typeof bundleSearchParamSchema>;
@@ -53,5 +54,26 @@ export const parseBundleOptionsFromRequestUrl = (
       type === BundleRequestType.Unknown
         ? null
         : bundleSearchParamSchema.parse(query),
+  };
+};
+
+export const parseBundleOptionsForWeb = (
+  bundleOptions: Partial<BundleOptions>,
+  type: 'bundle' | 'sourcemap',
+): {
+  type: BundleRequestType;
+  bundleOptions: ParsedBundleOptions | null;
+} => {
+  return {
+    type:
+      type === 'bundle'
+        ? BundleRequestType.Bundle
+        : BundleRequestType.Sourcemap,
+    bundleOptions: bundleSearchParamSchema.parse({
+      ...Object.entries(bundleOptions).reduce((prev, [key, value]) => {
+        return { ...prev, [key]: value.toString() };
+      }, {}),
+      platform: 'web',
+    }),
   };
 };

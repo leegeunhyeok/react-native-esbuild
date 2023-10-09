@@ -131,7 +131,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     const context: PluginContext = {
       ...bundleOptions,
-
       id: this.identifyTaskByBundleOptions(bundleOptions),
       root: this.root,
       config: this.config,
@@ -172,7 +171,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         // additional plugins from configuration
         ...(this.config.plugins ?? []),
       ],
-      write: mode === 'bundle' || bundleOptions.platform === 'web',
+      write: mode === 'bundle',
       ...webSpecifiedOptions,
     });
   }
@@ -225,9 +224,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     const revisionId = bundleEndedAt.getTime().toString();
     const { outputFiles } = data.result;
 
-    // `outputFiles` available when only `write: false`
-    if (outputFiles === undefined) return;
-
     const currentTask = this.buildTasks.get(context.id);
     this.assertBuildTask(currentTask);
 
@@ -244,6 +240,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
           'build failed',
           ReactNativeEsbuildErrorCode.BuildFailure,
         );
+      }
+
+      // `outputFiles` available when only `write: false`
+      if (outputFiles === undefined) {
+        throw new ReactNativeEsbuildError('outputFiles is empty');
       }
 
       const bundleOutput = outputFiles.find(findFromOutputFile(bundleFilename));

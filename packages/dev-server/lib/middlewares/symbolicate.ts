@@ -7,8 +7,13 @@ import {
   parseStackFromRawBody,
   symbolicateStackTrace,
 } from '@react-native-esbuild/symbolicate';
+import type { BundleOptions } from '@react-native-esbuild/config';
 import { logger } from '../shared';
-import { parseBundleOptionsFromRequestUrl } from '../helpers';
+import type { ParsedBundleOptions } from '../helpers';
+import {
+  parseBundleOptionsForWeb,
+  parseBundleOptionsFromRequestUrl,
+} from '../helpers';
 import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'symbolicate-middleware';
@@ -31,9 +36,12 @@ const handleError = (error: any): void => {
   }
 };
 
-export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
-  bundler,
-}) => {
+export const createSymbolicateMiddleware: DevServerMiddlewareCreator<{
+  webBundleOptions?: Partial<BundleOptions>;
+}> = (context, options) => {
+  const bundler = context.bundler;
+  const webBundleOptions = options?.webBundleOptions;
+
   return function symbolicateMiddleware(request, response, next) {
     if (!request.url) {
       logger.warn(`(${TAG}) request url is empty`);
@@ -42,25 +50,32 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
     }
 
     const { pathname } = parse(request.url, true);
-    if (!pathname?.endsWith('/symbolicate')) {
+    if (!(pathname && pathname.endsWith('/symbolicate'))) {
       next();
       return;
     }
 
-    const stack = parseStackFromRawBody(request.rawBody);
-    const targetStack = stack.find(({ file }) => file.startsWith('http'));
-
-    if (!targetStack) {
-      throw new Error('unable to processing');
-    }
-
     try {
-      const { bundleOptions } = parseBundleOptionsFromRequestUrl(
-        targetStack.file,
-      );
+      const stack = parseStackFromRawBody(request.rawBody);
+      const targetStack = stack.find(({ file }) => file.startsWith('http'));
+      if (!targetStack) {
+        throw new ReactNativeEsbuildError('unable to get symbolicate stack');
+      }
+
+      let bundleOptions: ParsedBundleOptions | null = null;
+      if (webBundleOptions) {
+        bundleOptions = parseBundleOptionsForWeb(
+          webBundleOptions,
+          'sourcemap',
+        ).bundleOptions;
+      } else {
+        bundleOptions = parseBundleOptionsFromRequestUrl(
+          targetStack.file,
+        ).bundleOptions;
+      }
 
       if (!bundleOptions) {
-        throw new Error();
+        throw new ReactNativeEsbuildError('unable to parse bundle options');
       }
 
       bundler
@@ -84,7 +99,7 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator = ({
           response.writeHead(500).end();
         });
     } catch (error) {
-      logger.warn('invalid symbolicate request');
+      logger.warn('invalid symbolicate request', error as Error);
       response.writeHead(400).end();
     }
   };

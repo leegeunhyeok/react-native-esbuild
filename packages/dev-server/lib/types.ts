@@ -23,8 +23,9 @@ export interface DevServerMiddlewareContext {
   bundler: ReactNativeEsbuildBundler;
 }
 
-export type DevServerMiddlewareCreator = (
+export type DevServerMiddlewareCreator<MiddlewareOptions = void> = (
   context: DevServerMiddlewareContext,
+  options?: MiddlewareOptions,
 ) => DevServerMiddleware;
 
 export type DevServerMiddleware = (

@@ -11,6 +11,7 @@ import {
 } from '@react-native-esbuild/config';
 import { logger } from '../shared';
 import type { DevServerOptions } from '../types';
+import { createSymbolicateMiddleware } from '../middlewares';
 import { DevServer } from './DevServer';
 
 /**
@@ -69,6 +70,18 @@ export class ReactNativeWebServer extends DevServer {
     request.pipe(proxyRequest, { end: true });
   }
 
+  private parseBody(request: IncomingMessage): Promise<void> {
+    const body: Buffer[] = [];
+    return new Promise((resolve, _reject) => {
+      request
+        .on('data', (chunk: Buffer) => body.push(chunk))
+        .on('end', () => {
+          request.rawBody = Buffer.concat(body).toString();
+          resolve();
+        });
+    });
+  }
+
   initialize(): void {
     if (this.initialized) {
       logger.warn('dev server already initialized');
@@ -76,11 +89,23 @@ export class ReactNativeWebServer extends DevServer {
     }
 
     logger.debug('create http server');
-    this.server = http.createServer((request, response) => {
-      this.proxyHandler(request, response);
-    });
+    const bundler = new ReactNativeEsbuildBundler(this.devServerOptions.root);
+    this.bundler = bundler;
 
-    this.bundler = new ReactNativeEsbuildBundler(this.devServerOptions.root);
+    const symbolicateMiddleware = createSymbolicateMiddleware(
+      { bundler, devServerOptions: this.devServerOptions },
+      { webBundleOptions: this.bundleOptions },
+    );
+
+    this.server = http.createServer((request, response) => {
+      this.parseBody(request).then(() => {
+        // 1. send request to middleware
+        // 2. send request to proxy handler if not handled
+        symbolicateMiddleware(request, response, () => {
+          this.proxyHandler(request, response);
+        });
+      });
+    });
     this.initialized = true;
   }
 
