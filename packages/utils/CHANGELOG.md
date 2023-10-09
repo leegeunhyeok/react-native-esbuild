@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.6](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2023-10-09)
+
+### Features
+
+- add config option ([5ccf07b](https://github.com/leegeunhyeok/react-native-esbuild/commit/5ccf07be808b5c8b22f1e516e5757e3f968dc365))
+
 ## [0.1.0-beta.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2023-10-08)
 
 **Note:** Version bump only for package @react-native-esbuild/utils

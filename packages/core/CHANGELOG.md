@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.6](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2023-10-09)
+
+### Features
+
+- add config option ([5ccf07b](https://github.com/leegeunhyeok/react-native-esbuild/commit/5ccf07be808b5c8b22f1e516e5757e3f968dc365))
+- supports symbolicate for web ([4a63b94](https://github.com/leegeunhyeok/react-native-esbuild/commit/4a63b941aa4bb497cfbc937c88c99d3ce844f9d9))
+
+### Code Refactoring
+
+- move some utilities to static methods ([5660f79](https://github.com/leegeunhyeok/react-native-esbuild/commit/5660f793bb2bf34842afa781bec37fda4d0fc01c))
+- remove useless log ([2f5d825](https://github.com/leegeunhyeok/react-native-esbuild/commit/2f5d8252911f7303a03f275ac90d4385cae64f9b))
+
 ## [0.1.0-beta.5](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2023-10-08)
 
 ### Miscellaneous Chores
