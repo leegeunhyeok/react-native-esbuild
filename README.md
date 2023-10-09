@@ -4,7 +4,7 @@
 
   <img alt="logo" src="./logo.png" width="240">
 
-  > ⚡️ An extremely fast bundler + React Native
+  ⚡️ An extremely fast bundler + React Native
 
   [![esbuild](https://img.shields.io/badge/esbuild-ffcf00?logo=esbuild&logoColor=black&style=flat-square)](https://esbuild.github.io)
   [![swc](https://img.shields.io/badge/swc-e47700?logo=swc&logoColor=white&style=flat-square)](https://swc.rs)
