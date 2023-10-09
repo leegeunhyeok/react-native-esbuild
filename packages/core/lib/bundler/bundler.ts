@@ -69,6 +69,15 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     }
   }
 
+  public static setGlobalLogLevel(logLevel: LogLevel): void {
+    Logger.setGlobalLogLevel(logLevel);
+  }
+
+  public static async resetCache(): Promise<void> {
+    await ReactNativeEsbuildBundler.caches.clearAll();
+    logger.info('transform cache was reset');
+  }
+
   constructor(private root: string = process.cwd()) {
     super();
     this.config = getConfigFromGlobal();

@@ -1,8 +1,8 @@
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
-import { LogLevel, Logger } from '@react-native-esbuild/utils';
+import { LogLevel } from '@react-native-esbuild/utils';
 import { cli } from './cli';
 import * as Commands from './commands';
-import { getCommand, resetCache, handleUncaughtException } from './helpers';
+import { getCommand, handleUncaughtException } from './helpers';
 import { baseArgvSchema } from './schema';
 import { logger } from './shared';
 
@@ -10,11 +10,12 @@ import { logger } from './shared';
   const argv = await cli();
   const options = baseArgvSchema.parse(argv);
   ReactNativeEsbuildBundler.initialize(options.config);
-
-  Logger.setGlobalLogLevel(options.verbose ? LogLevel.Trace : LogLevel.Info);
+  ReactNativeEsbuildBundler.setGlobalLogLevel(
+    options.verbose ? LogLevel.Trace : LogLevel.Info,
+  );
 
   if (options['reset-cache']) {
-    await resetCache();
+    await ReactNativeEsbuildBundler.resetCache();
   }
 
   switch (getCommand(argv)) {
