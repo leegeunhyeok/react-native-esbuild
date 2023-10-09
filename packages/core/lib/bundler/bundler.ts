@@ -308,7 +308,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     const buildTaskId = context.id;
     const targetTask = this.buildTasks.get(buildTaskId);
     this.assertBuildTask(targetTask);
-    logger.debug(buildTaskId.toString());
     logger.debug(`reset task (id: ${buildTaskId})`, {
       buildCount: targetTask.buildCount,
     });
