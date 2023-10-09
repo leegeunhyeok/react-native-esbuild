@@ -74,6 +74,12 @@ Transformer configurations.
 - `transformer.additionalTransformRules`: Additional transform rules. This rules will be applied before phase of transform to es5
   - For more details, go to [Custom Transformation](/configuration/custom-transformation)
 
+### web
+
+Web configurations.
+
+For more details, go to [Web Support](/web).
+
 ## Types
 
 <details><summary>Config</summary>
