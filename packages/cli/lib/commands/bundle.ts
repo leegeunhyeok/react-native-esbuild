@@ -6,7 +6,10 @@ import {
   createSvgTransformPlugin,
   createReactNativeWebPlugin,
 } from '@react-native-esbuild/plugins';
-import type { BundleOptions } from '@react-native-esbuild/config';
+import {
+  DEFAULT_ENTRY_POINT,
+  type BundleOptions,
+} from '@react-native-esbuild/config';
 import { printDebugOptions } from '../helpers';
 import { bundleArgvSchema } from '../schema';
 import { logger } from '../shared';
@@ -15,7 +18,7 @@ import type { Command } from '../types';
 export const bundle: Command = async (argv) => {
   const bundleArgv = bundleArgvSchema.parse(argv);
   const bundleOptions: Partial<BundleOptions> = {
-    entry: bundleArgv['entry-file'],
+    entry: path.resolve(bundleArgv['entry-file'] ?? DEFAULT_ENTRY_POINT),
     sourcemap: bundleArgv['sourcemap-output'],
     outfile: bundleArgv['bundle-output'],
     assetsDir: bundleArgv['assets-dest'],

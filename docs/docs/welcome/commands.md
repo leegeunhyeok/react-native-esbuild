@@ -28,6 +28,7 @@ rne start
 |:--|:--|:--|
 | `--host` | Set the server host | `localhost` |
 | `--port` | Set the server port | `8081` |
+| `--config` | Path to the bundler configuration file | `<cwd>/react-native-esbuild.config.js` |
 | `--verbose` | Print all logs | `false` |
 | `--reset-cache` | Reset transform cache | `false` |
 
@@ -47,6 +48,7 @@ rne serve
 | `--template` | Set the template file path | Path to [default template](/web#default-template) |
 | `--dev` | Set as development environment | `true` |
 | `--minify` | Enable minify | `false` |
+| `--config` | Path to the bundler configuration file | `<cwd>/react-native-esbuild.config.js` |
 | `--verbose` | Print all logs | `false` |
 | `--reset-cache` | Reset transform cache | `false` |
 
@@ -68,6 +70,7 @@ rne bundle --platform=<android | ios | web> --bundle-output=path/to/bundle
 | `--dev` | Set as development environment | `true` |
 | `--minify` | Enable minify | `false` |
 | `--metafile` | Export [Esbuild metafile](https://esbuild.github.io/api/#metafile) to working directory | `false` |
+| `--config` | Path to the bundler configuration file | `<cwd>/react-native-esbuild.config.js` |
 | `--verbose` | Print all logs | `false` |
 | `--reset-cache` | Reset transform cache | `false` |
 

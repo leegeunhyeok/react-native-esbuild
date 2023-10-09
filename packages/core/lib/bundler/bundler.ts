@@ -13,13 +13,7 @@ import {
   type BundleOptions,
   getDevServerPublicPath,
 } from '@react-native-esbuild/config';
-import {
-  Logger,
-  LogLevel,
-  colors,
-  isCI,
-  isTTY,
-} from '@react-native-esbuild/utils';
+import { Logger, LogLevel } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
 import { logger } from '../shared';
 import type {
@@ -56,13 +50,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
 
-  public static initialize(): void {
-    if (isCI() || !isTTY()) colors.disable();
+  /**
+   * must be initialized first at the entry point
+   */
+  public static initialize(configFilePath?: string): void {
     printLogo();
     printVersion();
-
-    const config = loadConfig(process.cwd());
-
+    const config = loadConfig(configFilePath);
     config.logger?.disabled ?? false ? Logger.disable() : Logger.enable();
     Logger.setTimestampFormat(config.logger?.timestamp ?? null);
 

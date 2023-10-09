@@ -7,12 +7,11 @@ import { baseArgvSchema } from './schema';
 import { logger } from './shared';
 
 (async () => {
-  ReactNativeEsbuildBundler.initialize();
-
   const argv = await cli();
   const options = baseArgvSchema.parse(argv);
+  ReactNativeEsbuildBundler.initialize(options.config);
 
-  Logger.setGlobalLogLevel(options.verbose ? LogLevel.Debug : LogLevel.Info);
+  Logger.setGlobalLogLevel(options.verbose ? LogLevel.Trace : LogLevel.Info);
 
   if (options['reset-cache']) {
     await resetCache();

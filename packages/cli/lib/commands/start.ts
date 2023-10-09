@@ -1,10 +1,12 @@
 /* eslint-disable quotes -- allow quote in template literal */
+import path from 'node:path';
 import { ReactNativeAppServer } from '@react-native-esbuild/dev-server';
 import {
   createAssetRegisterPlugin,
   createSvgTransformPlugin,
   createReactNativeRuntimeTransformPlugin,
 } from '@react-native-esbuild/plugins';
+import { DEFAULT_ENTRY_POINT } from '@react-native-esbuild/config';
 import { enableInteractiveMode, printDebugOptions } from '../helpers';
 import { logger } from '../shared';
 import { startArgvSchema } from '../schema';
@@ -13,7 +15,7 @@ import type { Command } from '../types';
 // eslint-disable-next-line @typescript-eslint/require-await -- no async task in start command yet
 export const start: Command = async (argv) => {
   const startArgv = startArgvSchema.parse(argv);
-  const entry = startArgv['entry-file'];
+  const entry = path.resolve(startArgv['entry-file'] ?? DEFAULT_ENTRY_POINT);
   const serveOptions = {
     host: startArgv.host,
     port: startArgv.port,

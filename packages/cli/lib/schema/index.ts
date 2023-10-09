@@ -12,6 +12,7 @@ const resolvePath = (filepath: string): string =>
 
 export const baseArgvSchema = z.object({
   verbose: z.boolean().optional(),
+  config: z.string().optional(),
   'reset-cache': z.boolean().optional(),
 });
 

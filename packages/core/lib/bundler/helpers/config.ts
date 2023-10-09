@@ -7,7 +7,7 @@ import {
 } from '@react-native-esbuild/config';
 import type { BundleMode, Config } from '../../types';
 
-export const loadConfig = (resolveDir: string): Config => {
+export const loadConfig = (configFilePath?: string): Config => {
   let config: Config | undefined;
 
   // Base config
@@ -33,10 +33,16 @@ export const loadConfig = (resolveDir: string): Config => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires -- config file may not exist
     config = require(
-      path.resolve(resolveDir, 'react-native-esbuild.config.js'),
+      configFilePath
+        ? path.resolve(configFilePath)
+        : path.resolve(process.cwd(), 'react-native-esbuild.config.js'),
     ).default;
   } catch {
     // could not resolve configuration file
+    // fallback to default configuration
+    process.stderr.write(
+      'could not resolve configuration file. fallback to default\n\n',
+    );
   }
 
   config = config

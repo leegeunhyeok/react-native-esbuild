@@ -8,6 +8,10 @@ import { VERSION } from './constants';
 import type { RawArgv } from './types';
 
 const commonOptions = {
+  config: {
+    describe: 'Path to the bundler configuration file',
+    type: 'string',
+  },
   verbose: {
     describe: 'Print all logs',
     type: 'boolean',
@@ -144,6 +148,7 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
             minify: {
               describe: 'Enable minify',
               type: 'boolean',
+              default: false,
             },
             metafile: {
               describe: 'Export Esbuild metafile to working directory',
