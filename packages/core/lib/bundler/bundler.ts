@@ -214,9 +214,10 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     data: { result: BuildResult; success: boolean },
     context: PluginContext,
   ): void {
-    // exit when error occurs in bundle mode
-    if (!data.success && context.mode === 'bundle') {
-      process.exit(1);
+    // exit at the end of a build in bundle mode.
+    // if the build fails, exit to state 1.
+    if (context.mode === 'bundle') {
+      process.exit(data.success ? 0 : 1);
     }
     const bundleEndedAt = new Date();
     const bundleFilename = context.outfile;
