@@ -39,6 +39,29 @@ AppRegistry.runApplication(
 );
 ```
 
+### Development and Build
+
+```bash
+# rne serve: Start the development server for Web 
+# visit http://localhost:8081 (default)
+rne serve
+
+# rne bundle: Build the bundle for the provided JavaScript entry file
+rne bundle \
+  --platform=web \
+  --entry-file=index.web.js \
+  --bundle-output=dist/index.js
+
+# bundle result example
+dist
+├── back-icon-TRKDMJBN.png
+├── back-icon-mask-JPKVDL4L.png
+├── esbuild-YFSWKYAM.png
+├── index.html
+├── index.js
+└── index.js.map
+```
+
 ## Page Template
 
 ### Default Template
@@ -136,35 +159,4 @@ exports.default = {
 <!-- After -->
 <div>Hello, world!</div>
 <script src="index.js"></script>
-```
-
-
-## Commands
-
-### Serve
-
-Build and serve bundle.
-
-```bash
-# visit http://localhost:8081 (default)
-rne serve
-```
-
-### Bundle
-
-Build for Web.
-
-```bash
-rne bundle \
-  --platform=web \
-  --bundle-output=dist/index.js
-
-# bundle result example
-dist
-├── back-icon-TRKDMJBN.png
-├── back-icon-mask-JPKVDL4L.png
-├── esbuild-YFSWKYAM.png
-├── index.html
-├── index.js
-└── index.js.map
 ```

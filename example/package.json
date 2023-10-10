@@ -13,7 +13,7 @@
     "serve": "rne serve",
     "bundle:android": "rne bundle --platform=android --bundle-output=dist/android.jsbundle --assets-dest=dist/assets",
     "bundle:ios": "rne bundle --platform=ios --bundle-output=dist/ios.jsbundle --assets-dest=dist/assets",
-    "bundle:web": "rne bundle --platform=web --bundle-output=public/index.js",
+    "bundle:web": "rne bundle --platform=web --bundle-output=public/index.js --entry-file=index.web.js",
     "start:metro": "react-native start",
     "bundle:metro:android": "react-native bundle --entry-file=index.js --platform=android --bundle-output=dist/android-metro.bundlejs",
     "bundle:metro:ios": "react-native bundle --entry-file=index.js --platform=ios --bundle-output=dist/ios-metro.bundlejs",
