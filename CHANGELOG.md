@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.7](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2023-10-10)
+
+### Bug Fixes
+
+- **core:** exit on build successful in bundle mode ([5dbc68c](https://github.com/leegeunhyeok/react-native-esbuild/commit/5dbc68cb22d5c6f7edf66dee16f3b05f197f3cf8))
+
 ## [0.1.0-beta.6](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2023-10-09)
 
 ### Features

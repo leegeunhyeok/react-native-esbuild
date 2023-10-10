@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/internal",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "description": "shared configs and helpers for internal of react-native",
   "keywords": [
     "react-native",
