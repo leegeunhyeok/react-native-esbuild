@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2023-10-10)
+
+### Bug Fixes
+
+- **core:** post processing skipped ([0adb206](https://github.com/leegeunhyeok/react-native-esbuild/commit/0adb206e66ea453a20a1e216430af12e2b82a509))
+
 ## [0.1.0-beta.7](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2023-10-10)
 
 ### Bug Fixes

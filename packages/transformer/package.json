@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/transformer",
-  "version": "0.1.0-beta.7",
+  "version": "0.1.0-beta.8",
   "description": "transformer for @react-native-esbuild",
   "keywords": [
     "react-native",
