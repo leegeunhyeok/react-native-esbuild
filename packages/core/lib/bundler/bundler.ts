@@ -217,7 +217,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     // exit at the end of a build in bundle mode.
     // if the build fails, exit to state 1.
     if (context.mode === 'bundle') {
-      process.exit(data.success ? 0 : 1);
+      if (data.success) return;
+      process.exit(1);
     }
     const bundleEndedAt = new Date();
     const bundleFilename = context.outfile;
