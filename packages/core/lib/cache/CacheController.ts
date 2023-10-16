@@ -6,7 +6,7 @@ import type { Cache } from '../types';
 const OPTIONS = { encoding: 'utf-8' } as const;
 
 export class CacheController {
-  private cache = new Map<string, Cache>();
+  private cache: Record<string, Cache> = {};
 
   constructor(private cacheDirectory: string) {
     try {
@@ -21,7 +21,7 @@ export class CacheController {
   }
 
   public readFromMemory(key: string): Cache | undefined {
-    return this.cache.get(key);
+    return this.cache[key];
   }
 
   public readFromFileSystem(hash: string): Promise<string | null> {
@@ -31,7 +31,7 @@ export class CacheController {
   }
 
   public writeToMemory(key: string, cacheData: Cache): void {
-    this.cache.set(key, cacheData);
+    this.cache[key] = cacheData;
   }
 
   public writeToFileSystem(hash: string, data: string): Promise<void> {
@@ -41,6 +41,6 @@ export class CacheController {
   }
 
   public reset(): void {
-    this.cache.clear();
+    this.cache = {};
   }
 }
