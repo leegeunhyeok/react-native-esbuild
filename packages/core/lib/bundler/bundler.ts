@@ -91,7 +91,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.on('report', (event) => {
       this.broadcastToReporter(event);
     });
-    this.setupWatcher();
   }
 
   private broadcastToReporter(event: ReportableEvent): void {
@@ -121,17 +120,23 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private setupWatcher(): void {
+    logger.debug('setup watcher');
     FileSystemWatcher.getInstance()
-      .setHandler((changedFile, stats) => {
-        if (this.buildTasks.size > 0) {
+      .setHandler((event, changedFile, stats) => {
+        if (this.buildTasks.size > 0 && event === 'change') {
           ReactNativeEsbuildBundler.shared.watcher = {
             changed: changedFile,
             stats,
           };
+        } else {
+          ReactNativeEsbuildBundler.shared.watcher = {
+            changed: null,
+            stats: undefined,
+          };
         }
 
-        for (const { context } of this.buildTasks.values()) {
-          context.rebuild();
+        for (const { context, handler } of this.buildTasks.values()) {
+          context.rebuild().catch((error) => handler?.rejecter?.(error));
         }
       })
       .watch(this.root);
@@ -312,20 +317,22 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
+      this.setupWatcher();
       const buildOptions = await this.getBuildOptionsForBundler(
         'watch',
         bundleOptions,
         additionalData,
       );
+      const handler = createPromiseHandler();
       const context = await esbuild.context(buildOptions);
       this.buildTasks.set(targetTaskId, {
         context,
-        handler: createPromiseHandler(),
+        handler,
         status: 'pending',
         buildCount: 0,
       });
       // trigger first build
-      context.rebuild();
+      context.rebuild().catch((error) => handler.rejecter?.(error));
       logger.debug(`bundle task is now watching (id: ${targetTaskId})`);
     }
 
