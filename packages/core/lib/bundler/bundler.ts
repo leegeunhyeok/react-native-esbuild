@@ -15,6 +15,7 @@ import {
 } from '@react-native-esbuild/config';
 import { Logger, LogLevel } from '@react-native-esbuild/utils';
 import { CacheStorage } from '../cache';
+import { FileSystemWatcher } from '../watcher';
 import { logger } from '../shared';
 import type {
   Config,
@@ -28,6 +29,7 @@ import type {
   EsbuildPluginFactory,
   PluginContext,
   ReportableEvent,
+  BundlerSharedData,
 } from '../types';
 import {
   loadConfig,
@@ -45,6 +47,11 @@ import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
+  public static shared: BundlerSharedData = {
+    watcher: {
+      changed: null,
+    },
+  };
   private config: Config;
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
@@ -84,6 +91,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.on('report', (event) => {
       this.broadcastToReporter(event);
     });
+    this.setupWatcher();
   }
 
   private broadcastToReporter(event: ReportableEvent): void {
@@ -110,6 +118,23 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     // send event to custom reporter
     this.config.reporter?.(event);
+  }
+
+  private setupWatcher(): void {
+    FileSystemWatcher.getInstance()
+      .setHandler((changedFile, stats) => {
+        if (this.buildTasks.size > 0) {
+          ReactNativeEsbuildBundler.shared.watcher = {
+            changed: changedFile,
+            stats,
+          };
+        }
+
+        for (const { context } of this.buildTasks.values()) {
+          context.rebuild();
+        }
+      })
+      .watch(this.root);
   }
 
   private async getBuildOptionsForBundler(
@@ -299,8 +324,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         status: 'pending',
         buildCount: 0,
       });
-      await context.watch();
-      logger.debug(`bundle task is now watching: (id: ${targetTaskId})`);
+      // trigger first build
+      context.rebuild();
+      logger.debug(`bundle task is now watching (id: ${targetTaskId})`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- set() if not exist

@@ -14,8 +14,11 @@ import {
   type FlowRunner,
 } from './TransformFlowBuilder';
 import {
-  getTransformedCodeFromCache,
-  writeTransformedCodeToCache,
+  makeCacheConfig,
+  getTransformedCodeFromInMemoryCache,
+  getTransformedCodeFromFileSystemCache,
+  writeTransformedCodeToInMemoryCache,
+  writeTransformedCodeToFileSystemCache,
 } from './helpers';
 
 const NAME = 'react-native-runtime-transform-plugin';
@@ -46,29 +49,70 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           args,
           sharedData,
         ) => {
-          if (!cacheEnabled) return { code, done: false };
+          const isChangedFile = Bundler.shared.watcher.changed === args.path;
+          const cacheConfig = await makeCacheConfig(
+            cacheController,
+            args,
+            context,
+            isChangedFile ? Bundler.shared.watcher.stats : undefined,
+          );
 
-          const {
-            code: cachedCode,
-            hash,
-            mtimeMs,
-          } = await getTransformedCodeFromCache(cacheController, args, context);
+          sharedData.hash = cacheConfig.hash;
+          sharedData.mtimeMs = cacheConfig.mtimeMs;
 
-          sharedData.hash = hash;
-          sharedData.mtimeMs = mtimeMs;
+          // 1. force re-transform when file changed
+          if (isChangedFile) {
+            logger.debug('changed file detected', { path: args.path });
+            return { code, done: false };
+          }
+
+          // 2. using previous transformed result and skip transform
+          //    when file is not changed and transform result in memory
+          const inMemoryCache = getTransformedCodeFromInMemoryCache(
+            cacheController,
+            cacheConfig,
+          );
+          if (inMemoryCache) {
+            return { code: inMemoryCache, done: true };
+          }
+
+          // 3. when cache is disabled, always transform code each build tasks
+          if (!cacheEnabled) {
+            return { code, done: false };
+          }
+
+          // 4. trying to get cache from file system
+          //    = cache exist ? use cache : transform code
+          const cachedCode = await getTransformedCodeFromFileSystemCache(
+            cacheController,
+            cacheConfig,
+          );
 
           return { code: cachedCode ?? code, done: Boolean(cachedCode) };
         };
 
         const onAfterTransform: FlowRunner = async (code, _args, shared) => {
-          if (cacheEnabled && shared.hash && shared.mtimeMs) {
-            await writeTransformedCodeToCache(
+          if (!(shared.hash && shared.mtimeMs)) {
+            logger.warn('unexpected cache config');
+            return { code, done: true };
+          }
+
+          const cacheConfig = { hash: shared.hash, mtimeMs: shared.mtimeMs };
+
+          writeTransformedCodeToInMemoryCache(
+            cacheController,
+            code,
+            cacheConfig,
+          );
+
+          if (cacheEnabled) {
+            await writeTransformedCodeToFileSystemCache(
               cacheController,
               code,
-              shared.hash,
-              shared.mtimeMs,
+              cacheConfig,
             );
           }
+
           return { code, done: true };
         };
 

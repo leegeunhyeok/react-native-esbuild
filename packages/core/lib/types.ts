@@ -1,3 +1,4 @@
+import type { Stats } from 'node:fs';
 import type { BuildContext, Plugin } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type { Options as SwcTransformOptions } from '@swc/core';
@@ -154,6 +155,13 @@ export interface BundleFailureResult {
 export type EsbuildPluginFactory<PluginConfig = void> = (
   config?: PluginConfig,
 ) => (context: PluginContext) => Plugin;
+
+export interface BundlerSharedData {
+  watcher: {
+    changed: string | null;
+    stats?: Stats;
+  };
+}
 
 export type BundlerAdditionalData = Record<string, unknown>;
 

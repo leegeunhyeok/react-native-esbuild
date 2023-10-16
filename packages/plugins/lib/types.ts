@@ -17,3 +17,8 @@ export interface SuffixPathResult {
 export interface ReactNativeRuntimeTransformPluginConfig {
   injectScriptPaths?: string[];
 }
+
+export interface CacheConfig {
+  hash: string;
+  mtimeMs: number;
+}
