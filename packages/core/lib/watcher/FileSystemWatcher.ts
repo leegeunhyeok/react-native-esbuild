@@ -1,11 +1,9 @@
-import path from 'node:path';
 import type { Stats } from 'node:fs';
 import * as chokidar from 'chokidar';
 import {
   SOURCE_EXTENSIONS,
   ASSET_EXTENSIONS,
 } from '@react-native-esbuild/internal';
-import { LOCAL_CACHE_DIR } from '@react-native-esbuild/config';
 import { logger } from '../shared';
 
 const WATCH_EXTENSIONS_REGEXP = new RegExp(
@@ -58,36 +56,33 @@ export class FileSystemWatcher {
       return;
     }
 
-    const ignoreDirectories = [path.join(targetPath, LOCAL_CACHE_DIR)];
-
-    const addListener = (
-      event: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir',
-    ): void => {
-      if (!this.watcher) return;
-      this.watcher.on(event, (path, stats) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- allow
-        this.handleWatch(event, path, stats);
-      });
-    };
-
     this.watcher = chokidar
       .watch(targetPath, {
         alwaysStat: true,
         ignoreInitial: true,
-        ignored: ignoreDirectories,
+        ignored: /(?:^|[/\\])\../,
+      })
+      .on('addDir', (path, stats) => {
+        this.handleWatch('addDir', path, stats);
+      })
+      .on('unlinkDir', (path) => {
+        this.handleWatch('unlinkDir', path);
+      })
+      .on('add', (path, stats) => {
+        this.handleWatch('add', path, stats);
+      })
+      .on('change', (path, stats) => {
+        this.handleWatch('change', path, stats);
+      })
+      .on('unlink', (path) => {
+        this.handleWatch('unlink', path);
       })
       .on('ready', () => {
-        logger.debug(`watching '${targetPath}'`);
+        logger.debug('watching', { targetPath });
       })
       .on('error', (error) => {
         logger.error('unexpected error on watcher', error);
       });
-
-    addListener('addDir');
-    addListener('unlinkDir');
-    addListener('add');
-    addListener('change');
-    addListener('unlink');
   }
 
   close(): void {
