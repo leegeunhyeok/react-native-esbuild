@@ -4,7 +4,7 @@ import { getDevServerAssetPath } from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
 import type { Asset } from '@react-native-esbuild/internal';
 import { logger } from '../../shared';
-import { getDevServerBasePath, resolveAssetPath } from './path';
+import { addSuffix, getDevServerBasePath, resolveAssetPath } from './path';
 
 /**
  * @see {@link https://developer.android.com/training/multiscreen/screendensities#TaskProvideAltBmp}
@@ -40,7 +40,12 @@ export const copyAssetsToDevServer = async (
       const filepath = await resolveAssetPath(asset, scale);
       await fs.copyFile(
         filepath,
-        path.join(devServerAssetPath, path.basename(filepath)),
+        path.join(
+          devServerAssetPath,
+          addSuffix(asset.name, asset.extension, {
+            scale,
+          }),
+        ),
       );
     });
   });
@@ -79,12 +84,16 @@ export const copyAssetsToDestination = async (
     assets.map((asset): Promise<void> => {
       return Promise.all(
         asset.scales.map(async (scale): Promise<void> => {
+          const scaleSuffixedName = addSuffix(asset.name, asset.extension, {
+            scale,
+          });
+
           if (context.platform !== 'android') {
             const from = await resolveAssetPath(asset, scale);
             const to = path.join(
               assetsDir,
               asset.httpServerLocation,
-              path.basename(from),
+              scaleSuffixedName,
             );
 
             await mkdirWithAssertPath(to);
