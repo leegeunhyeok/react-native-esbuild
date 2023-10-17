@@ -1,8 +1,4 @@
-import {
-  getIdByOptions,
-  getDevServerAssetPath,
-  getBuildStatusCachePath,
-} from '../core';
+import { getIdByOptions, getBuildStatusCachePath } from '../core';
 import { OptionFlag } from '../../types';
 
 const BASE_OPTIONS = {
@@ -64,12 +60,6 @@ describe.each([
     it(`should bitwise value is ${expected}`, () => {
       expect(getIdByOptions({ ...BASE_OPTIONS, ...options })).toEqual(expected);
     });
-  });
-});
-
-describe('getDevServerAssetPath', () => {
-  it('should match snapshot', () => {
-    expect(getDevServerAssetPath(ROOT_DIR)).toMatchSnapshot();
   });
 });
 

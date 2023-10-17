@@ -65,10 +65,6 @@ export const ASSET_PATH = 'assets';
 export const PUBLIC_PATH = 'public';
 export const STATUS_CACHE_FILE = 'build-status.json';
 
-export const getDevServerAssetPath = (root: string): string => {
-  return path.resolve(root, LOCAL_CACHE_DIR, ASSET_PATH);
-};
-
 export const getDevServerPublicPath = (root: string): string => {
   return path.resolve(root, LOCAL_CACHE_DIR, PUBLIC_PATH);
 };

@@ -57,26 +57,6 @@ describe('serve-asset-middleware', () => {
       next = jest.fn();
     });
 
-    describe('asset path is directory', () => {
-      beforeEach(() => {
-        jest.spyOn(fs, 'open').mockImplementation(() => {
-          return Promise.resolve(
-            getMockedFileHandler({
-              data: faker.string.alphanumeric(10),
-              size: faker.number.int(),
-              isDirectory: true,
-            }),
-          );
-        });
-        middleware(request, response, next);
-      });
-
-      it('should response with status 500', () => {
-        expect(response.writeHead).toBeCalledWith(500);
-        expect(response.end).toBeCalled();
-      });
-    });
-
     describe('asset path is file', () => {
       let data: string;
       let size: number;

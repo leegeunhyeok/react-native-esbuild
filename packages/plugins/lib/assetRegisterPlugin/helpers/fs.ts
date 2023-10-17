@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { getDevServerAssetPath } from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
 import type { Asset } from '@react-native-esbuild/internal';
 import { logger } from '../../shared';
@@ -17,41 +16,6 @@ const ANDROID_ASSET_QUALIFIER: Record<number, string> = {
   3: 'xxhdpi',
   4: 'xxxhdpi',
 } as const;
-
-/**
- * copy assets to dev server asset directory
- */
-export const copyAssetsToDevServer = async (
-  context: PluginContext,
-  assets: Asset[],
-): Promise<void> => {
-  if (context.mode === 'bundle') return;
-
-  const devServerAssetPath = getDevServerAssetPath(context.root);
-
-  // cleanup asset cache directory
-  await fs
-    .rm(devServerAssetPath, { recursive: true, force: true })
-    .catch(() => void 0);
-  await fs.mkdir(devServerAssetPath, { recursive: true });
-
-  const assetCopyTasks = assets.map((asset) => {
-    return asset.scales.map(async (scale): Promise<void> => {
-      const filepath = await resolveAssetPath(asset, scale);
-      await fs.copyFile(
-        filepath,
-        path.join(
-          devServerAssetPath,
-          addSuffix(asset.name, asset.extension, {
-            scale,
-          }),
-        ),
-      );
-    });
-  });
-
-  await Promise.all(assetCopyTasks);
-};
 
 /**
  * copy assets to platform specified destination
