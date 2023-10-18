@@ -164,11 +164,21 @@ export type ReactNativeEsbuildPluginCreator<PluginConfig = void> = (
 export interface BundlerSharedData {
   watcher: {
     changed: string | null;
-    stats?: Stats;
+    stats: Stats | null;
+  };
+  hmr: {
+    id: string | null;
+    path: string | null;
   };
 }
 
 export type BundlerAdditionalData = Record<string, unknown>;
+export interface UpdatedModule {
+  id: string;
+  path: string;
+  code: string;
+  mode: 'hot-reload' | 'full-reload';
+}
 
 export interface PluginContext extends BundleOptions {
   id: number;

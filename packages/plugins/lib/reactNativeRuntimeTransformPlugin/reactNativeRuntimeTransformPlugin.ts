@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { OnLoadResult } from 'esbuild';
 import {
   ReactNativeEsbuildBundler as Bundler,
   type ReactNativeEsbuildPluginCreator,
@@ -11,6 +10,7 @@ import {
   swcPresets,
   type AsyncTransformStep,
 } from '@react-native-esbuild/transformer';
+import { wrapModuleBoundary } from '@react-native-esbuild/hmr';
 import { logger } from '../shared';
 import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
 import {
@@ -39,8 +39,9 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
     const additionalSwcRules = additionalTransformRules?.swc ?? [];
     const injectScriptPaths = [
       getReactNativeInitializeCore(context.root),
+      context.dev ? '@react-native-esbuild/hmr/runtime' : null,
       ...(config?.injectScriptPaths ?? []),
-    ];
+    ].filter(Boolean) as string[];
 
     const onBeforeTransform: AsyncTransformStep = async (
       code,
@@ -56,6 +57,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       // 1. Force re-transform when file is changed.
       if (isChangedFile) {
         logger.debug('changed file detected', { path: args.path });
+        bundlerSharedData.hmr = { id: moduleMeta.hash, path: args.path };
         return { code, done: false };
       }
 
@@ -88,9 +90,10 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
 
     const onAfterTransform: AsyncTransformStep = async (
       code,
-      _args,
+      args,
       moduleMeta,
     ) => {
+      const shouldWrapModule = context.mode !== 'bundle';
       const cacheConfig = {
         hash: moduleMeta.hash,
         mtimeMs: moduleMeta.stats.mtimeMs,
@@ -105,7 +108,16 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
         );
       }
 
-      return { code, done: true };
+      return {
+        code: shouldWrapModule
+          ? wrapModuleBoundary(
+              code,
+              moduleMeta.hash,
+              bundlerSharedData.watcher.changed === args.path,
+            )
+          : code,
+        done: true,
+      };
     };
 
     let transformPipeline: AsyncTransformPipeline;
@@ -128,7 +140,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       return {
         contents: (await transformPipeline.transform(rawCode, args)).code,
         loader: 'js',
-      } as OnLoadResult;
+      };
     });
 
     build.onEnd(async (args) => {

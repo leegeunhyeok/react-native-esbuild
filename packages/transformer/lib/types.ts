@@ -27,11 +27,6 @@ export type TransformerOptionsPreset<TransformerOptions> = (
   context: TransformerContext,
 ) => TransformerOptions;
 
-// swc preset options
-export interface SwcReactNativeRuntimePresetOptions {
-  reactRefresh?: { moduleId: string };
-}
-
 export interface SwcJestPresetOptions {
   module?: 'cjs' | 'esm';
   experimental?: {

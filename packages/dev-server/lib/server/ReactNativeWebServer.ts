@@ -3,6 +3,7 @@ import http, {
   type ServerResponse,
   type IncomingMessage,
 } from 'node:http';
+import { parse } from 'node:url';
 import type { ServeResult } from 'esbuild';
 import invariant from 'invariant';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
@@ -10,7 +11,10 @@ import {
   combineWithDefaultBundleOptions,
   type BundleOptions,
 } from '@react-native-esbuild/config';
-import { createSymbolicateMiddleware } from '../middlewares';
+import {
+  createHmrMiddlewareForWeb,
+  createSymbolicateMiddleware,
+} from '../middlewares';
 import { logger } from '../shared';
 import type { DevServerOptions } from '../types';
 import { DevServer } from './DevServer';
@@ -96,6 +100,19 @@ export class ReactNativeWebServer extends DevServer {
       this.devServerOptions.root,
     ).initialize({ watcherEnabled: true }));
 
+    const { server: hmrServer, ...hmr } = createHmrMiddlewareForWeb();
+
+    this.bundler.on(
+      'build-end',
+      ({ revisionId, updatedModule, additionalData }) => {
+        if (!additionalData?.disableRefresh) {
+          updatedModule?.mode === 'hot-reload'
+            ? hmr.hotReload(revisionId, updatedModule.code)
+            : hmr.liveReload(revisionId);
+        }
+      },
+    );
+
     const symbolicateMiddleware = createSymbolicateMiddleware(
       { bundler, devServerOptions: this.devServerOptions },
       { webBundleOptions: this.bundleOptions },
@@ -112,6 +129,20 @@ export class ReactNativeWebServer extends DevServer {
           this.proxyHandler(request, response);
         });
       });
+    });
+
+    this.server.on('upgrade', (request, socket, head) => {
+      if (!request.url) return;
+      const { pathname } = parse(request.url);
+
+      if (pathname === '/hot') {
+        const wss = hmrServer.getWebSocketServer();
+        wss.handleUpgrade(request, socket, head, (client) => {
+          wss.emit('connection', client, request);
+        });
+      } else {
+        socket.destroy();
+      }
     });
 
     await onPostSetup?.(bundler);

@@ -51,6 +51,17 @@ module.exports = {
       },
     },
     {
+      files: ['packages/hmr/lib/runtime/*.ts'],
+      rules: {
+        'no-console': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+      },
+    },
+    {
       files: ['packages/jest/lib/**/*.ts'],
       rules: {
         'import/no-default-export': 'off',

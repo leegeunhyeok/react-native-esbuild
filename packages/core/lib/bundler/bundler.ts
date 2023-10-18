@@ -27,6 +27,7 @@ import type {
   BundleResult,
   BundleRequestOptions,
   PluginContext,
+  UpdatedModule,
   ReportableEvent,
   ReactNativeEsbuildPluginCreator,
 } from '../types';
@@ -35,18 +36,19 @@ import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
 import { BundlerEventEmitter } from './events';
 import {
   loadConfig,
-  getConfigFromGlobal,
   createPromiseHandler,
+  getConfigFromGlobal,
   getTransformedPreludeScript,
   getResolveExtensionsOption,
   getLoaderOption,
   getEsbuildWebConfig,
+  getHmrUpdatedModule,
 } from './helpers';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
-  public static caches = new CacheStorage();
-  public static shared = new SharedStorage();
+  public static caches = CacheStorage.getInstance();
+  public static shared = SharedStorage.getInstance();
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReactNativeEsbuildPluginCreator<unknown>[] = [];
@@ -133,10 +135,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return FileSystemWatcher.getInstance()
       .setHandler((event, changedFile, stats) => {
         const hasTask = this.buildTasks.size > 0;
+        const isChanged = event === 'change';
         ReactNativeEsbuildBundler.shared.setValue({
           watcher: {
-            changed: hasTask && event === 'change' ? changedFile : null,
-            stats,
+            changed: hasTask && isChanged ? changedFile : null,
+            stats: stats ?? null,
           },
         });
 
@@ -153,12 +156,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildOptions> {
     const config = this.config;
+    const enableHmr = bundleOptions.dev && !bundleOptions.minify;
     invariant(config.resolver, 'invalid resolver configuration');
     invariant(config.resolver.mainFields, 'invalid mainFields');
     invariant(config.transformer, 'invalid transformer configuration');
     invariant(config.resolver.assetExtensions, 'invalid assetExtension');
     invariant(config.resolver.sourceExtensions, 'invalid sourceExtensions');
-
     setEnvironment(bundleOptions.dev);
 
     const webSpecifiedOptions =
@@ -207,7 +210,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         // Additional plugins in configuration.
         ...(config.plugins ?? []),
       ],
-      legalComments: bundleOptions.dev ? 'inline' : 'none',
+      legalComments: enableHmr ? 'inline' : 'none',
       target: 'es6',
       format: 'esm',
       supported: {
@@ -267,13 +270,17 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       process.exit(1);
     }
 
+    const hmrSharedValue = ReactNativeEsbuildBundler.shared.get(context.id);
     const currentTask = this.buildTasks.get(context.id);
+    invariant(hmrSharedValue, 'invalid hmr shared value');
     invariant(currentTask, 'no task');
+
     const bundleEndedAt = new Date();
     const bundleFilename = context.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const revisionId = bundleEndedAt.getTime().toString();
     const { outputFiles } = data.result;
+    let updatedModule: UpdatedModule | null = null;
 
     const findFromOutputFile = (
       filename: string,
@@ -293,6 +300,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       invariant(bundleOutput, 'empty bundle output');
       invariant(bundleSourcemapOutput, 'empty sourcemap output');
 
+      updatedModule = getHmrUpdatedModule(
+        hmrSharedValue.hmr.id,
+        hmrSharedValue.hmr.path,
+        bundleOutput.text,
+      );
+
       currentTask.handler?.resolver?.({
         result: {
           source: bundleOutput.contents,
@@ -310,6 +323,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         revisionId,
         id: context.id,
         additionalData: context.additionalData,
+        updatedModule,
       });
     }
   }

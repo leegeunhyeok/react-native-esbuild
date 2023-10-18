@@ -6,10 +6,16 @@ import { getBuildStatusCachePath } from '@react-native-esbuild/config';
 import { colors, isTTY } from '@react-native-esbuild/utils';
 import { logger } from '../../../shared';
 import { ESBUILD_LABEL } from '../../logo';
-import type { BuildStatus, PluginContext } from '../../../types';
+import type {
+  BuildStatus,
+  BundlerSharedData,
+  PluginContext,
+} from '../../../types';
+import { SharedStorage } from '../../storages';
 import { fromTemplate, getSummaryTemplate } from './templates';
 
 export class StatusLogger {
+  private bundlerSharedData: BundlerSharedData;
   private platformText: string;
   private spinner: Ora;
   private totalModuleCount = 0;
@@ -19,6 +25,7 @@ export class StatusLogger {
   private previousPercent = 0;
 
   constructor(private context: PluginContext) {
+    this.bundlerSharedData = SharedStorage.getInstance().get(context.id);
     this.platformText = colors.gray(
       `[${[context.platform, context.dev ? 'dev' : null]
         .filter(Boolean)
@@ -102,6 +109,7 @@ export class StatusLogger {
     this.previousPercent = 0;
     this.statusUpdate();
 
+    process.stdout.write('\n');
     isTTY()
       ? this.spinner.start()
       : this.print(`${this.platformText} build in progress...`);
@@ -110,12 +118,20 @@ export class StatusLogger {
   async summary({ warnings, errors }: BuildResult): Promise<boolean> {
     const duration = (new Date().getTime() - this.buildStartedAt) / 1000;
     const isSuccess = errors.length === 0;
+    const changedFileText =
+      isSuccess && this.bundlerSharedData.hmr.path
+        ? colors.gray(
+            `(${this.bundlerSharedData.hmr.path
+              .replace(this.context.root, '')
+              .substring(1)})`,
+          )
+        : '';
 
     await this.printMessages(warnings, 'warning');
     await this.printMessages(errors, 'error');
 
     const resultText = isSuccess
-      ? `${this.platformText} done!`
+      ? `${this.platformText} done! ${changedFileText}`
       : `${this.platformText} failed!`;
 
     if (isTTY()) {

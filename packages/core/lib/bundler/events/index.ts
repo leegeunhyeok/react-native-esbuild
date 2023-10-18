@@ -3,6 +3,7 @@ import type {
   BundlerAdditionalData,
   BuildStatus,
   ReportableEvent,
+  UpdatedModule,
 } from '../../types';
 
 export class BundlerEventEmitter extends EventEmitter {
@@ -46,6 +47,7 @@ export interface BundlerEventPayload {
   'build-end': {
     id: number;
     revisionId: string;
+    updatedModule: UpdatedModule | null;
     additionalData?: BundlerAdditionalData;
   };
   'build-status-change': BuildStatus & {

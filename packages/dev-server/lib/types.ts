@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { Server as WebSocketServer } from 'ws';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import type { HmrServer } from '@react-native-esbuild/hmr';
 
 export enum BundleRequestType {
   Unknown,
@@ -30,11 +30,12 @@ export type DevServerMiddleware = (
   next: (error?: unknown) => void,
 ) => void;
 
-export interface HotReloadMiddleware {
-  server: WebSocketServer;
-  hotReload: (revisionId: string) => void;
+export interface HmrMiddleware {
+  server: HmrServer;
   updateStart: () => void;
   updateDone: () => void;
+  hotReload: (revisionId: string, code: string) => void;
+  liveReload: (revisionId: string) => void;
 }
 
 /**

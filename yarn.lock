@@ -4335,6 +4335,7 @@ __metadata:
     "@babel/core": ^7.23.2
     "@faker-js/faker": ^8.1.0
     "@react-native-esbuild/config": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/transformer": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
@@ -4357,6 +4358,7 @@ __metadata:
     "@react-native-community/cli-server-api": ^11.3.6
     "@react-native-esbuild/config": "workspace:*"
     "@react-native-esbuild/core": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/symbolicate": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
     "@types/connect": ^3.4.35
@@ -4369,6 +4371,19 @@ __metadata:
     mime: ^3.0.0
     ws: ^8.13.0
     zod: ^3.22.2
+  languageName: unknown
+  linkType: soft
+
+"@react-native-esbuild/hmr@workspace:*, @react-native-esbuild/hmr@workspace:packages/hmr":
+  version: 0.0.0-use.local
+  resolution: "@react-native-esbuild/hmr@workspace:packages/hmr"
+  dependencies:
+    "@react-native-esbuild/utils": "workspace:*"
+    "@swc/helpers": ^0.5.2
+    "@types/react-refresh": ^0.14.3
+    esbuild: ^0.19.3
+    react-refresh: ^0.14.0
+    ws: ^8.14.2
   languageName: unknown
   linkType: soft
 
@@ -4406,6 +4421,7 @@ __metadata:
     "@faker-js/faker": ^8.1.0
     "@react-native-esbuild/config": "workspace:*"
     "@react-native-esbuild/core": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/transformer": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
@@ -4437,6 +4453,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.23.2
     "@react-native-esbuild/config": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@swc/core": ^1.3.95
     "@swc/helpers": ^0.5.3
     "@types/md5": ^2.3.4
@@ -4444,6 +4461,7 @@ __metadata:
     md5: ^2.3.0
     sucrase: ^3.34.0
     swc-plugin-coverage-instrument: ^0.0.20
+    swc-plugin-react-refresh: ^0.1.0-alpha.5
     swc_mut_cjs_exports: ^0.85.0
   languageName: unknown
   linkType: soft
@@ -5231,7 +5249,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.5.3":
+"@swc/helpers@npm:^0.5.2, @swc/helpers@npm:^0.5.3":
   version: 0.5.3
   resolution: "@swc/helpers@npm:0.5.3"
   dependencies:
@@ -5350,7 +5368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__core@npm:^7.1.14":
+"@types/babel__core@npm:*, @types/babel__core@npm:^7.1.14":
   version: 7.20.3
   resolution: "@types/babel__core@npm:7.20.3"
   dependencies:
@@ -5706,6 +5724,16 @@ __metadata:
   version: 1.2.6
   resolution: "@types/range-parser@npm:1.2.6"
   checksum: 22decf0fa30a5fb5b26b9d30052c8eca1dddf55449c87031c8d58a4e2e75c606d7bab6a1409988c96f774eb0ebf814147d47c76487d1d0d83441f1ab26bd5d6a
+  languageName: node
+  linkType: hard
+
+"@types/react-refresh@npm:^0.14.3":
+  version: 0.14.3
+  resolution: "@types/react-refresh@npm:0.14.3"
+  dependencies:
+    "@types/babel__core": "*"
+    csstype: ^3.0.2
+  checksum: ff48c18f928f213cfd1fa379f6b275e401adad87f909a83501a7026075a1d596ef2697269a9ce4fc5063841622ea2c2ffe9c332a2cc9e5ca67199f05c7994f89
   languageName: node
   linkType: hard
 
@@ -10120,7 +10148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.19.5":
+"esbuild@npm:^0.19.3, esbuild@npm:^0.19.5":
   version: 0.19.5
   resolution: "esbuild@npm:0.19.5"
   dependencies:
@@ -20474,6 +20502,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swc-plugin-react-refresh@npm:^0.1.0-alpha.5":
+  version: 0.1.0-alpha.5
+  resolution: "swc-plugin-react-refresh@npm:0.1.0-alpha.5"
+  checksum: 7eacb193e6097699a13415c43e981f44c6ce2eb881cf2669779c96ee1b3405bfc9ec3d3395e7343e100b1d811317bb9f1caaf7bbb2dffcc2b46e16fd5e6a70f0
+  languageName: node
+  linkType: hard
+
 "swc_mut_cjs_exports@npm:^0.85.0":
   version: 0.85.0
   resolution: "swc_mut_cjs_exports@npm:0.85.0"
@@ -22192,7 +22227,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.13.0":
+"ws@npm:^8.13.0, ws@npm:^8.14.2":
   version: 8.14.2
   resolution: "ws@npm:8.14.2"
   peerDependencies:

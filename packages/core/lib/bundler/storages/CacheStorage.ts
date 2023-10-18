@@ -9,7 +9,16 @@ import { Storage } from './Storage';
 const CACHE_DIRECTORY = path.join(os.tmpdir(), GLOBAL_CACHE_DIR);
 
 export class CacheStorage extends Storage<CacheController> {
-  constructor() {
+  private static instance: CacheStorage | null = null;
+
+  public static getInstance(): CacheStorage {
+    if (CacheStorage.instance === null) {
+      CacheStorage.instance = new CacheStorage();
+    }
+    return CacheStorage.instance;
+  }
+
+  private constructor() {
     super();
     try {
       fs.accessSync(CACHE_DIRECTORY, fs.constants.R_OK | fs.constants.W_OK);

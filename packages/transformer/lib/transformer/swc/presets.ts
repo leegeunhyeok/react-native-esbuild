@@ -1,4 +1,8 @@
-import type { Options, TsParserConfig, EsParserConfig } from '@swc/core';
+import type { EsParserConfig, Options, TsParserConfig } from '@swc/core';
+import {
+  REACT_REFRESH_REGISTER_FUNCTION,
+  REACT_REFRESH_SIGNATURE_FUNCTION,
+} from '@react-native-esbuild/hmr';
 import type {
   TransformerOptionsPreset,
   SwcJestPresetOptions,
@@ -38,7 +42,13 @@ const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
         react: {
           runtime: 'automatic',
           development: context.dev,
-          refresh: false,
+          // @ts-expect-error -- Wrong type definition.
+          refresh: context.path.includes('/node_modules/')
+            ? false
+            : {
+                refreshReg: REACT_REFRESH_REGISTER_FUNCTION,
+                refreshSig: REACT_REFRESH_SIGNATURE_FUNCTION,
+              },
         },
       },
     },

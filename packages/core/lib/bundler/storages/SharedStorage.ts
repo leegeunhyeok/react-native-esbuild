@@ -2,12 +2,23 @@ import type { BundlerSharedData } from '../../types';
 import { Storage } from './Storage';
 
 export class SharedStorage extends Storage<BundlerSharedData> {
+  private static instance: SharedStorage | null = null;
+
+  public static getInstance(): SharedStorage {
+    if (SharedStorage.instance === null) {
+      SharedStorage.instance = new SharedStorage();
+    }
+    return SharedStorage.instance;
+  }
+
+  private constructor() {
+    super();
+  }
+
   private getDefaultSharedData(): BundlerSharedData {
     return {
-      watcher: {
-        changed: null,
-        stats: undefined,
-      },
+      watcher: { changed: null, stats: null },
+      hmr: { id: null, path: null },
     };
   }
 
@@ -34,8 +45,12 @@ export class SharedStorage extends Storage<BundlerSharedData> {
 
   public clearAll(): Promise<void> {
     for (const sharedData of this.data.values()) {
+      // watcher
       sharedData.watcher.changed = null;
-      sharedData.watcher.stats = undefined;
+      sharedData.watcher.stats = null;
+      // hmr
+      sharedData.hmr.id = null;
+      sharedData.hmr.path = null;
     }
     return Promise.resolve();
   }
