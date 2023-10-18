@@ -19,6 +19,18 @@ const ALLOW_SCALES: Partial<Record<BundlerSupportPlatform, number[]>> = {
   ios: [1, 2, 3],
 };
 
+/**
+ * @see {@link https://developer.android.com/training/multiscreen/screendensities#TaskProvideAltBmp}
+ */
+const ANDROID_ASSET_QUALIFIER: Record<number, string> = {
+  0.75: 'ldpi',
+  1: 'mdpi',
+  1.5: 'hdpi',
+  2: 'xhdpi',
+  3: 'xxhdpi',
+  4: 'xxxhdpi',
+} as const;
+
 const imageSizeOf = promisify(imageSize);
 
 export const getAssetPriority = (filename: string): number => {
@@ -199,4 +211,50 @@ export const resolveAssetPath = async (
   }
 
   return suffixedPath;
+};
+
+/**
+ * @see {@link https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/getAssetDestPathAndroid.ts}
+ */
+export const getAndroidAssetDestinationPath = (
+  asset: Asset,
+  scale: number,
+): string => {
+  let resourceDir = 'raw';
+  const assetQualifierSuffix: string = ANDROID_ASSET_QUALIFIER[scale];
+  const assetDir = getDevServerBasePath(asset);
+  const assetName = `${assetDir}/${asset.name}`
+    .toLowerCase()
+    .replace(/\//g, '_')
+    .replace(/(?:[^a-z0-9_])/g, '')
+    .replace(/^assets_/, '');
+
+  if (!assetQualifierSuffix) {
+    throw new Error(`invalid asset qualifier: ${asset.path}`);
+  }
+
+  /**
+   * @see {@link https://developer.android.com/guide/topics/resources/drawable-resource}
+   */
+  const isDrawable = /\.(?:png|jpg|jpeg|gif|xml)$/.test(asset.extension);
+  if (isDrawable) {
+    resourceDir = `drawable-${assetQualifierSuffix}`;
+  }
+
+  return path.join(resourceDir, `${assetName}.${asset.type}`);
+};
+
+/**
+ * @see {@link https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/getAssetDestPathIOS.ts}
+ */
+export const getAssetDestinationPath = (
+  asset: Asset,
+  scale: number,
+): string => {
+  const suffix = scale === 1 ? '' : `@${scale}x`;
+  const fileName = `${asset.name + suffix}.${asset.type}`;
+  return path.join(
+    getDevServerBasePath(asset).replace(/\.\.\//g, '_'),
+    fileName,
+  );
 };
