@@ -14,7 +14,25 @@ const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(
   (platform) => `.${platform}`,
 ).join('|');
 
+const SCALE_PATTERN = '@(\\d+\\.?\\d*)x';
+const ALLOW_SCALES: Partial<Record<BundlerSupportPlatform, number[]>> = {
+  ios: [1, 2, 3],
+};
+
 const imageSizeOf = promisify(imageSize);
+
+export const getAssetPriority = (filename: string): number => {
+  if (
+    new RegExp(`${SCALE_PATTERN}(?:${PLATFORM_SUFFIX_PATTERN})`).test(filename)
+  ) {
+    return 3;
+  } else if (new RegExp(`(?:${PLATFORM_SUFFIX_PATTERN})`).test(filename)) {
+    return 2;
+  } else if (new RegExp(`${SCALE_PATTERN}`).test(filename)) {
+    return 1;
+  }
+  return 0;
+};
 
 export const addSuffix = (
   basename: string,
@@ -31,7 +49,9 @@ export const addSuffix = (
 
 export const stripSuffix = (basename: string, extension: string): string => {
   return basename.replace(
-    new RegExp(`(@(\\d+)x)?(${PLATFORM_SUFFIX_PATTERN})?${extension}`),
+    new RegExp(
+      `(${SCALE_PATTERN})?(?:${PLATFORM_SUFFIX_PATTERN})?${extension}`,
+    ),
     '',
   );
 };
@@ -111,16 +131,17 @@ export const resolveScaledAssets = async (
   const filesInDir = await fs.readdir(dirname);
   const stripedBasename = stripSuffix(basename, extension);
   const assetRegExp = new RegExp(
-    `${stripedBasename}(@(\\d+)x)?${
-      platform ? `.${platform}${extension}` : extension
-    }$`,
+    `${stripedBasename}(${SCALE_PATTERN})?(?:${PLATFORM_SUFFIX_PATTERN})?${extension}$`,
   );
   const scaledAssets: Partial<Record<AssetScale, string>> = {};
 
-  for (const file of filesInDir) {
+  for (const file of filesInDir.sort(
+    (a, b) => getAssetPriority(b) - getAssetPriority(a),
+  )) {
     const match = assetRegExp.exec(file);
     if (match) {
-      const [, , scale = 1] = match;
+      const [, , scale = '1'] = match;
+      if (scaledAssets[scale]) continue;
       scaledAssets[scale] = file;
     }
   }
@@ -139,7 +160,13 @@ export const resolveScaledAssets = async (
     extension,
     type: extension.substring(1),
     // eslint-disable-next-line @typescript-eslint/require-array-sort-compare -- allow using default compare function
-    scales: Object.keys(scaledAssets).map(parseFloat).sort(),
+    scales: Object.keys(scaledAssets)
+      .map(parseFloat)
+      .filter((scale: number) => {
+        // https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/filterPlatformAssetScales.ts
+        return ALLOW_SCALES[context.platform]?.includes(scale) ?? true;
+      })
+      .sort(),
     httpServerLocation: path.join(ASSET_PATH, path.dirname(relativePath)),
     hash: md5(imageData),
     dimensions: {

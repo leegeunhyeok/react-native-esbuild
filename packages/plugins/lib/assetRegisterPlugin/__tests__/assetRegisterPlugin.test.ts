@@ -9,6 +9,7 @@ import {
 } from '@react-native-esbuild/config';
 import type { AssetScale } from '@react-native-esbuild/internal';
 import {
+  getAssetPriority,
   addSuffix,
   stripSuffix,
   getSuffixedPath,
@@ -33,6 +34,40 @@ jest.mock('image-size', () => ({
 }));
 
 describe('assetRegisterPlugin', () => {
+  describe('getAssetPriority', () => {
+    let filename: string;
+    let extension: string;
+    let scale: AssetScale;
+    let platform: BundlerSupportPlatform;
+
+    beforeEach(() => {
+      filename = faker.string.alphanumeric(10);
+      extension = faker.helpers.arrayElement(['.png', '.jpg', '.jpeg', '.gif']);
+      scale = faker.number.int({ min: 1, max: 3 }) as AssetScale;
+      platform = faker.helpers.arrayElement(SUPPORT_PLATFORMS);
+    });
+
+    it('should platform and scale suffixed priority is 3', () => {
+      expect(
+        getAssetPriority(`${filename}@${scale}x.${platform}${extension}`),
+      ).toEqual(3);
+    });
+
+    it('should platform suffixed priority is 2', () => {
+      expect(getAssetPriority(`${filename}.${platform}${extension}`)).toEqual(
+        2,
+      );
+    });
+
+    it('should scale suffixed priority is 1', () => {
+      expect(getAssetPriority(`${filename}@${scale}x${extension}`)).toEqual(1);
+    });
+
+    it('should non-suffixed priority is 0', () => {
+      expect(getAssetPriority(`${filename}${extension}`)).toEqual(0);
+    });
+  });
+
   describe('addSuffix', () => {
     let filename: string;
     let extension: string;
@@ -276,6 +311,29 @@ describe('assetRegisterPlugin', () => {
     let mockedContext: PluginContext;
     let mockedArgs: OnLoadArgs;
 
+    const mockContext = (platform: BundlerSupportPlatform): void => {
+      mockedContext = deepmerge(mockedContext, { platform } as PluginContext);
+    };
+
+    const mockArgs = (platform: BundlerSupportPlatform | null): void => {
+      mockedArgs = {
+        path: pullPath,
+        pluginData: {
+          basename: filename,
+          extension,
+          platform,
+        },
+      } as OnLoadArgs;
+    };
+
+    const mockFileSystem = (files: string[]): void => {
+      fs.readdir = jest
+        .fn()
+        .mockImplementation((dirname: string): Promise<string[]> => {
+          return Promise.resolve(files.map((file) => `${dirname}/${file}`));
+        });
+    };
+
     beforeAll(() => {
       fs.readFile = jest.fn().mockReturnValue(() => '');
     });
@@ -301,16 +359,12 @@ describe('assetRegisterPlugin', () => {
 
       beforeEach(() => {
         platform = faker.helpers.arrayElement(SUPPORT_PLATFORMS);
-        mockedArgs = deepmerge(mockedArgs, { pluginData: { platform } });
-
-        fs.readdir = jest
-          .fn()
-          .mockImplementation((dirname: string): Promise<string[]> => {
-            return Promise.resolve([
-              `${dirname}/${filename}.${platform}${extension}`,
-              `${dirname}/${filename}.unknown${extension}`,
-            ]);
-          });
+        mockContext(platform);
+        mockArgs(platform);
+        mockFileSystem([
+          `${filename}.${platform}${extension}`,
+          `${filename}.unknown${extension}`,
+        ]);
       });
 
       it('should return single scale', async () => {
@@ -321,68 +375,138 @@ describe('assetRegisterPlugin', () => {
     });
 
     describe('when platform and scale suffixed assets are exist', () => {
-      let platform: BundlerSupportPlatform;
+      describe('when platform is ios', () => {
+        beforeEach(() => {
+          const platform = 'ios';
+          mockContext(platform);
+          mockArgs(platform);
+          mockFileSystem([
+            `${filename}${extension}`,
+            `${filename}@0.75x${extension}`,
+            `${filename}@1x${extension}`,
+            `${filename}@1.5x${extension}`,
+            `${filename}@2x${extension}`,
+            `${filename}@3x${extension}`,
+            `${filename}@4x${extension}`,
+            `${filename}.${platform}${extension}`,
+            `${filename}@0.75x.${platform}${extension}`,
+            `${filename}@1.5x.${platform}${extension}`,
+            `${filename}@2x.${platform}${extension}`,
+            `${filename}@3x.${platform}${extension}`,
+            `${filename}@4x.unknown${extension}`,
+          ]);
+        });
 
-      beforeEach(() => {
-        platform = faker.helpers.arrayElement(SUPPORT_PLATFORMS);
-        mockedContext = deepmerge(mockedContext, { platform } as PluginContext);
-        mockedArgs = deepmerge(mockedArgs, { pluginData: { platform } });
+        it('should exclude if not a scale of 1, 2, 3', async () => {
+          const res = await resolveScaledAssets(mockedContext, mockedArgs);
+          expect(res.scales.includes(0.75)).not.toBeTruthy();
+          expect(res.scales.includes(1.5)).not.toBeTruthy();
+          expect(res.scales.includes(4)).not.toBeTruthy();
+        });
 
-        fs.readdir = jest
-          .fn()
-          .mockImplementation((dirname: string): Promise<string[]> => {
-            return Promise.resolve([
-              `${dirname}/${filename}${extension}`,
-              `${dirname}/${filename}@1x${extension}`,
-              `${dirname}/${filename}@2x${extension}`,
-              `${dirname}/${filename}@3x${extension}`,
-              `${dirname}/${filename}.${platform}${extension}`,
-              `${dirname}/${filename}@2x.${platform}${extension}`,
-              `${dirname}/${filename}@3x.${platform}${extension}`,
-              `${dirname}/${filename}@4x.unknown${extension}`,
-            ]);
-          });
+        it('should return all of suffixed scale', async () => {
+          const res = await resolveScaledAssets(mockedContext, mockedArgs);
+          expect(res.scales.length).toEqual(3);
+          expect(res.scales.includes(1)).toBeTruthy();
+          expect(res.scales.includes(2)).toBeTruthy();
+          expect(res.scales.includes(3)).toBeTruthy();
+          expect(res.scales.includes(4)).not.toBeTruthy();
+        });
       });
 
-      it('should return all of suffixed scale', async () => {
-        const res = await resolveScaledAssets(mockedContext, mockedArgs);
-        expect(res.scales.length).toEqual(3);
-        expect(res.scales.includes(1)).toBeTruthy();
-        expect(res.scales.includes(2)).toBeTruthy();
-        expect(res.scales.includes(3)).toBeTruthy();
-        expect(res.scales.includes(4)).not.toBeTruthy();
+      describe('when platform is android or web', () => {
+        beforeEach(() => {
+          const platform = faker.helpers.arrayElement([
+            'android',
+            'web',
+          ] as const);
+          mockContext(platform);
+          mockArgs(platform);
+          mockFileSystem([
+            `${filename}${extension}`,
+            `${filename}@0.75x${extension}`,
+            `${filename}@1x${extension}`,
+            `${filename}@1.5x${extension}`,
+            `${filename}@2x${extension}`,
+            `${filename}@3x${extension}`,
+            `${filename}.${platform}${extension}`,
+            `${filename}@0.75x.${platform}${extension}`,
+            `${filename}@1.5x.${platform}${extension}`,
+            `${filename}@2x.${platform}${extension}`,
+            `${filename}@3x.${platform}${extension}`,
+            `${filename}@4x.unknown${extension}`,
+          ]);
+        });
+
+        it('should return all of suffixed scale', async () => {
+          const res = await resolveScaledAssets(mockedContext, mockedArgs);
+          expect(res.scales.length).toEqual(5);
+          expect(res.scales.includes(0.75)).toBeTruthy();
+          expect(res.scales.includes(1)).toBeTruthy();
+          expect(res.scales.includes(1.5)).toBeTruthy();
+          expect(res.scales.includes(2)).toBeTruthy();
+          expect(res.scales.includes(3)).toBeTruthy();
+          expect(res.scales.includes(4)).not.toBeTruthy();
+        });
       });
     });
 
     describe('when scale suffixed assets are exist', () => {
       beforeEach(() => {
-        fs.readdir = jest
-          .fn()
-          .mockImplementation((dirname: string): Promise<string[]> => {
-            return Promise.resolve([
-              `${dirname}/${filename}@1x${extension}`,
-              `${dirname}/${filename}@2x${extension}`,
-              `${dirname}/${filename}@3x${extension}`,
-            ]);
-          });
+        mockFileSystem([
+          `${filename}@0.75x${extension}`,
+          `${filename}@1x${extension}`,
+          `${filename}@1.5x${extension}`,
+          `${filename}@2x${extension}`,
+          `${filename}@3x${extension}`,
+          `${filename}@4x${extension}`,
+        ]);
       });
 
-      it('should return all of scale suffixed assets', async () => {
-        const res = await resolveScaledAssets(mockedContext, mockedArgs);
-        expect(res.scales.length).toEqual(3);
-        expect(res.scales.includes(1)).toBeTruthy();
-        expect(res.scales.includes(2)).toBeTruthy();
-        expect(res.scales.includes(3)).toBeTruthy();
+      describe('when platform is ios', () => {
+        beforeEach(() => {
+          mockArgs(null);
+          mockContext('ios');
+        });
+
+        it('should exclude if not a scale of 1, 2, 3', async () => {
+          const res = await resolveScaledAssets(mockedContext, mockedArgs);
+          expect(res.scales.includes(0.75)).not.toBeTruthy();
+          expect(res.scales.includes(1.5)).not.toBeTruthy();
+          expect(res.scales.includes(4)).not.toBeTruthy();
+        });
+
+        it('should return only 1, 2, 3 scale suffixed assets', async () => {
+          const res = await resolveScaledAssets(mockedContext, mockedArgs);
+          expect(res.scales.length).toEqual(3);
+          expect(res.scales.includes(1)).toBeTruthy();
+          expect(res.scales.includes(2)).toBeTruthy();
+          expect(res.scales.includes(3)).toBeTruthy();
+        });
+      });
+
+      describe('when platform is android or web', () => {
+        beforeEach(() => {
+          mockContext(faker.helpers.arrayElement(['android', 'web'] as const));
+        });
+
+        it('should return all of scale suffixed assets', async () => {
+          const res = await resolveScaledAssets(mockedContext, mockedArgs);
+          expect(res.scales.length).toEqual(6);
+          expect(res.scales.includes(0.75)).toBeTruthy();
+          expect(res.scales.includes(1)).toBeTruthy();
+          expect(res.scales.includes(1.5)).toBeTruthy();
+          expect(res.scales.includes(2)).toBeTruthy();
+          expect(res.scales.includes(3)).toBeTruthy();
+          expect(res.scales.includes(4)).toBeTruthy();
+        });
       });
     });
 
     describe('when only non-suffixed assets are exist', () => {
       beforeEach(() => {
-        fs.readdir = jest
-          .fn()
-          .mockImplementation((dirname: string): Promise<string[]> => {
-            return Promise.resolve([`${dirname}/${filename}${extension}`]);
-          });
+        mockContext(faker.helpers.arrayElement(SUPPORT_PLATFORMS));
+        mockFileSystem([`${filename}${extension}`]);
       });
 
       it('should return single scale', async () => {
@@ -394,11 +518,8 @@ describe('assetRegisterPlugin', () => {
 
     describe('when only @1x suffixed asset is exist', () => {
       beforeEach(() => {
-        fs.readdir = jest
-          .fn()
-          .mockImplementation((dirname: string): Promise<string[]> => {
-            return Promise.resolve([`${dirname}/${filename}@1x${extension}`]);
-          });
+        mockContext(faker.helpers.arrayElement(SUPPORT_PLATFORMS));
+        mockFileSystem([`${filename}@1x${extension}`]);
       });
 
       it('should return single scale', async () => {
