@@ -85,7 +85,7 @@ export class TransformFlowBuilder {
         injectScriptPaths: string[],
       ): string => {
         return [
-          injectScriptPaths.map((modulePath) => `import '${modulePath}';`),
+          ...injectScriptPaths.map((modulePath) => `import '${modulePath}';`),
           code,
         ].join('\n');
       };
