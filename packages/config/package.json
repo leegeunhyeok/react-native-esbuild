@@ -35,5 +35,8 @@
   },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.5"
   }
 }

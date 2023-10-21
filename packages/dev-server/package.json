@@ -42,7 +42,7 @@
     "@types/connect": "^3.4.35",
     "@types/mime": "^3.0.1",
     "@types/ws": "^8.5.5",
-    "esbuild": "^0.19.3"
+    "esbuild": "^0.19.5"
   },
   "dependencies": {
     "@react-native-community/cli-server-api": "^11.3.6",

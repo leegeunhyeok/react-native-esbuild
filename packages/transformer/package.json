@@ -38,13 +38,13 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
-    "esbuild": "^0.19.3"
+    "esbuild": "^0.19.5"
   },
   "dependencies": {
     "@babel/core": "^7.22.20",
     "@react-native-esbuild/config": "workspace:*",
-    "@swc/core": "^1.3.86",
-    "@swc/helpers": "^0.5.2",
+    "@swc/core": "^1.3.94",
+    "@swc/helpers": "^0.5.3",
     "sucrase": "^3.34.0"
   }
 }
