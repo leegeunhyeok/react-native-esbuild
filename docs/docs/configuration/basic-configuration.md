@@ -22,10 +22,12 @@ By default, follow the configuration below.
 ```js
 exports.default = {
   cache: true,
-  mainFields: ['react-native', 'browser', 'main', 'module'],
   logger: {
     disabled: false,
     timestamp: null,
+  },
+  resolver: {
+    mainFields: ['react-native', 'browser', 'main', 'module'],
   },
   transformer: {
     stripFlowPackageNames: ['react-native'],
@@ -42,24 +44,18 @@ Enable cache.
 
 Defaults to `true`
 
-### mainFields
-
-Field names for resolve package's modules.
-
-Defaults to `['react-native', 'browser', 'main', 'module']`
-
-### plugins
-
-Additional Esbuild plugins.
-
-For more details, go to [Custom Plugins](/configuration/custom-plugins)
-
 ### logger
 
 Logger configurations.
 
 - `logger.disabled`: Disable client log (Defaults to `false`)
 - `logger.timestamp`: Print timestamp with log when format is specified (Defaults to `null`)
+
+### resolver
+
+Resolver configurations.
+
+- `resolver.mainFields`: When importing from an npm package, this option will determine which fields in its `package.json` are checked.
 
 ### transformer
 
@@ -80,6 +76,12 @@ Web configurations.
 
 For more details, go to [Web Support](/web).
 
+### plugins
+
+Additional Esbuild plugins.
+
+For more details, go to [Custom Plugins](/configuration/custom-plugins)
+
 ## Types
 
 <details><summary>Config</summary>
@@ -92,16 +94,6 @@ interface Config {
    * Defaults to `true`
    */
   cache?: boolean;
-  /**
-   * Field names for resolve package's modules.
-   *
-   * Defaults to `['react-native', 'browser', 'main', 'module']`
-   */
-  mainFields?: string[];
-  /**
-   * Additional Esbuild plugins.
-   */
-  plugins?: EsbuildPlugin[];
   /**
    * Logger configurations
    */
@@ -118,6 +110,17 @@ interface Config {
      * Defaults to `null`
      */
     timestamp?: string | null;
+  };
+  /**
+   * Resolver configurations
+   */
+  resolver?: {
+    /**
+     * Field names for resolve package's modules.
+     *
+     * Defaults to `['react-native', 'browser', 'main', 'module']`
+     */
+    mainFields?: string[];
   };
   /**
    * Transformer configurations
@@ -185,6 +188,10 @@ interface Config {
      */
     placeholders?: Record<string, string>;
   };
+  /**
+   * Additional Esbuild plugins.
+   */
+  plugins?: EsbuildPlugin[];
   /**
    * Client event receiver
    */

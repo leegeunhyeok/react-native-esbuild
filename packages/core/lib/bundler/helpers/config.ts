@@ -13,14 +13,16 @@ export const loadConfig = (configFilePath?: string): Config => {
   // Base config
   const baseConfig: Config = {
     cache: true,
-    /**
-     * mainFields
-     * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
-     */
-    mainFields: ['react-native', 'browser', 'main', 'module'],
     logger: {
       disabled: false,
       timestamp: null,
+    },
+    resolver: {
+      /**
+       * mainFields
+       * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
+       */
+      mainFields: ['react-native', 'browser', 'main', 'module'],
     },
     transformer: {
       stripFlowPackageNames: ['react-native'],

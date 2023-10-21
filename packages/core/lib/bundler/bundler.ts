@@ -4,6 +4,7 @@ import esbuild, {
   type BuildResult,
   type ServeResult,
 } from 'esbuild';
+import invariant from 'invariant';
 import { getGlobalVariables } from '@react-native-esbuild/internal';
 import {
   setEnvironment,
@@ -66,11 +67,17 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     config.logger?.disabled ?? false ? Logger.disable() : Logger.enable();
     Logger.setTimestampFormat(config.logger?.timestamp ?? null);
 
-    if (!config.mainFields?.includes('react-native')) {
-      logger.warn('`react-native` not found in `mainFields`');
+    invariant(
+      config.resolver?.mainFields,
+      'resolver configuration is required',
+    );
+    invariant(config.transformer, 'transformer configuration is required');
+
+    if (!config.resolver.mainFields.includes('react-native')) {
+      logger.warn('`react-native` not found in `resolver.mainFields`');
     }
 
-    if (!config.transformer?.stripFlowPackageNames?.includes('react-native')) {
+    if (!config.transformer.stripFlowPackageNames?.includes('react-native')) {
       logger.warn('`react-native` not found in `stripFlowPackageNames`');
     }
   }
@@ -146,6 +153,10 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     bundleOptions: BundleOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildOptions> {
+    invariant(this.config.resolver, 'resolver configuration is required');
+    invariant(this.config.resolver.mainFields, 'invalid resolver.mainFields');
+    invariant(this.config.transformer, 'transformer configuration is required');
+
     setEnvironment(bundleOptions.dev);
 
     const webSpecifiedOptions =
@@ -190,7 +201,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       entryPoints: [bundleOptions.entry],
       outfile: bundleOptions.outfile,
       sourceRoot: path.dirname(bundleOptions.entry),
-      mainFields: this.config.mainFields,
+      mainFields: this.config.resolver.mainFields,
       resolveExtensions: getResolveExtensionsOption(bundleOptions),
       loader: getLoaderOption(),
       define: getGlobalVariables(bundleOptions),

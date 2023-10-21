@@ -12,16 +12,6 @@ export interface Config {
    */
   cache?: boolean;
   /**
-   * Field names for resolve package's modules.
-   *
-   * Defaults to `['react-native', 'browser', 'main', 'module']`
-   */
-  mainFields?: string[];
-  /**
-   * Additional Esbuild plugins.
-   */
-  plugins?: Plugin[];
-  /**
    * Logger configurations
    */
   logger?: {
@@ -37,6 +27,17 @@ export interface Config {
      * Defaults to `null`
      */
     timestamp?: string | null;
+  };
+  /**
+   * Resolver configurations
+   */
+  resolver?: {
+    /**
+     * Field names for resolve package's modules.
+     *
+     * Defaults to `['react-native', 'browser', 'main', 'module']`
+     */
+    mainFields?: string[];
   };
   /**
    * Transformer configurations
@@ -105,6 +106,10 @@ export interface Config {
      */
     placeholders?: Record<string, string>;
   };
+  /**
+   * Additional Esbuild plugins.
+   */
+  plugins?: Plugin[];
   /**
    * Client event receiver (only work on native)
    */
