@@ -9,7 +9,7 @@ import { logger } from './shared';
 (async () => {
   const argv = await cli();
   const options = baseArgvSchema.parse(argv);
-  ReactNativeEsbuildBundler.initialize(options.config);
+  ReactNativeEsbuildBundler.bootstrap(options.config);
   ReactNativeEsbuildBundler.setGlobalLogLevel(
     options.verbose ? LogLevel.Trace : LogLevel.Info,
   );

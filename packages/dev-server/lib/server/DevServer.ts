@@ -36,13 +36,9 @@ export abstract class DevServer {
     }
   }
 
-  public setup(delegate: (bundler: ReactNativeEsbuildBundler) => void): this {
-    this.assertBundler(this.bundler);
-    delegate(this.bundler);
-    return this;
-  }
-
-  protected abstract initialize(): void;
+  public abstract initialize(
+    onPostSetup?: (bundler: ReactNativeEsbuildBundler) => void | Promise<void>,
+  ): Promise<this>;
 
   public abstract listen(onListen?: () => void): Promise<HTTPServer>;
 }

@@ -1,4 +1,5 @@
 export enum ReactNativeEsbuildErrorCode {
+  NotInitialized = 'NotInitialized',
   BuildFailure = 'BuildFailure',
   InvalidTask = 'InvalidTask',
   Unknown = 'Unknown',

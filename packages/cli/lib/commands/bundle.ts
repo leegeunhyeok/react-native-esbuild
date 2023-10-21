@@ -30,9 +30,9 @@ export const bundle: Command = async (argv) => {
   logger.debug('bundle options');
   printDebugOptions(bundleOptions);
 
-  const bundler = new ReactNativeEsbuildBundler(
+  const bundler = await new ReactNativeEsbuildBundler(
     bundleOptions.entry ? path.dirname(bundleOptions.entry) : process.cwd(),
-  );
+  ).initialize();
 
   // @TODO: remove registerPlugin and add plugin presets (plugin preset builder)
   if (bundleOptions.platform !== 'web') {

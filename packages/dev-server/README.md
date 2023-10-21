@@ -5,17 +5,36 @@
 ## Usage
 
 ```ts
-import { ReactNativeEsbuildDevServer } from '@react-native-esbuild/dev-server';
+import {
+  ReactNativeAppServer,
+  ReactNativeWebServer,
+} from '@react-native-esbuild/dev-server';
 
-const { server, bundler } = new ReactNativeEsbuildDevServer({
+const serveOptions = {
   port: '8081',
   host: 'localhost',
-}).initialize();
+};
 
-bundler
-  .registerPlugin(/* plugin */)
-  .registerPlugin(/* plugin */)
-  .registerPlugin(/* plugin */);
+// For Native (Android, iOS)
+const server = await new ReactNativeAppServer(
+  serveOptions,
+).initialize((bundler) => {
+  bundler
+    .registerPlugin(/* plugin */)
+    .registerPlugin(/* plugin */)
+    .registerPlugin(/* plugin */);
+});
 
-server.listen();
+// For Web
+const server = await new ReactNativeWebServer(
+  serveOptions,
+  bundleOptions,
+).initialize((bundler) => {
+  bundler
+    .registerPlugin(createSvgTransformPlugin())
+    .registerPlugin(createReactNativeRuntimeTransformPlugin())
+    .registerPlugin(createReactNativeWebPlugin());
+});
+
+server.listen(() => console.log('listening!'));
 ```

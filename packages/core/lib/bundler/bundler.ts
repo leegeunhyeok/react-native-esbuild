@@ -5,6 +5,7 @@ import esbuild, {
   type ServeResult,
 } from 'esbuild';
 import invariant from 'invariant';
+import ora from 'ora';
 import { getGlobalVariables } from '@react-native-esbuild/internal';
 import {
   setEnvironment,
@@ -19,6 +20,7 @@ import { FileSystemWatcher } from '../watcher';
 import { logger } from '../shared';
 import type {
   Config,
+  BundlerInitializeOptions,
   BuildTask,
   BuildStatus,
   BundleMode,
@@ -42,7 +44,10 @@ import {
 } from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
-import { ReactNativeEsbuildError, ReactNativeEsbuildErrorCode } from './errors';
+import {
+  ReactNativeEsbuildError,
+  ReactNativeEsbuildErrorCode as ErrorCode,
+} from './errors';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
@@ -52,15 +57,16 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       changed: null,
     },
   };
+  private initialized = false;
   private config: Config;
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
 
   /**
-   * must be initialized first at the entry point
+   * must be bootstrapped first at the entry point
    */
-  public static initialize(configFilePath?: string): void {
+  public static bootstrap(configFilePath?: string): void {
     printLogo();
     printVersion();
     const config = loadConfig(configFilePath);
@@ -125,9 +131,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.config.reporter?.(event);
   }
 
-  private setupWatcher(): void {
-    logger.debug('setup watcher');
-    FileSystemWatcher.getInstance()
+  private startWatcher(): Promise<void> {
+    logger.debug('starting watcher');
+    return FileSystemWatcher.getInstance()
       .setHandler((event, changedFile, stats) => {
         if (this.buildTasks.size > 0 && event === 'change') {
           ReactNativeEsbuildBundler.shared.watcher = {
@@ -240,11 +246,20 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return getIdByOptions(bundleOptions);
   }
 
+  private throwIfNotInitialized(): void {
+    if (this.initialized) return;
+
+    throw new ReactNativeEsbuildError(
+      'bundler not initialized',
+      ErrorCode.NotInitialized,
+    );
+  }
+
   private assertBuildTask(task?: BuildTask): asserts task is BuildTask {
     if (task) return;
     throw new ReactNativeEsbuildError(
       'unable to get build task',
-      ReactNativeEsbuildErrorCode.InvalidTask,
+      ErrorCode.InvalidTask,
     );
   }
 
@@ -254,7 +269,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     if (handler) return;
     throw new ReactNativeEsbuildError(
       'invalid task handler',
-      ReactNativeEsbuildErrorCode.InvalidTask,
+      ErrorCode.InvalidTask,
     );
   }
 
@@ -300,7 +315,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       if (!data.success) {
         throw new ReactNativeEsbuildError(
           'build failed',
-          ReactNativeEsbuildErrorCode.BuildFailure,
+          ErrorCode.BuildFailure,
         );
       }
 
@@ -347,7 +362,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
-      this.setupWatcher();
       const buildOptions = await this.getBuildOptionsForBundler(
         'watch',
         bundleOptions,
@@ -394,15 +408,37 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     });
   }
 
-  registerPlugin(plugin: ReturnType<EsbuildPluginFactory<unknown>>): this {
+  public async initialize(options?: BundlerInitializeOptions): Promise<this> {
+    if (this.initialized) {
+      logger.warn('bundler already initialized');
+      return this;
+    }
+    const spinner = ora({ discardStdin: false }).start(
+      'Bundler initializing...',
+    );
+
+    if (options?.watcherEnabled) {
+      await this.startWatcher();
+    }
+
+    this.initialized = true;
+    spinner.stop();
+
+    return this;
+  }
+
+  public registerPlugin(
+    plugin: ReturnType<EsbuildPluginFactory<unknown>>,
+  ): this {
     this.plugins.push(plugin);
     return this;
   }
 
-  async bundle(
+  public async bundle(
     bundleOptions: Partial<BundleOptions>,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildResult> {
+    this.throwIfNotInitialized();
     const buildOptions = await this.getBuildOptionsForBundler(
       'bundle',
       combineWithDefaultBundleOptions(bundleOptions),
@@ -411,10 +447,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return esbuild.build(buildOptions);
   }
 
-  async serve(
+  public async serve(
     bundleOptions: Partial<BundleOptions>,
     additionalData?: BundlerAdditionalData,
   ): Promise<ServeResult> {
+    this.throwIfNotInitialized();
     if (bundleOptions.platform !== 'web') {
       throw new ReactNativeEsbuildError(
         'serve mode is only available on web platform',
@@ -432,10 +469,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     });
   }
 
-  async getBundle(
+  public async getBundle(
     bundleOptions: BundleRequestOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BundleResult> {
+    this.throwIfNotInitialized();
     const buildTask = await this.getOrCreateBundleTask(
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
@@ -444,11 +482,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return buildTask.handler.task;
   }
 
-  getConfig(): Config {
+  public getConfig(): Config {
     return this.config;
   }
 
-  getRoot(): string {
+  public getRoot(): string {
     return this.root;
   }
 }

@@ -10,7 +10,6 @@ import { logger } from '../shared';
 import type { Command } from '../types';
 import { serveArgvSchema } from '../schema';
 
-// eslint-disable-next-line @typescript-eslint/require-await -- no async task in serve command
 export const serve: Command = async (argv): Promise<void> => {
   const serveArgv = serveArgvSchema.parse(argv);
   const serveOptions = {
@@ -30,12 +29,15 @@ export const serve: Command = async (argv): Promise<void> => {
   logger.debug('bundle options');
   printDebugOptions(bundleOptions);
 
-  new ReactNativeWebServer(serveOptions, bundleOptions)
-    .setup((bundler) => {
-      bundler
-        .registerPlugin(createSvgTransformPlugin())
-        .registerPlugin(createReactNativeRuntimeTransformPlugin())
-        .registerPlugin(createReactNativeWebPlugin());
-    })
-    .listen();
+  const server = await new ReactNativeWebServer(
+    serveOptions,
+    bundleOptions,
+  ).initialize((bundler) => {
+    bundler
+      .registerPlugin(createSvgTransformPlugin())
+      .registerPlugin(createReactNativeRuntimeTransformPlugin())
+      .registerPlugin(createReactNativeWebPlugin());
+  });
+
+  await server.listen();
 };

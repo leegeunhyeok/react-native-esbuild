@@ -130,8 +130,11 @@ interface CustomTransformRuleBase<T> {
 export type BabelTransformRule = CustomTransformRuleBase<BabelTransformOptions>;
 export type SwcTransformRule = CustomTransformRuleBase<SwcTransformOptions>;
 
+export interface BundlerInitializeOptions {
+  watcherEnabled?: boolean;
+}
+
 export type BundleMode = 'bundle' | 'watch';
-export type InternalCaller = 'dev-server';
 
 export interface BuildTask {
   context: BuildContext;

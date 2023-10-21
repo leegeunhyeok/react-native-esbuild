@@ -23,14 +23,16 @@ export const start: Command = async (argv) => {
   logger.debug('start options');
   printDebugOptions({ entry, ...serveOptions });
 
-  const server = new ReactNativeAppServer(serveOptions).setup((bundler) => {
-    bundler
-      .registerPlugin(createAssetRegisterPlugin())
-      .registerPlugin(createSvgTransformPlugin())
-      .registerPlugin(createReactNativeRuntimeTransformPlugin());
-  });
+  const server = await new ReactNativeAppServer(serveOptions).initialize(
+    (bundler) => {
+      bundler
+        .registerPlugin(createAssetRegisterPlugin())
+        .registerPlugin(createSvgTransformPlugin())
+        .registerPlugin(createReactNativeRuntimeTransformPlugin());
+    },
+  );
 
-  server.listen(() => {
+  await server.listen(() => {
     if (
       enableInteractiveMode((keyName) => {
         switch (keyName) {

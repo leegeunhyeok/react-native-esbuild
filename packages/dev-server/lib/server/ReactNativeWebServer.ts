@@ -27,7 +27,6 @@ export class ReactNativeWebServer extends DevServer {
   ) {
     super(devServerOptions);
     this.bundleOptions = combineWithDefaultBundleOptions(bundleOptions ?? {});
-    this.initialize();
   }
 
   private proxyHandler(
@@ -82,21 +81,26 @@ export class ReactNativeWebServer extends DevServer {
     });
   }
 
-  initialize(): void {
+  async initialize(
+    onPostSetup?: (bundler: ReactNativeEsbuildBundler) => void | Promise<void>,
+  ): Promise<this> {
     if (this.initialized) {
       logger.warn('dev server already initialized');
-      return;
+      return this;
     }
 
-    logger.debug('create http server');
-    const bundler = new ReactNativeEsbuildBundler(this.devServerOptions.root);
-    this.bundler = bundler;
+    logger.debug('setup bundler');
+    // eslint-disable-next-line no-multi-assign -- allow
+    const bundler = (this.bundler = await new ReactNativeEsbuildBundler(
+      this.devServerOptions.root,
+    ).initialize({ watcherEnabled: true }));
 
     const symbolicateMiddleware = createSymbolicateMiddleware(
       { bundler, devServerOptions: this.devServerOptions },
       { webBundleOptions: this.bundleOptions },
     );
 
+    logger.debug('create http server');
     this.server = http.createServer((request, response) => {
       this.parseBody(request).then(() => {
         // 1. send request to middleware
@@ -106,7 +110,10 @@ export class ReactNativeWebServer extends DevServer {
         });
       });
     });
-    this.initialized = true;
+
+    await onPostSetup?.(bundler);
+
+    return this;
   }
 
   async listen(onListen?: () => void): Promise<HTTPServer> {

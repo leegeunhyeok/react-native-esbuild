@@ -19,7 +19,6 @@ import { logger } from '../shared';
 import type {
   BroadcastCommand,
   DevServerMiddlewareContext,
-  DevServerOptions,
   TypedInspectorProxy,
 } from '../types';
 import { DevServer } from './DevServer';
@@ -40,16 +39,19 @@ export class ReactNativeAppServer extends DevServer {
   >['eventsSocketEndpoint'];
   private inspectorProxy?: TypedInspectorProxy;
 
-  constructor(devServerOptions: DevServerOptions) {
-    super(devServerOptions);
-    this.initialize();
-  }
-
-  initialize(): void {
+  async initialize(
+    onPostSetup?: (bundler: ReactNativeEsbuildBundler) => void | Promise<void>,
+  ): Promise<this> {
     if (this.initialized) {
       logger.warn('dev server already initialized');
-      return;
+      return this;
     }
+
+    logger.debug('setup bundler');
+    // eslint-disable-next-line no-multi-assign -- allow
+    const bundler = (this.bundler = await new ReactNativeEsbuildBundler(
+      this.devServerOptions.root,
+    ).initialize({ watcherEnabled: true }));
 
     const {
       middleware,
@@ -71,10 +73,12 @@ export class ReactNativeAppServer extends DevServer {
 
     logger.debug('create http server');
     this.server = http.createServer(middleware);
-    this.bundler = new ReactNativeEsbuildBundler(this.devServerOptions.root);
     this.setupMiddlewares(middleware);
 
+    await onPostSetup?.(bundler);
+
     this.initialized = true;
+    return this;
   }
 
   private setupMiddlewares(server: Server): void {

@@ -14,8 +14,8 @@ export class FileSystemWatcher {
   public static DEBOUNCE_DELAY = 300;
   private static instance: FileSystemWatcher | null = null;
   private watcher: chokidar.FSWatcher | null = null;
-  private onWatch?: (event: string, path: string, stats?: Stats) => void;
   private debounceTimer?: NodeJS.Timeout;
+  private onWatch?: (event: string, path: string, stats?: Stats) => void;
 
   private constructor() {
     // empty constructor
@@ -29,7 +29,6 @@ export class FileSystemWatcher {
   }
 
   private handleWatch(event: string, path: string, stats?: Stats): void {
-    logger.debug('event received from watcher', { path });
     if (
       this.debounceTimer !== undefined ||
       !WATCH_EXTENSIONS_REGEXP.test(path)
@@ -40,6 +39,7 @@ export class FileSystemWatcher {
     this.debounceTimer = setTimeout(() => {
       this.debounceTimer = undefined;
       this.onWatch?.(event, path, stats);
+      logger.debug('changes detected by watcher', { event, path });
     }, FileSystemWatcher.DEBOUNCE_DELAY);
   }
 
@@ -50,39 +50,42 @@ export class FileSystemWatcher {
     return this;
   }
 
-  watch(targetPath: string): void {
+  watch(targetPath: string): Promise<void> {
     if (this.watcher) {
       logger.debug('already watching');
-      return;
+      return Promise.resolve();
     }
 
-    this.watcher = chokidar
-      .watch(targetPath, {
-        alwaysStat: true,
-        ignoreInitial: true,
-        ignored: /(?:^|[/\\])\../,
-      })
-      .on('addDir', (path, stats) => {
-        this.handleWatch('addDir', path, stats);
-      })
-      .on('unlinkDir', (path) => {
-        this.handleWatch('unlinkDir', path);
-      })
-      .on('add', (path, stats) => {
-        this.handleWatch('add', path, stats);
-      })
-      .on('change', (path, stats) => {
-        this.handleWatch('change', path, stats);
-      })
-      .on('unlink', (path) => {
-        this.handleWatch('unlink', path);
-      })
-      .on('ready', () => {
-        logger.debug('watching', { targetPath });
-      })
-      .on('error', (error) => {
-        logger.error('unexpected error on watcher', error);
-      });
+    return new Promise((resolve) => {
+      this.watcher = chokidar
+        .watch(targetPath, {
+          alwaysStat: true,
+          ignoreInitial: true,
+          ignored: /(?:^|[/\\])\../,
+        })
+        .on('addDir', (path, stats) => {
+          this.handleWatch('addDir', path, stats);
+        })
+        .on('unlinkDir', (path) => {
+          this.handleWatch('unlinkDir', path);
+        })
+        .on('add', (path, stats) => {
+          this.handleWatch('add', path, stats);
+        })
+        .on('change', (path, stats) => {
+          this.handleWatch('change', path, stats);
+        })
+        .on('unlink', (path) => {
+          this.handleWatch('unlink', path);
+        })
+        .on('ready', () => {
+          logger.debug('ready for watching', { targetPath });
+          resolve();
+        })
+        .on('error', (error) => {
+          logger.error('unexpected error on watcher', error);
+        });
+    });
   }
 
   close(): void {
