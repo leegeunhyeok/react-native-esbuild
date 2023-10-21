@@ -159,9 +159,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     bundleOptions: BundleOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildOptions> {
-    invariant(this.config.resolver, 'resolver configuration is required');
-    invariant(this.config.resolver.mainFields, 'invalid resolver.mainFields');
-    invariant(this.config.transformer, 'transformer configuration is required');
+    const config = this.config;
+    invariant(config.resolver, 'invalid resolver configuration');
+    invariant(config.resolver.mainFields, 'invalid mainFields');
+    invariant(config.transformer, 'invalid transformer configuration');
+    invariant(config.resolver.assetExtensions, 'invalid assetExtension');
+    invariant(config.resolver.sourceExtensions, 'invalid sourceExtensions');
 
     setEnvironment(bundleOptions.dev);
 
@@ -207,9 +210,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       entryPoints: [bundleOptions.entry],
       outfile: bundleOptions.outfile,
       sourceRoot: path.dirname(bundleOptions.entry),
-      mainFields: this.config.resolver.mainFields,
-      resolveExtensions: getResolveExtensionsOption(bundleOptions),
-      loader: getLoaderOption(),
+      mainFields: config.resolver.mainFields,
+      resolveExtensions: getResolveExtensionsOption(
+        bundleOptions,
+        config.resolver.sourceExtensions,
+        config.resolver.assetExtensions,
+      ),
+      loader: getLoaderOption(config.resolver.assetExtensions),
       define: getGlobalVariables(bundleOptions),
       banner: {
         js: await getTransformedPreludeScript(bundleOptions, this.root),
@@ -218,7 +225,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         // plugin factories
         ...plugins.map((plugin) => plugin(context)),
         // additional plugins from configuration
-        ...(this.config.plugins ?? []),
+        ...(config.plugins ?? []),
       ],
       legalComments: bundleOptions.dev ? 'inline' : 'none',
       target: 'es6',

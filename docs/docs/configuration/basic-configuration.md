@@ -28,6 +28,8 @@ exports.default = {
   },
   resolver: {
     mainFields: ['react-native', 'browser', 'main', 'module'],
+    sourceExtensions: [/* internal/lib/defaults.ts */],
+    assetExtensions: [/* internal/lib/defaults.ts */],
   },
   transformer: {
     stripFlowPackageNames: ['react-native'],
@@ -55,7 +57,9 @@ Logger configurations.
 
 Resolver configurations.
 
-- `resolver.mainFields`: When importing from an npm package, this option will determine which fields in its `package.json` are checked.
+- `resolver.mainFields`: When importing from an npm package, this option will determine which fields in its `package.json` are checked. (Defaults to `['react-native', 'browser', 'main', 'module']`)
+- `resolver.sourceExtensions`: File extensions for transform. ([Default](https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/internal/lib/defaults.ts))
+- `resolver.assetExtensions`: File extensions for assets registration. ([Default](https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/internal/lib/defaults.ts))
 
 ### transformer
 
@@ -121,6 +125,18 @@ interface Config {
      * Defaults to `['react-native', 'browser', 'main', 'module']`
      */
     mainFields?: string[];
+    /**
+     * File extensions for transform.
+     *
+     * Defaults: https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/internal/lib/defaults.ts
+     */
+    sourceExtensions?: string[];
+    /**
+     * File extensions for assets registration.
+     *
+     * Defaults: https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/internal/lib/defaults.ts
+     */
+    assetExtensions?: string[];
   };
   /**
    * Transformer configurations

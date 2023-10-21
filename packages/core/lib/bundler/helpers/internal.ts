@@ -1,13 +1,9 @@
-import {
-  ASSET_EXTENSIONS,
-  SOURCE_EXTENSIONS,
-  getPreludeScript,
-} from '@react-native-esbuild/internal';
+import type { BuildOptions } from 'esbuild';
+import { getPreludeScript } from '@react-native-esbuild/internal';
 import {
   stripFlowWithSucrase,
   minifyWithSwc,
 } from '@react-native-esbuild/transformer';
-import type { BuildOptions } from 'esbuild';
 import type { BundleOptions } from '@react-native-esbuild/config';
 
 export const getTransformedPreludeScript = async (
@@ -38,8 +34,10 @@ export const getTransformedPreludeScript = async (
 
 export const getResolveExtensionsOption = (
   bundleOptions: BundleOptions,
+  sourceExtensions: string[],
+  assetExtensions: string[],
 ): BuildOptions['resolveExtensions'] => {
-  const extensions = [...SOURCE_EXTENSIONS, ...ASSET_EXTENSIONS];
+  const extensions = [...sourceExtensions, ...assetExtensions];
   /**
    * platform specified extensions for resolve priority
    *
@@ -57,11 +55,13 @@ export const getResolveExtensionsOption = (
     .flat();
 };
 
-export const getLoaderOption = (): BuildOptions['loader'] => {
+export const getLoaderOption = (
+  assetExtensions: string[],
+): BuildOptions['loader'] => {
   /**
    * loader option for file loader interprets the assets as file
    */
   return Object.fromEntries(
-    ASSET_EXTENSIONS.map((ext) => [ext, 'file'] as const),
+    assetExtensions.map((ext) => [ext, 'file'] as const),
   );
 };

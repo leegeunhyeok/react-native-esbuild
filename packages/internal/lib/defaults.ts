@@ -1,6 +1,17 @@
-// asset extensions
-// https://github.com/facebook/metro/blob/0.72.x/packages/metro-config/src/defaults/defaults.js
-// https://github.com/facebook/metro/blob/0.72.x/packages/metro-file-map/src/workerExclusionList.js
+/**
+ * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
+ */
+export const RESOLVER_MAIN_FIELDS = [
+  'react-native',
+  'browser',
+  'main',
+  'module',
+];
+
+/**
+ * @see {@link https://github.com/facebook/metro/blob/0.72.x/packages/metro-config/src/defaults/defaults.js}
+ * @see {@link https://github.com/facebook/metro/blob/0.72.x/packages/metro-file-map/src/workerExclusionList.js}
+ */
 export const SOURCE_EXTENSIONS = [
   '.tsx',
   '.ts',

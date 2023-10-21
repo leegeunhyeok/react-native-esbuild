@@ -2,6 +2,11 @@ import path from 'node:path';
 import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
 import {
+  RESOLVER_MAIN_FIELDS,
+  SOURCE_EXTENSIONS,
+  ASSET_EXTENSIONS,
+} from '@react-native-esbuild/internal';
+import {
   getDevServerPublicPath,
   type BundleOptions,
 } from '@react-native-esbuild/config';
@@ -18,11 +23,9 @@ export const loadConfig = (configFilePath?: string): Config => {
       timestamp: null,
     },
     resolver: {
-      /**
-       * mainFields
-       * @see {@link https://github.com/facebook/metro/blob/0.72.x/docs/Configuration.md#resolvermainfields}
-       */
-      mainFields: ['react-native', 'browser', 'main', 'module'],
+      mainFields: RESOLVER_MAIN_FIELDS,
+      sourceExtensions: SOURCE_EXTENSIONS,
+      assetExtensions: ASSET_EXTENSIONS,
     },
     transformer: {
       stripFlowPackageNames: ['react-native'],
