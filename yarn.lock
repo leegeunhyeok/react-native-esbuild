@@ -4910,7 +4910,7 @@ __metadata:
     md5: ^2.3.0
     ora: ^5.4.1
   peerDependencies:
-    react-native: ^0.72.0
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
