@@ -1,25 +1,53 @@
 import {
   transform,
   minify,
-  type Options,
-  type JsMinifyOptions,
+  type TsParserConfig,
+  type EsParserConfig,
 } from '@swc/core';
-import { getSwcOptions } from '@react-native-esbuild/config';
-import type { Transformer } from './types';
+import type {
+  Transformer,
+  SwcTransformerOptions,
+  SwcMinifierOptions,
+} from './types';
 
-export const transformWithSwc: Transformer<Options> = async (
+const getParseOption = (
+  isTypescript: boolean,
+): TsParserConfig | EsParserConfig => {
+  return isTypescript
+    ? ({
+        syntax: 'typescript',
+        tsx: true,
+        dynamicImport: true,
+      } as TsParserConfig)
+    : ({
+        syntax: 'ecmascript',
+        jsx: true,
+        exportDefaultFrom: true,
+      } as EsParserConfig);
+};
+
+export const transformWithSwc: Transformer<SwcTransformerOptions> = async (
   code,
   context,
-  customOptions,
+  options,
 ) => {
-  const options = getSwcOptions(
-    {
-      filename: context.path,
-      root: context.root,
+  const { code: transformedCode } = await transform(code, {
+    minify: false,
+    sourceMaps: false,
+    isModule: true,
+    inputSourceMap: false,
+    inlineSourcesContent: false,
+    jsc: {
+      parser: getParseOption(/\.tsx?$/.test(context.path)),
+      target: 'es5',
+      loose: false,
+      externalHelpers: true,
+      keepClassNames: true,
     },
-    customOptions,
-  );
-  const { code: transformedCode } = await transform(code, options);
+    // Override to custom options.
+    ...options?.customOptions,
+    root: context.root,
+  });
 
   if (typeof transformedCode !== 'string') {
     throw new Error('swc transformed source is empty');
@@ -28,12 +56,12 @@ export const transformWithSwc: Transformer<Options> = async (
   return transformedCode;
 };
 
-export const minifyWithSwc: Transformer<JsMinifyOptions> = async (
+export const minifyWithSwc: Transformer<SwcMinifierOptions> = async (
   code,
   _context,
-  customOptions,
+  options,
 ) => {
-  const { code: minifiedCode } = await minify(code, customOptions);
+  const { code: minifiedCode } = await minify(code, options?.customOptions);
 
   if (typeof minifiedCode !== 'string') {
     throw new Error('swc minified source is empty');

@@ -112,10 +112,7 @@ export class TransformFlowBuilder {
             code: await transformWithBabel(
               code,
               this.getTransformContext(args),
-              {
-                // follow babelrc of react-native project's root (same as metro)
-                babelrc: true,
-              },
+              { fullyTransform: true },
             ),
             // skip other transformations when fully transformed
             done: true,
@@ -160,13 +157,16 @@ export class TransformFlowBuilder {
       transformFlow.addFlow(async (code, args) => {
         for await (const rule of this.additionalBabelRules) {
           if (rule.test(args.path, code)) {
+            const customOptions =
+              typeof rule.options === 'function'
+                ? rule.options(args.path, code)
+                : rule.options;
+
             // eslint-disable-next-line no-param-reassign -- allow reassign
             code = await transformWithBabel(
               code,
               this.getTransformContext(args),
-              typeof rule.options === 'function'
-                ? rule.options(args.path, code)
-                : rule.options,
+              { customOptions },
             );
           }
         }
@@ -179,13 +179,16 @@ export class TransformFlowBuilder {
       transformFlow.addFlow(async (code, args) => {
         for await (const rule of this.additionalSwcRules) {
           if (rule.test(args.path, code)) {
+            const customOptions =
+              typeof rule.options === 'function'
+                ? rule.options(args.path, code)
+                : rule.options;
+
             // eslint-disable-next-line no-param-reassign -- allow reassign
             code = await transformWithSwc(
               code,
               this.getTransformContext(args),
-              typeof rule.options === 'function'
-                ? rule.options(args.path, code)
-                : rule.options,
+              { customOptions },
             );
           }
         }

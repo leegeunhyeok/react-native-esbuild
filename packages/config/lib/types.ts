@@ -1,6 +1,3 @@
-import type { TransformOptions as BabelTransformOptions } from '@babel/core';
-import type { Options as SwcTransformOptions } from '@swc/core';
-
 export type BundlerSupportPlatform = 'android' | 'ios' | 'web';
 
 export interface BundleOptions {
@@ -12,11 +9,6 @@ export interface BundleOptions {
   metafile: boolean;
   sourcemap?: string;
   assetsDir?: string;
-}
-
-export interface SwcPresetOptions {
-  filename: string;
-  root: string;
 }
 
 export enum OptionFlag {
@@ -39,9 +31,3 @@ export interface CustomTransformRuleBase<T> {
    */
   options: T | ((path: string, code: string) => T);
 }
-
-export type CustomBabelTransformRule =
-  CustomTransformRuleBase<BabelTransformOptions>;
-
-export type CustomSwcTransformRule =
-  CustomTransformRuleBase<SwcTransformOptions>;

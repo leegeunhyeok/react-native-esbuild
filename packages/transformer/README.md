@@ -11,7 +11,7 @@ import {
 } from '@react-native-esbuild/transformer';
 
 await stripFlowWithSucrase(code, context);
-await transformWithBabel(code, context, customOptions);
-await transformWithSwc(code, context, customOptions);
-await minifyWithSwc(code, context, customOptions);
+await transformWithBabel(code, context, options);
+await transformWithSwc(code, context, options);
+await minifyWithSwc(code, context, options);
 ```

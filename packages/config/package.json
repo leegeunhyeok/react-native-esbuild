@@ -35,14 +35,5 @@
   },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.22.20",
-    "@swc/core": "^1.3.86",
-    "@types/babel__core": "^7.20.1",
-    "esbuild": "^0.19.3"
-  },
-  "dependencies": {
-    "deepmerge": "^4.3.1"
   }
 }

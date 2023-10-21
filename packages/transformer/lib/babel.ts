@@ -1,39 +1,32 @@
-import {
-  loadOptions,
-  transform,
-  type TransformOptions,
-  type BabelFileResult,
-} from '@babel/core';
-import { getBabelOptions } from '@react-native-esbuild/config';
-import { promisify } from './utils';
-import type { Transformer } from './types';
+import { loadOptions, transformAsync } from '@babel/core';
+import type { Transformer, BabelTransformerOptions } from './types';
 
-export const transformWithBabel: Transformer<TransformOptions> = async (
+export const transformWithBabel: Transformer<BabelTransformerOptions> = async (
   code: string,
   context,
-  customOptions,
+  options,
 ) => {
-  const options = loadOptions({
-    ...getBabelOptions(context.root, customOptions),
+  const babelOptions = loadOptions({
+    minified: false,
+    compact: false,
+    sourceMaps: false,
+    babelrc: options?.fullyTransform ?? false,
+    highlightCode: !process.stdin.isTTY,
+    // Override to custom options.
+    ...options?.customOptions,
+    root: context.root,
     filename: context.path,
-    caller: {
-      name: '@react-native-esbuild/plugins',
-    },
   });
 
-  if (!options) {
+  if (!babelOptions) {
     throw new Error('cannot load babel options');
   }
 
-  const { code: transformedCode } = await promisify<BabelFileResult>(
-    (handler) => {
-      transform(code, options, handler);
-    },
-  );
+  const result = await transformAsync(code, babelOptions);
 
-  if (typeof transformedCode !== 'string') {
+  if (typeof result?.code !== 'string') {
     throw new Error('babel transformed source is empty');
   }
 
-  return transformedCode;
+  return result.code;
 };
