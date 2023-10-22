@@ -24,7 +24,7 @@ Developed by <a href="https://github.com/leegeunhyeok">Geunhyeok LEE (@leegeunhy
 - 🌳 Supports Tree Shaking
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
-- 🔥 Supports Hermes Runtime
+- 🔥 Supports JSC & Hermes Runtime
 - 🔄 Supports Live Reload
 - 🐛 Supports Debugging(Flipper, Chrome Debugger)
 - 🌍 Supports All Platforms(Android, iOS, Web)
