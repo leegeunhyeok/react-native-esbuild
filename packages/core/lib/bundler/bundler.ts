@@ -15,7 +15,6 @@ import {
   type BundleOptions,
 } from '@react-native-esbuild/config';
 import { Logger, LogLevel } from '@react-native-esbuild/utils';
-import { CacheStorage } from '../cache';
 import { FileSystemWatcher } from '../watcher';
 import { logger } from '../shared';
 import type {
@@ -32,6 +31,7 @@ import type {
   ReportableEvent,
   BundlerSharedData,
 } from '../types';
+import { CacheStorage } from './storages';
 import {
   loadConfig,
   getConfigFromGlobal,
@@ -46,13 +46,13 @@ import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
-  public static caches = CacheStorage.getInstance();
+  public static caches = new CacheStorage();
   public static shared = new Map<number, BundlerSharedData>();
-  private initialized = false;
-  private config: Config;
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
+  private initialized = false;
+  private config: Config;
 
   /**
    * must be bootstrapped first at the entry point

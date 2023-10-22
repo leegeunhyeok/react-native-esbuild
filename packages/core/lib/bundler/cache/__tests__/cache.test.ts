@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { faker } from '@faker-js/faker';
 import { CacheController } from '../CacheController';
-import type { Cache } from '../../types';
+import type { Cache } from '../../../types';
 
 describe('CacheController', () => {
   const CACHE_DIR = '/cache';
