@@ -52,11 +52,7 @@ import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = CacheStorage.getInstance();
-  public static shared: BundlerSharedData = {
-    watcher: {
-      changed: null,
-    },
-  };
+  public static shared = new Map<number, BundlerSharedData>();
   private initialized = false;
   private config: Config;
   private appLogger = new Logger('app', LogLevel.Trace);
@@ -132,19 +128,19 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private startWatcher(): Promise<void> {
+    const setSharedWatcherData = (data: BundlerSharedData['watcher']): void => {
+      for (const shared of ReactNativeEsbuildBundler.shared.values()) {
+        shared.watcher = data;
+      }
+    };
+
     return FileSystemWatcher.getInstance()
       .setHandler((event, changedFile, stats) => {
-        if (this.buildTasks.size > 0 && event === 'change') {
-          ReactNativeEsbuildBundler.shared.watcher = {
-            changed: changedFile,
-            stats,
-          };
-        } else {
-          ReactNativeEsbuildBundler.shared.watcher = {
-            changed: null,
-            stats: undefined,
-          };
-        }
+        const hasTask = this.buildTasks.size > 0;
+        setSharedWatcherData({
+          changed: hasTask && event === 'change' ? changedFile : null,
+          stats,
+        });
 
         for (const { context, handler } of this.buildTasks.values()) {
           context.rebuild().catch((error) => handler?.rejecter?.(error));
