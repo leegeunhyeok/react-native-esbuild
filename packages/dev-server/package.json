@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/dev-server",
-  "version": "0.1.0-beta.8",
+  "version": "0.1.0-beta.9",
   "description": "development server for @react-native-esbuild",
   "keywords": [
     "react-native",

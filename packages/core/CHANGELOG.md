@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
+
+### Features
+
+- add resolver extension configs ([3c303fa](https://github.com/leegeunhyeok/react-native-esbuild/commit/3c303faff1214d8201789c47e8ac78ef17879e8b))
+- add SharedStorage ([50c64c1](https://github.com/leegeunhyeok/react-native-esbuild/commit/50c64c1d239322882ffe50a57b8470189367c494))
+- **core:** add resolver config ([f8e753d](https://github.com/leegeunhyeok/react-native-esbuild/commit/f8e753d1681852e96598e9d2cc8de06e2a4e9693))
+- initialize before serve ([8993689](https://github.com/leegeunhyeok/react-native-esbuild/commit/899368955fe939c65689d833ef76799ecab61c66))
+- supports task boundary shared data ([a8d91c8](https://github.com/leegeunhyeok/react-native-esbuild/commit/a8d91c88c5079acbae3f1b554527893f48e27945))
+
+### Bug Fixes
+
+- set watcher shared data only on change event ([7ff0675](https://github.com/leegeunhyeok/react-native-esbuild/commit/7ff06759b093437e4ada7d1cd4e84ffcedf66ef0))
+
+### Miscellaneous Chores
+
+- change react-native peer deps version to any ([7b2570b](https://github.com/leegeunhyeok/react-native-esbuild/commit/7b2570ba51ffaa5027b54a4782d3d49db614faa6))
+- remove unused directive and log ([67fb681](https://github.com/leegeunhyeok/react-native-esbuild/commit/67fb681392cd6770da9b0ae24998e5e3ecc35679))
+
+### Code Refactoring
+
+- add Storage interface ([d27172a](https://github.com/leegeunhyeok/react-native-esbuild/commit/d27172a9b5e2eca1d85a625fadfdab73ca4ca696))
+- handle errors and type assertions ([486ee8c](https://github.com/leegeunhyeok/react-native-esbuild/commit/486ee8c05f2910f90c29335d8a58c1e9987737e2))
+- move transformer options to each tranform module ([5d8cc9b](https://github.com/leegeunhyeok/react-native-esbuild/commit/5d8cc9ba0e870e47cbbd4d8591f1bc643df1f25c))
+- rename getBundle to getBundleResult ([b293094](https://github.com/leegeunhyeok/react-native-esbuild/commit/b293094000dbac39e8b77e6ba9854ce455ef0795))
+
+### Build System
+
+- **deps:** bump version up transform packages ([205d3ff](https://github.com/leegeunhyeok/react-native-esbuild/commit/205d3ff2dc0c8df62e3d0ddfce2576e726256c94))
+
 ## [0.1.0-beta.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2023-10-10)
 
 ### Bug Fixes

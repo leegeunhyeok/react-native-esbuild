@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
+
+### Features
+
+- add resolver extension configs ([3c303fa](https://github.com/leegeunhyeok/react-native-esbuild/commit/3c303faff1214d8201789c47e8ac78ef17879e8b))
+- add SharedStorage ([50c64c1](https://github.com/leegeunhyeok/react-native-esbuild/commit/50c64c1d239322882ffe50a57b8470189367c494))
+- **core:** add resolver config ([f8e753d](https://github.com/leegeunhyeok/react-native-esbuild/commit/f8e753d1681852e96598e9d2cc8de06e2a4e9693))
+- initialize before serve ([8993689](https://github.com/leegeunhyeok/react-native-esbuild/commit/899368955fe939c65689d833ef76799ecab61c66))
+- **plugins:** refactor assets destionation rules ([ac39e0c](https://github.com/leegeunhyeok/react-native-esbuild/commit/ac39e0c5ae23568088a22f1581d7cfad6bf84113))
+- support float scaled assets ([00beadf](https://github.com/leegeunhyeok/react-native-esbuild/commit/00beadf345411a9b3a99e7bd82847dc794a7ff3c))
+- supports task boundary shared data ([a8d91c8](https://github.com/leegeunhyeok/react-native-esbuild/commit/a8d91c88c5079acbae3f1b554527893f48e27945))
+
+### Bug Fixes
+
+- **demo:** duplicate safearea insets ([d72aa1e](https://github.com/leegeunhyeok/react-native-esbuild/commit/d72aa1eefe02da6a5043b4c87426543928ebb370))
+- **plugins:** invalid injectScriptPaths import statements ([8c86e59](https://github.com/leegeunhyeok/react-native-esbuild/commit/8c86e5908d4b0bab4738df41c067dc9a0207fbf0))
+- **plugins:** strip platform suffix before copy assets ([cba44a5](https://github.com/leegeunhyeok/react-native-esbuild/commit/cba44a58588b7250cb809e3e75f502c90711ae43))
+- set watcher shared data only on change event ([7ff0675](https://github.com/leegeunhyeok/react-native-esbuild/commit/7ff06759b093437e4ada7d1cd4e84ffcedf66ef0))
+
+### Miscellaneous Chores
+
+- change react-native peer deps version to any ([7b2570b](https://github.com/leegeunhyeok/react-native-esbuild/commit/7b2570ba51ffaa5027b54a4782d3d49db614faa6))
+- **deps:** bump version up react-native to 0.72.6 ([93270ab](https://github.com/leegeunhyeok/react-native-esbuild/commit/93270ab17e24c6f615954fc77ed2115a5ae5f66f))
+- remove unused directive and log ([67fb681](https://github.com/leegeunhyeok/react-native-esbuild/commit/67fb681392cd6770da9b0ae24998e5e3ecc35679))
+
+### Code Refactoring
+
+- add Storage interface ([d27172a](https://github.com/leegeunhyeok/react-native-esbuild/commit/d27172a9b5e2eca1d85a625fadfdab73ca4ca696))
+- **dev-server:** now read assets from origin path ([64e75df](https://github.com/leegeunhyeok/react-native-esbuild/commit/64e75df281e32e549c51a0f544c5c8ae2779fe92))
+- handle errors and type assertions ([486ee8c](https://github.com/leegeunhyeok/react-native-esbuild/commit/486ee8c05f2910f90c29335d8a58c1e9987737e2))
+- move transformer options to each tranform module ([5d8cc9b](https://github.com/leegeunhyeok/react-native-esbuild/commit/5d8cc9ba0e870e47cbbd4d8591f1bc643df1f25c))
+- rename getBundle to getBundleResult ([b293094](https://github.com/leegeunhyeok/react-native-esbuild/commit/b293094000dbac39e8b77e6ba9854ce455ef0795))
+
+### Build System
+
+- **deps:** bump @babel/traverse from 7.22.8 to 7.23.2 ([f335554](https://github.com/leegeunhyeok/react-native-esbuild/commit/f3355549fa615176f07251d612d85aee5f2fc2bd))
+- **deps:** bump react-devtools-core from 4.28.0 to 4.28.4 ([9ce1cc9](https://github.com/leegeunhyeok/react-native-esbuild/commit/9ce1cc9b1a509f022180ea307f5872bdf2a70360))
+- **deps:** bump version up transform packages ([205d3ff](https://github.com/leegeunhyeok/react-native-esbuild/commit/205d3ff2dc0c8df62e3d0ddfce2576e726256c94))
+
 ## [0.1.0-beta.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2023-10-10)
 
 ### Bug Fixes

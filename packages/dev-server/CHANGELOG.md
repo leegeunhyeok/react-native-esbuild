@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
+
+### Features
+
+- initialize before serve ([8993689](https://github.com/leegeunhyeok/react-native-esbuild/commit/899368955fe939c65689d833ef76799ecab61c66))
+
+### Code Refactoring
+
+- **dev-server:** now read assets from origin path ([64e75df](https://github.com/leegeunhyeok/react-native-esbuild/commit/64e75df281e32e549c51a0f544c5c8ae2779fe92))
+- handle errors and type assertions ([486ee8c](https://github.com/leegeunhyeok/react-native-esbuild/commit/486ee8c05f2910f90c29335d8a58c1e9987737e2))
+- rename getBundle to getBundleResult ([b293094](https://github.com/leegeunhyeok/react-native-esbuild/commit/b293094000dbac39e8b77e6ba9854ce455ef0795))
+
+### Build System
+
+- **deps:** bump version up transform packages ([205d3ff](https://github.com/leegeunhyeok/react-native-esbuild/commit/205d3ff2dc0c8df62e3d0ddfce2576e726256c94))
+
 ## [0.1.0-beta.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2023-10-10)
 
 **Note:** Version bump only for package @react-native-esbuild/dev-server

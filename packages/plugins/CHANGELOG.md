@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
+
+### Features
+
+- add SharedStorage ([50c64c1](https://github.com/leegeunhyeok/react-native-esbuild/commit/50c64c1d239322882ffe50a57b8470189367c494))
+- **plugins:** refactor assets destionation rules ([ac39e0c](https://github.com/leegeunhyeok/react-native-esbuild/commit/ac39e0c5ae23568088a22f1581d7cfad6bf84113))
+- support float scaled assets ([00beadf](https://github.com/leegeunhyeok/react-native-esbuild/commit/00beadf345411a9b3a99e7bd82847dc794a7ff3c))
+
+### Bug Fixes
+
+- **plugins:** invalid injectScriptPaths import statements ([8c86e59](https://github.com/leegeunhyeok/react-native-esbuild/commit/8c86e5908d4b0bab4738df41c067dc9a0207fbf0))
+- **plugins:** strip platform suffix before copy assets ([cba44a5](https://github.com/leegeunhyeok/react-native-esbuild/commit/cba44a58588b7250cb809e3e75f502c90711ae43))
+
+### Code Refactoring
+
+- **dev-server:** now read assets from origin path ([64e75df](https://github.com/leegeunhyeok/react-native-esbuild/commit/64e75df281e32e549c51a0f544c5c8ae2779fe92))
+- handle errors and type assertions ([486ee8c](https://github.com/leegeunhyeok/react-native-esbuild/commit/486ee8c05f2910f90c29335d8a58c1e9987737e2))
+- move transformer options to each tranform module ([5d8cc9b](https://github.com/leegeunhyeok/react-native-esbuild/commit/5d8cc9ba0e870e47cbbd4d8591f1bc643df1f25c))
+
+### Build System
+
+- **deps:** bump version up transform packages ([205d3ff](https://github.com/leegeunhyeok/react-native-esbuild/commit/205d3ff2dc0c8df62e3d0ddfce2576e726256c94))
+
 ## [0.1.0-beta.8](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2023-10-10)
 
 **Note:** Version bump only for package @react-native-esbuild/plugins
