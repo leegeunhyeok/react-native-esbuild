@@ -24,5 +24,5 @@ await bundler.initialize();
 await bundler.bundle(bundleOptions);
 
 // using `esbuild.context()` (in-memory output for dev-server)
-await bundler.getBundle(bundleOptions);
+await bundler.getBundleResult(bundleOptions);
 ```

@@ -476,7 +476,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     });
   }
 
-  public async getBundle(
+  public async getBundleResult(
     bundleOptions: BundleRequestOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BundleResult> {

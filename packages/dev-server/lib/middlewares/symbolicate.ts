@@ -79,7 +79,7 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator<{
       }
 
       bundler
-        .getBundle(bundleOptions)
+        .getBundleResult(bundleOptions)
         .then(({ result, error }) => {
           if (error) throw error;
           return symbolicateStackTrace(result.sourcemap, stack).catch(

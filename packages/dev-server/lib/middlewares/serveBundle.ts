@@ -49,7 +49,7 @@ const serveBundle = (
 
   bundler.on('build-status-change', bundleStatusChangeHandler);
   bundler
-    .getBundle(bundleOptions)
+    .getBundleResult(bundleOptions)
     .then(({ result, error }) => {
       if (error) throw error;
       bundleResponse.endWithBundle(result.source, result.bundledAt);
@@ -70,7 +70,7 @@ const serveSourcemap = (
   response: ServerResponse,
 ): void => {
   bundler
-    .getBundle(bundleOptions, { disableRefresh: true })
+    .getBundleResult(bundleOptions, { disableRefresh: true })
     .then(({ result, error }) => {
       if (error) throw error;
       response.setHeader('Access-Control-Allow-Origin', 'devtools://devtools');
