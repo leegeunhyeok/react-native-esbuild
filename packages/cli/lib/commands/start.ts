@@ -12,7 +12,6 @@ import { logger } from '../shared';
 import { startArgvSchema } from '../schema';
 import type { Command } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/require-await -- no async task in start command yet
 export const start: Command = async (argv) => {
   const startArgv = startArgvSchema.parse(argv);
   const entry = path.resolve(startArgv['entry-file'] ?? DEFAULT_ENTRY_POINT);

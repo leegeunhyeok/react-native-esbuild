@@ -132,7 +132,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private startWatcher(): Promise<void> {
-    logger.debug('starting watcher');
     return FileSystemWatcher.getInstance()
       .setHandler((event, changedFile, stats) => {
         if (this.buildTasks.size > 0 && event === 'change') {
