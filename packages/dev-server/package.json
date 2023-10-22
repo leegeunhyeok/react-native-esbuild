@@ -40,6 +40,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
     "@types/connect": "^3.4.35",
+    "@types/invariant": "^2.2.36",
     "@types/mime": "^3.0.1",
     "@types/ws": "^8.5.5",
     "esbuild": "^0.19.5"
@@ -50,6 +51,7 @@
     "@react-native-esbuild/core": "workspace:*",
     "@react-native-esbuild/symbolicate": "workspace:*",
     "@react-native-esbuild/utils": "workspace:*",
+    "invariant": "^2.2.4",
     "metro-inspector-proxy": "^0.78.0",
     "mime": "^3.0.0",
     "ws": "^8.13.0",

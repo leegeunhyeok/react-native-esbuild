@@ -4,8 +4,12 @@ import { promisify } from 'node:util';
 import type { OnLoadArgs } from 'esbuild';
 import { imageSize } from 'image-size';
 import md5 from 'md5';
-import type { BundlerSupportPlatform } from '@react-native-esbuild/config';
-import { ASSET_PATH, SUPPORT_PLATFORMS } from '@react-native-esbuild/config';
+import invariant from 'invariant';
+import {
+  ASSET_PATH,
+  SUPPORT_PLATFORMS,
+  type BundlerSupportPlatform,
+} from '@react-native-esbuild/config';
 import type { PluginContext } from '@react-native-esbuild/core';
 import type { Asset, AssetScale } from '@react-native-esbuild/internal';
 import type { SuffixPathResult } from '../../types';
@@ -123,12 +127,10 @@ export const getDevServerBasePath = (asset: Asset): string => {
 function assertSuffixPathResult(
   data: OnLoadArgs['pluginData'],
 ): asserts data is SuffixPathResult {
-  if (
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- esbuild type
-    !(typeof data.basename === 'string' && typeof data.extension === 'string')
-  ) {
-    throw new Error('invalid pluginData');
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- allow
+  invariant(data.basename, 'basename is empty');
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- allow
+  invariant(data.extension, 'extension is empty');
 }
 
 export const resolveScaledAssets = async (

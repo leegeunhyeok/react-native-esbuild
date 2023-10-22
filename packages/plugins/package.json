@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
+    "@types/invariant": "^2.2.36",
     "@types/md5": "^2.3.2",
     "deepmerge": "^4.3.1",
     "esbuild": "^0.19.5"
@@ -51,6 +52,7 @@
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "image-size": "^1.0.2",
+    "invariant": "^2.2.4",
     "md5": "^2.3.0"
   }
 }

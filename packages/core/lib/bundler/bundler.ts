@@ -27,7 +27,6 @@ import type {
   BundlerAdditionalData,
   BundleResult,
   BundleRequestOptions,
-  PromiseHandler,
   EsbuildPluginFactory,
   PluginContext,
   ReportableEvent,
@@ -44,10 +43,6 @@ import {
 } from './helpers';
 import { BundlerEventEmitter } from './events';
 import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
-import {
-  ReactNativeEsbuildError,
-  ReactNativeEsbuildErrorCode as ErrorCode,
-} from './errors';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
@@ -250,29 +245,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private throwIfNotInitialized(): void {
     if (this.initialized) return;
-
-    throw new ReactNativeEsbuildError(
-      'bundler not initialized',
-      ErrorCode.NotInitialized,
-    );
-  }
-
-  private assertBuildTask(task?: BuildTask): asserts task is BuildTask {
-    if (task) return;
-    throw new ReactNativeEsbuildError(
-      'unable to get build task',
-      ErrorCode.InvalidTask,
-    );
-  }
-
-  private assertTaskHandler(
-    handler?: PromiseHandler<BundleResult> | null,
-  ): asserts handler is PromiseHandler<BundleResult> {
-    if (handler) return;
-    throw new ReactNativeEsbuildError(
-      'invalid task handler',
-      ErrorCode.InvalidTask,
-    );
+    throw new Error('bundler not initialized');
   }
 
   private handleBuildStart(context: PluginContext): void {
@@ -297,14 +270,14 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       if (data.success) return;
       process.exit(1);
     }
+
+    const currentTask = this.buildTasks.get(context.id);
+    invariant(currentTask, 'no task');
     const bundleEndedAt = new Date();
     const bundleFilename = context.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const revisionId = bundleEndedAt.getTime().toString();
     const { outputFiles } = data.result;
-
-    const currentTask = this.buildTasks.get(context.id);
-    this.assertBuildTask(currentTask);
 
     const findFromOutputFile = (
       filename: string,
@@ -314,26 +287,15 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     };
 
     try {
-      if (!data.success) {
-        throw new ReactNativeEsbuildError(
-          'build failed',
-          ErrorCode.BuildFailure,
-        );
-      }
-
-      // `outputFiles` available when only `write: false`
-      if (outputFiles === undefined) {
-        throw new ReactNativeEsbuildError('outputFiles is empty');
-      }
+      invariant(data.success, 'build failed');
+      invariant(outputFiles, 'empty outputFiles');
 
       const bundleOutput = outputFiles.find(findFromOutputFile(bundleFilename));
       const bundleSourcemapOutput = outputFiles.find(
         findFromOutputFile(bundleSourcemapFilename),
       );
-
-      if (!(bundleOutput && bundleSourcemapOutput)) {
-        throw new ReactNativeEsbuildError('empty bundle result');
-      }
+      invariant(bundleOutput, 'empty bundle output');
+      invariant(bundleSourcemapOutput, 'empty sourcemap output');
 
       currentTask.handler?.resolver?.({
         result: {
@@ -361,6 +323,15 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildTask> {
     const targetTaskId = this.identifyTaskByBundleOptions(bundleOptions);
+
+    if (!ReactNativeEsbuildBundler.shared.has(targetTaskId)) {
+      ReactNativeEsbuildBundler.shared.set(targetTaskId, {
+        watcher: {
+          changed: null,
+          stats: undefined,
+        },
+      });
+    }
 
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
@@ -390,14 +361,14 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     // task does not exist in bundle mode
     if (context.mode === 'bundle') return;
 
-    const buildTaskId = context.id;
-    const targetTask = this.buildTasks.get(buildTaskId);
-    this.assertBuildTask(targetTask);
-    logger.debug(`reset task (id: ${buildTaskId})`, {
+    const targetTask = this.buildTasks.get(context.id);
+    invariant(targetTask, 'no task');
+
+    logger.debug(`reset task (id: ${context.id})`, {
       buildCount: targetTask.buildCount,
     });
 
-    this.buildTasks.set(buildTaskId, {
+    this.buildTasks.set(context.id, {
       // keep previous esbuild context
       context: targetTask.context,
       // set status to pending and using new promise instance only when stale
@@ -441,6 +412,18 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildResult> {
     this.throwIfNotInitialized();
+
+    // TODO: migrate to SharedStorage
+    ReactNativeEsbuildBundler.shared.set(
+      getIdByOptions(bundleOptions as BundleOptions),
+      {
+        watcher: {
+          changed: null,
+          stats: undefined,
+        },
+      },
+    );
+
     const buildOptions = await this.getBuildOptionsForBundler(
       'bundle',
       combineWithDefaultBundleOptions(bundleOptions),
@@ -455,16 +438,14 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   ): Promise<ServeResult> {
     this.throwIfNotInitialized();
     if (bundleOptions.platform !== 'web') {
-      throw new ReactNativeEsbuildError(
-        'serve mode is only available on web platform',
-      );
+      throw new Error('serve mode is only available on web platform');
     }
 
     const buildTask = await this.getOrCreateBundleTask(
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
-    this.assertTaskHandler(buildTask.handler);
+    invariant(buildTask.handler, 'no handler');
 
     return buildTask.context.serve({
       servedir: getDevServerPublicPath(this.root),
@@ -480,7 +461,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
-    this.assertTaskHandler(buildTask.handler);
+    invariant(buildTask.handler, 'no handler');
+
     return buildTask.handler.task;
   }
 

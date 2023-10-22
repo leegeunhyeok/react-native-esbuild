@@ -44,7 +44,5 @@ export const bundle: Command = async (argv) => {
     .registerPlugin(createReactNativeRuntimeTransformPlugin())
     .registerPlugin(createReactNativeWebPlugin());
 
-  await bundler.bundle(bundleOptions).catch(() => {
-    process.exit(1);
-  });
+  await bundler.bundle(bundleOptions);
 };

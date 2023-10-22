@@ -4926,9 +4926,11 @@ __metadata:
     "@react-native-esbuild/symbolicate": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
     "@types/connect": ^3.4.35
+    "@types/invariant": ^2.2.36
     "@types/mime": ^3.0.1
     "@types/ws": ^8.5.5
     esbuild: ^0.19.5
+    invariant: ^2.2.4
     metro-inspector-proxy: ^0.78.0
     mime: ^3.0.0
     ws: ^8.13.0
@@ -4958,10 +4960,12 @@ __metadata:
     "@react-native-esbuild/utils": "workspace:*"
     "@svgr/core": ^8.1.0
     "@svgr/plugin-jsx": ^8.1.0
+    "@types/invariant": ^2.2.36
     "@types/md5": ^2.3.2
     deepmerge: ^4.3.1
     esbuild: ^0.19.5
     image-size: ^1.0.2
+    invariant: ^2.2.4
     md5: ^2.3.0
   languageName: unknown
   linkType: soft

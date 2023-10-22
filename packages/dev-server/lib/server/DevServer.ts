@@ -1,8 +1,5 @@
 import type { Server as HTTPServer } from 'node:http';
-import {
-  ReactNativeEsbuildError,
-  type ReactNativeEsbuildBundler,
-} from '@react-native-esbuild/core';
+import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import { DEFAULT_HOST, DEFAULT_PORT } from '../constants';
 import type { DevServerOptions } from '../types';
 
@@ -18,22 +15,6 @@ export abstract class DevServer {
       port: devServerOptions.port ?? DEFAULT_PORT,
       host: devServerOptions.host ?? DEFAULT_HOST,
     };
-  }
-
-  protected assertBundler(
-    bundler?: ReactNativeEsbuildBundler,
-  ): asserts bundler is ReactNativeEsbuildBundler {
-    if (!bundler) {
-      throw new ReactNativeEsbuildError('bundler is not ready');
-    }
-  }
-
-  protected assertHTTPServer(
-    httpServer?: HTTPServer,
-  ): asserts httpServer is HTTPServer {
-    if (!httpServer) {
-      throw new ReactNativeEsbuildError('http server is not ready');
-    }
   }
 
   public abstract initialize(

@@ -7,7 +7,7 @@ import { CacheController } from './CacheController';
 
 export class CacheStorage {
   private static instance: CacheStorage | null = null;
-  private caches = new Map<string, CacheController>();
+  private caches = new Map<number, CacheController>();
 
   public static getCacheDirectory(): string {
     return path.join(os.tmpdir(), GLOBAL_CACHE_DIR);
@@ -30,14 +30,14 @@ export class CacheStorage {
     }
   }
 
-  public get(storageKey: string): CacheController {
-    if (this.caches.has(storageKey)) {
+  public get(key: number): CacheController {
+    if (this.caches.has(key)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- has()
-      return this.caches.get(storageKey)!;
+      return this.caches.get(key)!;
     }
 
     const controller = new CacheController(CacheStorage.getCacheDirectory());
-    this.caches.set(storageKey, controller);
+    this.caches.set(key, controller);
 
     return controller;
   }

@@ -1,9 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import {
-  ReactNativeEsbuildError,
-  ReactNativeEsbuildErrorCode,
-  type BundlerEventListener,
-  type ReactNativeEsbuildBundler,
+import type {
+  BundlerEventListener,
+  ReactNativeEsbuildBundler,
 } from '@react-native-esbuild/core';
 import { getIdByOptions } from '@react-native-esbuild/config';
 import { BundleResponse, parseBundleOptionsFromRequestUrl } from '../helpers';
@@ -12,24 +10,6 @@ import { BundleRequestType, type DevServerMiddlewareCreator } from '../types';
 import type { ParsedBundleOptions } from '../helpers';
 
 const TAG = 'serve-bundle-middleware';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
-const handleError = (error: any): void => {
-  if (error instanceof ReactNativeEsbuildError) {
-    switch (error.code) {
-      case ReactNativeEsbuildErrorCode.InvalidTask:
-        logger.error('bundle task is invalid');
-        break;
-      case ReactNativeEsbuildErrorCode.BuildFailure:
-        logger.error('build failed');
-        break;
-      default:
-        logger.error('internal error', error as Error);
-    }
-  } else {
-    logger.error('unable to get bundle', error as Error);
-  }
-};
 
 const serveBundle = (
   bundler: ReactNativeEsbuildBundler,
@@ -55,7 +35,7 @@ const serveBundle = (
       bundleResponse.endWithBundle(result.source, result.bundledAt);
     })
     .catch((error) => {
-      handleError(error);
+      logger.error('unable to get bundle', error as Error);
       bundleResponse.endWithError();
     })
     .finally(() => {
@@ -78,7 +58,7 @@ const serveSourcemap = (
       response.writeHead(200).end(result.sourcemap);
     })
     .catch((error) => {
-      handleError(error);
+      logger.error('unable to get bundle', error as Error);
       response.writeHead(500).end();
     });
 };

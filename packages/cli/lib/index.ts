@@ -42,6 +42,7 @@ import { logger } from './shared';
   }
 })().catch((error) => {
   logger.error('cannot execute command', error as Error);
+  process.exit(1);
 });
 
 process

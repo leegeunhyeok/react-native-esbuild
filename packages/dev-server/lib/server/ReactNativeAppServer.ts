@@ -2,12 +2,10 @@ import http, { type Server as HTTPServer } from 'node:http';
 import { parse } from 'node:url';
 import type { WebSocketServer } from 'ws';
 import type { Server } from 'connect';
-import { createDevServerMiddleware } from '@react-native-community/cli-server-api';
-import {
-  ReactNativeEsbuildBundler,
-  ReactNativeEsbuildError,
-} from '@react-native-esbuild/core';
+import invariant from 'invariant';
 import { InspectorProxy } from 'metro-inspector-proxy';
+import { createDevServerMiddleware } from '@react-native-community/cli-server-api';
+import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
   createHotReloadMiddleware,
   createServeAssetMiddleware,
@@ -82,11 +80,9 @@ export class ReactNativeAppServer extends DevServer {
   }
 
   private setupMiddlewares(server: Server): void {
+    invariant(this.bundler, 'bundler is not ready');
+    invariant(this.inspectorProxy, 'inspector proxy is not ready');
     logger.debug('setup middlewares');
-
-    if (!(this.bundler && this.inspectorProxy)) {
-      throw new ReactNativeEsbuildError('unable to setup middlewares');
-    }
 
     const context: DevServerMiddlewareContext = {
       bundler: this.bundler,
@@ -113,7 +109,7 @@ export class ReactNativeAppServer extends DevServer {
     logger.debug('setup web socket handlers');
 
     if (!(this.server && this.bundler && this.inspectorProxy)) {
-      throw new ReactNativeEsbuildError('server is not initialized');
+      throw new Error('server is not initialized');
     }
 
     const { server: hotReloadWss, ...hr } = createHotReloadMiddleware({
@@ -175,8 +171,8 @@ export class ReactNativeAppServer extends DevServer {
 
   // eslint-disable-next-line @typescript-eslint/require-await -- allow no await
   async listen(onListen?: () => void): Promise<HTTPServer> {
-    this.assertBundler(this.bundler);
-    this.assertHTTPServer(this.server);
+    invariant(this.bundler, 'bundler is not ready');
+    invariant(this.server, 'server is not ready');
     const { host, port } = this.devServerOptions;
 
     return this.server.listen(port, () => {

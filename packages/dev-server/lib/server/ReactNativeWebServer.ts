@@ -4,6 +4,7 @@ import http, {
   type IncomingMessage,
 } from 'node:http';
 import type { ServeResult } from 'esbuild';
+import invariant from 'invariant';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
   combineWithDefaultBundleOptions,
@@ -117,8 +118,8 @@ export class ReactNativeWebServer extends DevServer {
   }
 
   async listen(onListen?: () => void): Promise<HTTPServer> {
-    this.assertBundler(this.bundler);
-    this.assertHTTPServer(this.server);
+    invariant(this.bundler, 'bundler is not ready');
+    invariant(this.server, 'server is not ready');
 
     const server = this.server;
     const { host, port } = this.devServerOptions;

@@ -63,7 +63,7 @@ export const getMockedBundler = ({
   hasError,
 }: MockedBundlerParams): ReactNativeEsbuildBundler => {
   return {
-    getBundle: jest.fn().mockReturnValue(
+    getBundleResult: jest.fn().mockReturnValue(
       Promise.resolve({
         result: hasError
           ? null

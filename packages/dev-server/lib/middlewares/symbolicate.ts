@@ -1,9 +1,5 @@
 import { parse } from 'node:url';
 import {
-  ReactNativeEsbuildError,
-  ReactNativeEsbuildErrorCode,
-} from '@react-native-esbuild/core';
-import {
   parseStackFromRawBody,
   symbolicateStackTrace,
 } from '@react-native-esbuild/symbolicate';
@@ -17,24 +13,6 @@ import {
 import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'symbolicate-middleware';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- error
-const handleError = (error: any): void => {
-  if (error instanceof ReactNativeEsbuildError) {
-    switch (error.code) {
-      case ReactNativeEsbuildErrorCode.InvalidTask:
-        logger.error('bundle task is invalid');
-        break;
-      case ReactNativeEsbuildErrorCode.BuildFailure:
-        logger.error('build failed');
-        break;
-      default:
-        logger.error('internal error', error as Error);
-    }
-  } else {
-    logger.error('symbolicate error', error as Error);
-  }
-};
 
 export const createSymbolicateMiddleware: DevServerMiddlewareCreator<{
   webBundleOptions?: Partial<BundleOptions>;
@@ -59,7 +37,7 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator<{
       const stack = parseStackFromRawBody(request.rawBody);
       const targetStack = stack.find(({ file }) => file.startsWith('http'));
       if (!targetStack) {
-        throw new ReactNativeEsbuildError('unable to get symbolicate stack');
+        throw new Error('unable to get symbolicate stack');
       }
 
       let bundleOptions: ParsedBundleOptions | null = null;
@@ -75,7 +53,7 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator<{
       }
 
       if (!bundleOptions) {
-        throw new ReactNativeEsbuildError('unable to parse bundle options');
+        throw new Error('unable to parse bundle options');
       }
 
       bundler
@@ -95,7 +73,7 @@ export const createSymbolicateMiddleware: DevServerMiddlewareCreator<{
           response.writeHead(200).end(JSON.stringify(symbolicateResult));
         })
         .catch((error) => {
-          handleError(error);
+          logger.error('unable to get bundle', error as Error);
           response.writeHead(500).end();
         });
     } catch (error) {
