@@ -29,9 +29,8 @@ import type {
   EsbuildPluginFactory,
   PluginContext,
   ReportableEvent,
-  BundlerSharedData,
 } from '../types';
-import { CacheStorage } from './storages';
+import { CacheStorage, SharedStorage } from './storages';
 import {
   loadConfig,
   getConfigFromGlobal,
@@ -47,7 +46,7 @@ import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static caches = new CacheStorage();
-  public static shared = new Map<number, BundlerSharedData>();
+  public static shared = new SharedStorage();
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
@@ -123,18 +122,14 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   }
 
   private startWatcher(): Promise<void> {
-    const setSharedWatcherData = (data: BundlerSharedData['watcher']): void => {
-      for (const shared of ReactNativeEsbuildBundler.shared.values()) {
-        shared.watcher = data;
-      }
-    };
-
     return FileSystemWatcher.getInstance()
       .setHandler((event, changedFile, stats) => {
         const hasTask = this.buildTasks.size > 0;
-        setSharedWatcherData({
-          changed: hasTask && event === 'change' ? changedFile : null,
-          stats,
+        ReactNativeEsbuildBundler.shared.setValue({
+          watcher: {
+            changed: hasTask && event === 'change' ? changedFile : null,
+            stats,
+          },
         });
 
         for (const { context, handler } of this.buildTasks.values()) {
@@ -324,15 +319,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   ): Promise<BuildTask> {
     const targetTaskId = this.identifyTaskByBundleOptions(bundleOptions);
 
-    if (!ReactNativeEsbuildBundler.shared.has(targetTaskId)) {
-      ReactNativeEsbuildBundler.shared.set(targetTaskId, {
-        watcher: {
-          changed: null,
-          stats: undefined,
-        },
-      });
-    }
-
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
       const buildOptions = await this.getBuildOptionsForBundler(
@@ -412,18 +398,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildResult> {
     this.throwIfNotInitialized();
-
-    // TODO: migrate to SharedStorage
-    ReactNativeEsbuildBundler.shared.set(
-      getIdByOptions(bundleOptions as BundleOptions),
-      {
-        watcher: {
-          changed: null,
-          stats: undefined,
-        },
-      },
-    );
-
     const buildOptions = await this.getBuildOptionsForBundler(
       'bundle',
       combineWithDefaultBundleOptions(bundleOptions),

@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { OnLoadResult } from 'esbuild';
-import invariant from 'invariant';
 import {
   ReactNativeEsbuildBundler as Bundler,
   type EsbuildPluginFactory,
@@ -32,7 +31,7 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
       name: NAME,
       setup: (build): void => {
         const cacheController = Bundler.caches.get(context.id);
-        const shared = Bundler.shared.get(context.id);
+        const bundlerSharedData = Bundler.shared.get(context.id);
         const cacheEnabled = context.config.cache ?? true;
         const {
           stripFlowPackageNames = [],
@@ -45,19 +44,18 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           getReactNativeInitializeCore(context.root),
           ...(config?.injectScriptPaths ?? []),
         ];
-        invariant(shared, 'no shared data');
 
         const onBeforeTransform: FlowRunner = async (
           code,
           args,
           sharedData,
         ) => {
-          const isChangedFile = shared.watcher.changed === args.path;
+          const isChangedFile = bundlerSharedData.watcher.changed === args.path;
           const cacheConfig = await makeCacheConfig(
             cacheController,
             args,
             context,
-            isChangedFile ? shared.watcher.stats : undefined,
+            isChangedFile ? bundlerSharedData.watcher.stats : undefined,
           );
 
           sharedData.hash = cacheConfig.hash;
