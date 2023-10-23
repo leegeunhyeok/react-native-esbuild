@@ -20,7 +20,7 @@ export enum LogLevel {
   Error,
 }
 
-self.logEnabled = false;
+self.logEnabled = true;
 self.logLevel = LogLevel.Trace;
 self.logTimestampFormat = null;
 

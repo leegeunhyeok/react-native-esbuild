@@ -1,6 +1,6 @@
 import path from 'node:path';
-import deepmerge from 'deepmerge';
 import type { BuildOptions } from 'esbuild';
+import deepmerge from 'deepmerge';
 import {
   RESOLVER_MAIN_FIELDS,
   SOURCE_EXTENSIONS,
@@ -10,6 +10,7 @@ import {
   getDevServerPublicPath,
   type BundleOptions,
 } from '@react-native-esbuild/config';
+import { logger } from '../../shared';
 import type { BundleMode, Config } from '../../types';
 
 export const loadConfig = (configFilePath?: string): Config => {
@@ -42,14 +43,13 @@ export const loadConfig = (configFilePath?: string): Config => {
         ? path.resolve(configFilePath)
         : path.resolve(process.cwd(), 'react-native-esbuild.config.js'),
     ).default;
-  } catch {
+  } catch (error) {
     /**
      * Could not resolve configuration file.
      * Fallback to default configuration.
      */
-    process.stderr.write(
-      'could not resolve configuration file. fallback to default\n\n',
-    );
+    logger.warn('could not resolve configuration file');
+    logger.debug('configuration load error', error as Error);
   }
 
   config = config
