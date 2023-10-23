@@ -1,15 +1,14 @@
-import {
-  createSvgTransformPlugin,
-  createReactNativeRuntimeTransformPlugin,
-  createReactNativeWebPlugin,
-} from '@react-native-esbuild/plugins';
 import { ReactNativeWebServer } from '@react-native-esbuild/dev-server';
 import type { BundleOptions } from '@react-native-esbuild/config';
 import { printDebugOptions } from '../helpers';
+import { serveArgvSchema } from '../schema';
+import { presets } from '../presets';
 import { logger } from '../shared';
 import type { Command } from '../types';
-import { serveArgvSchema } from '../schema';
 
+/**
+ * Start dev server for web.
+ */
 export const serve: Command = async (argv): Promise<void> => {
   const serveArgv = serveArgvSchema.parse(argv);
   const serveOptions = {
@@ -33,10 +32,7 @@ export const serve: Command = async (argv): Promise<void> => {
     serveOptions,
     bundleOptions,
   ).initialize((bundler) => {
-    bundler
-      .registerPlugin(createSvgTransformPlugin())
-      .registerPlugin(createReactNativeRuntimeTransformPlugin())
-      .registerPlugin(createReactNativeWebPlugin());
+    presets.web.forEach(bundler.addPlugin.bind(bundler));
   });
 
   await server.listen();

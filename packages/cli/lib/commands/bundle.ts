@@ -1,20 +1,18 @@
 import path from 'node:path';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
-  createAssetRegisterPlugin,
-  createReactNativeRuntimeTransformPlugin,
-  createSvgTransformPlugin,
-  createReactNativeWebPlugin,
-} from '@react-native-esbuild/plugins';
-import {
   DEFAULT_ENTRY_POINT,
   type BundleOptions,
 } from '@react-native-esbuild/config';
 import { printDebugOptions } from '../helpers';
 import { bundleArgvSchema } from '../schema';
+import { presets } from '../presets';
 import { logger } from '../shared';
 import type { Command } from '../types';
 
+/**
+ * Create bundle command.
+ */
 export const bundle: Command = async (argv) => {
   const bundleArgv = bundleArgvSchema.parse(argv);
   const bundleOptions: Partial<BundleOptions> = {
@@ -27,22 +25,17 @@ export const bundle: Command = async (argv) => {
     minify: bundleArgv.minify,
     metafile: bundleArgv.metafile,
   };
+  const root = bundleOptions.entry
+    ? path.dirname(bundleOptions.entry)
+    : process.cwd();
   logger.debug('bundle options');
   printDebugOptions(bundleOptions);
 
-  const bundler = await new ReactNativeEsbuildBundler(
-    bundleOptions.entry ? path.dirname(bundleOptions.entry) : process.cwd(),
-  ).initialize();
+  const bundler = new ReactNativeEsbuildBundler(root);
+  (bundleOptions.platform === 'web' ? presets.web : presets.native).forEach(
+    bundler.addPlugin.bind(bundler),
+  );
 
-  // TODO: Remove `registerPlugin` and add plugin presets(plugin preset builder) instead.
-  if (bundleOptions.platform !== 'web') {
-    bundler.registerPlugin(createAssetRegisterPlugin());
-  }
-
-  bundler
-    .registerPlugin(createSvgTransformPlugin())
-    .registerPlugin(createReactNativeRuntimeTransformPlugin())
-    .registerPlugin(createReactNativeWebPlugin());
-
+  await bundler.initialize();
   await bundler.bundle(bundleOptions);
 };

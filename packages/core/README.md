@@ -13,9 +13,9 @@ ReactNativeEsbuildBundler.bootstrap();
 const bundler = new ReactNativeEsbuildBundler();
 
 bundler
-  .registerPlugin(/* call EsbuildPluginFactory */)
-  .registerPlugin(/* call EsbuildPluginFactory */)
-  .registerPlugin(/* call EsbuildPluginFactory */);
+  .addPlugin(/* call ReactNativeEsbuildPluginCreator */)
+  .addPlugin(/* call ReactNativeEsbuildPluginCreator */)
+  .addPlugin(/* call ReactNativeEsbuildPluginCreator */);
 
 // initialize bundler
 await bundler.initialize();

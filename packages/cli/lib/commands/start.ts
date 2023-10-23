@@ -1,17 +1,16 @@
 /* eslint-disable quotes -- Allow quote in template literal */
 import path from 'node:path';
 import { ReactNativeAppServer } from '@react-native-esbuild/dev-server';
-import {
-  createAssetRegisterPlugin,
-  createSvgTransformPlugin,
-  createReactNativeRuntimeTransformPlugin,
-} from '@react-native-esbuild/plugins';
 import { DEFAULT_ENTRY_POINT } from '@react-native-esbuild/config';
 import { enableInteractiveMode, printDebugOptions } from '../helpers';
-import { logger } from '../shared';
 import { startArgvSchema } from '../schema';
+import { presets } from '../presets';
+import { logger } from '../shared';
 import type { Command } from '../types';
 
+/**
+ * Start dev server for native.
+ */
 export const start: Command = async (argv) => {
   const startArgv = startArgvSchema.parse(argv);
   const entry = path.resolve(startArgv['entry-file'] ?? DEFAULT_ENTRY_POINT);
@@ -24,10 +23,7 @@ export const start: Command = async (argv) => {
 
   const server = await new ReactNativeAppServer(serveOptions).initialize(
     (bundler) => {
-      bundler
-        .registerPlugin(createAssetRegisterPlugin())
-        .registerPlugin(createSvgTransformPlugin())
-        .registerPlugin(createReactNativeRuntimeTransformPlugin());
+      presets.native.forEach(bundler.addPlugin.bind(bundler));
     },
   );
 

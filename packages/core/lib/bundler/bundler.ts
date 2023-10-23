@@ -26,9 +26,9 @@ import type {
   BundlerAdditionalData,
   BundleResult,
   BundleRequestOptions,
-  EsbuildPluginFactory,
   PluginContext,
   ReportableEvent,
+  ReactNativeEsbuildPluginCreator,
 } from '../types';
 import { CacheStorage, SharedStorage } from './storages';
 import {
@@ -49,7 +49,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   public static shared = new SharedStorage();
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
-  private plugins: ReturnType<EsbuildPluginFactory<unknown>>[] = [];
+  private plugins: ReactNativeEsbuildPluginCreator<unknown>[] = [];
   private initialized = false;
   private config: Config;
 
@@ -172,19 +172,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       additionalData,
     };
 
-    const plugins = [
-      /**
-       * `build-status-plugin` is required and must be placed first.
-       */
-      createBuildStatusPlugin({
-        onStart: this.handleBuildStart.bind(this),
-        onUpdate: this.handleBuildStateUpdate.bind(this),
-        onEnd: this.handleBuildEnd.bind(this),
-      }),
-      createMetafilePlugin(),
-      ...this.plugins,
-    ];
-
     return {
       entryPoints: [bundleOptions.entry],
       outfile: bundleOptions.outfile,
@@ -201,8 +188,14 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         js: await getTransformedPreludeScript(bundleOptions, this.root),
       },
       plugins: [
-        // Call the registered plugin factories to create plugin.
-        ...plugins.map((plugin) => plugin(context)),
+        createBuildStatusPlugin(context, {
+          onStart: this.handleBuildStart.bind(this),
+          onUpdate: this.handleBuildStateUpdate.bind(this),
+          onEnd: this.handleBuildEnd.bind(this),
+        }),
+        createMetafilePlugin(context),
+        // Added plugin creators.
+        ...this.plugins.map((plugin) => plugin(context)),
         // Additional plugins in configuration.
         ...(config.plugins ?? []),
       ],
@@ -388,6 +381,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     this.initialized = true;
     spinner.stop();
 
+    return this;
+  }
+
+  public addPlugin(creator: ReactNativeEsbuildPluginCreator<unknown>): this {
+    this.plugins.push(creator);
     return this;
   }
 

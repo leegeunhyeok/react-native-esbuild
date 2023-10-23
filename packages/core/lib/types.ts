@@ -172,9 +172,10 @@ export interface BundleFailureResult {
   error: Error;
 }
 
-export type EsbuildPluginFactory<PluginConfig = void> = (
+export type ReactNativeEsbuildPluginCreator<PluginConfig = void> = (
+  context: PluginContext,
   config?: PluginConfig,
-) => (context: PluginContext) => Plugin;
+) => Plugin;
 
 export interface BundlerSharedData {
   watcher: {
