@@ -10,7 +10,7 @@ import type {
   SwcMinifierOptions,
 } from './types';
 
-const getParseOption = (
+const getParserOptions = (
   isTypescript: boolean,
 ): TsParserConfig | EsParserConfig => {
   return isTypescript
@@ -38,7 +38,7 @@ export const transformWithSwc: Transformer<SwcTransformerOptions> = async (
     inputSourceMap: false,
     inlineSourcesContent: false,
     jsc: {
-      parser: getParseOption(/\.tsx?$/.test(context.path)),
+      parser: getParserOptions(/\.tsx?$/.test(context.path)),
       target: 'es5',
       loose: false,
       externalHelpers: true,
