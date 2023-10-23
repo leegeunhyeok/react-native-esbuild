@@ -3,7 +3,7 @@ import { logger } from '../shared';
 import type { SerializableData } from '../types';
 
 /**
- * Send bundle task status and write bundle to client
+ * Send bundle progress and bundle result to client.
  *
  * @see {@link https://github.com/facebook/metro/blob/v0.78.0/packages/metro/src/Server.js#L664-L672}
  */
@@ -65,7 +65,7 @@ export class BundleResponse {
   }
 
   /**
-   * Send bundle state to client (it will be displayed at the top of device)
+   * Send bundle state to client(it will be displayed at the top of device).
    *
    * If client isn't support multipart format, do nothing.
    *
@@ -106,7 +106,7 @@ export class BundleResponse {
   }
 
   /**
-   * Send bundle result
+   * Send bundle result.
    *
    * - Sample response
    * ```text

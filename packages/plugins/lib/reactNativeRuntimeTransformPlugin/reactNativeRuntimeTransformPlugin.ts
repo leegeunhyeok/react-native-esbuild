@@ -61,14 +61,16 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
           sharedData.hash = cacheConfig.hash;
           sharedData.mtimeMs = cacheConfig.mtimeMs;
 
-          // 1. force re-transform when file changed
+          // 1. Force re-transform when file is changed.
           if (isChangedFile) {
             logger.debug('changed file detected', { path: args.path });
             return { code, done: false };
           }
 
-          // 2. using previous transformed result and skip transform
-          //    when file is not changed and transform result in memory
+          /**
+           * 2. Use previous transformed result and skip transform
+           *    when file is not changed and transform result exist in memory.
+           */
           const inMemoryCache = getTransformedCodeFromInMemoryCache(
             cacheController,
             cacheConfig,
@@ -77,12 +79,12 @@ export const createReactNativeRuntimeTransformPlugin: EsbuildPluginFactory<
             return { code: inMemoryCache, done: true };
           }
 
-          // 3. when cache is disabled, always transform code each build tasks
+          // 3. Transform code on each build task when cache is disabled.
           if (!cacheEnabled) {
             return { code, done: false };
           }
 
-          // 4. trying to get cache from file system
+          // 4. Trying to get cache from file system.
           //    = cache exist ? use cache : transform code
           const cachedCode = await getTransformedCodeFromFileSystemCache(
             cacheController,

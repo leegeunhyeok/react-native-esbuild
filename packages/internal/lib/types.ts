@@ -19,4 +19,4 @@ export interface Asset {
   platform: BundlerSupportPlatform | null;
 }
 
-export type AssetScale = 1 | 2 | 3;
+export type AssetScale = 0.75 | 1 | 1.5 | 2 | 3;

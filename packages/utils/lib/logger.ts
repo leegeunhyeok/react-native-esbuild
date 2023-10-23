@@ -76,7 +76,7 @@ export class Logger {
   private getTimestamp(): string {
     if (!self.logTimestampFormat) return '';
 
-    // eg. "2023-05-09 18:33:19.232 " (has extra padding)
+    // eg. "2023-05-09 18:33:19.232 " (extra padding included)
     return `${gray(dayjs().format(self.logTimestampFormat as string))} `;
   }
 

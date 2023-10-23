@@ -28,6 +28,5 @@ export const fromTemplate = (
     template,
   );
 
-  // add trailing new line
   return `${templateText}\n`;
 };

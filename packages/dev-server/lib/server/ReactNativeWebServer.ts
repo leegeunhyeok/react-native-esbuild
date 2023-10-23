@@ -16,7 +16,7 @@ import { createSymbolicateMiddleware } from '../middlewares';
 import { DevServer } from './DevServer';
 
 /**
- * development server for web platform
+ * Development server for web platform
  */
 export class ReactNativeWebServer extends DevServer {
   private bundleOptions: BundleOptions;
@@ -91,7 +91,7 @@ export class ReactNativeWebServer extends DevServer {
     }
 
     logger.debug('setup bundler');
-    // eslint-disable-next-line no-multi-assign -- allow
+    // eslint-disable-next-line no-multi-assign -- Allow multi assign.
     const bundler = (this.bundler = await new ReactNativeEsbuildBundler(
       this.devServerOptions.root,
     ).initialize({ watcherEnabled: true }));
@@ -104,8 +104,10 @@ export class ReactNativeWebServer extends DevServer {
     logger.debug('create http server');
     this.server = http.createServer((request, response) => {
       this.parseBody(request).then(() => {
-        // 1. send request to middleware
-        // 2. send request to proxy handler if not handled
+        /**
+         * 1. Send request to middlewares.
+         * 2. If not handled, send request to esbuild via proxy handler.
+         */
         symbolicateMiddleware(request, response, () => {
           this.proxyHandler(request, response);
         });

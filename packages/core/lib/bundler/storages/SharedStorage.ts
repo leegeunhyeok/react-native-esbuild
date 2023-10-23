@@ -13,7 +13,7 @@ export class SharedStorage extends Storage<BundlerSharedData> {
 
   public get(key: number): BundlerSharedData {
     if (this.data.has(key)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- has()
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Already `has()` checked.
       return this.data.get(key)!;
     }
 

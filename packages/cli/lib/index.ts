@@ -36,7 +36,7 @@ import { logger } from './shared';
       break;
 
     case 'ram-bundle':
-      // eslint-disable-next-line quotes -- message
+      // eslint-disable-next-line quotes -- Log message.
       logger.warn(`'ram-bundle' command is not supported`);
       process.exit(1);
   }

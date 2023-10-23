@@ -11,7 +11,7 @@ import type {
 
 const getMessage = (data: Data): HmrClientMessage | null => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- from ws data
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Web socket data.
     const parsedData = JSON.parse(String(data));
     return 'type' in parsedData ? (parsedData as HmrClientMessage) : null;
   } catch (error) {
@@ -50,7 +50,7 @@ export const createHotReloadMiddleware = ({
         break;
       }
 
-      // not supported
+      // Not supported
       case 'register-entrypoints':
       case 'log-opt-in':
         break;
@@ -64,7 +64,7 @@ export const createHotReloadMiddleware = ({
   };
 
   /**
-   * inject reload code to application
+   * Send reload code to client.
    *
    * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro-runtime/src/modules/HMRClient.js#L91-L99}
    * @see [turboModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/TurboModule/TurboModuleRegistry.js#L17}
@@ -78,7 +78,7 @@ export const createHotReloadMiddleware = ({
           {
             /**
              * ```ts
-             * // it works the same as the code below
+             * // It works the same as the code below.
              * import { DevSettings } from 'react-native';
              *
              * DevSettings.reload();

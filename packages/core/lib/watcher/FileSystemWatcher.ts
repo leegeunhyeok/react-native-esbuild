@@ -18,7 +18,7 @@ export class FileSystemWatcher {
   private onWatch?: (event: string, path: string, stats?: Stats) => void;
 
   private constructor() {
-    // empty constructor
+    /* Empty constructor */
   }
 
   public static getInstance(): FileSystemWatcher {

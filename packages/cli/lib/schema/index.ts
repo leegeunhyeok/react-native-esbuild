@@ -2,11 +2,6 @@ import path from 'node:path';
 import { SUPPORT_PLATFORMS } from '@react-native-esbuild/config';
 import { z } from 'zod';
 
-export type CliBaseArgv = z.infer<typeof baseArgvSchema>;
-export type StartCommandArgv = z.infer<typeof startArgvSchema>;
-export type ServeCommandArgv = z.infer<typeof serveArgvSchema>;
-export type BundleCommandArgv = z.infer<typeof bundleArgvSchema>;
-
 const resolvePath = (filepath: string): string =>
   path.resolve(process.cwd(), filepath);
 
@@ -33,7 +28,8 @@ export const serveArgvSchema = z.object({
 
 export const bundleArgvSchema = z.object({
   /**
-   * type infer issue with using map
+   * Type infer issue with using `map()`.
+   *
    * ```ts
    * // not work
    * z.union(SUPPORT_PLATFORMS.map(z.literal)),

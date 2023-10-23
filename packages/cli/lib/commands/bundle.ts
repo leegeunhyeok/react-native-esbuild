@@ -34,7 +34,7 @@ export const bundle: Command = async (argv) => {
     bundleOptions.entry ? path.dirname(bundleOptions.entry) : process.cwd(),
   ).initialize();
 
-  // @TODO: remove registerPlugin and add plugin presets (plugin preset builder)
+  // TODO: Remove `registerPlugin` and add plugin presets(plugin preset builder) instead.
   if (bundleOptions.platform !== 'web') {
     bundler.registerPlugin(createAssetRegisterPlugin());
   }

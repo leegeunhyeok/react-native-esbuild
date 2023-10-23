@@ -65,12 +65,14 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
     (async function resolveAssetWithPlatformSuffix() {
       const hasPlatform = typeof query.platform === 'string';
 
-      // 1. resolve platform suffixed asset path
-      // 2. if failed, resolve non-suffixed asset path
+      /**
+       * 1. Resolve platform suffixed asset path.
+       * 2. If unable to resolve, try non-suffixed asset path.
+       */
       try {
         return await resolveAndLoadAssetData(
           assetPath,
-          // @ts-expect-error -- platform is string
+          // @ts-expect-error -- `platform` is string.
           hasPlatform ? query.platform : undefined,
         );
       } catch (error) {

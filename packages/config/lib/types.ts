@@ -11,6 +11,9 @@ export interface BundleOptions {
   assetsDir?: string;
 }
 
+/**
+ * Flags for `BundleOptions`
+ */
 export enum OptionFlag {
   None = 0b00000000,
   PlatformAndroid = 0b00000001,
@@ -18,16 +21,4 @@ export enum OptionFlag {
   PlatformWeb = 0b00000100,
   Dev = 0b00001000,
   Minify = 0b00010000,
-}
-
-// transformers
-export interface CustomTransformRuleBase<T> {
-  /**
-   * Predicator for transform
-   */
-  test: (path: string, code: string) => boolean;
-  /**
-   * Transformer options
-   */
-  options: T | ((path: string, code: string) => T);
 }

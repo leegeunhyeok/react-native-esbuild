@@ -127,9 +127,9 @@ export const getDevServerBasePath = (asset: Asset): string => {
 function assertSuffixPathResult(
   data: OnLoadArgs['pluginData'],
 ): asserts data is SuffixPathResult {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- allow
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- `pluginData` is any type.
   invariant(data.basename, 'basename is empty');
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- allow
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- `pluginData` is any type.
   invariant(data.extension, 'extension is empty');
 }
 
@@ -173,7 +173,7 @@ export const resolveScaledAssets = async (
     name: stripedBasename.replace(extension, ''),
     extension,
     type: extension.substring(1),
-    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare -- allow using default compare function
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare -- Allow sort's default compare function.
     scales: Object.keys(scaledAssets)
       .map(parseFloat)
       .filter((scale: number) => {
@@ -200,9 +200,19 @@ export const resolveAssetPath = async (
     platform: asset.platform,
   }).path;
 
-  // when scale is 1, filename can be suffixed(platform, scale) or plain(`image.png`)
-  // 1. resolve plain asset first(`image.png`)
-  // 2. if file is not exist, resolve suffixed path
+  /**
+   * When scale is 1, filename can be suffixed or non-suffixed(`image.png`).
+   *
+   * - Suffixed
+   *   - `filename.<platform>@<scale>x.ext`
+   *   - `filename.<platform>.ext`
+   *   - `filename@<scale>x.ext`
+   * - Non suffixed
+   *   - `filename.ext`
+   *
+   * 1. Resolve non-suffixed asset first.
+   * 2. If file is not exist, resolve suffixed path.
+   */
   if (targetScale === 1) {
     const result = await fs
       .stat(asset.path)

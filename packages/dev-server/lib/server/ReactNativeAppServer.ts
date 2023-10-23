@@ -22,7 +22,7 @@ import type {
 import { DevServer } from './DevServer';
 
 /**
- * development server for native application
+ * Development server for native application (Android, iOS)
  */
 export class ReactNativeAppServer extends DevServer {
   private wsInitialized = false;
@@ -46,7 +46,7 @@ export class ReactNativeAppServer extends DevServer {
     }
 
     logger.debug('setup bundler');
-    // eslint-disable-next-line no-multi-assign -- allow
+    // eslint-disable-next-line no-multi-assign -- Allow multi assign.
     const bundler = (this.bundler = await new ReactNativeEsbuildBundler(
       this.devServerOptions.root,
     ).initialize({ watcherEnabled: true }));
@@ -66,7 +66,7 @@ export class ReactNativeAppServer extends DevServer {
     this.messageSocketEndpoint = messageSocketEndpoint;
     this.eventsSocketEndpoint = eventsSocketEndpoint;
     this.inspectorProxy =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- InspectorProxy isn't well typed
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- `InspectorProxy` isn't well typed.
       new InspectorProxy(this.devServerOptions.root) as TypedInspectorProxy;
 
     logger.debug('create http server');
@@ -89,7 +89,7 @@ export class ReactNativeAppServer extends DevServer {
       devServerOptions: this.devServerOptions,
     };
 
-    // middleware for http logging
+    // Middleware for logging http requests.
     server.use((request, _response, next) => {
       if (request.method && request.url) {
         logger.debug(`[${request.method}] ${request.url}`, request.headers);
@@ -118,6 +118,12 @@ export class ReactNativeAppServer extends DevServer {
       },
     });
 
+    /**
+     * Inspector proxy handlers.
+     *
+     * - `/inspector/device`
+     * - `/inspector/debug`
+     */
     const inspectorProxyWss = this.inspectorProxy.createWebSocketListeners(
       this.server,
     );
@@ -127,14 +133,12 @@ export class ReactNativeAppServer extends DevServer {
       '/debugger-proxy': this.debuggerProxyEndpoint.server,
       '/message': this.messageSocketEndpoint.server,
       '/events': this.eventsSocketEndpoint.server,
-      // handle `/inspector/device`
-      // handle `/inspector/debug`
       ...inspectorProxyWss,
     };
 
     this.bundler.on('build-start', hr.updateStart);
     this.bundler.on('build-end', ({ revisionId, additionalData }) => {
-      // add additionalData `{ disableRefresh: true }` from `serve-asset-middleware`
+      // `additionalData` can be `{ disableRefresh: true }` by `serve-asset-middleware`.
       if (!additionalData?.disableRefresh) {
         hr.hotReload(revisionId);
       }
@@ -168,7 +172,7 @@ export class ReactNativeAppServer extends DevServer {
     this.wsInitialized = true;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await -- allow no await
+  // eslint-disable-next-line @typescript-eslint/require-await -- Allow no await for return `Promise`.
   async listen(onListen?: () => void): Promise<HTTPServer> {
     invariant(this.bundler, 'bundler is not ready');
     invariant(this.server, 'server is not ready');

@@ -99,7 +99,7 @@ const themeLight = makeTheme({
   },
 });
 
-// @TODO: Add dark theme
+// TODO: Add dark theme
 const themeDark: Theme = {
   ...themeLight,
 };

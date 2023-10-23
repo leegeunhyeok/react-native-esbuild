@@ -36,15 +36,17 @@ export const loadConfig = (configFilePath?: string): Config => {
   };
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires -- config file may not exist
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires -- Config file may not exist.
     config = require(
       configFilePath
         ? path.resolve(configFilePath)
         : path.resolve(process.cwd(), 'react-native-esbuild.config.js'),
     ).default;
   } catch {
-    // could not resolve configuration file
-    // fallback to default configuration
+    /**
+     * Could not resolve configuration file.
+     * Fallback to default configuration.
+     */
     process.stderr.write(
       'could not resolve configuration file. fallback to default\n\n',
     );
@@ -52,12 +54,12 @@ export const loadConfig = (configFilePath?: string): Config => {
 
   config = config
     ? deepmerge(baseConfig, config, {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- deepmerge typing
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- `deepmerge` isn't well typed.
         arrayMerge: (_destinationArray, sourceArray) => sourceArray,
       })
     : baseConfig;
 
-  // assign config to global context
+  // Assign config to global context.
   Object.defineProperty(self, '_config', {
     value: config,
     writable: false,
@@ -80,7 +82,12 @@ export const getEsbuildWebConfig = (
 ): BuildOptions => {
   return {
     format: 'iife',
-    // cannot use both `outfile` and `outdir`
+    /**
+     * Cannot use both `outfile` and `outdir`.
+     *
+     * - bundle mode: `outfile`
+     * - watch mode:`outdir`
+     */
     outdir: mode === 'bundle' ? undefined : getDevServerPublicPath(root),
     outfile: mode === 'bundle' ? bundleOptions.outfile : undefined,
   };

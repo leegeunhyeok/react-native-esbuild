@@ -77,7 +77,7 @@ export class TransformFlowBuilder {
     this.onBefore && transformFlow.beforeTransform(this.onBefore);
     this.onAfter && transformFlow.afterTransform(this.onAfter);
 
-    // 1. inject initializeCore and specified scripts to entry file
+    // 1. Inject initializeCore and specified scripts to entry file.
     if (this.injectScriptPaths.length) {
       const entryFile = path.resolve(this.context.root, this.context.entry);
       const combineInjectScripts = (
@@ -101,7 +101,7 @@ export class TransformFlowBuilder {
       });
     }
 
-    // 2. fully transform and skip other flows
+    // 2. Fully transform and skip other flows.
     const fullyTransformPackagesRegExp = this.getNodePackageRegExp(
       this.fullyTransformPackageNames,
     );
@@ -122,7 +122,7 @@ export class TransformFlowBuilder {
       });
     }
 
-    // 3. strip flow syntax
+    // 3. Strip flow syntax.
     const stripFlowPackageNamesRegExp = this.getNodePackageRegExp(
       this.stripFlowPackageNames,
     );
@@ -141,7 +141,7 @@ export class TransformFlowBuilder {
           stripFlowPackageNamesRegExp.test(args.path) ||
           isFlow(code, args.path)
         ) {
-          // eslint-disable-next-line no-param-reassign -- allow reassign
+          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = await stripFlowWithSucrase(
             code,
             this.getTransformContext(args),
@@ -152,7 +152,7 @@ export class TransformFlowBuilder {
       });
     }
 
-    // 4. apply additional babel rules
+    // 4. Apply additional babel rules.
     if (this.additionalBabelRules.length) {
       transformFlow.addFlow(async (code, args) => {
         for await (const rule of this.additionalBabelRules) {
@@ -162,7 +162,7 @@ export class TransformFlowBuilder {
                 ? rule.options(args.path, code)
                 : rule.options;
 
-            // eslint-disable-next-line no-param-reassign -- allow reassign
+            // eslint-disable-next-line no-param-reassign -- Allow reassign.
             code = await transformWithBabel(
               code,
               this.getTransformContext(args),
@@ -174,7 +174,7 @@ export class TransformFlowBuilder {
       });
     }
 
-    // 5. apply additional swc rules
+    // 5. Apply additional swc rules.
     if (this.additionalSwcRules.length) {
       transformFlow.addFlow(async (code, args) => {
         for await (const rule of this.additionalSwcRules) {
@@ -184,7 +184,7 @@ export class TransformFlowBuilder {
                 ? rule.options(args.path, code)
                 : rule.options;
 
-            // eslint-disable-next-line no-param-reassign -- allow reassign
+            // eslint-disable-next-line no-param-reassign -- Allow reassign.
             code = await transformWithSwc(
               code,
               this.getTransformContext(args),
@@ -196,7 +196,7 @@ export class TransformFlowBuilder {
       });
     }
 
-    // 6. transform to es5 (end of transform flow)
+    // 6. Transform code to es5.
     transformFlow.addFlow(async (code, args) => {
       return {
         code: await transformWithSwc(code, this.getTransformContext(args)),

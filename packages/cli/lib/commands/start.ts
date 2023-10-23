@@ -1,4 +1,4 @@
-/* eslint-disable quotes -- allow quote in template literal */
+/* eslint-disable quotes -- Allow quote in template literal */
 import path from 'node:path';
 import { ReactNativeAppServer } from '@react-native-esbuild/dev-server';
 import {

@@ -10,7 +10,7 @@ const LOGO = `
            e88"   e88"
 `;
 
-// center column of `LOGO`
+// Center column index of `LOGO`
 const LOGO_CENTER_X = 18;
 
 export const ESBUILD_LABEL = ' » esbuild ';

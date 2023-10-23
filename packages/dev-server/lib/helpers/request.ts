@@ -10,13 +10,13 @@ const toBoolean = (val: z.infer<typeof boolean>): boolean => val === 'true';
 const boolean = z.union([z.literal('true'), z.literal('false')]);
 const bundleSearchParamSchema = z
   .object({
-    // required
+    // Required field.
     platform: z.union([
       z.literal('android'),
       z.literal('ios'),
       z.literal('web'),
     ]),
-    // optional
+    // Optional fields.
     dev: boolean.default('true').transform(toBoolean),
     minify: boolean.default('false').transform(toBoolean),
     runModule: boolean.default('false').transform(toBoolean),
@@ -41,7 +41,7 @@ export const parseBundleOptionsFromRequestUrl = (
     };
   }
 
-  // eslint-disable-next-line no-nested-ternary -- allow nested ternary operator
+  // eslint-disable-next-line no-nested-ternary -- Allow nested ternary operator.
   const type = pathname.endsWith('.bundle')
     ? BundleRequestType.Bundle
     : pathname.endsWith('.map')

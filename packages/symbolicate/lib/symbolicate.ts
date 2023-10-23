@@ -65,7 +65,7 @@ const originalPositionFor = (
       );
       return {
         ...targetFrame,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Object.entries
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Allow for `Object.entries()`.
         ...(value ? { [targetKey]: value } : null),
       };
     },
@@ -101,7 +101,7 @@ const getCodeFrame = (
     const source = sourcemapConsumer.sourceContentFor(frame.file);
     const { lineNumber, column, file } = frame;
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment -- codeFrameColumns isn't well typed
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment -- `codeFrameColumns` type isn't defined.
       content: codeFrameColumns(
         source,
         {
@@ -125,7 +125,7 @@ export const symbolicateStackTrace = async (
   const sourcemapConsumer = await new SourceMapConsumer(sourcemapContent);
 
   const frames = stack
-    // filter bundled files from dev-server
+    // Filter files that served bundle from dev-server.
     .filter(({ file }) => file.startsWith('http'))
     .map((frame) => originalPositionFor(sourcemapConsumer, frame))
     .map(collapseFrame);

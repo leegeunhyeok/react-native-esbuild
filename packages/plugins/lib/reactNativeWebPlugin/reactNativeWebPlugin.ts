@@ -10,9 +10,9 @@ import { generateIndexPage } from './helpers';
 
 const NAME = 'react-native-web-plugin';
 const RESOLVE_PATTERNS = [
-  // for relative path import of initializeCore
+  // For relative path import of initializeCore.
   /node_modules\/react-native\//,
-  // for import via package name
+  // For import via package name.
   /^react-native$/,
 ];
 

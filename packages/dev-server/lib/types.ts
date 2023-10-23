@@ -66,7 +66,7 @@ export interface LogMessage {
     | 'groupCollapsed'
     | 'groupEnd'
     | 'debug';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- follow metro types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Following metro's type definition.
   data: any[];
   mode: 'BRIDGE' | 'NOBRIDGE';
 }
@@ -121,7 +121,7 @@ export type BroadcastCommand = 'reload' | 'devMenu';
 
 export type SerializableData = string | Buffer | Uint8Array;
 
-// TODO: convert to declare module 'metro-inspector-proxy' { ... }
+// TODO: Convert to `declare module 'metro-inspector-proxy' { ... }`
 export interface TypedInspectorProxy {
   (projectRoot: string): TypedInspectorProxy;
 

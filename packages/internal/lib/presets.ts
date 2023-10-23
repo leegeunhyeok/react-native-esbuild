@@ -1,4 +1,4 @@
-/* eslint-disable quotes -- allow using backtick */
+/* eslint-disable quotes -- Allow using backtick */
 import fs from 'node:fs/promises';
 import type { BundleOptions } from '@react-native-esbuild/config';
 import { resolveFromRoot, wrapWithIIFE } from './helpers';
@@ -23,7 +23,7 @@ export const getInjectVariables = (dev: boolean): string[] => [
 ];
 
 const getReactNativePolyfills = (root: string): Promise<string[]> => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- should dynamic require
+  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Allow dynamic require.
   const getPolyfills = require(
     resolveFromRoot(REACT_NATIVE_GET_POLYFILLS_PATH, root),
   ) as () => string[];
@@ -67,7 +67,7 @@ export const getPreludeScript = async (
   return initialScripts;
 };
 /**
- * get asset registration script
+ * Get asset registration script.
  *
  * @see {@link https://github.com/facebook/metro/blob/v0.78.0/packages/metro/src/Bundler/util.js#L29-L57}
  * @see {@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/Image/RelativeImageStub.js}

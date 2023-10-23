@@ -8,8 +8,7 @@ export const resolveFromRoot = (
   return require.resolve(targetPath, {
     paths: Array.from(
       new Set([
-        // add current workspace directory to module resolution path.
-        // improve for workspace projects (eg. monorepo)
+        // Add current directory to module resolution path for workspace projects(eg. monorepo).
         path.join(root, 'node_modules'),
         ...(require.main?.paths ?? []),
       ]),

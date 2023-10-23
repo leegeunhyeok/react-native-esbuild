@@ -6,7 +6,7 @@ export const getCommand = <RawArgv extends { _: (string | number)[] }>(
   position = 0,
 ): string => argv._[position].toString();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Allow any type for debugging.
 export const printDebugOptions = <T extends Record<string, any>>(
   options: T,
 ): void => {

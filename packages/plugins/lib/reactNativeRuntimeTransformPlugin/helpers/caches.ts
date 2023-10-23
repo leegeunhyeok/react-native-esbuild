@@ -7,19 +7,20 @@ import type {
 } from '@react-native-esbuild/core';
 import type { CacheConfig } from '../../types';
 
+/**
+ * Generate hash that contains the file path, modification time, and bundle options.
+ *
+ * `id` is combined(platform, dev, minify) bundle options value in `@react-native-esbuild`.
+ *
+ * hash = md5(id + modified time + file path)
+ *            number + number    + string
+ */
 export const makeCacheConfig = async (
   controller: CacheController,
   args: OnLoadArgs,
   context: PluginContext,
   stats?: Stats,
 ): Promise<CacheConfig> => {
-  /**
-   * `id` is combined value (platform, dev, minify)
-   * use `id` as filesystem hash key generation
-   *
-   * md5(id + modified time + file path) = cache key
-   *     number + number    + string
-   */
   const mtimeMs = (stats ?? (await fs.stat(args.path))).mtimeMs;
   return {
     hash: controller.getCacheHash(context.id + mtimeMs + args.path),
@@ -32,7 +33,7 @@ export const getTransformedCodeFromInMemoryCache = (
   cacheConfig: CacheConfig,
 ): string | null => {
   const inMemoryCache = controller.readFromMemory(cacheConfig.hash);
-  // file is not modified, using cache data
+  // If file is not modified, use cache data instead.
   return inMemoryCache && inMemoryCache.modifiedAt === cacheConfig.mtimeMs
     ? inMemoryCache.data
     : null;

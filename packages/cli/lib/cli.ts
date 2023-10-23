@@ -156,7 +156,7 @@ export const cli = (): RawArgv | Promise<RawArgv> => {
               default: false,
             },
             ...commonOptions,
-            // dummy options
+            // Dummy options.
             transformer: {
               describe: 'no-op',
               type: 'string',

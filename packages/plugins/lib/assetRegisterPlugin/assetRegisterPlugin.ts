@@ -27,7 +27,7 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
         const { convertSvg = false } = context.config.transformer ?? {};
         const { assetExtensions = ASSET_EXTENSIONS } = config;
         const filteredAssetExtensions = assetExtensions.filter((extension) =>
-          // if using svgr, ignore svg assets for file loader
+          // When `transformer.convertSvg` is `true`, filter out svg from asset extensions.
           convertSvg ? extension !== '.svg' : true,
         );
         const assetExtensionsFilter = new RegExp(
@@ -52,17 +52,14 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
           assets = [];
         });
 
+        /**
+         * 1. Resolve platform and scale suffixed asset(eg. `image@1x.ios.png`).
+         * 2. Resolve platform suffixed asset(eg. `image.ios.png`).
+         * 3. Resolve scale suffixed asset(eg. `image@1x.png`).
+         * 4. Resolve non-suffixed asset(eg. `image.png`).
+         */
         build.onResolve({ filter: assetExtensionsFilter }, async (args) => {
           if (args.pluginData) return null;
-
-          /**
-           * Resolve assets flow
-           *
-           * 1. Resolve platform and scale suffixed asset (eg. `image@1x.ios.png`)
-           * 2. Resolve platform scale suffixed asset (eg. `image.ios.png`)
-           * 3. Resolve scale suffixed asset (eg. `image@1x.png`)
-           * 4. Resolve original asset (eg. `image.png`)
-           */
 
           // 1
           let suffixedPathResult = getSuffixedPath(args.path, {
@@ -118,7 +115,7 @@ export const createAssetRegisterPlugin: EsbuildPluginFactory<
         );
 
         build.onEnd(async (result) => {
-          // skip copying assets on build failure
+          // Skip copying assets when build failure.
           if (result.errors.length) return;
           await copyAssetsToDestination(context, assets);
         });

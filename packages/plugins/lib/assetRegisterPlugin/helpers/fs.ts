@@ -10,7 +10,7 @@ import {
 } from './path';
 
 /**
- * copy assets to platform specified destination
+ * Copy assets to platform specified destination.
  *
  * @see {@link https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/assetPathUtils.ts}
  */

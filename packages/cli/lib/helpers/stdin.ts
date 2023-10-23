@@ -22,7 +22,7 @@ export const enableInteractiveMode = (
     (_data, key: { ctrl: boolean; name: string }) => {
       const { ctrl, name } = key;
 
-      // shortcuts
+      // Handle shortcuts.
       if (ctrl) {
         switch (name) {
           // Ctrl + C: SIGINT
