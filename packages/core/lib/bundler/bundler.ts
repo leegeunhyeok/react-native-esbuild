@@ -177,15 +177,9 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
        * `build-status-plugin` is required and must be placed first
        */
       createBuildStatusPlugin({
-        onStart: (context) => {
-          this.handleBuildStart(context);
-        },
-        onUpdate: (buildState, context) => {
-          this.handleBuildStateUpdate(buildState, context);
-        },
-        onEnd: (result, context) => {
-          this.handleBuildEnd(result, context);
-        },
+        onStart: this.handleBuildStart.bind(this),
+        onUpdate: this.handleBuildStateUpdate.bind(this),
+        onEnd: this.handleBuildEnd.bind(this),
       }),
       createMetafilePlugin(),
       ...this.plugins,

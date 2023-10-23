@@ -97,7 +97,6 @@ export class ReactNativeAppServer extends DevServer {
       next();
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- for bind
     server.use(this.inspectorProxy.processRequest.bind(this.inspectorProxy));
     server.use(createServeAssetMiddleware(context));
     server.use(createServeBundleMiddleware(context));
