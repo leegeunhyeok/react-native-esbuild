@@ -45,7 +45,7 @@ export const start: Command = async (argv) => {
     ) {
       logger.info(`> press 'r' to reload`);
       logger.info(`> press 'd' to open developer menu`);
-      process.stdout.write('\n');
+      logger.nl();
     }
   });
 };

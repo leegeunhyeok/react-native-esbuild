@@ -181,7 +181,7 @@ export class ReactNativeAppServer extends DevServer {
     return this.server.listen(port, () => {
       this.setupWebSocketServers();
       logger.info(`dev server listening on http://${host}:${port}`);
-      process.stdout.write('\n');
+      logger.nl();
       onListen?.();
     });
   }

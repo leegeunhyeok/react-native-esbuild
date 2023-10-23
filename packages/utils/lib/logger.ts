@@ -141,6 +141,10 @@ export class Logger {
     this.logLevel = level;
   }
 
+  public nl(): void {
+    process.stdout.write('\n');
+  }
+
   public trace(message: string, extra?: object): void {
     if (this.getLogLevel() > LogLevel.Trace) return;
 

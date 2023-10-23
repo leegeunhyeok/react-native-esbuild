@@ -50,6 +50,7 @@ export const loadConfig = (configFilePath?: string): Config => {
      */
     logger.warn('could not resolve configuration file');
     logger.debug('configuration load error', error as Error);
+    logger.nl();
   }
 
   config = config

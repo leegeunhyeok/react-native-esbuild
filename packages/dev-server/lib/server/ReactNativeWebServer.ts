@@ -132,7 +132,7 @@ export class ReactNativeWebServer extends DevServer {
     server.listen(port, () => {
       logger.info(`dev server listening on http://${host}:${port}`);
       logger.debug(`proxy to esbuild ${serveResult.host}:${serveResult.port}`);
-      process.stdout.write('\n');
+      logger.nl();
       onListen?.();
     });
 
