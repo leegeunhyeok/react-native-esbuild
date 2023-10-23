@@ -13,10 +13,7 @@ import { logger } from './shared';
   ReactNativeEsbuildBundler.setGlobalLogLevel(
     options.verbose ? LogLevel.Trace : LogLevel.Info,
   );
-
-  if (options['reset-cache']) {
-    await ReactNativeEsbuildBundler.resetCache();
-  }
+  self.shouldResetCache = options['reset-cache'];
 
   switch (getCommand(argv)) {
     case 'start':

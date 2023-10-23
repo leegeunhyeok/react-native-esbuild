@@ -370,6 +370,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       logger.warn('bundler already initialized');
       return this;
     }
+
+    // Initialize.
     const spinner = ora({ discardStdin: false }).start(
       'Bundler initializing...',
     );
@@ -380,6 +382,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
     this.initialized = true;
     spinner.stop();
+
+    // Post initialize.
+    if (self.shouldResetCache) {
+      await ReactNativeEsbuildBundler.resetCache();
+    }
 
     return this;
   }
