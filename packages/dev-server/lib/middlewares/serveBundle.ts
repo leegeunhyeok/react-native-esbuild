@@ -4,10 +4,13 @@ import type {
   ReactNativeEsbuildBundler,
 } from '@react-native-esbuild/core';
 import { getIdByOptions } from '@react-native-esbuild/config';
-import { BundleResponse, parseBundleOptionsFromRequestUrl } from '../helpers';
+import {
+  BundleResponse,
+  parseBundleOptionsFromRequestUrl,
+  type ParsedBundleOptions,
+} from '../helpers';
 import { logger } from '../shared';
 import { BundleRequestType, type DevServerMiddlewareCreator } from '../types';
-import type { ParsedBundleOptions } from '../helpers';
 
 const TAG = 'serve-bundle-middleware';
 

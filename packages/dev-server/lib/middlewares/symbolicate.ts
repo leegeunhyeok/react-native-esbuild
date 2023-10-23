@@ -4,12 +4,12 @@ import {
   symbolicateStackTrace,
 } from '@react-native-esbuild/symbolicate';
 import type { BundleOptions } from '@react-native-esbuild/config';
-import { logger } from '../shared';
-import type { ParsedBundleOptions } from '../helpers';
 import {
   parseBundleOptionsForWeb,
   parseBundleOptionsFromRequestUrl,
+  type ParsedBundleOptions,
 } from '../helpers';
+import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'symbolicate-middleware';

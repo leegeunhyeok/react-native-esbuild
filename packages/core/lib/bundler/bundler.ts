@@ -31,6 +31,8 @@ import type {
   ReactNativeEsbuildPluginCreator,
 } from '../types';
 import { CacheStorage, SharedStorage } from './storages';
+import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
+import { BundlerEventEmitter } from './events';
 import {
   loadConfig,
   getConfigFromGlobal,
@@ -40,8 +42,6 @@ import {
   getLoaderOption,
   getEsbuildWebConfig,
 } from './helpers';
-import { BundlerEventEmitter } from './events';
-import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {

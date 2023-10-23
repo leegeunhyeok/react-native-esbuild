@@ -5,13 +5,13 @@ import type { OnLoadArgs } from 'esbuild';
 import { imageSize } from 'image-size';
 import md5 from 'md5';
 import invariant from 'invariant';
+import type { PluginContext } from '@react-native-esbuild/core';
+import type { Asset, AssetScale } from '@react-native-esbuild/internal';
 import {
   ASSET_PATH,
   SUPPORT_PLATFORMS,
   type BundlerSupportPlatform,
 } from '@react-native-esbuild/config';
-import type { PluginContext } from '@react-native-esbuild/core';
-import type { Asset, AssetScale } from '@react-native-esbuild/internal';
 import type { SuffixPathResult } from '../../types';
 
 const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(

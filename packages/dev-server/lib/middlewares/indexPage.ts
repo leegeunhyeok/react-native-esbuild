@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { DevServerMiddlewareCreator } from '../types';
 import { logger } from '../shared';
+import type { DevServerMiddlewareCreator } from '../types';
 
 const TAG = 'index-page-middleware';
 

@@ -1,11 +1,10 @@
 import path from 'node:path';
-import { OptionFlag } from '../types';
-import type { BundleOptions } from '../types';
 import {
   DEFAULT_ENTRY_POINT,
   DEFAULT_OUTFILE,
   LOCAL_CACHE_DIR,
 } from '../shares';
+import { OptionFlag, type BundleOptions } from '../types';
 
 export const combineWithDefaultBundleOptions = (
   options: Partial<BundleOptions>,

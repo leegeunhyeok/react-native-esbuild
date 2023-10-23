@@ -10,9 +10,9 @@ import {
   combineWithDefaultBundleOptions,
   type BundleOptions,
 } from '@react-native-esbuild/config';
+import { createSymbolicateMiddleware } from '../middlewares';
 import { logger } from '../shared';
 import type { DevServerOptions } from '../types';
-import { createSymbolicateMiddleware } from '../middlewares';
 import { DevServer } from './DevServer';
 
 /**
