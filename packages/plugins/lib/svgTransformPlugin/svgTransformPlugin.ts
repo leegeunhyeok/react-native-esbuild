@@ -9,6 +9,8 @@ export const createSvgTransformPlugin: ReactNativeEsbuildPluginCreator = (
 ) => ({
   name: NAME,
   setup: (build): void => {
+    const isNative = ['android', 'ios'].includes(context.platform);
+
     if (!(context.config.transformer?.convertSvg ?? false)) {
       return;
     }
@@ -20,7 +22,7 @@ export const createSvgTransformPlugin: ReactNativeEsbuildPluginCreator = (
           rawSvg,
           {
             plugins: ['@svgr/plugin-jsx'],
-            native: true,
+            native: isNative,
           },
           { filePath: args.path },
         ),

@@ -14,6 +14,7 @@ const native: ReactNativeEsbuildPluginCreator<unknown>[] = [
 
 const web: ReactNativeEsbuildPluginCreator<unknown>[] = [
   createReactNativeWebPlugin,
+  createSvgTransformPlugin,
   createReactNativeRuntimeTransformPlugin,
 ];
 
