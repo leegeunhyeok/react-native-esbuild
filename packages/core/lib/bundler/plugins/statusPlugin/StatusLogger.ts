@@ -16,6 +16,7 @@ export class StatusLogger {
   private resolvedModules = new Set();
   private loadedModules = 0;
   private buildStartedAt = 0;
+  private previousPercent = 0;
 
   constructor(private context: PluginContext) {
     this.platformText = colors.gray(
@@ -34,16 +35,23 @@ export class StatusLogger {
     const { resolved } = this.getStatus();
     const loaded = this.loadedModules;
 
-    // Enable interactive message when only in a TTY environment
+    // Enable interactive message when only in a TTY environment.
     if (isTTY()) {
       this.totalModuleCount = Math.max(resolved, this.totalModuleCount);
       const percent = Math.min(
         (loaded / this.totalModuleCount) * 100 || 0,
         100,
       );
-      this.spinner.text = `${
-        this.platformText
-      } build in progress... ${percent.toFixed(2)}% (${loaded}/${resolved})`;
+
+      // To avoid percent value reduction.
+      if (this.previousPercent === 100 || this.previousPercent < percent) {
+        this.previousPercent = percent;
+      }
+
+      this.spinner.text = `${this.platformText} build in progress... ${Math.max(
+        this.previousPercent,
+        percent,
+      ).toFixed(2)}% (${loaded}/${resolved})`;
     }
   }
 
@@ -91,6 +99,7 @@ export class StatusLogger {
     this.resolvedModules.clear();
     this.loadedModules = 0;
     this.buildStartedAt = new Date().getTime();
+    this.previousPercent = 0;
     this.statusUpdate();
 
     isTTY()
@@ -122,7 +131,7 @@ export class StatusLogger {
       fromTemplate(getSummaryTemplate(), {
         warnings: colors.yellow(warnings.length.toString()),
         errors: colors.red(errors.length.toString()),
-        duration: colors.cyan(duration.toString()),
+        duration: colors.cyan(duration.toFixed(3)),
       }),
     );
 
