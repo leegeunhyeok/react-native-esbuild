@@ -1,9 +1,6 @@
 import type { OnLoadArgs } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
-import type {
-  Options as SwcTransformOptions,
-  JsMinifyOptions as SwcJsMinifyOptions,
-} from '@swc/core';
+import type { Options as SwcTransformOptions } from '@swc/core';
 
 export type Transformer<Options> = (
   code: string,
@@ -20,28 +17,6 @@ export type SyncTransformer<Options> = (
 export interface TransformerContext {
   path: string;
   root: string;
-}
-
-export interface BabelTransformerOptions {
-  /**
-   * Transform with project's babel configurations.
-   */
-  fullyTransform?: boolean;
-  overrideOptions?: BabelTransformOptions;
-}
-
-export interface SwcTransformerOptions {
-  /**
-   * Preset for swc options.
-   *
-   * Defaults to 'react-native'
-   */
-  preset?: 'react-native' | 'jest';
-  overrideOptions?: SwcTransformOptions;
-}
-
-export interface SwcMinifierOptions {
-  overrideOptions?: SwcJsMinifyOptions;
 }
 
 export interface TransformRuleBase<T> {
