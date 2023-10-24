@@ -44,7 +44,7 @@
   "dependencies": {
     "@jest/create-cache-key-function": "^29.7.0",
     "@react-native-esbuild/core": "workspace:*",
-    "@react-native-esbuild/internal": "workspace:^",
+    "@react-native-esbuild/internal": "workspace:*",
     "@react-native-esbuild/transformer": "workspace:*",
     "md5": "^2.3.0"
   },

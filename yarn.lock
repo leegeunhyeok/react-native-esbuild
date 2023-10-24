@@ -4956,7 +4956,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/internal@workspace:*, @react-native-esbuild/internal@workspace:^, @react-native-esbuild/internal@workspace:packages/internal":
+"@react-native-esbuild/internal@workspace:*, @react-native-esbuild/internal@workspace:packages/internal":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/internal@workspace:packages/internal"
   dependencies:
@@ -4973,7 +4973,7 @@ __metadata:
     "@jest/create-cache-key-function": ^29.7.0
     "@jest/transform": ^29.7.0
     "@react-native-esbuild/core": "workspace:*"
-    "@react-native-esbuild/internal": "workspace:^"
+    "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/transformer": "workspace:*"
     "@types/md5": ^2.3.2
     esbuild: ^0.19.5
