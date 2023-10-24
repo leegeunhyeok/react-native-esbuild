@@ -24,14 +24,9 @@ export const createAssetRegisterPlugin: ReactNativeEsbuildPluginCreator<
 > = (context, config = DEFAULT_PLUGIN_CONFIG) => ({
   name: NAME,
   setup: (build) => {
-    const { convertSvg = false } = context.config.transformer ?? {};
     const { assetExtensions = ASSET_EXTENSIONS } = config;
-    const filteredAssetExtensions = assetExtensions.filter((extension) =>
-      // When `transformer.convertSvg` is `true`, filter out svg from asset extensions.
-      convertSvg ? extension !== '.svg' : true,
-    );
     const assetExtensionsFilter = new RegExp(
-      `.(${filteredAssetExtensions.join('|')})$`,
+      `.(${assetExtensions.join('|')})$`,
     );
     let assets: Asset[] = [];
 

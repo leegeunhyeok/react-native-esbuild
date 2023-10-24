@@ -65,7 +65,6 @@ Resolver configurations.
 
 Transformer configurations.
 
-- `transformer.convertSvg`: If `true`, convert svg assets to `react-native-svg` based component.
 - `transformer.stripFlowPackageNames`: Package names to strip flow syntax from (Defaults to `['react-native']`)
 - `transformer.fullyTransformPackageNames`: Package names to fully transform with [metro-react-native-babel-preset](https://github.com/facebook/react-native/tree/main/packages/react-native-babel-preset) from
   :::warning
@@ -142,10 +141,6 @@ interface Config {
    * Transformer configurations
    */
   transformer?: {
-    /**
-     * If `true`, convert svg assets to `react-native-svg` based component
-     */
-    convertSvg?: boolean;
     /**
      * Strip flow syntax.
      *

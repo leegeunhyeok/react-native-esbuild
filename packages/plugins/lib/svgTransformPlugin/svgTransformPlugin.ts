@@ -11,10 +11,6 @@ export const createSvgTransformPlugin: ReactNativeEsbuildPluginCreator = (
   setup: (build): void => {
     const isNative = ['android', 'ios'].includes(context.platform);
 
-    if (!(context.config.transformer?.convertSvg ?? false)) {
-      return;
-    }
-
     build.onLoad({ filter: /\.svg$/ }, async (args) => {
       const rawSvg = await fs.readFile(args.path, { encoding: 'utf8' });
       return {

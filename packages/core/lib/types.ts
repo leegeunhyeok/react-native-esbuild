@@ -58,10 +58,6 @@ export interface Config {
    */
   transformer?: {
     /**
-     * If `true`, convert svg assets to `react-native-svg` based component
-     */
-    convertSvg?: boolean;
-    /**
      * Strip flow syntax.
      *
      * Defaults to `['react-native']`

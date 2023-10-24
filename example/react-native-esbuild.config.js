@@ -7,7 +7,6 @@ exports.default = {
     timestamp: 'YYYY-MM-DD HH:mm:ss.SSS',
   },
   transformer: {
-    convertSvg: true,
     stripFlowPackageNames: ['react-native'],
     fullyTransformPackageNames: [],
     additionalTransformRules: {

@@ -29,7 +29,6 @@ export const IMAGE_EXTENSIONS = [
   '.jpeg',
   '.jpg',
   '.png',
-  '.svg',
   '.tiff',
   '.tif',
   '.webp',
