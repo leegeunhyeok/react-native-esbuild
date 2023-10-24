@@ -197,12 +197,6 @@ export interface Cache {
   modifiedAt: number;
 }
 
-export type Transformer<Options> = (
-  code: string,
-  context: { path: string; root: string },
-  customOption?: Options,
-) => string | Promise<string>;
-
 export type ReportableEvent = ClientLogEvent;
 
 /**

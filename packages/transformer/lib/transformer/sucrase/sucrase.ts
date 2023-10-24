@@ -1,5 +1,5 @@
 import { transform, type Transform } from 'sucrase';
-import type { SyncTransformer } from '../types';
+import type { SyncTransformer } from '../../types';
 
 const TRANSFORM_FOR_STRIP_FLOW: Transform[] = ['flow', 'imports', 'jsx'];
 

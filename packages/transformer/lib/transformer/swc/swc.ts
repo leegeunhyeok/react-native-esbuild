@@ -1,54 +1,23 @@
-import {
-  transform,
-  transformSync,
-  minify,
-  type Options,
-  type TsParserConfig,
-  type EsParserConfig,
-} from '@swc/core';
+import { transform, transformSync, minify, type Options } from '@swc/core';
 import type {
   Transformer,
   SwcTransformerOptions,
   SwcMinifierOptions,
   SyncTransformer,
   TransformerContext,
-} from '../types';
-
-const getParserOptions = (
-  isTypescript: boolean,
-): TsParserConfig | EsParserConfig => {
-  return isTypescript
-    ? ({
-        syntax: 'typescript',
-        tsx: true,
-        dynamicImport: true,
-      } as TsParserConfig)
-    : ({
-        syntax: 'ecmascript',
-        jsx: true,
-        exportDefaultFrom: true,
-      } as EsParserConfig);
-};
+} from '../../types';
+import * as presets from './presets';
 
 const getSwcOptions = (
   context: TransformerContext,
   options?: SwcTransformerOptions,
 ): Options => {
   return {
-    minify: false,
-    sourceMaps: false,
-    isModule: true,
-    inputSourceMap: false,
-    inlineSourcesContent: false,
-    jsc: {
-      parser: getParserOptions(/\.tsx?$/.test(context.path)),
-      target: 'es5',
-      loose: false,
-      externalHelpers: true,
-      keepClassNames: true,
-    },
-    // Override to custom options.
-    ...options?.customOptions,
+    ...(options?.preset === 'jest'
+      ? presets.getJestOptions(context)
+      : presets.getReactNativeRuntimeOptions(context)),
+    ...options?.overrideOptions,
+    filename: context.path,
     root: context.root,
   };
 };
@@ -92,7 +61,7 @@ export const minifyWithSwc: Transformer<SwcMinifierOptions> = async (
   _context,
   options,
 ) => {
-  const { code: minifiedCode } = await minify(code, options?.customOptions);
+  const { code: minifiedCode } = await minify(code, options?.overrideOptions);
 
   if (typeof minifiedCode !== 'string') {
     throw new Error('swc minified source is empty');

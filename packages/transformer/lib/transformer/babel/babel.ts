@@ -4,7 +4,7 @@ import type {
   SyncTransformer,
   BabelTransformerOptions,
   TransformerContext,
-} from '../types';
+} from '../../types';
 
 const loadBabelOptions = (
   context: TransformerContext,
@@ -17,7 +17,7 @@ const loadBabelOptions = (
     babelrc: options?.fullyTransform ?? false,
     highlightCode: !process.stdin.isTTY,
     // Override to custom options.
-    ...options?.customOptions,
+    ...options?.overrideOptions,
     root: context.root,
     filename: context.path,
   });

@@ -3,7 +3,7 @@ import {
   transformSyncWithBabel,
   transformWithSwc,
   transformSyncWithSwc,
-} from '../transform';
+} from '../transformer';
 import type {
   TransformRuleBase,
   TransformerContext,
@@ -26,7 +26,7 @@ export const transformByBabelRule = (
 ): Promise<string | null> => {
   return rule.test(context.path, code)
     ? transformWithBabel(code, context, {
-        customOptions: getOptions(rule.options, code, context),
+        overrideOptions: getOptions(rule.options, code, context),
       })
     : Promise.resolve(null);
 };
@@ -38,7 +38,7 @@ export const transformSyncByBabelRule = (
 ): string | null => {
   return rule.test(context.path, code)
     ? transformSyncWithBabel(code, context, {
-        customOptions: getOptions(rule.options, code, context),
+        overrideOptions: getOptions(rule.options, code, context),
       })
     : null;
 };
@@ -50,7 +50,7 @@ export const transformBySwcRule = (
 ): Promise<string | null> => {
   return rule.test(context.path, code)
     ? transformWithSwc(code, context, {
-        customOptions: getOptions(rule.options, code, context),
+        overrideOptions: getOptions(rule.options, code, context),
       })
     : Promise.resolve(null);
 };
@@ -62,7 +62,7 @@ export const transformSyncBySwcRule = (
 ): string | null => {
   return rule.test(context.path, code)
     ? transformSyncWithSwc(code, context, {
-        customOptions: getOptions(rule.options, code, context),
+        overrideOptions: getOptions(rule.options, code, context),
       })
     : null;
 };

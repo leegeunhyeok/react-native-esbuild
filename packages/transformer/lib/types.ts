@@ -23,16 +23,25 @@ export interface TransformerContext {
 }
 
 export interface BabelTransformerOptions {
+  /**
+   * Transform with project's babel configurations.
+   */
   fullyTransform?: boolean;
-  customOptions?: BabelTransformOptions;
+  overrideOptions?: BabelTransformOptions;
 }
 
 export interface SwcTransformerOptions {
-  customOptions?: SwcTransformOptions;
+  /**
+   * Preset for swc options.
+   *
+   * Defaults to 'react-native'
+   */
+  preset?: 'react-native' | 'jest';
+  overrideOptions?: SwcTransformOptions;
 }
 
 export interface SwcMinifierOptions {
-  customOptions?: SwcJsMinifyOptions;
+  overrideOptions?: SwcJsMinifyOptions;
 }
 
 export interface TransformRuleBase<T> {

@@ -23,7 +23,7 @@ export const getTransformedPreludeScript = async (
 
   return bundleOptions.minify
     ? minifyWithSwc(strippedScript, context, {
-        customOptions: {
+        overrideOptions: {
           compress: true,
           mangle: true,
           sourceMap: false,

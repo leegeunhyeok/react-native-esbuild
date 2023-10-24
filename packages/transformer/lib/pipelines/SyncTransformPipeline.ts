@@ -4,7 +4,7 @@ import {
   transformSyncWithBabel,
   transformSyncWithSwc,
   stripFlowWithSucrase,
-} from '../transform';
+} from '../transformer';
 import { transformSyncByBabelRule, transformSyncBySwcRule } from '../helpers';
 import type { SyncTransformStep, TransformResult, SharedData } from '../types';
 import { TransformPipeline } from './pipeline';
