@@ -1,3 +1,3 @@
-export { transformWithBabel } from './babel';
-export { transformWithSwc, minifyWithSwc } from './swc';
-export { stripFlowWithSucrase } from './sucrase';
+export * from './babel';
+export * from './swc';
+export * from './sucrase';

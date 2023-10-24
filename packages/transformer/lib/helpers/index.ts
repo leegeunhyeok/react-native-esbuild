@@ -1,1 +1,1 @@
-export * from './transformByRule';
+export * from './transformer';

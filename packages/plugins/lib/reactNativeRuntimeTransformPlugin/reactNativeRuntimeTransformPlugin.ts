@@ -7,8 +7,8 @@ import {
 } from '@react-native-esbuild/core';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
 import {
-  TransformPipeline,
-  type TransformStep,
+  AsyncTransformPipeline,
+  type AsyncTransformStep,
 } from '@react-native-esbuild/transformer';
 import { logger } from '../shared';
 import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
@@ -42,7 +42,11 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       ...(config?.injectScriptPaths ?? []),
     ];
 
-    const onBeforeTransform: TransformStep = async (code, args, sharedData) => {
+    const onBeforeTransform: AsyncTransformStep = async (
+      code,
+      args,
+      sharedData,
+    ) => {
       const isChangedFile = bundlerSharedData.watcher.changed === args.path;
       const cacheConfig = await makeCacheConfig(
         cacheController,
@@ -87,7 +91,11 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       return { code: cachedCode ?? code, done: Boolean(cachedCode) };
     };
 
-    const onAfterTransform: TransformStep = async (code, _args, shared) => {
+    const onAfterTransform: AsyncTransformStep = async (
+      code,
+      _args,
+      shared,
+    ) => {
       if (!(shared.hash && shared.mtimeMs)) {
         logger.warn('unexpected cache config');
         return { code, done: true };
@@ -108,9 +116,8 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       return { code, done: true };
     };
 
-    let transformPipeline: TransformPipeline;
-    // eslint-disable-next-line new-cap -- builder
-    const transformPipelineBuilder = new TransformPipeline.builder(
+    let transformPipeline: AsyncTransformPipeline;
+    const transformPipelineBuilder = new AsyncTransformPipeline.builder(
       context.root,
       context.entry,
     )
@@ -127,8 +134,9 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
     });
 
     build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
+      const rawCode = await fs.readFile(args.path, { encoding: 'utf-8' });
       return {
-        contents: await transformPipeline.transform(args),
+        contents: (await transformPipeline.transform(rawCode, args)).code,
         loader: 'js',
       } as OnLoadResult;
     });

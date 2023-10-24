@@ -17,7 +17,7 @@ export const getTransformedPreludeScript = async (
    * Remove `"use strict";` added by sucrase.
    * @see {@link https://github.com/alangpierce/sucrase/issues/787#issuecomment-1483934492}
    */
-  const strippedScript = (await stripFlowWithSucrase(preludeScript, context))
+  const strippedScript = stripFlowWithSucrase(preludeScript, context)
     .replace(/"use strict";/, '')
     .trim();
 

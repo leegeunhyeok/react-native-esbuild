@@ -29,6 +29,7 @@ module.exports = {
       rules: {
         semi: ['error', 'always'],
         quotes: ['error', 'single'],
+        'new-cap': 'off',
         'object-curly-spacing': ['error', 'always'],
         'array-bracket-spacing': 'off',
         'unicorn/filename-case': 'off',
