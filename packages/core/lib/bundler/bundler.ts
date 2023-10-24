@@ -78,6 +78,10 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     }
   }
 
+  public static getConfig(): Config {
+    return getConfigFromGlobal();
+  }
+
   public static setGlobalLogLevel(logLevel: LogLevel): void {
     Logger.setGlobalLogLevel(logLevel);
   }
@@ -441,10 +445,6 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     invariant(buildTask.handler, 'no handler');
 
     return buildTask.handler.task;
-  }
-
-  public getConfig(): Config {
-    return this.config;
   }
 
   public getRoot(): string {

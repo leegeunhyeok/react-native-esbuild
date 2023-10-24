@@ -20,7 +20,7 @@ export abstract class TransformPipelineBuilder<
   protected transformerOptions: {
     swc?: SwcTransformOptions;
     babel?: BabelTransformOptions;
-  };
+  } = {};
   protected injectScriptPaths: string[] = [];
   protected fullyTransformPackageNames: string[] = [];
   protected stripFlowPackageNames: string[] = [];

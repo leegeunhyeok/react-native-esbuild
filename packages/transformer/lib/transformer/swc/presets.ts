@@ -1,4 +1,5 @@
 import type { Options } from '@swc/core';
+import type { SwcJestPresetOptions } from '../../types';
 
 /**
  * swc transform options preset for react-native runtime.
@@ -20,7 +21,7 @@ const getReactNativeRuntimeOptions = (): Options => ({
 /**
  * swc transform options preset for jest.
  */
-const getJestOptions = (): Options => ({
+const getJestOptions = (options: SwcJestPresetOptions): Options => ({
   sourceMaps: 'inline',
   jsc: {
     target: 'es2022',
@@ -36,8 +37,22 @@ const getJestOptions = (): Options => ({
         runtime: 'automatic',
       },
     },
+    experimental: {
+      ...(options.experimental?.customCoverageInstrumentation
+        ? {
+            plugins: [
+              [
+                'swc-plugin-coverage-instrument',
+                options.experimental.customCoverageInstrumentation,
+              ],
+            ],
+          }
+        : null),
+    },
   },
-  module: { type: 'commonjs' },
+  module: {
+    type: options.module === 'esm' ? 'es6' : 'commonjs',
+  },
 });
 
 export { getReactNativeRuntimeOptions, getJestOptions };

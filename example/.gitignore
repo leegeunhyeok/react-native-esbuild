@@ -75,6 +75,7 @@ yarn-error.log
 
 # @react-native-esbuild
 .rne
+.swc
 
 # @react-native-esbuild for web
 public/
