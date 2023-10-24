@@ -161,13 +161,13 @@ interface Config {
      */
     additionalTransformRules?: {
       /**
-       * Custom Babel rules
+       * Additional babel transform rules
        */
-      babel?: CustomTransformRuleBase<BabelTransformOptions>[];
+      babel?: TransformRuleBase<BabelTransformOptions>[];
       /**
-       * Custom Swc rules
+       * Additional swc transform rules
        */
-      swc?: CustomTransformRuleBase<SwcTransformOptions>[];
+      swc?: TransformRuleBase<SwcTransformOptions>[];
     };
   };
   /**
@@ -221,7 +221,7 @@ interface Config {
 
 
 ```ts
-interface CustomTransformRuleBase<T> {
+interface TransformRuleBase<T> {
   /**
    * Predicator for transform
    */
@@ -232,8 +232,8 @@ interface CustomTransformRuleBase<T> {
   options: T | ((path: string, code: string) => T);
 }
 
-type BabelTransformRule = CustomTransformRuleBase<BabelTransformOptions>;
-type SwcTransformRule = CustomTransformRuleBase<SwcTransformOptions>;
+type SwcTransformRule = TransformRuleBase<import('@swc/core').TransformOptions>;
+type BabelTransformRule = TransformRuleBase<import('@babel/core').Options>;
 ```
 
 </details>

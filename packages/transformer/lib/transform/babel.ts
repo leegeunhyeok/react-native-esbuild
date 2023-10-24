@@ -1,5 +1,5 @@
 import { loadOptions, transformAsync } from '@babel/core';
-import type { Transformer, BabelTransformerOptions } from './types';
+import type { Transformer, BabelTransformerOptions } from '../types';
 
 export const transformWithBabel: Transformer<BabelTransformerOptions> = async (
   code: string,

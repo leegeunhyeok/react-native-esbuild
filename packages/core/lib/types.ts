@@ -1,7 +1,9 @@
 import type { Stats } from 'node:fs';
 import type { BuildContext, Plugin } from 'esbuild';
-import type { TransformOptions as BabelTransformOptions } from '@babel/core';
-import type { Options as SwcTransformOptions } from '@swc/core';
+import type {
+  BabelTransformRule,
+  SwcTransformRule,
+} from '@react-native-esbuild/transformer';
 import type { BundleOptions } from '@react-native-esbuild/config';
 
 export interface Config {
@@ -74,11 +76,11 @@ export interface Config {
      */
     additionalTransformRules?: {
       /**
-       * Custom Babel rules
+       * Additional babel transform rules
        */
       babel?: BabelTransformRule[];
       /**
-       * Custom Swc rules
+       * Additional swc transform rules
        */
       swc?: SwcTransformRule[];
     };
@@ -127,20 +129,6 @@ export interface Config {
    */
   reporter?: (event: ReportableEvent) => void;
 }
-
-interface CustomTransformRuleBase<T> {
-  /**
-   * Predicator for transform
-   */
-  test: (path: string, code: string) => boolean;
-  /**
-   * Transformer options
-   */
-  options: T | ((path: string, code: string) => T);
-}
-
-export type BabelTransformRule = CustomTransformRuleBase<BabelTransformOptions>;
-export type SwcTransformRule = CustomTransformRuleBase<SwcTransformOptions>;
 
 export interface BundlerInitializeOptions {
   watcherEnabled?: boolean;

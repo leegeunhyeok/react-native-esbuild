@@ -1,14 +1,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type {
-  PluginContext,
-  BabelTransformRule,
-  SwcTransformRule,
-} from '@react-native-esbuild/core';
+import type { PluginContext } from '@react-native-esbuild/core';
 import {
   transformWithBabel,
   stripFlowWithSucrase,
   transformWithSwc,
+  transformByBabelRule,
+  transformBySwcRule,
+  type BabelTransformRule,
+  type SwcTransformRule,
 } from '@react-native-esbuild/transformer';
 import type { OnLoadArgs } from 'esbuild';
 
@@ -155,20 +155,10 @@ export class TransformFlowBuilder {
     // 4. Apply additional babel rules.
     if (this.additionalBabelRules.length) {
       transformFlow.addFlow(async (code, args) => {
+        const context = this.getTransformContext(args);
         for await (const rule of this.additionalBabelRules) {
-          if (rule.test(args.path, code)) {
-            const customOptions =
-              typeof rule.options === 'function'
-                ? rule.options(args.path, code)
-                : rule.options;
-
-            // eslint-disable-next-line no-param-reassign -- Allow reassign.
-            code = await transformWithBabel(
-              code,
-              this.getTransformContext(args),
-              { customOptions },
-            );
-          }
+          // eslint-disable-next-line no-param-reassign -- Allow reassign.
+          code = (await transformByBabelRule(rule, code, context)) ?? code;
         }
         return { code, done: false };
       });
@@ -177,20 +167,10 @@ export class TransformFlowBuilder {
     // 5. Apply additional swc rules.
     if (this.additionalSwcRules.length) {
       transformFlow.addFlow(async (code, args) => {
+        const context = this.getTransformContext(args);
         for await (const rule of this.additionalSwcRules) {
-          if (rule.test(args.path, code)) {
-            const customOptions =
-              typeof rule.options === 'function'
-                ? rule.options(args.path, code)
-                : rule.options;
-
-            // eslint-disable-next-line no-param-reassign -- Allow reassign.
-            code = await transformWithSwc(
-              code,
-              this.getTransformContext(args),
-              { customOptions },
-            );
-          }
+          // eslint-disable-next-line no-param-reassign -- Allow reassign.
+          code = (await transformBySwcRule(rule, code, context)) ?? code;
         }
         return { code, done: false };
       });

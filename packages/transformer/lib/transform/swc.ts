@@ -8,7 +8,7 @@ import type {
   Transformer,
   SwcTransformerOptions,
   SwcMinifierOptions,
-} from './types';
+} from '../types';
 
 const getParserOptions = (
   isTypescript: boolean,
