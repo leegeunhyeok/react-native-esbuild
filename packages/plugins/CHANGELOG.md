@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2023-10-24)
+
+### Features
+
+- remove convertSvg and enable it by default ([f2d068a](https://github.com/leegeunhyeok/react-native-esbuild/commit/f2d068a686b4809cad19743cc3bf08d13cca4f49))
+- **transformer:** add sync transformer ([b591d39](https://github.com/leegeunhyeok/react-native-esbuild/commit/b591d39af4eb3c6483f345c190561d879ea1429a))
+
+### Bug Fixes
+
+- **web:** svg transformation issue ([59cc81a](https://github.com/leegeunhyeok/react-native-esbuild/commit/59cc81a316983295d7ff714a24ca37a254859c96))
+
+### Miscellaneous Chores
+
+- remove unused code and update comments ([7e03116](https://github.com/leegeunhyeok/react-native-esbuild/commit/7e03116882a9018fdeef1cd137bcc4b169d24d54))
+
+### Code Refactoring
+
+- add plugin presets ([383bc9d](https://github.com/leegeunhyeok/react-native-esbuild/commit/383bc9dec38bc5e08c2247c8b24e748e582bd524))
+- co-locating transformer ([8803887](https://github.com/leegeunhyeok/react-native-esbuild/commit/880388772afda556ea319e303af52d5e5be6144f))
+- function based transformer presets ([fb56af9](https://github.com/leegeunhyeok/react-native-esbuild/commit/fb56af93c9a014be97b53965001d7b62a1e74749))
+- import orders ([26d4e45](https://github.com/leegeunhyeok/react-native-esbuild/commit/26d4e454abb89b1b7d2e0eadaf15b27b124a34b5))
+- move transformer types and add transform rule helpers ([b6d08d2](https://github.com/leegeunhyeok/react-native-esbuild/commit/b6d08d23fc0e265430bdcd30839a8035cbf0b3f0))
+
 ## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
 
 ### Features

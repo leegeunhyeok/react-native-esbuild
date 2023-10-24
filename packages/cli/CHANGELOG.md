@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2023-10-24)
+
+### Features
+
+- add logger.nl ([82ac30e](https://github.com/leegeunhyeok/react-native-esbuild/commit/82ac30ec26498efc848820cfb300605d337804d5))
+- reset cache after initialize ([1856495](https://github.com/leegeunhyeok/react-native-esbuild/commit/1856495a6448a2640544ec58ed08b552e4946036))
+
+### Bug Fixes
+
+- **web:** svg transformation issue ([59cc81a](https://github.com/leegeunhyeok/react-native-esbuild/commit/59cc81a316983295d7ff714a24ca37a254859c96))
+
+### Miscellaneous Chores
+
+- remove unused code and update comments ([7e03116](https://github.com/leegeunhyeok/react-native-esbuild/commit/7e03116882a9018fdeef1cd137bcc4b169d24d54))
+
+### Code Refactoring
+
+- add plugin presets ([383bc9d](https://github.com/leegeunhyeok/react-native-esbuild/commit/383bc9dec38bc5e08c2247c8b24e748e582bd524))
+
 ## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
 
 ### Features

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2023-10-24)
+
+### Features
+
+- add logger.nl ([82ac30e](https://github.com/leegeunhyeok/react-native-esbuild/commit/82ac30ec26498efc848820cfb300605d337804d5))
+- improve build status log ([e25578f](https://github.com/leegeunhyeok/react-native-esbuild/commit/e25578f6d72311133b2a92274f20eaed400e5892))
+- **jest:** add @react-native-esbuild/jest ([53b1874](https://github.com/leegeunhyeok/react-native-esbuild/commit/53b1874fbdaa639b4f21ac0394285317075288c5))
+- remove convertSvg and enable it by default ([f2d068a](https://github.com/leegeunhyeok/react-native-esbuild/commit/f2d068a686b4809cad19743cc3bf08d13cca4f49))
+- reset cache after initialize ([1856495](https://github.com/leegeunhyeok/react-native-esbuild/commit/1856495a6448a2640544ec58ed08b552e4946036))
+- **transformer:** add sync transformer ([b591d39](https://github.com/leegeunhyeok/react-native-esbuild/commit/b591d39af4eb3c6483f345c190561d879ea1429a))
+
+### Miscellaneous Chores
+
+- remove unused code and update comments ([7e03116](https://github.com/leegeunhyeok/react-native-esbuild/commit/7e03116882a9018fdeef1cd137bcc4b169d24d54))
+- update prepack script ([7c155dd](https://github.com/leegeunhyeok/react-native-esbuild/commit/7c155dd1190b3909112895bed8e2fbc916559b6f))
+
+### Code Refactoring
+
+- add plugin presets ([383bc9d](https://github.com/leegeunhyeok/react-native-esbuild/commit/383bc9dec38bc5e08c2247c8b24e748e582bd524))
+- enable strictBindCallApply and update bind functions ([114a94d](https://github.com/leegeunhyeok/react-native-esbuild/commit/114a94d866ae2389685f3d03dc67e2524be46447))
+- enhance load configuration ([de388d1](https://github.com/leegeunhyeok/react-native-esbuild/commit/de388d1acecde85166c382588b266a72ffd7f8e0))
+- function based transformer presets ([fb56af9](https://github.com/leegeunhyeok/react-native-esbuild/commit/fb56af93c9a014be97b53965001d7b62a1e74749))
+- import orders ([26d4e45](https://github.com/leegeunhyeok/react-native-esbuild/commit/26d4e454abb89b1b7d2e0eadaf15b27b124a34b5))
+- move transformer types and add transform rule helpers ([b6d08d2](https://github.com/leegeunhyeok/react-native-esbuild/commit/b6d08d23fc0e265430bdcd30839a8035cbf0b3f0))
+- **transformer:** add transform option presets ([4596996](https://github.com/leegeunhyeok/react-native-esbuild/commit/45969965bf3528a3a6c79d2edfd8b19f2814ad97))
+- **transformer:** remove custom options ([2ca9a8b](https://github.com/leegeunhyeok/react-native-esbuild/commit/2ca9a8bb2256aba592a2c4f1357204b714f5ccf5))
+
 ## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
 
 ### Features

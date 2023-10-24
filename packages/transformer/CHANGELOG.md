@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2023-10-24)
+
+### Features
+
+- **jest:** add @react-native-esbuild/jest ([53b1874](https://github.com/leegeunhyeok/react-native-esbuild/commit/53b1874fbdaa639b4f21ac0394285317075288c5))
+- **transformer:** add sync transformer ([b591d39](https://github.com/leegeunhyeok/react-native-esbuild/commit/b591d39af4eb3c6483f345c190561d879ea1429a))
+
+### Miscellaneous Chores
+
+- update prepack script ([7c155dd](https://github.com/leegeunhyeok/react-native-esbuild/commit/7c155dd1190b3909112895bed8e2fbc916559b6f))
+
+### Code Refactoring
+
+- co-locating transformer ([8803887](https://github.com/leegeunhyeok/react-native-esbuild/commit/880388772afda556ea319e303af52d5e5be6144f))
+- function based transformer presets ([fb56af9](https://github.com/leegeunhyeok/react-native-esbuild/commit/fb56af93c9a014be97b53965001d7b62a1e74749))
+- move transformer types and add transform rule helpers ([b6d08d2](https://github.com/leegeunhyeok/react-native-esbuild/commit/b6d08d23fc0e265430bdcd30839a8035cbf0b3f0))
+- rename to getParserOptions ([6033dcf](https://github.com/leegeunhyeok/react-native-esbuild/commit/6033dcfe2808bbe99be5fd8c2a800cb82dafcc95))
+- **transformer:** add transform option presets ([4596996](https://github.com/leegeunhyeok/react-native-esbuild/commit/45969965bf3528a3a6c79d2edfd8b19f2814ad97))
+- **transformer:** remove custom options ([2ca9a8b](https://github.com/leegeunhyeok/react-native-esbuild/commit/2ca9a8bb2256aba592a2c4f1357204b714f5ccf5))
+
 ## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
 
 ### Code Refactoring

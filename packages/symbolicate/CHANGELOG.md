@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2023-10-24)
+
+### Miscellaneous Chores
+
+- remove unused code and update comments ([7e03116](https://github.com/leegeunhyeok/react-native-esbuild/commit/7e03116882a9018fdeef1cd137bcc4b169d24d54))
+
 ## [0.1.0-beta.9](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2023-10-22)
 
 ### Build System
