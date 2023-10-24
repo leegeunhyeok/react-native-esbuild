@@ -1,28 +1,48 @@
-import { transform, transformSync, minify, type Options } from '@swc/core';
+import {
+  transform,
+  transformSync,
+  minify,
+  type Options,
+  type JsMinifyOptions,
+  type TsParserConfig,
+  type EsParserConfig,
+} from '@swc/core';
 import type {
   Transformer,
-  SwcTransformerOptions,
-  SwcMinifierOptions,
   SyncTransformer,
   TransformerContext,
 } from '../../types';
-import * as presets from './presets';
+
+const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
+  return /\.tsx?$/.test(path)
+    ? ({
+        syntax: 'typescript',
+        tsx: true,
+        dynamicImport: true,
+      } as TsParserConfig)
+    : ({
+        syntax: 'ecmascript',
+        jsx: true,
+        exportDefaultFrom: true,
+      } as EsParserConfig);
+};
 
 const getSwcOptions = (
   context: TransformerContext,
-  options?: SwcTransformerOptions,
+  options?: Options,
 ): Options => {
   return {
-    ...(options?.preset === 'jest'
-      ? presets.getJestOptions(context)
-      : presets.getReactNativeRuntimeOptions(context)),
-    ...options?.overrideOptions,
+    ...options,
+    jsc: {
+      parser: getParserOptions(context.path),
+      ...options?.jsc,
+    },
     filename: context.path,
     root: context.root,
   };
 };
 
-export const transformWithSwc: Transformer<SwcTransformerOptions> = async (
+export const transformWithSwc: Transformer<Options> = async (
   code,
   context,
   options,
@@ -39,7 +59,7 @@ export const transformWithSwc: Transformer<SwcTransformerOptions> = async (
   return transformedCode;
 };
 
-export const transformSyncWithSwc: SyncTransformer<SwcTransformerOptions> = (
+export const transformSyncWithSwc: SyncTransformer<Options> = (
   code,
   context,
   options,
@@ -56,12 +76,12 @@ export const transformSyncWithSwc: SyncTransformer<SwcTransformerOptions> = (
   return transformedCode;
 };
 
-export const minifyWithSwc: Transformer<SwcMinifierOptions> = async (
+export const minifyWithSwc: Transformer<JsMinifyOptions> = async (
   code,
   _context,
   options,
 ) => {
-  const { code: minifiedCode } = await minify(code, options?.overrideOptions);
+  const { code: minifiedCode } = await minify(code, options);
 
   if (typeof minifiedCode !== 'string') {
     throw new Error('swc minified source is empty');

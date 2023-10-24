@@ -1,9 +1,12 @@
 import type { OnLoadArgs } from 'esbuild';
+import type { Options as SwcTransformOptions } from '@swc/core';
+import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type {
   BabelTransformRule,
   SwcTransformRule,
   TransformStep,
 } from '../types';
+import { babelPresets, swcPresets } from '../transformer';
 import type { TransformPipeline } from './pipeline';
 
 const FLOW_SYMBOL = ['@flow', '@noflow'] as const;
@@ -14,6 +17,10 @@ export abstract class TransformPipelineBuilder<
 > {
   protected onBefore?: Step;
   protected onAfter?: Step;
+  protected transformerOptions: {
+    swc?: SwcTransformOptions;
+    babel?: BabelTransformOptions;
+  };
   protected injectScriptPaths: string[] = [];
   protected fullyTransformPackageNames: string[] = [];
   protected stripFlowPackageNames: string[] = [];
@@ -23,7 +30,16 @@ export abstract class TransformPipelineBuilder<
   constructor(
     protected root: string,
     protected entry: string,
-  ) {}
+    transformerOptions?: {
+      swc?: SwcTransformOptions;
+      babel?: BabelTransformOptions;
+    },
+  ) {
+    this.transformerOptions.swc =
+      transformerOptions?.swc ?? swcPresets.getReactNativeRuntimeOptions();
+    this.transformerOptions.babel =
+      transformerOptions?.babel ?? babelPresets.getCommon();
+  }
 
   protected getNodePackageRegExp(packageNames: string[]): RegExp | null {
     return packageNames.length

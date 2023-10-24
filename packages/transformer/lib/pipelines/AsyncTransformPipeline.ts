@@ -45,7 +45,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
             code: await transformWithBabel(
               code,
               this.getTransformContext(args),
-              { fullyTransform: true },
+              { root: this.root, babelrc: true },
             ),
             // skip other transformations when fully transformed
             done: true,
@@ -100,7 +100,11 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
     // 6. Transform code to es5.
     pipeline.addStep(async (code, args) => {
       return {
-        code: await transformWithSwc(code, this.getTransformContext(args)),
+        code: await transformWithSwc(
+          code,
+          this.getTransformContext(args),
+          this.transformerOptions.swc,
+        ),
         done: true,
       };
     });
@@ -141,7 +145,6 @@ export class AsyncTransformPipeline extends TransformPipeline<AsyncTransformStep
       before(code, args, sharedData),
     );
 
-    const res = await after(result.code, args, sharedData);
-    return res;
+    return after(result.code, args, sharedData);
   }
 }

@@ -1,29 +1,23 @@
+import type { TransformOptions } from '@babel/core';
 import { loadOptions, transformAsync, transformSync } from '@babel/core';
 import type {
   Transformer,
   SyncTransformer,
-  BabelTransformerOptions,
   TransformerContext,
 } from '../../types';
 
 const loadBabelOptions = (
   context: TransformerContext,
-  options?: BabelTransformerOptions,
+  options?: TransformOptions,
 ): ReturnType<typeof loadOptions> => {
   return loadOptions({
-    minified: false,
-    compact: false,
-    sourceMaps: false,
-    babelrc: options?.fullyTransform ?? false,
-    highlightCode: !process.stdin.isTTY,
-    // Override to custom options.
-    ...options?.overrideOptions,
+    ...options,
     root: context.root,
     filename: context.path,
   });
 };
 
-export const transformWithBabel: Transformer<BabelTransformerOptions> = async (
+export const transformWithBabel: Transformer<TransformOptions> = async (
   code: string,
   context,
   options,
@@ -41,9 +35,11 @@ export const transformWithBabel: Transformer<BabelTransformerOptions> = async (
   return result.code;
 };
 
-export const transformSyncWithBabel: SyncTransformer<
-  BabelTransformerOptions
-> = (code: string, context, options) => {
+export const transformSyncWithBabel: SyncTransformer<TransformOptions> = (
+  code: string,
+  context,
+  options,
+) => {
   const babelOptions = loadBabelOptions(context, options);
   if (!babelOptions) {
     throw new Error('cannot load babel options');
