@@ -51,6 +51,13 @@ module.exports = {
       },
     },
     {
+      files: ['packages/jest/lib/**/*.ts'],
+      rules: {
+        'import/no-default-export': 'off',
+        'import/no-named-as-default': 'off',
+      },
+    },
+    {
       files: ['example/**/*'],
       rules: {
         'no-console': 'off',

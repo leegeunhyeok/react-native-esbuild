@@ -19,6 +19,23 @@ export interface TransformerContext {
   root: string;
 }
 
+// swc presets
+export interface SwcJestPresetOptions {
+  module?: 'cjs' | 'esm';
+  experimental?: {
+    /**
+     * @see {@link https://github.com/kwonoj/swc-plugin-coverage-instrument}
+     */
+    customCoverageInstrumentation?: {
+      coverageVariable?: string;
+      compact?: boolean;
+      reportLogic?: boolean;
+      ignoreClassMethods?: string[];
+      instrumentLog?: { level: string; enableTrace: boolean };
+    };
+  };
+}
+
 export interface TransformRuleBase<T> {
   /**
    * Predicator for transform

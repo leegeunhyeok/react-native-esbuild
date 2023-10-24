@@ -1,12 +1,11 @@
 {
-  "name": "@react-native-esbuild/transformer",
+  "name": "@react-native-esbuild/jest",
   "version": "0.1.0-beta.9",
-  "description": "transformer for @react-native-esbuild",
+  "description": "react-native preset for jest powered by @react-native-esbuild",
   "keywords": [
     "react-native",
     "esbuild",
-    "sucrase",
-    "babel"
+    "jest"
   ],
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
@@ -20,7 +19,9 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "dist",
+    "jest-preset.js"
   ],
   "publishConfig": {
     "access": "public"
@@ -37,15 +38,19 @@
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
-  "devDependencies": {
-    "esbuild": "^0.19.5"
+  "peerDependencies": {
+    "react-native": "*"
   },
   "dependencies": {
-    "@babel/core": "^7.22.20",
-    "@react-native-esbuild/config": "workspace:*",
-    "@swc/core": "^1.3.94",
-    "@swc/helpers": "^0.5.3",
-    "sucrase": "^3.34.0",
-    "swc-plugin-coverage-instrument": "^0.0.20"
+    "@jest/create-cache-key-function": "^29.7.0",
+    "@react-native-esbuild/core": "workspace:*",
+    "@react-native-esbuild/internal": "workspace:^",
+    "@react-native-esbuild/transformer": "workspace:*",
+    "md5": "^2.3.0"
+  },
+  "devDependencies": {
+    "@jest/transform": "^29.7.0",
+    "@types/md5": "^2.3.2",
+    "esbuild": "^0.19.5"
   }
 }

@@ -4,5 +4,5 @@
     "rootDir": ".",
     "jsx": "react-native"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "tests/*", "__tests__/**/*"]
 }
