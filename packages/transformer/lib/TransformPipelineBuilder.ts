@@ -1,27 +1,32 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { PluginContext } from '@react-native-esbuild/core';
+import type { OnLoadArgs } from 'esbuild';
 import {
   transformWithBabel,
   stripFlowWithSucrase,
   transformWithSwc,
-  transformByBabelRule,
-  transformBySwcRule,
-  type BabelTransformRule,
-  type SwcTransformRule,
-} from '@react-native-esbuild/transformer';
-import type { OnLoadArgs } from 'esbuild';
+} from './transform';
+import { transformByBabelRule, transformBySwcRule } from './helpers';
+import type {
+  TransformStep,
+  BabelTransformRule,
+  SwcTransformRule,
+  SharedData,
+} from './types';
 
-export class TransformFlowBuilder {
-  private onBefore?: FlowRunner;
-  private onAfter?: FlowRunner;
+class TransformPipelineBuilder {
+  private onBefore?: TransformStep;
+  private onAfter?: TransformStep;
   private injectScriptPaths: string[] = [];
   private fullyTransformPackageNames: string[] = [];
   private stripFlowPackageNames: string[] = [];
   private additionalBabelRules: BabelTransformRule[] = [];
   private additionalSwcRules: SwcTransformRule[] = [];
 
-  constructor(private context: PluginContext) {}
+  constructor(
+    private root: string,
+    private entry: string,
+  ) {}
 
   private getNodePackageRegExp(packageNames: string[]): RegExp | null {
     return packageNames.length
@@ -33,15 +38,15 @@ export class TransformFlowBuilder {
     path: string;
     root: string;
   } {
-    return { path: args.path, root: this.context.root };
+    return { path: args.path, root: this.root };
   }
 
-  onStart(transformer: FlowRunner): this {
+  onStart(transformer: TransformStep): this {
     this.onBefore = transformer;
     return this;
   }
 
-  onEnd(transformer: FlowRunner): this {
+  onEnd(transformer: TransformStep): this {
     this.onAfter = transformer;
     return this;
   }
@@ -71,15 +76,15 @@ export class TransformFlowBuilder {
     return this;
   }
 
-  build(): TransformFlow {
-    const transformFlow = new TransformFlow();
+  build(): TransformPipeline {
+    const pipeline = new TransformPipeline();
 
-    this.onBefore && transformFlow.beforeTransform(this.onBefore);
-    this.onAfter && transformFlow.afterTransform(this.onAfter);
+    this.onBefore && pipeline.beforeTransform(this.onBefore);
+    this.onAfter && pipeline.afterTransform(this.onAfter);
 
     // 1. Inject initializeCore and specified scripts to entry file.
     if (this.injectScriptPaths.length) {
-      const entryFile = path.resolve(this.context.root, this.context.entry);
+      const entryFile = path.resolve(this.root, this.entry);
       const combineInjectScripts = (
         code: string,
         injectScriptPaths: string[],
@@ -90,7 +95,7 @@ export class TransformFlowBuilder {
         ].join('\n');
       };
 
-      transformFlow.addFlow((code, args) => {
+      pipeline.addStep((code, args) => {
         return {
           code:
             args.path === entryFile
@@ -101,12 +106,12 @@ export class TransformFlowBuilder {
       });
     }
 
-    // 2. Fully transform and skip other flows.
+    // 2. Fully transform and skip other steps.
     const fullyTransformPackagesRegExp = this.getNodePackageRegExp(
       this.fullyTransformPackageNames,
     );
     if (fullyTransformPackagesRegExp) {
-      transformFlow.addFlow(async (code, args) => {
+      pipeline.addStep(async (code, args) => {
         if (fullyTransformPackagesRegExp.test(args.path)) {
           return {
             code: await transformWithBabel(
@@ -136,7 +141,7 @@ export class TransformFlowBuilder {
         );
       };
 
-      transformFlow.addFlow(async (code, args) => {
+      pipeline.addStep(async (code, args) => {
         if (
           stripFlowPackageNamesRegExp.test(args.path) ||
           isFlow(code, args.path)
@@ -154,7 +159,7 @@ export class TransformFlowBuilder {
 
     // 4. Apply additional babel rules.
     if (this.additionalBabelRules.length) {
-      transformFlow.addFlow(async (code, args) => {
+      pipeline.addStep(async (code, args) => {
         const context = this.getTransformContext(args);
         for await (const rule of this.additionalBabelRules) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
@@ -166,7 +171,7 @@ export class TransformFlowBuilder {
 
     // 5. Apply additional swc rules.
     if (this.additionalSwcRules.length) {
-      transformFlow.addFlow(async (code, args) => {
+      pipeline.addStep(async (code, args) => {
         const context = this.getTransformContext(args);
         for await (const rule of this.additionalSwcRules) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
@@ -177,54 +182,55 @@ export class TransformFlowBuilder {
     }
 
     // 6. Transform code to es5.
-    transformFlow.addFlow(async (code, args) => {
+    pipeline.addStep(async (code, args) => {
       return {
         code: await transformWithSwc(code, this.getTransformContext(args)),
         done: true,
       };
     });
 
-    return transformFlow;
+    return pipeline;
   }
 }
 
-export class TransformFlow {
-  private flow: FlowRunner[] = [];
-  private onBeforeTransform?: FlowRunner;
-  private onAfterTransform?: FlowRunner;
+export class TransformPipeline {
+  public static builder = TransformPipelineBuilder;
+  private steps: TransformStep[] = [];
+  private onBeforeTransform?: TransformStep;
+  private onAfterTransform?: TransformStep;
 
-  beforeTransform(onBeforeTransform: FlowRunner): this {
+  beforeTransform(onBeforeTransform: TransformStep): this {
     this.onBeforeTransform = onBeforeTransform;
     return this;
   }
 
-  afterTransform(onAfterTransform: FlowRunner): this {
+  afterTransform(onAfterTransform: TransformStep): this {
     this.onAfterTransform = onAfterTransform;
     return this;
   }
 
-  addFlow(runner: FlowRunner): this {
-    this.flow.push(runner);
+  addStep(runner: TransformStep): this {
+    this.steps.push(runner);
     return this;
   }
 
   async transform(args: OnLoadArgs): Promise<string> {
     const rawCode = await fs.readFile(args.path, { encoding: 'utf-8' });
-    const sharedData = {} as FlowSharedData;
+    const sharedData = {} as SharedData;
 
-    const before: FlowRunner = (code, args) => {
+    const before: TransformStep = (code, args) => {
       return this.onBeforeTransform
         ? this.onBeforeTransform(code, args, sharedData)
         : Promise.resolve({ code, done: false });
     };
 
-    const after: FlowRunner = (code, args) => {
+    const after: TransformStep = (code, args) => {
       return this.onAfterTransform
         ? this.onAfterTransform(code, args, sharedData)
         : Promise.resolve({ code, done: true });
     };
 
-    const result = await this.flow.reduce(
+    const result = await this.steps.reduce(
       (prev, curr) => {
         return Promise.resolve(prev).then((prevResult) =>
           prevResult.done
@@ -237,20 +243,4 @@ export class TransformFlow {
 
     return (await after(result.code, args, sharedData)).code;
   }
-}
-
-export type FlowRunner = (
-  code: string,
-  args: OnLoadArgs,
-  sharedData: FlowSharedData,
-) => Promise<TransformResult> | TransformResult;
-
-interface TransformResult {
-  code: string;
-  done: boolean;
-}
-
-interface FlowSharedData {
-  hash?: string;
-  mtimeMs?: number;
 }

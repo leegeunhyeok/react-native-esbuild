@@ -1,3 +1,4 @@
+import type { OnLoadArgs } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type {
   Options as SwcTransformOptions,
@@ -41,3 +42,20 @@ export interface TransformRuleBase<T> {
 
 export type BabelTransformRule = TransformRuleBase<BabelTransformOptions>;
 export type SwcTransformRule = TransformRuleBase<SwcTransformOptions>;
+
+// TransformPipelineBuilder
+export type TransformStep = (
+  code: string,
+  args: OnLoadArgs,
+  sharedData: SharedData,
+) => Promise<TransformResult> | TransformResult;
+
+interface TransformResult {
+  code: string;
+  done: boolean;
+}
+
+export interface SharedData {
+  hash?: string;
+  mtimeMs?: number;
+}

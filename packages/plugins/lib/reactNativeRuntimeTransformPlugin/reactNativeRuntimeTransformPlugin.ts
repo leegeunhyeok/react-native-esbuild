@@ -6,13 +6,12 @@ import {
   type ReactNativeEsbuildPluginCreator,
 } from '@react-native-esbuild/core';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
+import {
+  TransformPipeline,
+  type TransformStep,
+} from '@react-native-esbuild/transformer';
 import { logger } from '../shared';
 import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
-import {
-  TransformFlowBuilder,
-  type TransformFlow,
-  type FlowRunner,
-} from './TransformFlowBuilder';
 import {
   makeCacheConfig,
   getTransformedCodeFromInMemoryCache,
@@ -43,7 +42,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       ...(config?.injectScriptPaths ?? []),
     ];
 
-    const onBeforeTransform: FlowRunner = async (code, args, sharedData) => {
+    const onBeforeTransform: TransformStep = async (code, args, sharedData) => {
       const isChangedFile = bundlerSharedData.watcher.changed === args.path;
       const cacheConfig = await makeCacheConfig(
         cacheController,
@@ -88,7 +87,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       return { code: cachedCode ?? code, done: Boolean(cachedCode) };
     };
 
-    const onAfterTransform: FlowRunner = async (code, _args, shared) => {
+    const onAfterTransform: TransformStep = async (code, _args, shared) => {
       if (!(shared.hash && shared.mtimeMs)) {
         logger.warn('unexpected cache config');
         return { code, done: true };
@@ -109,8 +108,12 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       return { code, done: true };
     };
 
-    let transformFlow: TransformFlow;
-    const transformFlowBuilder = new TransformFlowBuilder(context)
+    let transformPipeline: TransformPipeline;
+    // eslint-disable-next-line new-cap -- builder
+    const transformPipelineBuilder = new TransformPipeline.builder(
+      context.root,
+      context.entry,
+    )
       .setInjectScripts(injectScriptPaths)
       .setFullyTransformPackages(fullyTransformPackageNames)
       .setStripFlowPackages(stripFlowPackageNames)
@@ -120,12 +123,12 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       .onEnd(onAfterTransform);
 
     build.onStart(() => {
-      transformFlow = transformFlowBuilder.build();
+      transformPipeline = transformPipelineBuilder.build();
     });
 
     build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
       return {
-        contents: await transformFlow.transform(args),
+        contents: await transformPipeline.transform(args),
         loader: 'js',
       } as OnLoadResult;
     });
