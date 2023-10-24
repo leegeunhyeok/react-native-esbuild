@@ -2,16 +2,16 @@ import type { OnLoadArgs } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type { Options as SwcTransformOptions } from '@swc/core';
 
-export type Transformer<Options> = (
+export type AsyncTransformer<TransformerOptions> = (
   code: string,
   context: TransformerContext,
-  options?: Options,
+  preset?: TransformerOptionsPreset<TransformerOptions>,
 ) => Promise<string>;
 
-export type SyncTransformer<Options> = (
+export type SyncTransformer<TransformerOptions> = (
   code: string,
   context: TransformerContext,
-  options?: Options,
+  preset?: TransformerOptionsPreset<TransformerOptions>,
 ) => string;
 
 export interface TransformerContext {
@@ -19,7 +19,15 @@ export interface TransformerContext {
   root: string;
 }
 
-// swc presets
+export type TransformerOptionsPreset<TransformerOptions> = (
+  context: TransformerContext,
+) => TransformerOptions;
+
+// swc preset options
+export interface SwcReactNativeRuntimePresetOptions {
+  reactRefresh?: { moduleId: string };
+}
+
 export interface SwcJestPresetOptions {
   module?: 'cjs' | 'esm';
   experimental?: {

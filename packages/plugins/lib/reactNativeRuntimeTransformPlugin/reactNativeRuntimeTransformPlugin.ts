@@ -8,6 +8,7 @@ import {
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
 import {
   AsyncTransformPipeline,
+  swcPresets,
   type AsyncTransformStep,
 } from '@react-native-esbuild/transformer';
 import { logger } from '../shared';
@@ -121,6 +122,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       context.root,
       context.entry,
     )
+      .setSwcPreset(swcPresets.getReactNativeRuntimePreset())
       .setInjectScripts(injectScriptPaths)
       .setFullyTransformPackages(fullyTransformPackageNames)
       .setStripFlowPackages(stripFlowPackageNames)

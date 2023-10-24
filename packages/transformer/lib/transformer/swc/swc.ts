@@ -4,53 +4,15 @@ import {
   minify,
   type Options,
   type JsMinifyOptions,
-  type TsParserConfig,
-  type EsParserConfig,
 } from '@swc/core';
-import type {
-  Transformer,
-  SyncTransformer,
-  TransformerContext,
-} from '../../types';
+import type { AsyncTransformer, SyncTransformer } from '../../types';
 
-const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
-  return /\.tsx?$/.test(path)
-    ? ({
-        syntax: 'typescript',
-        tsx: true,
-        dynamicImport: true,
-      } as TsParserConfig)
-    : ({
-        syntax: 'ecmascript',
-        jsx: true,
-        exportDefaultFrom: true,
-      } as EsParserConfig);
-};
-
-const getSwcOptions = (
-  context: TransformerContext,
-  options?: Options,
-): Options => {
-  return {
-    ...options,
-    jsc: {
-      parser: getParserOptions(context.path),
-      ...options?.jsc,
-    },
-    filename: context.path,
-    root: context.root,
-  };
-};
-
-export const transformWithSwc: Transformer<Options> = async (
+export const transformWithSwc: AsyncTransformer<Options> = async (
   code,
   context,
-  options,
+  preset,
 ) => {
-  const { code: transformedCode } = await transform(
-    code,
-    getSwcOptions(context, options),
-  );
+  const { code: transformedCode } = await transform(code, preset?.(context));
 
   if (typeof transformedCode !== 'string') {
     throw new Error('swc transformed source is empty');
@@ -62,12 +24,9 @@ export const transformWithSwc: Transformer<Options> = async (
 export const transformSyncWithSwc: SyncTransformer<Options> = (
   code,
   context,
-  options,
+  preset,
 ) => {
-  const { code: transformedCode } = transformSync(
-    code,
-    getSwcOptions(context, options),
-  );
+  const { code: transformedCode } = transformSync(code, preset?.(context));
 
   if (typeof transformedCode !== 'string') {
     throw new Error('swc transformed source is empty');
@@ -76,12 +35,12 @@ export const transformSyncWithSwc: SyncTransformer<Options> = (
   return transformedCode;
 };
 
-export const minifyWithSwc: Transformer<JsMinifyOptions> = async (
+export const minifyWithSwc: AsyncTransformer<JsMinifyOptions> = async (
   code,
-  _context,
-  options,
+  context,
+  preset,
 ) => {
-  const { code: minifiedCode } = await minify(code, options);
+  const { code: minifiedCode } = await minify(code, preset?.(context));
 
   if (typeof minifiedCode !== 'string') {
     throw new Error('swc minified source is empty');

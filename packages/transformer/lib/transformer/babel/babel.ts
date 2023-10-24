@@ -1,7 +1,7 @@
 import type { TransformOptions } from '@babel/core';
 import { loadOptions, transformAsync, transformSync } from '@babel/core';
 import type {
-  Transformer,
+  AsyncTransformer,
   SyncTransformer,
   TransformerContext,
 } from '../../types';
@@ -17,12 +17,12 @@ const loadBabelOptions = (
   });
 };
 
-export const transformWithBabel: Transformer<TransformOptions> = async (
+export const transformWithBabel: AsyncTransformer<TransformOptions> = async (
   code: string,
   context,
-  options,
+  preset,
 ) => {
-  const babelOptions = loadBabelOptions(context, options);
+  const babelOptions = loadBabelOptions(context, preset?.(context));
   if (!babelOptions) {
     throw new Error('cannot load babel options');
   }
@@ -38,9 +38,9 @@ export const transformWithBabel: Transformer<TransformOptions> = async (
 export const transformSyncWithBabel: SyncTransformer<TransformOptions> = (
   code: string,
   context,
-  options,
+  preset,
 ) => {
-  const babelOptions = loadBabelOptions(context, options);
+  const babelOptions = loadBabelOptions(context, preset?.(context));
   if (!babelOptions) {
     throw new Error('cannot load babel options');
   }

@@ -45,7 +45,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
             code: await transformWithBabel(
               code,
               this.getTransformContext(args),
-              { root: this.root, babelrc: true },
+              this.presets.babelFullyTransform,
             ),
             // skip other transformations when fully transformed
             done: true,
@@ -103,7 +103,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
         code: await transformWithSwc(
           code,
           this.getTransformContext(args),
-          this.transformerOptions.swc,
+          this.swcPreset,
         ),
         done: true,
       };

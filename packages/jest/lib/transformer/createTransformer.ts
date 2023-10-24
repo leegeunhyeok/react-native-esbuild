@@ -34,13 +34,13 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
   const syncTransformPipeline = new SyncTransformPipeline.builder(
     ROOT,
     DUMMY_ENTRY,
-    {
-      swc: swcPresets.getJestOptions({
+  )
+    .setSwcPreset(
+      swcPresets.getJestPreset({
         module: 'cjs',
         experimental: swcExperimentalOptions,
       }),
-    },
-  )
+    )
     .setInjectScripts([getReactNativeInitializeCore(ROOT)])
     .setFullyTransformPackages(transformer?.fullyTransformPackageNames ?? [])
     .setStripFlowPackages(transformer?.stripFlowPackageNames ?? [])
@@ -55,14 +55,14 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
   const asyncTransformPipeline = new AsyncTransformPipeline.builder(
     ROOT,
     DUMMY_ENTRY,
-    {
+  )
+    .setSwcPreset(
       // Async transform is always ESM.
-      swc: swcPresets.getJestOptions({
+      swcPresets.getJestPreset({
         module: 'esm',
         experimental: swcExperimentalOptions,
       }),
-    },
-  )
+    )
     .setInjectScripts([getReactNativeInitializeCore(ROOT)])
     .setFullyTransformPackages(transformer?.fullyTransformPackageNames ?? [])
     .setStripFlowPackages(transformer?.stripFlowPackageNames ?? [])

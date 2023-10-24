@@ -42,10 +42,11 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
       pipeline.addStep((code, args) => {
         if (fullyTransformPackagesRegExp.test(args.path)) {
           return {
-            code: transformSyncWithBabel(code, this.getTransformContext(args), {
-              root: this.root,
-              babelrc: true,
-            }),
+            code: transformSyncWithBabel(
+              code,
+              this.getTransformContext(args),
+              this.presets.babelFullyTransform,
+            ),
             // skip other transformations when fully transformed
             done: true,
           };
@@ -102,7 +103,7 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
         code: transformSyncWithSwc(
           code,
           this.getTransformContext(args),
-          this.transformerOptions.swc,
+          this.swcPreset,
         ),
         done: true,
       };

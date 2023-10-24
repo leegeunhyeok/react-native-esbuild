@@ -3,6 +3,7 @@ import { getPreludeScript } from '@react-native-esbuild/internal';
 import {
   stripFlowWithSucrase,
   minifyWithSwc,
+  swcPresets,
 } from '@react-native-esbuild/transformer';
 import type { BundleOptions } from '@react-native-esbuild/config';
 
@@ -22,11 +23,7 @@ export const getTransformedPreludeScript = async (
     .trim();
 
   return bundleOptions.minify
-    ? minifyWithSwc(strippedScript, context, {
-        compress: true,
-        mangle: true,
-        sourceMap: false,
-      })
+    ? minifyWithSwc(strippedScript, context, swcPresets.getMinifyPreset())
     : strippedScript;
 };
 

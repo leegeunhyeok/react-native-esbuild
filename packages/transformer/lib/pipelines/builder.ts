@@ -1,12 +1,12 @@
 import type { OnLoadArgs } from 'esbuild';
 import type { Options as SwcTransformOptions } from '@swc/core';
-import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type {
   BabelTransformRule,
   SwcTransformRule,
   TransformStep,
+  TransformerOptionsPreset,
 } from '../types';
-import { babelPresets, swcPresets } from '../transformer';
+import { babelPresets } from '../transformer';
 import type { TransformPipeline } from './pipeline';
 
 const FLOW_SYMBOL = ['@flow', '@noflow'] as const;
@@ -15,12 +15,12 @@ export abstract class TransformPipelineBuilder<
   Step extends TransformStep<unknown>,
   Pipeline extends TransformPipeline<Step>,
 > {
+  protected presets = {
+    babelFullyTransform: babelPresets.getFullyTransformPreset(),
+  };
   protected onBefore?: Step;
   protected onAfter?: Step;
-  protected transformerOptions: {
-    swc?: SwcTransformOptions;
-    babel?: BabelTransformOptions;
-  } = {};
+  protected swcPreset?: TransformerOptionsPreset<SwcTransformOptions>;
   protected injectScriptPaths: string[] = [];
   protected fullyTransformPackageNames: string[] = [];
   protected stripFlowPackageNames: string[] = [];
@@ -30,16 +30,7 @@ export abstract class TransformPipelineBuilder<
   constructor(
     protected root: string,
     protected entry: string,
-    transformerOptions?: {
-      swc?: SwcTransformOptions;
-      babel?: BabelTransformOptions;
-    },
-  ) {
-    this.transformerOptions.swc =
-      transformerOptions?.swc ?? swcPresets.getReactNativeRuntimeOptions();
-    this.transformerOptions.babel =
-      transformerOptions?.babel ?? babelPresets.getCommon();
-  }
+  ) {}
 
   protected getNodePackageRegExp(packageNames: string[]): RegExp | null {
     return packageNames.length
@@ -103,6 +94,13 @@ export abstract class TransformPipelineBuilder<
 
   public setAdditionalSwcTransformRules(rules: SwcTransformRule[]): this {
     this.additionalSwcRules = rules;
+    return this;
+  }
+
+  public setSwcPreset(
+    preset: TransformerOptionsPreset<SwcTransformOptions>,
+  ): this {
+    this.swcPreset = preset;
     return this;
   }
 

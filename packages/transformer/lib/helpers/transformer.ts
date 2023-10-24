@@ -9,14 +9,16 @@ import type {
   TransformerContext,
   SwcTransformRule,
   BabelTransformRule,
+  TransformerOptionsPreset,
 } from '../types';
 
-const getOptions = <T>(
+const ruleOptionsToPreset = <T>(
   options: TransformRuleBase<T>['options'],
   code: string,
-  context: TransformerContext,
-): T => {
-  return options instanceof Function ? options(context.path, code) : options;
+): TransformerOptionsPreset<T> => {
+  return options instanceof Function
+    ? (context) => options(context.path, code)
+    : () => options;
 };
 
 export const transformByBabelRule = (
@@ -25,7 +27,7 @@ export const transformByBabelRule = (
   context: TransformerContext,
 ): Promise<string | null> => {
   return rule.test(context.path, code)
-    ? transformWithBabel(code, context, getOptions(rule.options, code, context))
+    ? transformWithBabel(code, context, ruleOptionsToPreset(rule.options, code))
     : Promise.resolve(null);
 };
 
@@ -38,7 +40,7 @@ export const transformSyncByBabelRule = (
     ? transformSyncWithBabel(
         code,
         context,
-        getOptions(rule.options, code, context),
+        ruleOptionsToPreset(rule.options, code),
       )
     : null;
 };
@@ -49,7 +51,7 @@ export const transformBySwcRule = (
   context: TransformerContext,
 ): Promise<string | null> => {
   return rule.test(context.path, code)
-    ? transformWithSwc(code, context, getOptions(rule.options, code, context))
+    ? transformWithSwc(code, context, ruleOptionsToPreset(rule.options, code))
     : Promise.resolve(null);
 };
 
@@ -62,7 +64,7 @@ export const transformSyncBySwcRule = (
     ? transformSyncWithSwc(
         code,
         context,
-        getOptions(rule.options, code, context),
+        ruleOptionsToPreset(rule.options, code),
       )
     : null;
 };
