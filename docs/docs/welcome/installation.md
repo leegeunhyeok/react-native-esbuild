@@ -6,6 +6,8 @@ slug: /installation
 
 # Installation
 
+Requirements: `Node>=16`
+
 ```bash
 # using npm
 npm install -D @react-native-esbuild/cli

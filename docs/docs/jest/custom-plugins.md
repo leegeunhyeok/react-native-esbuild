@@ -12,6 +12,8 @@ It can replace [babel-jest](https://github.com/facebook/react-native/blob/v0.72.
 
 ## Setup
 
+Requirements: `Jest>=27`
+
 ```bash
 # using npm
 npm install -D @react-native-esbuild/jest

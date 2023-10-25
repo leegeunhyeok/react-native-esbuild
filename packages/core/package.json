@@ -36,6 +36,9 @@
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@react-native-esbuild/config": "workspace:*",
     "@react-native-esbuild/internal": "workspace:*",
