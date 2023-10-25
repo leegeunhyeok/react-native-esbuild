@@ -29,6 +29,7 @@ Developed by <a href="https://github.com/leegeunhyeok">Geunhyeok LEE (@leegeunhy
 - 🐛 Supports Debugging(Flipper, Chrome Debugger)
 - 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready
+- 🃏 Jest transformer included
 
 👉 See a demo application built with a web target [here](https://rne-web-demo.vercel.app).
 
@@ -42,7 +43,7 @@ The JavaScript ecosystem is strong enough on its own, but React Native is mostly
 
 That's why I've developed a modern bundler that supports all platforms to take full advantage of React Native's strengths.
 
-It aims to build for all platforms with just one bundler without complicated setup and provide a good DX(Development Experience).
+It aims to build for all platforms with just one bundler without complicated setup and provide a good development experience (like a super fast build, testing, etc).
 
 ## Architecture
 

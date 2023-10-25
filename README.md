@@ -32,6 +32,7 @@
 - 🐛 Supports Debugging(Flipper, Chrome Debugger)
 - 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready
+- 🃏 Jest transformer included
 
 👉 See a demo application built with a web target [here](https://rne-web-demo.vercel.app).
 
