@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.10...v0.1.0-beta.11) (2023-10-25)
+
+### Features
+
+- **jest:** cjs exported modules to configurable ([e7dc06c](https://github.com/leegeunhyeok/react-native-esbuild/commit/e7dc06c0054880cf1b4bd79251e99d437f03cd95))
+
+### Miscellaneous Chores
+
+- replace ts-jest to @swc/jest ([fcea8b9](https://github.com/leegeunhyeok/react-native-esbuild/commit/fcea8b97c03b5ce21604ba95a17649e727e8d6c1))
+
+### Build System
+
+- **deps:** bump version up packages ([09e5ba3](https://github.com/leegeunhyeok/react-native-esbuild/commit/09e5ba3314e668de48284ac115229292e282a085))
+
 ## [0.1.0-beta.10](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2023-10-24)
 
 ### Features
