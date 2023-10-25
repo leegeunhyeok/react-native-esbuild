@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-beta.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2023-10-25)
+
+### Features
+
+- skip printing logo in jest worker ([c9c7daa](https://github.com/leegeunhyeok/react-native-esbuild/commit/c9c7daa00639bec38121aa9bf35c3e559a01a95e))
+
 ## [0.1.0-beta.11](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.10...v0.1.0-beta.11) (2023-10-25)
 
 ### Features
