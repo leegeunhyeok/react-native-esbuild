@@ -37,11 +37,12 @@ export const loadConfig = (configFilePath?: string): Config => {
   };
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-var-requires -- Config file may not exist.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires -- Config file may not exist.
     config = require(
       configFilePath
         ? path.resolve(configFilePath)
         : path.resolve(process.cwd(), 'react-native-esbuild.config.js'),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- Config will be default exported.
     ).default;
   } catch (error) {
     /**
