@@ -32,6 +32,21 @@ export interface SwcJestPresetOptions {
   module?: 'cjs' | 'esm';
   experimental?: {
     /**
+     * Option for Jest compatibility.
+     *
+     * Using swc to transform code to comply with the ESM specification,
+     * but Jest to test it in a CJS environment, may encounter issues
+     * due to the immutable issue of exports.
+     *
+     * To avoid the issue, enable option.
+     * It will be transformed exports with add `configurable: true`.
+     *
+     * Defaults to `true`
+     *
+     * @see {@link https://github.com/swc-project/swc/discussions/5151}
+     */
+    mutableCjsExports?: boolean;
+    /**
      * @see {@link https://github.com/kwonoj/swc-plugin-coverage-instrument}
      */
     customCoverageInstrumentation?: {

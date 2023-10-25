@@ -43,6 +43,19 @@ const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
 const getJestPreset = (
   options: SwcJestPresetOptions,
 ): TransformerOptionsPreset<Options> => {
+  const plugins = [
+    options.experimental?.mutableCjsExports ?? true
+      ? ['swc_mut_cjs_exports', {}]
+      : null,
+    options.experimental?.customCoverageInstrumentation
+      ? [
+          'swc-plugin-coverage-instrument',
+          options.experimental.customCoverageInstrumentation,
+        ]
+      : null,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- swc type
+  ].filter(Boolean) as [string, Record<string, any>][];
+
   return (context) => ({
     sourceMaps: 'inline',
     jsc: {
@@ -60,16 +73,7 @@ const getJestPreset = (
         },
       },
       experimental: {
-        ...(options.experimental?.customCoverageInstrumentation
-          ? {
-              plugins: [
-                [
-                  'swc-plugin-coverage-instrument',
-                  options.experimental.customCoverageInstrumentation,
-                ],
-              ],
-            }
-          : null),
+        plugins,
       },
     },
     module: {
