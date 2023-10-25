@@ -57,8 +57,12 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
    * Must be bootstrapped first at the entry point
    */
   public static bootstrap(configFilePath?: string): void {
-    printLogo();
-    printVersion();
+    // Skip printing the logo in the Jest worker process.
+    if (process.env.JEST_WORKER_ID === undefined) {
+      printLogo();
+      printVersion();
+    }
+
     const config = loadConfig(configFilePath);
     config.logger?.disabled ?? false ? Logger.disable() : Logger.enable();
     Logger.setTimestampFormat(config.logger?.timestamp ?? null);
