@@ -18,11 +18,14 @@ yarn add -D @react-native-esbuild/cli
 
 ## Configuration
 
-Add `.rne` to `.gitignore`.
+Add `.rne` and `.swc` to `.gitignore`.
 
 ```sh
 # @react-native-esbuild's local cache directory for development environment
 .rne
+
+# swc plugins
+.swc
 ```
 
 And create `react-native-esbuild.js` to project root.
