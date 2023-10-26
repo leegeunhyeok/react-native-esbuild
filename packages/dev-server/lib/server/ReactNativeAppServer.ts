@@ -14,11 +14,7 @@ import {
   createIndexPageMiddleware,
 } from '../middlewares';
 import { logger } from '../shared';
-import type {
-  BroadcastCommand,
-  DevServerMiddlewareContext,
-  TypedInspectorProxy,
-} from '../types';
+import type { BroadcastCommand, DevServerMiddlewareContext } from '../types';
 import { DevServer } from './DevServer';
 
 /**
@@ -35,7 +31,7 @@ export class ReactNativeAppServer extends DevServer {
   private eventsSocketEndpoint: ReturnType<
     typeof createDevServerMiddleware
   >['eventsSocketEndpoint'];
-  private inspectorProxy?: TypedInspectorProxy;
+  private inspectorProxy?: InspectorProxy;
 
   async initialize(
     onPostSetup?: (bundler: ReactNativeEsbuildBundler) => void | Promise<void>,
@@ -65,9 +61,7 @@ export class ReactNativeAppServer extends DevServer {
     this.debuggerProxyEndpoint = debuggerProxyEndpoint;
     this.messageSocketEndpoint = messageSocketEndpoint;
     this.eventsSocketEndpoint = eventsSocketEndpoint;
-    this.inspectorProxy =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- `InspectorProxy` isn't well typed.
-      new InspectorProxy(this.devServerOptions.root) as TypedInspectorProxy;
+    this.inspectorProxy = new InspectorProxy(this.devServerOptions.root);
 
     logger.debug('create http server');
     this.server = http.createServer(middleware);
