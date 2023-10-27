@@ -34,6 +34,13 @@ const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
       loose: false,
       externalHelpers: true,
       keepClassNames: true,
+      transform: {
+        react: {
+          runtime: 'automatic',
+          development: context.dev,
+          refresh: false,
+        },
+      },
     },
     filename: context.path,
     root: context.root,
@@ -70,6 +77,8 @@ const getJestPreset = (
         },
         react: {
           runtime: 'automatic',
+          development: context.dev,
+          refresh: false,
         },
       },
       experimental: {
