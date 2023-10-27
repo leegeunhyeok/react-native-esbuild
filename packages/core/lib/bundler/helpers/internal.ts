@@ -1,5 +1,6 @@
 import type { BuildOptions } from 'esbuild';
 import { getPreludeScript } from '@react-native-esbuild/internal';
+import type { TransformerContext } from '@react-native-esbuild/transformer';
 import {
   stripFlowWithSucrase,
   minifyWithSwc,
@@ -11,7 +12,14 @@ export const getTransformedPreludeScript = async (
   bundleOptions: BundleOptions,
   root: string,
 ): Promise<string> => {
-  const context = { root, path: '' };
+  // Dummy context
+  const context: TransformerContext = {
+    root,
+    path: '',
+    id: 0,
+    dev: bundleOptions.dev,
+    entry: bundleOptions.entry,
+  };
   const preludeScript = await getPreludeScript(bundleOptions, root);
 
   /**

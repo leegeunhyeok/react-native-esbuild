@@ -1,4 +1,5 @@
 import path from 'node:path';
+import fs from 'node:fs';
 import type { OnLoadArgs } from 'esbuild';
 import {
   transformSyncWithBabel,
@@ -6,7 +7,7 @@ import {
   stripFlowWithSucrase,
 } from '../transformer';
 import { transformSyncByBabelRule, transformSyncBySwcRule } from '../helpers';
-import type { SyncTransformStep, TransformResult, SharedData } from '../types';
+import type { SyncTransformStep, TransformResult, ModuleMeta } from '../types';
 import { TransformPipeline } from './pipeline';
 import { TransformPipelineBuilder } from './builder';
 
@@ -15,14 +16,14 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
   SyncTransformPipeline
 > {
   build(): SyncTransformPipeline {
-    const pipeline = new SyncTransformPipeline();
+    const pipeline = new SyncTransformPipeline(this.context);
 
     this.onBefore && pipeline.beforeTransform(this.onBefore);
     this.onAfter && pipeline.afterTransform(this.onAfter);
 
     // 1. Inject initializeCore and specified scripts to entry file.
     if (this.injectScriptPaths.length) {
-      const entryFile = path.resolve(this.root, this.entry);
+      const entryFile = path.resolve(this.context.root, this.context.entry);
       pipeline.addStep((code, args) => {
         return {
           code:
@@ -44,7 +45,7 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
           return {
             code: transformSyncWithBabel(
               code,
-              this.getTransformContext(args),
+              this.getContext(args),
               this.presets.babelFullyTransform,
             ),
             // skip other transformations when fully transformed
@@ -66,7 +67,7 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
           this.isFlow(code, args.path)
         ) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
-          code = stripFlowWithSucrase(code, this.getTransformContext(args));
+          code = stripFlowWithSucrase(code, this.getContext(args));
         }
 
         return { code, done: false };
@@ -76,7 +77,7 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
     // 4. Apply additional babel rules.
     if (this.additionalBabelRules.length) {
       pipeline.addStep((code, args) => {
-        const context = this.getTransformContext(args);
+        const context = this.getContext(args);
         for (const rule of this.additionalBabelRules) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = transformSyncByBabelRule(rule, code, context) ?? code;
@@ -88,7 +89,7 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
     // 5. Apply additional swc rules.
     if (this.additionalSwcRules.length) {
       pipeline.addStep((code, args) => {
-        const context = this.getTransformContext(args);
+        const context = this.getContext(args);
         for (const rule of this.additionalSwcRules) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = transformSyncBySwcRule(rule, code, context) ?? code;
@@ -100,11 +101,7 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
     // 6. Transform code to es5.
     pipeline.addStep((code, args) => {
       return {
-        code: transformSyncWithSwc(
-          code,
-          this.getTransformContext(args),
-          this.swcPreset,
-        ),
+        code: transformSyncWithSwc(code, this.getContext(args), this.swcPreset),
         done: true,
       };
     });
@@ -135,17 +132,21 @@ export class SyncTransformPipeline extends TransformPipeline<SyncTransformStep> 
   }
 
   transform(code: string, args: OnLoadArgs): TransformResult {
-    const sharedData = {} as SharedData;
+    const fileStat = fs.statSync(args.path);
+    const moduleMeta: ModuleMeta = {
+      stats: fileStat,
+      hash: this.getHash(this.context.id, args.path, fileStat.mtimeMs),
+    };
 
     const before: SyncTransformStep = (code, args) => {
       return this.onBeforeTransform
-        ? this.onBeforeTransform(code, args, sharedData)
+        ? this.onBeforeTransform(code, args, moduleMeta)
         : { code, done: false };
     };
 
     const after: SyncTransformStep = (code, args) => {
       return this.onAfterTransform
-        ? this.onAfterTransform(code, args, sharedData)
+        ? this.onAfterTransform(code, args, moduleMeta)
         : { code, done: true };
     };
 
@@ -153,11 +154,11 @@ export class SyncTransformPipeline extends TransformPipeline<SyncTransformStep> 
       (prev, curr) => {
         return prev.done
           ? { code: prev.code, done: true }
-          : curr(prev.code, args, sharedData);
+          : curr(prev.code, args, moduleMeta);
       },
-      before(code, args, sharedData),
+      before(code, args, moduleMeta),
     );
 
-    return after(result.code, args, sharedData);
+    return after(result.code, args, moduleMeta);
   }
 }

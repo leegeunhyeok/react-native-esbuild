@@ -1,3 +1,4 @@
+import type { Stats } from 'node:fs';
 import type { OnLoadArgs } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type { Options as SwcTransformOptions } from '@swc/core';
@@ -15,8 +16,11 @@ export type SyncTransformer<TransformerOptions> = (
 ) => string;
 
 export interface TransformerContext {
-  path: string;
+  id: number;
   root: string;
+  entry: string;
+  dev: boolean;
+  path: string;
 }
 
 export type TransformerOptionsPreset<TransformerOptions> = (
@@ -77,7 +81,7 @@ export type SwcTransformRule = TransformRuleBase<SwcTransformOptions>;
 export type TransformStep<Result> = (
   code: string,
   args: OnLoadArgs,
-  sharedData: SharedData,
+  moduleMeta: ModuleMeta,
 ) => Result;
 
 export type AsyncTransformStep = TransformStep<Promise<TransformResult>>;
@@ -88,7 +92,7 @@ export interface TransformResult {
   done: boolean;
 }
 
-export interface SharedData {
-  hash?: string;
-  mtimeMs?: number;
+export interface ModuleMeta {
+  hash: string;
+  stats: Stats;
 }

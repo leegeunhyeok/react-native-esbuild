@@ -4339,12 +4339,10 @@ __metadata:
     "@react-native-esbuild/transformer": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
     "@swc/core": ^1.3.95
-    "@types/md5": ^2.3.2
     chokidar: ^3.5.3
     deepmerge: ^4.3.1
     esbuild: ^0.19.5
     invariant: ^2.2.4
-    md5: ^2.3.0
     ora: ^5.4.1
   peerDependencies:
     react-native: "*"
@@ -4441,7 +4439,9 @@ __metadata:
     "@react-native-esbuild/config": "workspace:*"
     "@swc/core": ^1.3.95
     "@swc/helpers": ^0.5.3
+    "@types/md5": ^2.3.4
     esbuild: ^0.19.5
+    md5: ^2.3.0
     sucrase: ^3.34.0
     swc-plugin-coverage-instrument: ^0.0.20
     swc_mut_cjs_exports: ^0.85.0
@@ -5600,7 +5600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/md5@npm:^2.3.2":
+"@types/md5@npm:^2.3.2, @types/md5@npm:^2.3.4":
   version: 2.3.4
   resolution: "@types/md5@npm:2.3.4"
   checksum: 9a724277b2e4b5c6fce4d34d2e2baab821ef47904eccdcbd389fb9973f2e5198f71a4aa98ddcf092fe32457be307d2f3d3f1e099a53d1642c6e569ade5450548

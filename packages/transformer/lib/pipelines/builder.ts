@@ -4,6 +4,7 @@ import type {
   BabelTransformRule,
   SwcTransformRule,
   TransformStep,
+  TransformerContext,
   TransformerOptionsPreset,
 } from '../types';
 import { babelPresets } from '../transformer';
@@ -27,10 +28,7 @@ export abstract class TransformPipelineBuilder<
   protected additionalBabelRules: BabelTransformRule[] = [];
   protected additionalSwcRules: SwcTransformRule[] = [];
 
-  constructor(
-    protected root: string,
-    protected entry: string,
-  ) {}
+  constructor(protected context: Omit<TransformerContext, 'path'>) {}
 
   protected getNodePackageRegExp(packageNames: string[]): RegExp | null {
     return packageNames.length
@@ -38,11 +36,8 @@ export abstract class TransformPipelineBuilder<
       : null;
   }
 
-  protected getTransformContext(args: OnLoadArgs): {
-    path: string;
-    root: string;
-  } {
-    return { path: args.path, root: this.root };
+  protected getContext(args: OnLoadArgs): TransformerContext {
+    return { ...this.context, path: args.path };
   }
 
   protected combineInjectScripts(

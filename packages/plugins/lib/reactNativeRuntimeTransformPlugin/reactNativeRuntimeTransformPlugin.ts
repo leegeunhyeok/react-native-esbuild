@@ -14,7 +14,6 @@ import {
 import { logger } from '../shared';
 import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
 import {
-  makeCacheConfig,
   getTransformedCodeFromInMemoryCache,
   getTransformedCodeFromFileSystemCache,
   writeTransformedCodeToInMemoryCache,
@@ -46,18 +45,13 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
     const onBeforeTransform: AsyncTransformStep = async (
       code,
       args,
-      sharedData,
+      moduleMeta,
     ) => {
       const isChangedFile = bundlerSharedData.watcher.changed === args.path;
-      const cacheConfig = await makeCacheConfig(
-        cacheController,
-        args,
-        context,
-        isChangedFile ? bundlerSharedData.watcher.stats : undefined,
-      );
-
-      sharedData.hash = cacheConfig.hash;
-      sharedData.mtimeMs = cacheConfig.mtimeMs;
+      const cacheConfig = {
+        hash: moduleMeta.hash,
+        mtimeMs: moduleMeta.stats.mtimeMs,
+      };
 
       // 1. Force re-transform when file is changed.
       if (isChangedFile) {
@@ -95,15 +89,12 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
     const onAfterTransform: AsyncTransformStep = async (
       code,
       _args,
-      shared,
+      moduleMeta,
     ) => {
-      if (!(shared.hash && shared.mtimeMs)) {
-        logger.warn('unexpected cache config');
-        return { code, done: true };
-      }
-
-      const cacheConfig = { hash: shared.hash, mtimeMs: shared.mtimeMs };
-
+      const cacheConfig = {
+        hash: moduleMeta.hash,
+        mtimeMs: moduleMeta.stats.mtimeMs,
+      };
       writeTransformedCodeToInMemoryCache(cacheController, code, cacheConfig);
 
       if (cacheEnabled) {
@@ -118,10 +109,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
     };
 
     let transformPipeline: AsyncTransformPipeline;
-    const transformPipelineBuilder = new AsyncTransformPipeline.builder(
-      context.root,
-      context.entry,
-    )
+    const transformPipelineBuilder = new AsyncTransformPipeline.builder(context)
       .setSwcPreset(swcPresets.getReactNativeRuntimePreset())
       .setInjectScripts(injectScriptPaths)
       .setFullyTransformPackages(fullyTransformPackageNames)

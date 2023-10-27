@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import md5 from 'md5';
 import type { Cache } from '../../types';
 
 const OPTIONS = { encoding: 'utf-8' } as const;
@@ -14,10 +13,6 @@ export class CacheController {
     } catch (_error) {
       fs.mkdirSync(cacheDirectory, { recursive: true });
     }
-  }
-
-  public getCacheHash(message: string): string {
-    return md5(message);
   }
 
   public readFromMemory(key: string): Cache | undefined {

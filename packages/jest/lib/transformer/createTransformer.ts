@@ -10,14 +10,21 @@ import {
   SyncTransformPipeline,
   AsyncTransformPipeline,
   swcPresets,
+  type TransformerContext,
 } from '@react-native-esbuild/transformer';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
 import type { TransformerConfig } from '../types';
 import pkg from '../../package.json';
 
-const DUMMY_ENTRY = '';
 const DUMMY_ESBUILD_VALUE = '';
 const ROOT = process.cwd();
+const TRANSFORMER_CONTEXT: TransformerContext = {
+  root: ROOT,
+  id: 0,
+  dev: true,
+  entry: '',
+  path: '',
+};
 
 ReactNativeEsbuildBundler.bootstrap();
 
@@ -32,8 +39,7 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
     : undefined;
 
   const syncTransformPipeline = new SyncTransformPipeline.builder(
-    ROOT,
-    DUMMY_ENTRY,
+    TRANSFORMER_CONTEXT,
   )
     .setSwcPreset(
       swcPresets.getJestPreset({
@@ -53,8 +59,7 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
     .build();
 
   const asyncTransformPipeline = new AsyncTransformPipeline.builder(
-    ROOT,
-    DUMMY_ENTRY,
+    TRANSFORMER_CONTEXT,
   )
     .setSwcPreset(
       // Async transform is always ESM.

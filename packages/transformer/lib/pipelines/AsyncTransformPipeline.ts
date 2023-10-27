@@ -1,4 +1,5 @@
 import path from 'node:path';
+import fs from 'node:fs/promises';
 import type { OnLoadArgs } from 'esbuild';
 import {
   transformWithBabel,
@@ -6,7 +7,7 @@ import {
   stripFlowWithSucrase,
 } from '../transformer';
 import { transformByBabelRule, transformBySwcRule } from '../helpers';
-import type { AsyncTransformStep, TransformResult, SharedData } from '../types';
+import type { AsyncTransformStep, ModuleMeta, TransformResult } from '../types';
 import { TransformPipeline } from './pipeline';
 import { TransformPipelineBuilder } from './builder';
 
@@ -15,14 +16,14 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
   AsyncTransformPipeline
 > {
   build(): AsyncTransformPipeline {
-    const pipeline = new AsyncTransformPipeline();
+    const pipeline = new AsyncTransformPipeline(this.context);
 
     this.onBefore && pipeline.beforeTransform(this.onBefore);
     this.onAfter && pipeline.afterTransform(this.onAfter);
 
     // 1. Inject initializeCore and specified scripts to entry file.
     if (this.injectScriptPaths.length) {
-      const entryFile = path.resolve(this.root, this.entry);
+      const entryFile = path.resolve(this.context.root, this.context.entry);
       pipeline.addStep((code, args) => {
         return Promise.resolve({
           code:
@@ -44,7 +45,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
           return {
             code: await transformWithBabel(
               code,
-              this.getTransformContext(args),
+              this.getContext(args),
               this.presets.babelFullyTransform,
             ),
             // skip other transformations when fully transformed
@@ -66,7 +67,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
           this.isFlow(code, args.path)
         ) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
-          code = stripFlowWithSucrase(code, this.getTransformContext(args));
+          code = stripFlowWithSucrase(code, this.getContext(args));
         }
 
         return Promise.resolve({ code, done: false });
@@ -76,7 +77,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
     // 4. Apply additional babel rules.
     if (this.additionalBabelRules.length) {
       pipeline.addStep(async (code, args) => {
-        const context = this.getTransformContext(args);
+        const context = this.getContext(args);
         for await (const rule of this.additionalBabelRules) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = (await transformByBabelRule(rule, code, context)) ?? code;
@@ -88,7 +89,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
     // 5. Apply additional swc rules.
     if (this.additionalSwcRules.length) {
       pipeline.addStep(async (code, args) => {
-        const context = this.getTransformContext(args);
+        const context = this.getContext(args);
         for await (const rule of this.additionalSwcRules) {
           // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = (await transformBySwcRule(rule, code, context)) ?? code;
@@ -102,7 +103,7 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
       return {
         code: await transformWithSwc(
           code,
-          this.getTransformContext(args),
+          this.getContext(args),
           this.swcPreset,
         ),
         done: true,
@@ -120,17 +121,21 @@ export class AsyncTransformPipeline extends TransformPipeline<AsyncTransformStep
   protected onAfterTransform?: AsyncTransformStep;
 
   async transform(code: string, args: OnLoadArgs): Promise<TransformResult> {
-    const sharedData = {} as SharedData;
+    const fileStat = await fs.stat(args.path);
+    const moduleMeta: ModuleMeta = {
+      stats: fileStat,
+      hash: this.getHash(this.context.id, args.path, fileStat.mtimeMs),
+    };
 
     const before: AsyncTransformStep = (code, args) => {
       return this.onBeforeTransform
-        ? this.onBeforeTransform(code, args, sharedData)
+        ? this.onBeforeTransform(code, args, moduleMeta)
         : Promise.resolve({ code, done: false });
     };
 
     const after: AsyncTransformStep = (code, args) => {
       return this.onAfterTransform
-        ? this.onAfterTransform(code, args, sharedData)
+        ? this.onAfterTransform(code, args, moduleMeta)
         : Promise.resolve({ code, done: true });
     };
 
@@ -139,12 +144,12 @@ export class AsyncTransformPipeline extends TransformPipeline<AsyncTransformStep
         return Promise.resolve(prev).then((prevResult) =>
           prevResult.done
             ? Promise.resolve({ code: prevResult.code, done: true })
-            : curr(prevResult.code, args, sharedData),
+            : curr(prevResult.code, args, moduleMeta),
         );
       },
-      before(code, args, sharedData),
+      before(code, args, moduleMeta),
     );
 
-    return after(result.code, args, sharedData);
+    return after(result.code, args, moduleMeta);
   }
 }
