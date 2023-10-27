@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/hmr",
-  "version": "0.1.0-beta.8",
+  "version": "0.1.0-alpha.42",
   "description": "HMR implementation for @react-native-esbuild",
   "keywords": [
     "react-native",

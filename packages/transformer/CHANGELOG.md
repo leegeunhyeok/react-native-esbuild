@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.42](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.12...v0.1.0-alpha.42) (2023-10-27)
+
+### Features
+
+- implements hot reload ([4d99921](https://github.com/leegeunhyeok/react-native-esbuild/commit/4d9992124a7207dca378d4a115476f14102b5811)), closes [#38](https://github.com/leegeunhyeok/react-native-esbuild/issues/38)
+- **transformer:** supports runtime jsx transformation ([c17e1c6](https://github.com/leegeunhyeok/react-native-esbuild/commit/c17e1c6bd0065fa443a07139ddaf8f167b16bf73))
+
+### Code Refactoring
+
+- add module metadata ([a960c14](https://github.com/leegeunhyeok/react-native-esbuild/commit/a960c14dd358390e4dfa9037382b098bed185a09))
+
 ## [0.1.0-beta.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2023-10-25)
 
 **Note:** Version bump only for package @react-native-esbuild/transformer

@@ -1,6 +1,6 @@
 {
   "name": "@react-native-esbuild/jest",
-  "version": "0.1.0-beta.12",
+  "version": "0.1.0-alpha.42",
   "description": "react-native preset for jest powered by @react-native-esbuild",
   "keywords": [
     "react-native",
