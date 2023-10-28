@@ -1,5 +1,6 @@
 import { Server, type WebSocket, type MessageEvent, type Data } from 'ws';
 import type { ClientLogEvent } from '@react-native-esbuild/core';
+import { getReloadByDevSettingsProxy } from '@react-native-esbuild/internal';
 import { logger } from '../shared';
 import type {
   HotReloadMiddleware,
@@ -67,8 +68,6 @@ export const createHotReloadMiddleware = ({
    * Send reload code to client.
    *
    * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro-runtime/src/modules/HMRClient.js#L91-L99}
-   * @see [turboModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/TurboModule/TurboModuleRegistry.js#L17}
-   * @see [nativeModuleProxy]{@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/BatchedBridge/NativeModules.js#L179}
    */
   const hotReload = (revisionId: string): void => {
     const hmrUpdateMessage: HmrUpdateMessage = {
@@ -76,23 +75,7 @@ export const createHotReloadMiddleware = ({
       body: {
         added: [
           {
-            /**
-             * ```ts
-             * // It works the same as the code below.
-             * import { DevSettings } from 'react-native';
-             *
-             * DevSettings.reload();
-             * ```
-             */
-            module: [
-              -1,
-              `(function () {
-                var moduleName = "DevSettings";
-                (global.__turboModuleProxy
-                  ? global.__turboModuleProxy(moduleName)
-                  : global.nativeModuleProxy[moduleName]).reload();
-              })();`,
-            ],
+            module: [-1, getReloadByDevSettingsProxy()],
             sourceMappingURL: null,
             sourceURL: null,
           },

@@ -98,3 +98,23 @@ export const getAssetRegistrationScript = ({
     )});
   `;
 };
+
+/**
+ * Get reload script.
+ *
+ * @see turboModuleProxy {@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/TurboModule/TurboModuleRegistry.js#L17}
+ * @see nativeModuleProxy {@link https://github.com/facebook/react-native/blob/v0.72.0/packages/react-native/Libraries/BatchedBridge/NativeModules.js#L179}
+ *
+ * ```ts
+ * // It works the same as the code below.
+ * import { DevSettings } from 'react-native';
+ *
+ * DevSettings.reload();
+ * ```
+ */
+export const getReloadByDevSettingsProxy = (): string => `(function () {
+  var moduleName = "DevSettings";
+  (global.__turboModuleProxy
+    ? global.__turboModuleProxy(moduleName)
+    : global.nativeModuleProxy[moduleName]).reload();
+})();`;
