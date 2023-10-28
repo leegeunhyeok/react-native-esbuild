@@ -35,6 +35,7 @@ module.exports = {
         'unicorn/filename-case': 'off',
         'import/no-named-as-default-member': 'off',
         'no-bitwise': 'off',
+        'no-param-reassign': 'off',
         'eslint-comments/disable-enable-pair': 'off',
         'prettier/prettier': 'error',
         '@typescript-eslint/prefer-reduce-type-parameter': 'off',

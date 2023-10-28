@@ -66,7 +66,6 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
           stripFlowPackageNamesRegExp.test(args.path) ||
           this.isFlow(code, args.path)
         ) {
-          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = stripFlowWithSucrase(code, this.getContext(args));
         }
 
@@ -79,7 +78,6 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
       pipeline.addStep((code, args) => {
         const context = this.getContext(args);
         for (const rule of this.additionalBabelRules) {
-          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = transformSyncByBabelRule(rule, code, context) ?? code;
         }
         return { code, done: false };
@@ -91,7 +89,6 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
       pipeline.addStep((code, args) => {
         const context = this.getContext(args);
         for (const rule of this.additionalSwcRules) {
-          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = transformSyncBySwcRule(rule, code, context) ?? code;
         }
         return { code, done: false };

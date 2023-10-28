@@ -66,7 +66,6 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
           stripFlowPackageNamesRegExp.test(args.path) ||
           this.isFlow(code, args.path)
         ) {
-          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = stripFlowWithSucrase(code, this.getContext(args));
         }
 
@@ -79,7 +78,6 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
       pipeline.addStep(async (code, args) => {
         const context = this.getContext(args);
         for await (const rule of this.additionalBabelRules) {
-          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = (await transformByBabelRule(rule, code, context)) ?? code;
         }
         return { code, done: false };
@@ -91,7 +89,6 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
       pipeline.addStep(async (code, args) => {
         const context = this.getContext(args);
         for await (const rule of this.additionalSwcRules) {
-          // eslint-disable-next-line no-param-reassign -- Allow reassign.
           code = (await transformBySwcRule(rule, code, context)) ?? code;
         }
         return { code, done: false };
