@@ -5,6 +5,7 @@ import type {
   SwcTransformRule,
 } from '@react-native-esbuild/transformer';
 import type { BundleOptions } from '@react-native-esbuild/config';
+import type { JscConfig } from '@swc/core';
 
 export interface Config {
   /**
@@ -57,6 +58,10 @@ export interface Config {
    * Transformer configurations
    */
   transformer?: {
+    /**
+     * Swc's `jsc` config.
+     */
+    jsc: Pick<JscConfig, 'transform' | 'experimental'>;
     /**
      * Strip flow syntax.
      *

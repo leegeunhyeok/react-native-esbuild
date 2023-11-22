@@ -32,6 +32,13 @@ exports.default = {
     assetExtensions: [/* internal/lib/defaults.ts */],
   },
   transformer: {
+    jsc: {
+      transform: {
+        react: {
+          runtime: 'automatic',
+        },
+      },
+    },
     stripFlowPackageNames: ['react-native'],
   },
   web: {
@@ -65,6 +72,7 @@ Resolver configurations.
 
 Transformer configurations.
 
+- `transformer.jsc`: [jsc](https://swc.rs/docs/configuration/compilation) config in swc.
 - `transformer.stripFlowPackageNames`: Package names to strip flow syntax from (Defaults to `['react-native']`)
 - `transformer.fullyTransformPackageNames`: Package names to fully transform with [metro-react-native-babel-preset](https://github.com/facebook/react-native/tree/main/packages/react-native-babel-preset) from
   :::warning

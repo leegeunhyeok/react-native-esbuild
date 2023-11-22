@@ -1,4 +1,9 @@
-import type { Options, TsParserConfig, EsParserConfig } from '@swc/core';
+import type {
+  Options,
+  JscConfig,
+  TsParserConfig,
+  EsParserConfig,
+} from '@swc/core';
 import type {
   TransformerOptionsPreset,
   SwcJestPresetOptions,
@@ -21,7 +26,9 @@ const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
 /**
  * swc transform options preset for react-native runtime.
  */
-const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
+const getReactNativeRuntimePreset = (
+  jscConfig?: Pick<JscConfig, 'transform' | 'experimental'>,
+): TransformerOptionsPreset<Options> => {
   return (context) => ({
     minify: false,
     sourceMaps: false,
@@ -34,13 +41,8 @@ const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
       loose: false,
       externalHelpers: true,
       keepClassNames: true,
-      transform: {
-        react: {
-          runtime: 'automatic',
-          development: context.dev,
-          refresh: false,
-        },
-      },
+      transform: jscConfig?.transform,
+      experimental: jscConfig?.experimental,
     },
     filename: context.path,
     root: context.root,

@@ -42,6 +42,10 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       ...(config?.injectScriptPaths ?? []),
     ];
 
+    const reactNativeRuntimePreset = swcPresets.getReactNativeRuntimePreset(
+      context.config.transformer?.jsc,
+    );
+
     const onBeforeTransform: AsyncTransformStep = async (
       code,
       args,
@@ -110,7 +114,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
 
     let transformPipeline: AsyncTransformPipeline;
     const transformPipelineBuilder = new AsyncTransformPipeline.builder(context)
-      .setSwcPreset(swcPresets.getReactNativeRuntimePreset())
+      .setSwcPreset(reactNativeRuntimePreset)
       .setInjectScripts(injectScriptPaths)
       .setFullyTransformPackages(fullyTransformPackageNames)
       .setStripFlowPackages(stripFlowPackageNames)
