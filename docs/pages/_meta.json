@@ -1,0 +1,17 @@
+{
+  "index": "Introduction",
+  "getting-started": "Getting Started",
+  "configuration": "Configuration",
+  "native-setup": "Native Setup",
+  "package-presets": "Package Presets",
+  "web": "Web",
+  "jest": "Testing with Jest",
+  "troubleshooting": "Troubleshooting",
+  "limitations": "Limitations",
+  "contact": {
+    "title": "Contact ↗",
+    "type": "page",
+    "href": "https://twitter.com/leegeunhyeok",
+    "newWindow": true
+  }
+}

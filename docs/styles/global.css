@@ -1,0 +1,36 @@
+.welcome-banner {
+  position: relative;
+  text-align: center;
+  min-height: 320px;
+}
+
+.welcome-banner > img {
+  width: 320px;
+  display: inline-block;
+}
+
+.welcome-banner > img.animate-logo {
+  animation: linear infinite roll 10s;
+}
+
+.welcome-banner > img.over-wrap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.description-banner {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.description-banner > img {
+  display: inline-block;
+}
+
+@keyframes roll {
+  to {
+    transform: rotate(360deg);
+  }
+}
