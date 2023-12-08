@@ -1,3 +1,5 @@
+import { Callout } from 'nextra/components'
+
 # Basic Configuration
 
 ## Configuration
@@ -69,11 +71,12 @@ Transformer configurations.
 - `transformer.jsc`: [jsc](https://swc.rs/docs/configuration/compilation) config in swc.
 - `transformer.stripFlowPackageNames`: Package names to strip flow syntax from (Defaults to `['react-native']`)
 - `transformer.fullyTransformPackageNames`: Package names to fully transform with [metro-react-native-babel-preset](https://github.com/facebook/react-native/tree/main/packages/react-native-babel-preset) from
-  :::warning
-  This may slow down code transformation
-  :::
 - `transformer.additionalTransformRules`: Additional transform rules. This rules will be applied before phase of transform to es5
   - For more details, go to [Custom Transformation](/configuration/custom-transformation)
+
+<Callout type="warning">
+  `transformer.fullyTransformPackageNames` may slow down code transformation
+</Callout>
 
 ### web
 
@@ -89,7 +92,8 @@ For more details, go to [Custom Plugins](/configuration/custom-plugins)
 
 ## Types
 
-<details><summary>Config</summary>
+<details>
+<summary>Config</summary>
 
 ```ts
 interface Config {
@@ -214,7 +218,8 @@ interface Config {
 
 </details>
 
-<details><summary>Custom Transform Rules</summary>
+<details>
+<summary>Custom Transform Rules</summary>
 
 
 ```ts
@@ -235,7 +240,8 @@ type BabelTransformRule = TransformRuleBase<import('@babel/core').Options>;
 
 </details>
 
-<details><summary>ReportableEvent</summary>
+<details>
+<summary>ReportableEvent</summary>
 
 ```ts
 type ReportableEvent = ClientLogEvent;

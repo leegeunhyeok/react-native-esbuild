@@ -28,7 +28,7 @@ const config: DocsThemeConfig = {
   },
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter()
-    const { frontMatter } = useConfig()
+    const { frontMatter, title } = useConfig()
     const url =
       'https://react-native-esbuild.vercel.app' +
       (defaultLocale === locale ? asPath : `/${locale}${asPath}`)
@@ -42,6 +42,7 @@ const config: DocsThemeConfig = {
           property="og:description"
           content={frontMatter.description || 'Document'}
         />
+        <title>{`${title} - RNE`}</title>
       </>
     )
   }

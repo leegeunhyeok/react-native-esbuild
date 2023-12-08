@@ -1,3 +1,7 @@
+import { Callout } from 'nextra/components'
+
+# Web Support
+
 React Native Esbuild supports all platforms, including Web.
 
 See a demo application built with a web target [here](https://rne-web-demo.vercel.app).
@@ -12,9 +16,9 @@ Install [react-native-web](https://necolas.github.io/react-native-web) and [reac
 yarn add react-native-web react-dom
 ```
 
-:::warning
-`react-dom` version must match the `react` version in your package.json
-:::
+<Callout type="warning">
+`react-dom` version must match with the `react` version in your package.json
+</Callout>
 
 ### Create Web Entry
 
@@ -125,11 +129,11 @@ exports.default{
 
 You can replace the `{{name}}` format strings in template through the `web.placeholders` configuration.
 
-:::info
+<Callout type="info">
 The reserved placeholder names are `_` prefixed name. It will be overridden your placeholders.
 
 - `_bundle`: the bundle file path
-:::
+</Callout>
 
 ```js
 // react-native-esbuild.config.js
@@ -138,7 +142,7 @@ exports.default = {
     placeholders: {
       placeholder_name: 'Hello, world!'
       // reserved placeholder name.
-      // it will be overridden by Esbuild.
+      // It will be overridden by bundler.
       _bundle: 'custom value',
     },
   },
