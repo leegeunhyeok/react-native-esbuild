@@ -70,9 +70,9 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - hermes-engine (0.72.4):
-    - hermes-engine/Pre-built (= 0.72.4)
-  - hermes-engine/Pre-built (0.72.4)
+  - hermes-engine (0.72.6):
+    - hermes-engine/Pre-built (= 0.72.6)
+  - hermes-engine/Pre-built (0.72.6)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.07.22.00):
@@ -377,7 +377,7 @@ PODS:
     - glog
   - react-native-flipper (0.176.0):
     - React-Core
-  - react-native-safe-area-context (4.7.2):
+  - react-native-safe-area-context (4.7.3):
     - React-Core
   - React-NativeModulesApple (0.72.6):
     - hermes-engine
@@ -489,9 +489,10 @@ PODS:
     - React-jsi (= 0.72.6)
     - React-logger (= 0.72.6)
     - React-perflogger (= 0.72.6)
-  - RNGestureHandler (2.13.1):
+  - RNGestureHandler (2.13.4):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - RNReanimated (3.5.2):
+  - RNReanimated (3.5.4):
     - DoubleConversion
     - FBLazyVector
     - glog
@@ -520,10 +521,10 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.25.0):
+  - RNScreens (3.27.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - React-RCTImage
-  - RNSVG (13.13.0):
+  - RNSVG (13.14.0):
     - React-Core
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
@@ -727,7 +728,7 @@ SPEC CHECKSUMS:
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: 81191603c4eaa01f5e4ae5737a9efcf64756c7b2
+  hermes-engine: 8057e75cfc1437b178ac86c8654b24e7fead7f60
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
@@ -746,7 +747,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
   react-native-flipper: bbbbb6e3d8b7e6f5fb083885cb9898765fd6d782
-  react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
+  react-native-safe-area-context: 238cd8b619e05cb904ccad97ef42e84d1b5ae6ec
   React-NativeModulesApple: 02e35e9a51e10c6422f04f5e4076a7c02243fff2
   React-perflogger: e3596db7e753f51766bceadc061936ef1472edc3
   React-RCTActionSheet: 17ab132c748b4471012abbcdcf5befe860660485
@@ -764,10 +765,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: f23e337008403341177fc52ee4ca94e442c17ede
   React-utils: fa59c9a3375fb6f4aeb66714fd3f7f76b43a9f16
   ReactCommon: dd03c17275c200496f346af93a7b94c53f3093a4
-  RNGestureHandler: 38aa38413896620338948fbb5c90579a7b1c3fde
-  RNReanimated: 2491645f0883526f4470d8b5c761308709ba31f8
-  RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
-  RNSVG: ed492aaf3af9ca01bc945f7a149d76d62e73ec82
+  RNGestureHandler: 6e46dde1f87e5f018a54fe5d40cd0e0b942b49ee
+  RNReanimated: ab2e96c6d5591c3dfbb38a464f54c8d17fb34a87
+  RNScreens: 3c2d122f5e08c192e254c510b212306da97d2581
+  RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: b76f1acfda8212aa16b7e26bcce3983230c82603
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
