@@ -1,5 +1,5 @@
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
-import { LogLevel } from '@react-native-esbuild/utils';
+import { LogLevel } from '@react-native-esbuild/shared';
 import { cli } from './cli';
 import * as Commands from './commands';
 import { getCommand, handleUncaughtException } from './helpers';

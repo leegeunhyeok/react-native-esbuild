@@ -1,36 +1,57 @@
-import type { Stats } from 'node:fs';
 import type { OnLoadArgs } from 'esbuild';
-import type { TransformOptions as BabelTransformOptions } from '@babel/core';
-import type { Options as SwcTransformOptions } from '@swc/core';
+import type { ModuleId } from '@react-native-esbuild/shared';
 
 export type AsyncTransformer<TransformerOptions> = (
   code: string,
-  context: TransformerContext,
-  preset?: TransformerOptionsPreset<TransformerOptions>,
+  config: TransformerConfig<TransformerOptions>,
 ) => Promise<string>;
 
 export type SyncTransformer<TransformerOptions> = (
   code: string,
-  context: TransformerContext,
-  preset?: TransformerOptionsPreset<TransformerOptions>,
+  config: TransformerConfig<TransformerOptions>,
 ) => string;
 
-export interface TransformerContext {
-  id: number;
+interface TransformerConfig<TransformerOptions> {
+  context: TransformContext;
+  preset?: TransformerOptionsPreset<TransformerOptions>;
+}
+
+export interface BaseTransformContext {
   root: string;
   entry: string;
   dev: boolean;
+}
+
+export interface TransformContext extends BaseTransformContext {
+  id: ModuleId;
   path: string;
+  /**
+   * @internal
+   *
+   * - `react-native-runtime-transform-plugin`
+   *   - `mtimeMs`, `hash`, `externalPattern`
+   * - `HMRTransformPipeline`
+   *   - `externalPattern`
+   *
+   * ```ts
+   * interface PluginData {
+   *   // Set modified at timestamp.
+   *   mtimeMs?: number;
+   *   // Set hash value when cache enabled.
+   *   hash?: string;
+   *   // Set map value when HMR enabled.
+   *   importPaths?: Record<string, string>;
+   *   // Set `true` if it's entry-point module.
+   *   isEntryPoint?: boolean;
+   * }
+   * ```
+   */
+  pluginData: OnLoadArgs['pluginData'];
 }
 
 export type TransformerOptionsPreset<TransformerOptions> = (
-  context: TransformerContext,
+  context: TransformContext,
 ) => TransformerOptions;
-
-// swc preset options
-export interface SwcReactNativeRuntimePresetOptions {
-  reactRefresh?: { moduleId: string };
-}
 
 export interface SwcJestPresetOptions {
   module?: 'cjs' | 'esm';
@@ -63,25 +84,14 @@ export interface SwcJestPresetOptions {
   };
 }
 
-export interface TransformRuleBase<T> {
-  /**
-   * Predicator for transform
-   */
-  test: (path: string, code: string) => boolean;
-  /**
-   * Transformer options
-   */
-  options: T | ((path: string, code: string) => T);
+export interface SwcMinifyPresetOptions {
+  minify: boolean;
 }
-
-export type BabelTransformRule = TransformRuleBase<BabelTransformOptions>;
-export type SwcTransformRule = TransformRuleBase<SwcTransformOptions>;
 
 // TransformPipelineBuilder
 export type TransformStep<Result> = (
   code: string,
-  args: OnLoadArgs,
-  moduleMeta: ModuleMeta,
+  context: TransformContext,
 ) => Result;
 
 export type AsyncTransformStep = TransformStep<Promise<TransformResult>>;
@@ -90,9 +100,4 @@ export type SyncTransformStep = TransformStep<TransformResult>;
 export interface TransformResult {
   code: string;
   done: boolean;
-}
-
-export interface ModuleMeta {
-  hash: string;
-  stats: Stats;
 }

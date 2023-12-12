@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { SUPPORT_PLATFORMS } from '@react-native-esbuild/config';
+import { SUPPORT_PLATFORMS } from '@react-native-esbuild/shared';
 import { z } from 'zod';
 
 const resolvePath = (filepath: string): string =>

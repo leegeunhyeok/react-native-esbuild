@@ -3,8 +3,7 @@ import { hideBin } from 'yargs/helpers';
 import {
   DEFAULT_ENTRY_POINT,
   DEFAULT_WEB_ENTRY_POINT,
-} from '@react-native-esbuild/config';
-import { VERSION } from './constants';
+} from '@react-native-esbuild/shared';
 import type { RawArgv } from './types';
 
 const commonOptions = {
@@ -27,7 +26,7 @@ const commonOptions = {
 export const cli = (): RawArgv | Promise<RawArgv> => {
   return yargs(hideBin(process.argv))
     .scriptName('rne')
-    .version(VERSION)
+    .version(self._version as string)
     .usage('$0 <cmd> [args]')
     .command(
       'start',

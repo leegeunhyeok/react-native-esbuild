@@ -28,24 +28,10 @@ const config: Config = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
-      displayName: '@react-native-esbuild/config',
-      transform,
-      testEnvironment: 'node',
-      testMatch: ['<rootDir>/packages/config/**/*.test.ts'],
-      setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
-    },
-    {
       displayName: '@react-native-esbuild/dev-server',
       transform,
       testEnvironment: 'node',
       testMatch: ['<rootDir>/packages/dev-server/**/*.test.ts'],
-      setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
-    },
-    {
-      displayName: '@react-native-esbuild/internal',
-      transform,
-      testEnvironment: 'node',
-      testMatch: ['<rootDir>/packages/internal/**/*.test.ts'],
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
@@ -70,10 +56,10 @@ const config: Config = {
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
     {
-      displayName: '@react-native-esbuild/utils',
+      displayName: '@react-native-esbuild/shared',
       transform,
       testEnvironment: 'node',
-      testMatch: ['<rootDir>/packages/utils/**/*.test.ts'],
+      testMatch: ['<rootDir>/packages/shared/**/*.test.ts'],
       setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
     },
   ],

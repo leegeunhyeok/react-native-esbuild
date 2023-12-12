@@ -1,4 +1,4 @@
-export * from './hotReload';
+export * from './hmr';
 export * from './indexPage';
 export * from './serveAsset';
 export * from './serveBundle';

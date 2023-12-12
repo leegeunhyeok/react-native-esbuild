@@ -1,1 +1,1 @@
-export * from './CacheController';
+export { CacheStorageImpl as CacheStorage } from './CacheStorageImpl';

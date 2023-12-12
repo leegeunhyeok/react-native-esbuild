@@ -1,11 +1,10 @@
 import fs from 'node:fs';
 import { faker } from '@faker-js/faker';
-import { CacheController } from '../CacheController';
-import type { Cache } from '../../../types';
+import type { Cache } from '@react-native-esbuild/shared';
+import { CacheStorageImpl } from '../CacheStorageImpl';
 
-describe('CacheController', () => {
-  const CACHE_DIR = '/cache';
-  let manager: CacheController;
+describe('CacheStorageImpl', () => {
+  let storage: CacheStorageImpl;
   let mockedFs: Record<string, string>;
 
   beforeAll(() => {
@@ -25,30 +24,12 @@ describe('CacheController', () => {
       });
     jest.spyOn(fs.promises, 'rm').mockReturnValue(Promise.resolve());
 
-    manager = new CacheController(CACHE_DIR);
+    storage = new CacheStorageImpl();
     mockedFs = {};
   });
 
   afterAll(() => {
     jest.restoreAllMocks();
-  });
-
-  describe('getCacheDirectory', () => {
-    it('should match snapshot', () => {
-      expect(CACHE_DIR).toMatchSnapshot();
-    });
-
-    describe('when filename is present', () => {
-      let filename: string;
-
-      beforeEach(() => {
-        filename = faker.system.fileName();
-      });
-
-      it('should join path with cache directory', () => {
-        expect(`${CACHE_DIR}/${filename}`).toMatch(new RegExp(`/${filename}$`));
-      });
-    });
   });
 
   describe('memory caching', () => {
@@ -60,13 +41,13 @@ describe('CacheController', () => {
         cacheKey = faker.string.uuid();
         cache = {
           data: faker.string.alphanumeric(10),
-          modifiedAt: faker.date.past().getTime(),
+          mtimeMs: faker.date.past().getTime(),
         };
-        manager.writeToMemory(cacheKey, cache);
+        storage.writeToMemory(cacheKey, cache);
       });
 
       it('should cache data store to memory', () => {
-        expect(manager.readFromMemory(cacheKey)).toMatchObject(cache);
+        expect(storage.readFromMemory(cacheKey)).toMatchObject(cache);
       });
 
       describe('when write cache with exist key to memory', () => {
@@ -74,12 +55,12 @@ describe('CacheController', () => {
 
         beforeEach(() => {
           otherData = faker.string.alphanumeric(10);
-          manager.writeToMemory(cacheKey, { ...cache, data: otherData });
+          storage.writeToMemory(cacheKey, { ...cache, data: otherData });
         });
 
         it('should overwrite exist cache data', () => {
-          expect(manager.readFromMemory(cacheKey)).not.toMatchObject(cache);
-          expect(manager.readFromMemory(cacheKey)).toMatchObject({
+          expect(storage.readFromMemory(cacheKey)).not.toMatchObject(cache);
+          expect(storage.readFromMemory(cacheKey)).toMatchObject({
             ...cache,
             data: otherData,
           });
@@ -95,12 +76,12 @@ describe('CacheController', () => {
     beforeEach(async () => {
       hash = faker.string.alphanumeric(10);
       data = faker.string.alphanumeric(10);
-      await manager.writeToFileSystem(hash, data);
+      await storage.writeToFileSystem(hash, data);
     });
 
     describe('when write data to file system', () => {
       it('should store data to file system', async () => {
-        expect(await manager.readFromFileSystem(hash)).toEqual(data);
+        expect(await storage.readFromFileSystem(hash)).toEqual(data);
       });
     });
   });

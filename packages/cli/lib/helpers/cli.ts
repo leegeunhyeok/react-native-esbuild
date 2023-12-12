@@ -1,4 +1,4 @@
-import { colors } from '@react-native-esbuild/utils';
+import { colors } from '@react-native-esbuild/shared';
 import { logger } from '../shared';
 
 export const getCommand = <RawArgv extends { _: (string | number)[] }>(

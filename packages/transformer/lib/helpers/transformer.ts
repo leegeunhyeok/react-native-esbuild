@@ -1,16 +1,15 @@
+import type {
+  BabelTransformRule,
+  SwcTransformRule,
+  TransformRuleBase,
+} from '@react-native-esbuild/shared';
 import {
   transformWithBabel,
   transformSyncWithBabel,
   transformWithSwc,
   transformSyncWithSwc,
 } from '../transformer';
-import type {
-  TransformRuleBase,
-  TransformerContext,
-  SwcTransformRule,
-  BabelTransformRule,
-  TransformerOptionsPreset,
-} from '../types';
+import type { TransformContext, TransformerOptionsPreset } from '../types';
 
 const ruleOptionsToPreset = <T>(
   options: TransformRuleBase<T>['options'],
@@ -24,47 +23,51 @@ const ruleOptionsToPreset = <T>(
 export const transformByBabelRule = (
   rule: BabelTransformRule,
   code: string,
-  context: TransformerContext,
+  context: TransformContext,
 ): Promise<string | null> => {
   return rule.test(context.path, code)
-    ? transformWithBabel(code, context, ruleOptionsToPreset(rule.options, code))
+    ? transformWithBabel(code, {
+        context,
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : Promise.resolve(null);
 };
 
 export const transformSyncByBabelRule = (
   rule: BabelTransformRule,
   code: string,
-  context: TransformerContext,
+  context: TransformContext,
 ): string | null => {
   return rule.test(context.path, code)
-    ? transformSyncWithBabel(
-        code,
+    ? transformSyncWithBabel(code, {
         context,
-        ruleOptionsToPreset(rule.options, code),
-      )
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : null;
 };
 
 export const transformBySwcRule = (
   rule: SwcTransformRule,
   code: string,
-  context: TransformerContext,
+  context: TransformContext,
 ): Promise<string | null> => {
   return rule.test(context.path, code)
-    ? transformWithSwc(code, context, ruleOptionsToPreset(rule.options, code))
+    ? transformWithSwc(code, {
+        context,
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : Promise.resolve(null);
 };
 
 export const transformSyncBySwcRule = (
   rule: SwcTransformRule,
   code: string,
-  context: TransformerContext,
+  context: TransformContext,
 ): string | null => {
   return rule.test(context.path, code)
-    ? transformSyncWithSwc(
-        code,
+    ? transformSyncWithSwc(code, {
         context,
-        ruleOptionsToPreset(rule.options, code),
-      )
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : null;
 };

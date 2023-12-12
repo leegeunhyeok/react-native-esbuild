@@ -1,3 +1,3 @@
-import { Logger } from '@react-native-esbuild/utils';
+import { Logger } from '@react-native-esbuild/shared';
 
 export const logger = new Logger('core');

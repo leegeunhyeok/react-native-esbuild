@@ -2,7 +2,7 @@ import fs, { type FileHandle } from 'node:fs/promises';
 import path from 'node:path';
 import url from 'node:url';
 import mime from 'mime';
-import { ASSET_PATH } from '@react-native-esbuild/config';
+import { ASSET_PATH } from '@react-native-esbuild/shared';
 import { logger } from '../shared';
 import type { DevServerMiddlewareCreator } from '../types';
 

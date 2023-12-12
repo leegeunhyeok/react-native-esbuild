@@ -1,3 +1,3 @@
 # `@react-native-esbuild/internal`
 
-> Internal configs and helpers for react-native
+> Internal(react-native) configs and helpers for @react-native-esbuild

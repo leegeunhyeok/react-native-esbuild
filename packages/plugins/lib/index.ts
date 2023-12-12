@@ -1,4 +1,6 @@
 export * from './assetRegisterPlugin';
+export * from './buildStatusPlugin';
+export * from './metafilePlugin';
 export * from './reactNativeRuntimeTransformPlugin';
 export * from './reactNativeWebPlugin';
 export * from './svgTransformPlugin';

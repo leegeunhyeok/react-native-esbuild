@@ -1,6 +1,6 @@
-import type { BundlerSupportPlatform } from '@react-native-esbuild/config';
+import type { BuildStatusListener } from '@react-native-esbuild/shared';
 
-// asset-register-plugin
+// assetRegisterPlugin
 export interface AssetRegisterPluginConfig {
   assetExtensions?: string[];
 }
@@ -10,15 +10,10 @@ export interface SuffixPathResult {
   dirname: string;
   basename: string;
   extension: string;
-  platform: BundlerSupportPlatform | null;
+  platform: string | null;
 }
 
-// react-native-runtime-transform-plugin
-export interface ReactNativeRuntimeTransformPluginConfig {
-  injectScriptPaths?: string[];
-}
-
-export interface CacheConfig {
-  hash: string;
-  mtimeMs: number;
+// buildStatusPlugin
+export interface BuildStatusPluginConfig {
+  handler?: BuildStatusListener;
 }

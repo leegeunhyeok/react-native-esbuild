@@ -1,6 +1,6 @@
 import { parse } from 'node:url';
 import { z } from 'zod';
-import type { BundleOptions } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/shared';
 import { BundleRequestType } from '../types';
 
 export type ParsedBundleOptions = z.infer<typeof bundleSearchParamSchema>;

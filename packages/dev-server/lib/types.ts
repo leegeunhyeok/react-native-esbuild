@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { Server as WebSocketServer } from 'ws';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
+import type { HMRServer } from '@react-native-esbuild/hmr';
 
 export enum BundleRequestType {
   Unknown,
@@ -30,21 +30,13 @@ export type DevServerMiddleware = (
   next: (error?: unknown) => void,
 ) => void;
 
-export interface HotReloadMiddleware {
-  server: WebSocketServer;
-  hotReload: (revisionId: string) => void;
+export interface HMRMiddleware {
+  server: HMRServer;
   updateStart: () => void;
   updateDone: () => void;
+  hotReload: (revisionId: string, code: string) => void;
+  liveReload: (revisionId: string) => void;
 }
-
-/**
- * HMR web socket messages
- * @see {@link https://github.com/facebook/metro/blob/v0.77.0/packages/metro-runtime/src/modules/types.flow.js#L68}
- */
-export type HmrClientMessage =
-  | RegisterEntryPointsMessage
-  | LogMessage
-  | LogOptInMessage;
 
 export interface RegisterEntryPointsMessage {
   type: 'register-entrypoints';

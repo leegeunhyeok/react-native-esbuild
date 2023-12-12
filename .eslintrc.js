@@ -29,6 +29,7 @@ module.exports = {
       rules: {
         semi: ['error', 'always'],
         quotes: ['error', 'single'],
+        camelcase: 'off',
         'new-cap': 'off',
         'object-curly-spacing': ['error', 'always'],
         'array-bracket-spacing': 'off',
@@ -43,12 +44,25 @@ module.exports = {
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/no-throw-literal': 'off',
         '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
       },
     },
     {
       files: ['**/build/*.js'],
       rules: {
         'no-console': 'off',
+      },
+    },
+    {
+      files: ['packages/hmr/lib/runtime/*.ts'],
+      rules: {
+        'no-console': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
       },
     },
     {

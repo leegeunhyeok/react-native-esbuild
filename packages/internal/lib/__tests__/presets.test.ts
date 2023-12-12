@@ -1,4 +1,4 @@
-import { getAssetRegistrationScript } from '../presets';
+import { getAssetRegistrationScript } from '../helpers';
 
 describe('getAssetRegistrationScript', () => {
   let assetRegistrationScript: string;

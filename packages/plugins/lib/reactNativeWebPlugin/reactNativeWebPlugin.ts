@@ -1,11 +1,13 @@
 import path from 'node:path';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
-import type { ReactNativeEsbuildPluginCreator } from '@react-native-esbuild/core';
-import { getDevServerPublicPath } from '@react-native-esbuild/config';
+import {
+  BuildMode,
+  getDevServerPublicPath,
+  type PluginFactory,
+} from '@react-native-esbuild/shared';
 import { logger } from '../shared';
 import { generateIndexPage } from './helpers';
 
-const NAME = 'react-native-web-plugin';
 const RESOLVE_PATTERNS = [
   // For relative path import of initializeCore.
   /node_modules\/react-native\//,
@@ -13,16 +15,17 @@ const RESOLVE_PATTERNS = [
   /^react-native$/,
 ];
 
-export const createReactNativeWebPlugin: ReactNativeEsbuildPluginCreator = (
-  context,
-) => ({
-  name: NAME,
+export const createReactNativeWebPlugin: PluginFactory = (buildContext) => ({
+  name: 'react-native-web-plugin',
   setup: (build): void => {
-    const { root, platform, outfile, mode } = context;
-    const { template, placeholders } = context.config.web ?? {};
-    const destination =
-      mode === 'watch' ? getDevServerPublicPath(root) : path.dirname(outfile);
+    const { root, mode } = buildContext;
+    const { platform, outfile } = buildContext.bundleOptions;
+    const { template, placeholders } = buildContext.config.web ?? {};
     const bundleFilename = path.basename(outfile);
+    const destination =
+      mode === BuildMode.Watch
+        ? getDevServerPublicPath(root)
+        : path.dirname(outfile);
 
     if (platform !== 'web') return;
 

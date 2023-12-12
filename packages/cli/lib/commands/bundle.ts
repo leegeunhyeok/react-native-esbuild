@@ -1,12 +1,11 @@
 import path from 'node:path';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
-  DEFAULT_ENTRY_POINT,
+  DEFAULT_WEB_ENTRY_POINT,
   type BundleOptions,
-} from '@react-native-esbuild/config';
+} from '@react-native-esbuild/shared';
 import { printDebugOptions } from '../helpers';
 import { bundleArgvSchema } from '../schema';
-import { presets } from '../presets';
 import { logger } from '../shared';
 import type { Command } from '../types';
 
@@ -16,7 +15,7 @@ import type { Command } from '../types';
 export const bundle: Command = async (argv) => {
   const bundleArgv = bundleArgvSchema.parse(argv);
   const bundleOptions: Partial<BundleOptions> = {
-    entry: path.resolve(bundleArgv['entry-file'] ?? DEFAULT_ENTRY_POINT),
+    entry: path.resolve(bundleArgv['entry-file'] ?? DEFAULT_WEB_ENTRY_POINT),
     sourcemap: bundleArgv['sourcemap-output'],
     outfile: bundleArgv['bundle-output'],
     assetsDir: bundleArgv['assets-dest'],
@@ -32,10 +31,6 @@ export const bundle: Command = async (argv) => {
   printDebugOptions(bundleOptions);
 
   const bundler = new ReactNativeEsbuildBundler(root);
-  (bundleOptions.platform === 'web' ? presets.web : presets.native).forEach(
-    bundler.addPlugin.bind(bundler),
-  );
-
   await bundler.initialize();
   await bundler.bundle(bundleOptions);
 };

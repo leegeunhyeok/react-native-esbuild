@@ -1,0 +1,56 @@
+{
+  "name": "@react-native-esbuild/hmr",
+  "version": "0.1.0-beta.8",
+  "description": "HMR implementation for @react-native-esbuild",
+  "keywords": [
+    "react-native",
+    "esbuild",
+    "hmr",
+    "react-refresh"
+  ],
+  "author": "leegeunhyeok <dev.ghlee@gmail.com>",
+  "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
+  "license": "MIT",
+  "type": "commonjs",
+  "module": "lib/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/lib/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./runtime": "./dist/runtime.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
+  },
+  "scripts": {
+    "prepack": "yarn build",
+    "cleanup": "rimraf ./dist",
+    "build": "node build/index.js && tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
+  },
+  "devDependencies": {
+    "@swc/helpers": "^0.5.2",
+    "@types/react-refresh": "^0.14.3",
+    "esbuild": "^0.19.3"
+  },
+  "dependencies": {
+    "@react-native-esbuild/internal": "workspace:*",
+    "@react-native-esbuild/shared": "workspace:*",
+    "react-refresh": "^0.14.0",
+    "ws": "^8.14.2"
+  }
+}

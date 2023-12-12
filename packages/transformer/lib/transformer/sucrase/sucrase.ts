@@ -10,7 +10,10 @@ const stripFlowTypeofImportStatements = (code: string): string => {
     .join('\n');
 };
 
-export const stripFlowWithSucrase: SyncTransformer<void> = (code, context) => {
+export const stripFlowWithSucrase: SyncTransformer<void> = (
+  code,
+  { context },
+) => {
   return stripFlowTypeofImportStatements(
     transform(code, {
       transforms: TRANSFORM_FOR_STRIP_FLOW,

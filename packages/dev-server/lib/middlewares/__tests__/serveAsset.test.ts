@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
-import { ASSET_PATH } from '@react-native-esbuild/config';
+import { ASSET_PATH } from '@react-native-esbuild/shared';
 import { faker } from '@faker-js/faker';
 import { createServeAssetMiddleware } from '../serveAsset';
 import type { DevServerMiddleware } from '../../types';

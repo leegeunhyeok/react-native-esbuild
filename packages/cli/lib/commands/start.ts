@@ -1,10 +1,9 @@
 /* eslint-disable quotes -- Allow quote in template literal */
 import path from 'node:path';
 import { ReactNativeAppServer } from '@react-native-esbuild/dev-server';
-import { DEFAULT_ENTRY_POINT } from '@react-native-esbuild/config';
+import { DEFAULT_ENTRY_POINT } from '@react-native-esbuild/shared';
 import { enableInteractiveMode, printDebugOptions } from '../helpers';
 import { startArgvSchema } from '../schema';
-import { presets } from '../presets';
 import { logger } from '../shared';
 import type { Command } from '../types';
 
@@ -21,12 +20,8 @@ export const start: Command = async (argv) => {
   logger.debug('start options');
   printDebugOptions({ entry, ...serveOptions });
 
-  const server = await new ReactNativeAppServer(serveOptions).initialize(
-    (bundler) => {
-      presets.native.forEach(bundler.addPlugin.bind(bundler));
-    },
-  );
-
+  const server = new ReactNativeAppServer(serveOptions);
+  await server.initialize();
   await server.listen(() => {
     if (
       enableInteractiveMode((keyName) => {

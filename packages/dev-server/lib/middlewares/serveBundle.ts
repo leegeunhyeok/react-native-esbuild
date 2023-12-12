@@ -3,7 +3,7 @@ import type {
   BundlerEventListener,
   ReactNativeEsbuildBundler,
 } from '@react-native-esbuild/core';
-import { getIdByOptions } from '@react-native-esbuild/config';
+import { getIdByOptions } from '@react-native-esbuild/shared';
 import {
   BundleResponse,
   parseBundleOptionsFromRequestUrl,

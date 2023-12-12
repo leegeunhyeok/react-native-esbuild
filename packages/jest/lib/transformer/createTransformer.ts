@@ -10,20 +10,17 @@ import {
   SyncTransformPipeline,
   AsyncTransformPipeline,
   swcPresets,
-  type TransformerContext,
+  type BaseTransformContext,
 } from '@react-native-esbuild/transformer';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
 import type { TransformerConfig } from '../types';
 import pkg from '../../package.json';
 
-const DUMMY_ESBUILD_VALUE = '';
 const ROOT = process.cwd();
-const TRANSFORMER_CONTEXT: TransformerContext = {
+const BASE_TRANSFORM_CONTEXT: BaseTransformContext = {
   root: ROOT,
-  id: 0,
   dev: true,
   entry: '',
-  path: '',
 };
 
 ReactNativeEsbuildBundler.bootstrap();
@@ -39,7 +36,7 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
     : undefined;
 
   const syncTransformPipeline = new SyncTransformPipeline.builder(
-    TRANSFORMER_CONTEXT,
+    BASE_TRANSFORM_CONTEXT,
   )
     .setSwcPreset(
       swcPresets.getJestPreset({
@@ -59,7 +56,7 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
     .build();
 
   const asyncTransformPipeline = new AsyncTransformPipeline.builder(
-    TRANSFORMER_CONTEXT,
+    BASE_TRANSFORM_CONTEXT,
   )
     .setSwcPreset(
       // Async transform is always ESM.
@@ -87,10 +84,9 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
       _options: TransformOptions,
     ): TransformedSource => {
       const transformResult = syncTransformPipeline.transform(code, {
+        id: 0,
         path,
-        pluginData: DUMMY_ESBUILD_VALUE,
-        namespace: DUMMY_ESBUILD_VALUE,
-        suffix: DUMMY_ESBUILD_VALUE,
+        pluginData: {},
       });
       return { code: transformResult.code };
     },
@@ -100,10 +96,9 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
       _options: TransformOptions,
     ): Promise<TransformedSource> => {
       const transformResult = await asyncTransformPipeline.transform(code, {
+        id: 0,
         path,
-        pluginData: DUMMY_ESBUILD_VALUE,
-        namespace: DUMMY_ESBUILD_VALUE,
-        suffix: DUMMY_ESBUILD_VALUE,
+        pluginData: {},
       });
       return { code: transformResult.code };
     },

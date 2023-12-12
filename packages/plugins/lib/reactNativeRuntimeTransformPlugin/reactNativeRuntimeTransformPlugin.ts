@@ -1,144 +1,71 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { OnLoadResult } from 'esbuild';
-import {
-  ReactNativeEsbuildBundler as Bundler,
-  type ReactNativeEsbuildPluginCreator,
-} from '@react-native-esbuild/core';
-import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
-import {
-  AsyncTransformPipeline,
-  swcPresets,
-  type AsyncTransformStep,
-} from '@react-native-esbuild/transformer';
+import { getCommonReactNativeRuntimePipelineBuilder } from '@react-native-esbuild/transformer';
+import type { PluginFactory } from '@react-native-esbuild/shared';
 import { logger } from '../shared';
-import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
-import {
-  getTransformedCodeFromInMemoryCache,
-  getTransformedCodeFromFileSystemCache,
-  writeTransformedCodeToInMemoryCache,
-  writeTransformedCodeToFileSystemCache,
-} from './helpers';
+import { getCachingSteps, transformJsonAsJsModule } from './helpers';
 
-const NAME = 'react-native-runtime-transform-plugin';
-
-export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCreator<
-  ReactNativeRuntimeTransformPluginConfig
-> = (context, config) => ({
-  name: NAME,
+export const createReactNativeRuntimeTransformPlugin: PluginFactory = (
+  buildContext,
+) => ({
+  name: 'react-native-runtime-transform-plugin',
   setup: (build): void => {
-    const cacheController = Bundler.caches.get(context.id);
-    const bundlerSharedData = Bundler.shared.get(context.id);
-    const cacheEnabled = context.config.cache ?? true;
-    const {
-      stripFlowPackageNames = [],
-      fullyTransformPackageNames = [],
-      additionalTransformRules,
-    } = context.config.transformer ?? {};
-    const additionalBabelRules = additionalTransformRules?.babel ?? [];
-    const additionalSwcRules = additionalTransformRules?.swc ?? [];
-    const injectScriptPaths = [
-      getReactNativeInitializeCore(context.root),
-      ...(config?.injectScriptPaths ?? []),
-    ];
+    const filter = /\.(?:[mc]js|[tj]sx?)$/;
+    const cachingSteps = getCachingSteps(buildContext);
+    const transformPipeline = getCommonReactNativeRuntimePipelineBuilder(
+      buildContext,
+    )
+      .beforeTransform(cachingSteps.beforeTransform)
+      .afterTransform(cachingSteps.afterTransform)
+      .build();
 
-    const reactNativeRuntimePreset = swcPresets.getReactNativeRuntimePreset(
-      context.config.transformer?.jsc,
+    transformJsonAsJsModule(buildContext, build);
+
+    build.onResolve({ filter }, (args) =>
+      args.kind === 'entry-point'
+        ? {
+            path: args.path,
+            pluginData: { isEntryPoint: true },
+          }
+        : null,
     );
 
-    const onBeforeTransform: AsyncTransformStep = async (
-      code,
-      args,
-      moduleMeta,
-    ) => {
-      const isChangedFile = bundlerSharedData.watcher.changed === args.path;
-      const cacheConfig = {
-        hash: moduleMeta.hash,
-        mtimeMs: moduleMeta.stats.mtimeMs,
-      };
+    build.onLoad({ filter }, async (args) => {
+      const moduleId = buildContext.moduleManager.getModuleId(args.path);
+      let handle: fs.FileHandle | undefined;
 
-      // 1. Force re-transform when file is changed.
-      if (isChangedFile) {
-        logger.debug('changed file detected', { path: args.path });
-        return { code, done: false };
+      try {
+        handle = await fs.open(args.path);
+        const stat = await handle.stat();
+        const rawCode = await handle.readFile({ encoding: 'utf-8' });
+
+        const { code } = await transformPipeline.transform(rawCode, {
+          id: moduleId,
+          path: args.path,
+          pluginData: {
+            ...args.pluginData,
+            mtimeMs: stat.mtimeMs,
+            externalPattern: buildContext.additionalData.externalPattern,
+          },
+        });
+
+        return { contents: code, loader: 'js' };
+      } finally {
+        try {
+          await handle?.close();
+        } catch (error) {
+          logger.error('unexpected error', error);
+          process.exit(1);
+        }
       }
-
-      /**
-       * 2. Use previous transformed result and skip transform
-       *    when file is not changed and transform result exist in memory.
-       */
-      const inMemoryCache = getTransformedCodeFromInMemoryCache(
-        cacheController,
-        cacheConfig,
-      );
-      if (inMemoryCache) {
-        return { code: inMemoryCache, done: true };
-      }
-
-      // 3. Transform code on each build task when cache is disabled.
-      if (!cacheEnabled) {
-        return { code, done: false };
-      }
-
-      // 4. Trying to get cache from file system.
-      //    = cache exist ? use cache : transform code
-      const cachedCode = await getTransformedCodeFromFileSystemCache(
-        cacheController,
-        cacheConfig,
-      );
-
-      return { code: cachedCode ?? code, done: Boolean(cachedCode) };
-    };
-
-    const onAfterTransform: AsyncTransformStep = async (
-      code,
-      _args,
-      moduleMeta,
-    ) => {
-      const cacheConfig = {
-        hash: moduleMeta.hash,
-        mtimeMs: moduleMeta.stats.mtimeMs,
-      };
-      writeTransformedCodeToInMemoryCache(cacheController, code, cacheConfig);
-
-      if (cacheEnabled) {
-        await writeTransformedCodeToFileSystemCache(
-          cacheController,
-          code,
-          cacheConfig,
-        );
-      }
-
-      return { code, done: true };
-    };
-
-    let transformPipeline: AsyncTransformPipeline;
-    const transformPipelineBuilder = new AsyncTransformPipeline.builder(context)
-      .setSwcPreset(reactNativeRuntimePreset)
-      .setInjectScripts(injectScriptPaths)
-      .setFullyTransformPackages(fullyTransformPackageNames)
-      .setStripFlowPackages(stripFlowPackageNames)
-      .setAdditionalBabelTransformRules(additionalBabelRules)
-      .setAdditionalSwcTransformRules(additionalSwcRules)
-      .onStart(onBeforeTransform)
-      .onEnd(onAfterTransform);
-
-    build.onStart(() => {
-      transformPipeline = transformPipelineBuilder.build();
-    });
-
-    build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
-      const rawCode = await fs.readFile(args.path, { encoding: 'utf-8' });
-      return {
-        contents: (await transformPipeline.transform(rawCode, args)).code,
-        loader: 'js',
-      } as OnLoadResult;
     });
 
     build.onEnd(async (args) => {
       if (args.errors.length) return;
 
-      if (!(build.initialOptions.outfile && context.sourcemap)) {
+      if (
+        !(build.initialOptions.outfile && buildContext.bundleOptions.sourcemap)
+      ) {
         logger.debug('outfile or sourcemap path is not specified');
         return;
       }
@@ -149,10 +76,10 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
 
       logger.debug('move sourcemap to specified path', {
         from: sourceMapPath,
-        to: context.sourcemap,
+        to: buildContext.bundleOptions.sourcemap,
       });
 
-      await fs.rename(sourceMapPath, context.sourcemap);
+      await fs.rename(sourceMapPath, buildContext.bundleOptions.sourcemap);
     });
   },
 });

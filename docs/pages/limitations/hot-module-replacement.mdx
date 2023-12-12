@@ -1,0 +1,30 @@
+import { Callout } from 'nextra/components'
+
+# Hot Module Replacement
+
+<Callout type="warning">
+  HMR(Hot Module Replacement) is experimental.
+</Callout>
+
+esbuild doesn't currently support Hot Module Replacement(HMR).
+
+So, I working hard for implement custom HMR and it's partially available as an experimental feature.
+
+You can enable HMR by `experimental.hmr` set to `true` in your configuration file.
+
+```js
+/**
+ * @type {import('@react-native-esbuild/core').Config}
+ */
+exports.default = {
+  // ...
+  experimental: {
+    hmr: true,
+  },
+};
+```
+
+and here are some limitations.
+
+- Detects changes in the `<projectRoot>/*` only.
+- Changes detected in `<projectRoot>/node_modules/*` will be ignored and fully refreshed after rebuild.

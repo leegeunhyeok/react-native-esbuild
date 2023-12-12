@@ -1,11 +1,12 @@
 import path from 'node:path';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
-import type { ReactNativeEsbuildPluginCreator } from '@react-native-esbuild/core';
+import { registerAsExternalModule } from '@react-native-esbuild/hmr';
+import type { PluginFactory } from '@react-native-esbuild/shared';
 import {
+  ASSET_EXTENSIONS,
   getAssetRegistrationScript,
   type Asset,
 } from '@react-native-esbuild/internal';
-import { ASSET_EXTENSIONS } from '@react-native-esbuild/internal';
 import type { AssetRegisterPluginConfig, SuffixPathResult } from '../types';
 import {
   copyAssetsToDestination,
@@ -19,9 +20,9 @@ const DEFAULT_PLUGIN_CONFIG: AssetRegisterPluginConfig = {
   assetExtensions: ASSET_EXTENSIONS,
 };
 
-export const createAssetRegisterPlugin: ReactNativeEsbuildPluginCreator<
+export const createAssetRegisterPlugin: PluginFactory<
   AssetRegisterPluginConfig
-> = (context, config = DEFAULT_PLUGIN_CONFIG) => ({
+> = (buildContext, config = DEFAULT_PLUGIN_CONFIG) => ({
   name: NAME,
   setup: (build) => {
     const { assetExtensions = ASSET_EXTENSIONS } = config;
@@ -59,14 +60,14 @@ export const createAssetRegisterPlugin: ReactNativeEsbuildPluginCreator<
       // 1
       let suffixedPathResult = getSuffixedPath(args.path, {
         scale: 1,
-        platform: context.platform,
+        platform: buildContext.bundleOptions.platform,
       });
       let resolveResult = await resolveAsset(suffixedPathResult, args);
 
       // 2
       if (resolveResult.errors.length) {
         suffixedPathResult = getSuffixedPath(args.path, {
-          platform: context.platform,
+          platform: buildContext.bundleOptions.platform,
         });
         resolveResult = await resolveAsset(suffixedPathResult, args);
       }
@@ -95,13 +96,21 @@ export const createAssetRegisterPlugin: ReactNativeEsbuildPluginCreator<
     });
 
     build.onLoad({ filter: /./, namespace: ASSET_NAMESPACE }, async (args) => {
-      const asset = await resolveScaledAssets(context, args);
+      const asset = await resolveScaledAssets(buildContext, args);
+      const assetRegistrationScript = getAssetRegistrationScript(asset);
+      const moduleId = buildContext.moduleManager.getModuleId(args.path);
 
       assets.push(asset);
 
       return {
         resolveDir: path.dirname(args.path),
-        contents: getAssetRegistrationScript(asset),
+        contents: buildContext.hmrEnabled
+          ? registerAsExternalModule(
+              moduleId,
+              assetRegistrationScript,
+              'module.exports',
+            )
+          : assetRegistrationScript,
         loader: 'js',
       };
     });
@@ -109,7 +118,7 @@ export const createAssetRegisterPlugin: ReactNativeEsbuildPluginCreator<
     build.onEnd(async (result) => {
       // Skip copying assets when build failure.
       if (result.errors.length) return;
-      await copyAssetsToDestination(context, assets);
+      await copyAssetsToDestination(buildContext, assets);
     });
   },
 });

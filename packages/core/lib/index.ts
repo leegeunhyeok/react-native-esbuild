@@ -4,6 +4,6 @@ import pkg from '../package.json';
 self._version = pkg.version;
 
 export { ReactNativeEsbuildBundler } from './bundler';
+export type { Config } from '@react-native-esbuild/shared';
+export type * from './bundler/events';
 export type * from './types';
-export type * from './bundler';
-export type { CacheController } from './bundler/cache';

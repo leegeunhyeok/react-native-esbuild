@@ -2,11 +2,11 @@ import fs from 'node:fs/promises';
 import deepmerge from 'deepmerge';
 import { faker } from '@faker-js/faker';
 import type { OnLoadArgs } from 'esbuild';
-import type { PluginContext } from '@react-native-esbuild/core';
 import {
   SUPPORT_PLATFORMS,
-  type BundlerSupportPlatform,
-} from '@react-native-esbuild/config';
+  type BuildContext,
+  type SupportedPlatform,
+} from '@react-native-esbuild/shared';
 import type { AssetScale } from '@react-native-esbuild/internal';
 import {
   getAssetPriority,
@@ -38,7 +38,7 @@ describe('assetRegisterPlugin', () => {
     let filename: string;
     let extension: string;
     let scale: AssetScale;
-    let platform: BundlerSupportPlatform;
+    let platform: SupportedPlatform;
 
     beforeEach(() => {
       filename = faker.string.alphanumeric(10);
@@ -72,7 +72,7 @@ describe('assetRegisterPlugin', () => {
     let filename: string;
     let extension: string;
     let scale: AssetScale;
-    let platform: BundlerSupportPlatform;
+    let platform: SupportedPlatform;
 
     beforeEach(() => {
       filename = faker.string.alphanumeric(10);
@@ -146,7 +146,7 @@ describe('assetRegisterPlugin', () => {
     let filename: string;
     let extension: string;
     let scale: AssetScale;
-    let platform: BundlerSupportPlatform;
+    let platform: SupportedPlatform;
 
     beforeEach(() => {
       filename = faker.string.alphanumeric(10);
@@ -241,7 +241,7 @@ describe('assetRegisterPlugin', () => {
     });
 
     describe('when `platform` is present', () => {
-      let platform: BundlerSupportPlatform;
+      let platform: SupportedPlatform;
       let suffixPathResult: SuffixPathResult;
 
       beforeEach(() => {
@@ -281,7 +281,7 @@ describe('assetRegisterPlugin', () => {
     });
 
     describe('when both `platform` and `scale` are present', () => {
-      let platform: BundlerSupportPlatform;
+      let platform: SupportedPlatform;
       let scale: AssetScale;
       let suffixPathResult: SuffixPathResult;
 
@@ -308,14 +308,16 @@ describe('assetRegisterPlugin', () => {
     let filename: string;
     let extension: string;
     let pullPath: string;
-    let mockedContext: PluginContext;
+    let mockedContext: BuildContext;
     let mockedArgs: OnLoadArgs;
 
-    const mockContext = (platform: BundlerSupportPlatform): void => {
-      mockedContext = deepmerge(mockedContext, { platform } as PluginContext);
+    const mockContext = (platform: SupportedPlatform): void => {
+      mockedContext = deepmerge(mockedContext, {
+        bundleOptions: { platform },
+      } as BuildContext);
     };
 
-    const mockArgs = (platform: BundlerSupportPlatform | null): void => {
+    const mockArgs = (platform: SupportedPlatform | null): void => {
       mockedArgs = {
         path: pullPath,
         pluginData: {
@@ -343,7 +345,7 @@ describe('assetRegisterPlugin', () => {
       filename = faker.string.alphanumeric(10);
       extension = faker.helpers.arrayElement(['.png', '.jpg', '.jpeg', '.gif']);
       pullPath = `${dirname}/${filename}${extension}`;
-      mockedContext = { root: faker.system.directoryPath() } as PluginContext;
+      mockedContext = { root: faker.system.directoryPath() } as BuildContext;
       mockedArgs = {
         path: pullPath,
         pluginData: {
@@ -355,7 +357,7 @@ describe('assetRegisterPlugin', () => {
     });
 
     describe('when platform suffixed asset is exist', () => {
-      let platform: BundlerSupportPlatform;
+      let platform: SupportedPlatform;
 
       beforeEach(() => {
         platform = faker.helpers.arrayElement(SUPPORT_PLATFORMS);

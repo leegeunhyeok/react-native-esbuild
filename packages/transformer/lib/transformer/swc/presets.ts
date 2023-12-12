@@ -1,12 +1,13 @@
-import type {
-  Options,
-  JscConfig,
-  TsParserConfig,
-  EsParserConfig,
-} from '@swc/core';
+import type { Options, TsParserConfig, EsParserConfig } from '@swc/core';
+import {
+  REACT_REFRESH_GET_SIGNATURE_FUNCTION,
+  REACT_REFRESH_REGISTER_FUNCTION,
+  isHMRBoundary,
+} from '@react-native-esbuild/hmr';
 import type {
   TransformerOptionsPreset,
   SwcJestPresetOptions,
+  SwcMinifyPresetOptions,
 } from '../../types';
 
 const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
@@ -26,27 +27,51 @@ const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
 /**
  * swc transform options preset for react-native runtime.
  */
-const getReactNativeRuntimePreset = (
-  jscConfig?: Pick<JscConfig, 'transform' | 'experimental'>,
-): TransformerOptionsPreset<Options> => {
-  return (context) => ({
-    minify: false,
-    sourceMaps: false,
-    isModule: true,
-    inputSourceMap: false,
-    inlineSourcesContent: false,
-    jsc: {
-      parser: getParserOptions(context.path),
-      target: 'es5',
-      loose: false,
-      externalHelpers: true,
-      keepClassNames: true,
-      transform: jscConfig?.transform,
-      experimental: jscConfig?.experimental,
-    },
-    filename: context.path,
-    root: context.root,
-  });
+const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
+  return (context) => {
+    const hmrEnabled = isHMRBoundary(context.path);
+    return {
+      minify: false,
+      sourceMaps: false,
+      isModule: true,
+      inputSourceMap: false,
+      inlineSourcesContent: false,
+      jsc: {
+        parser: getParserOptions(context.path),
+        target: 'es5',
+        loose: false,
+        externalHelpers: !context.dev,
+        keepClassNames: true,
+        transform: {
+          react: {
+            development: context.dev,
+            refresh: hmrEnabled
+              ? {
+                  refreshReg: REACT_REFRESH_REGISTER_FUNCTION,
+                  refreshSig: REACT_REFRESH_GET_SIGNATURE_FUNCTION,
+                }
+              : undefined,
+          },
+        },
+        experimental: {
+          plugins: hmrEnabled
+            ? [
+                [
+                  'swc-plugin-global-module',
+                  {
+                    runtimeModule: context.pluginData?.isRuntimeModule,
+                    externalPattern: context.pluginData?.externalPattern,
+                    importPaths: context.pluginData?.importPaths,
+                  },
+                ],
+              ]
+            : undefined,
+        },
+      },
+      filename: context.path,
+      root: context.root,
+    } as Options;
+  };
 };
 
 const getJestPreset = (
@@ -95,11 +120,21 @@ const getJestPreset = (
   });
 };
 
-const getMinifyPreset = () => {
-  return () => ({
-    compress: true,
-    mangle: true,
-    sourceMap: false,
+const getMinifyPreset = ({
+  minify,
+}: SwcMinifyPresetOptions): TransformerOptionsPreset<Options> => {
+  return (context) => ({
+    minify,
+    inputSourceMap: false,
+    inlineSourcesContent: false,
+    jsc: {
+      parser: getParserOptions(context.path),
+      target: 'es5',
+      loose: false,
+      keepClassNames: true,
+    },
+    filename: context.path,
+    root: context.root,
   });
 };
 

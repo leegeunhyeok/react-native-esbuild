@@ -29,4 +29,7 @@ exports.default = {
       ],
     },
   },
+  experimental: {
+    hmr: true,
+  },
 };

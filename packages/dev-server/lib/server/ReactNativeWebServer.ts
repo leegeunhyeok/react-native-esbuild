@@ -3,14 +3,18 @@ import http, {
   type ServerResponse,
   type IncomingMessage,
 } from 'node:http';
+import { parse } from 'node:url';
 import type { ServeResult } from 'esbuild';
 import invariant from 'invariant';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
   combineWithDefaultBundleOptions,
   type BundleOptions,
-} from '@react-native-esbuild/config';
-import { createSymbolicateMiddleware } from '../middlewares';
+} from '@react-native-esbuild/shared';
+import {
+  createHMRMiddlewareForWeb,
+  createSymbolicateMiddleware,
+} from '../middlewares';
 import { logger } from '../shared';
 import type { DevServerOptions } from '../types';
 import { DevServer } from './DevServer';
@@ -82,9 +86,7 @@ export class ReactNativeWebServer extends DevServer {
     });
   }
 
-  async initialize(
-    onPostSetup?: (bundler: ReactNativeEsbuildBundler) => void | Promise<void>,
-  ): Promise<this> {
+  async initialize(): Promise<this> {
     if (this.initialized) {
       logger.warn('dev server already initialized');
       return this;
@@ -95,6 +97,16 @@ export class ReactNativeWebServer extends DevServer {
     const bundler = (this.bundler = await new ReactNativeEsbuildBundler(
       this.devServerOptions.root,
     ).initialize({ watcherEnabled: true }));
+
+    const { server: hmrServer, ...hmr } = createHMRMiddlewareForWeb();
+
+    this.bundler.on('build-end', ({ revisionId, update, additionalData }) => {
+      if (!additionalData?.disableRefresh) {
+        update?.fullyReload
+          ? hmr.liveReload(revisionId)
+          : hmr.hotReload(revisionId, update?.code ?? '');
+      }
+    });
 
     const symbolicateMiddleware = createSymbolicateMiddleware(
       { bundler, devServerOptions: this.devServerOptions },
@@ -114,7 +126,19 @@ export class ReactNativeWebServer extends DevServer {
       });
     });
 
-    await onPostSetup?.(bundler);
+    this.server.on('upgrade', (request, socket, head) => {
+      if (!request.url) return;
+      const { pathname } = parse(request.url);
+
+      if (pathname === '/hot') {
+        const wss = hmrServer.getWebSocketServer();
+        wss.handleUpgrade(request, socket, head, (client) => {
+          wss.emit('connection', client, request);
+        });
+      } else {
+        socket.destroy();
+      }
+    });
 
     return this;
   }

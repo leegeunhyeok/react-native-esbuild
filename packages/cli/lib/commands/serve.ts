@@ -1,8 +1,7 @@
 import { ReactNativeWebServer } from '@react-native-esbuild/dev-server';
-import type { BundleOptions } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/shared';
 import { printDebugOptions } from '../helpers';
 import { serveArgvSchema } from '../schema';
-import { presets } from '../presets';
 import { logger } from '../shared';
 import type { Command } from '../types';
 
@@ -28,12 +27,7 @@ export const serve: Command = async (argv): Promise<void> => {
   logger.debug('bundle options');
   printDebugOptions(bundleOptions);
 
-  const server = await new ReactNativeWebServer(
-    serveOptions,
-    bundleOptions,
-  ).initialize((bundler) => {
-    presets.web.forEach(bundler.addPlugin.bind(bundler));
-  });
-
+  const server = new ReactNativeWebServer(serveOptions, bundleOptions);
+  await server.initialize();
   await server.listen();
 };

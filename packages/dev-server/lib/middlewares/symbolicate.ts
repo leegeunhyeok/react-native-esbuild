@@ -3,7 +3,7 @@ import {
   parseStackFromRawBody,
   symbolicateStackTrace,
 } from '@react-native-esbuild/symbolicate';
-import type { BundleOptions } from '@react-native-esbuild/config';
+import type { BundleOptions } from '@react-native-esbuild/shared';
 import {
   parseBundleOptionsForWeb,
   parseBundleOptionsFromRequestUrl,

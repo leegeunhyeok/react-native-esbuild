@@ -3,11 +3,11 @@ import { loadOptions, transformAsync, transformSync } from '@babel/core';
 import type {
   AsyncTransformer,
   SyncTransformer,
-  TransformerContext,
+  TransformContext,
 } from '../../types';
 
 const loadBabelOptions = (
-  context: TransformerContext,
+  context: TransformContext,
   options?: TransformOptions,
 ): ReturnType<typeof loadOptions> => {
   return loadOptions({
@@ -19,8 +19,7 @@ const loadBabelOptions = (
 
 export const transformWithBabel: AsyncTransformer<TransformOptions> = async (
   code: string,
-  context,
-  preset,
+  { context, preset },
 ) => {
   const babelOptions = loadBabelOptions(context, preset?.(context));
   if (!babelOptions) {
@@ -37,8 +36,7 @@ export const transformWithBabel: AsyncTransformer<TransformOptions> = async (
 
 export const transformSyncWithBabel: SyncTransformer<TransformOptions> = (
   code: string,
-  context,
-  preset,
+  { context, preset },
 ) => {
   const babelOptions = loadBabelOptions(context, preset?.(context));
   if (!babelOptions) {

@@ -1,9 +1,7 @@
 import EventEmitter from 'node:events';
-import type {
-  BundlerAdditionalData,
-  BuildStatus,
-  ReportableEvent,
-} from '../../types';
+import type { HMRTransformResult } from '@react-native-esbuild/hmr';
+import type { AdditionalData, BuildStatus } from '@react-native-esbuild/shared';
+import type { ClientLogEvent } from '@react-native-esbuild/internal';
 
 export class BundlerEventEmitter extends EventEmitter {
   addListener: <EventType extends BundlerEventType>(
@@ -41,16 +39,17 @@ export type BundlerEventListener<EventType extends BundlerEventType> = (
 export interface BundlerEventPayload {
   'build-start': {
     id: number;
-    additionalData?: BundlerAdditionalData;
+    additionalData?: AdditionalData;
   };
   'build-end': {
     id: number;
     revisionId: string;
-    additionalData?: BundlerAdditionalData;
+    update: HMRTransformResult | null;
+    additionalData?: AdditionalData;
   };
   'build-status-change': BuildStatus & {
     id: number;
-    additionalData?: BundlerAdditionalData;
+    additionalData?: AdditionalData;
   };
-  report: ReportableEvent;
+  report: ClientLogEvent;
 }

@@ -5,13 +5,13 @@ import type { OnLoadArgs } from 'esbuild';
 import { imageSize } from 'image-size';
 import md5 from 'md5';
 import invariant from 'invariant';
-import type { PluginContext } from '@react-native-esbuild/core';
-import type { Asset, AssetScale } from '@react-native-esbuild/internal';
 import {
   ASSET_PATH,
   SUPPORT_PLATFORMS,
-  type BundlerSupportPlatform,
-} from '@react-native-esbuild/config';
+  type BuildContext,
+  type SupportedPlatform,
+} from '@react-native-esbuild/shared';
+import type { Asset, AssetScale } from '@react-native-esbuild/internal';
 import type { SuffixPathResult } from '../../types';
 
 const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(
@@ -19,7 +19,7 @@ const PLATFORM_SUFFIX_PATTERN = SUPPORT_PLATFORMS.map(
 ).join('|');
 
 const SCALE_PATTERN = '@(\\d+\\.?\\d*)x';
-const ALLOW_SCALES: Partial<Record<BundlerSupportPlatform, number[]>> = {
+const ALLOW_SCALES: Partial<Record<SupportedPlatform, number[]>> = {
   ios: [1, 2, 3],
 };
 
@@ -54,7 +54,7 @@ export const addSuffix = (
   basename: string,
   extension: string,
   options?: {
-    platform?: BundlerSupportPlatform | null;
+    platform?: string | null;
     scale?: string | number;
   },
 ): string => {
@@ -93,7 +93,7 @@ export const getSuffixedPath = (
   assetPath: string,
   options?: {
     scale?: AssetScale;
-    platform?: BundlerSupportPlatform | null;
+    platform?: string | null;
   },
 ): SuffixPathResult => {
   // if `scale` present, append scale suffix to path
@@ -127,14 +127,13 @@ export const getDevServerBasePath = (asset: Asset): string => {
 function assertSuffixPathResult(
   data: OnLoadArgs['pluginData'],
 ): asserts data is SuffixPathResult {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- `pluginData` is any type.
   invariant(data.basename, 'basename is empty');
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- `pluginData` is any type.
+
   invariant(data.extension, 'extension is empty');
 }
 
 export const resolveScaledAssets = async (
-  context: PluginContext,
+  context: BuildContext,
   args: OnLoadArgs,
 ): Promise<Asset> => {
   assertSuffixPathResult(args.pluginData);
@@ -178,7 +177,9 @@ export const resolveScaledAssets = async (
       .map(parseFloat)
       .filter((scale: number) => {
         // https://github.com/react-native-community/cli/blob/v11.3.6/packages/cli-plugin-metro/src/commands/bundle/filterPlatformAssetScales.ts
-        return ALLOW_SCALES[context.platform]?.includes(scale) ?? true;
+        return (
+          ALLOW_SCALES[context.bundleOptions.platform]?.includes(scale) ?? true
+        );
       })
       .sort(),
     httpServerLocation: path.join(ASSET_PATH, path.dirname(relativePath)),
