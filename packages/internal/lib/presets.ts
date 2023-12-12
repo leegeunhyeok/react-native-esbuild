@@ -22,19 +22,13 @@ export const getInjectVariables = (dev: boolean): string[] => [
   `global = typeof globalThis !== 'undefined' ? globalThis : typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this`,
 ];
 
-const getReactNativePolyfills = (root: string): Promise<string[]> => {
+const getReactNativePolyfills = (root: string): string[] => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires -- Allow dynamic require.
   const getPolyfills = require(
     resolveFromRoot(REACT_NATIVE_GET_POLYFILLS_PATH, root),
   ) as () => string[];
 
-  return Promise.all(
-    getPolyfills().map((scriptPath) =>
-      fs
-        .readFile(scriptPath, { encoding: 'utf-8' })
-        .then((code) => wrapWithIIFE(code, scriptPath)),
-    ),
-  );
+  return getPolyfills();
 };
 
 export const getReactNativeInitializeCore = (root: string): string => {
@@ -56,16 +50,24 @@ export const getPreludeScript = async (
   { dev = true }: BundleOptions,
   root: string,
 ): Promise<string> => {
-  const polyfills = await getReactNativePolyfills(root);
+  const scripts = await Promise.all(
+    getReactNativePolyfills(root).map((scriptPath) =>
+      fs
+        .readFile(scriptPath, { encoding: 'utf-8' })
+        .then((code) => wrapWithIIFE(code, scriptPath)),
+    ),
+  );
+
   const initialScripts = [
     `var ${getInjectVariables(dev).join(',')};`,
     `process.env=process.env||{};`,
     `process.env.NODE_ENV=${JSON.stringify(getNodeEnv(dev))};`,
-    ...polyfills,
+    ...scripts,
   ].join('\n');
 
   return initialScripts;
 };
+
 /**
  * Get asset registration script.
  *
@@ -83,20 +85,18 @@ export const getAssetRegistrationScript = ({
   Asset,
   'name' | 'type' | 'scales' | 'hash' | 'httpServerLocation' | 'dimensions'
 >): string => {
-  return `
-    module.exports = require('react-native/Libraries/Image/AssetRegistry').registerAsset(${JSON.stringify(
-      {
-        __packager_asset: true,
-        name,
-        type,
-        scales,
-        hash,
-        httpServerLocation,
-        width: dimensions.width,
-        height: dimensions.height,
-      },
-    )});
-  `;
+  return `module.exports =require('react-native/Libraries/Image/AssetRegistry').registerAsset(${JSON.stringify(
+    {
+      __packager_asset: true,
+      name,
+      type,
+      scales,
+      hash,
+      httpServerLocation,
+      width: dimensions.width,
+      height: dimensions.height,
+    },
+  )});`;
 };
 
 /**

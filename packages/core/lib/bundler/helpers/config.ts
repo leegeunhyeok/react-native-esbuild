@@ -29,13 +29,6 @@ export const loadConfig = (configFilePath?: string): Config => {
       assetExtensions: ASSET_EXTENSIONS,
     },
     transformer: {
-      jsc: {
-        transform: {
-          react: {
-            runtime: 'automatic',
-          },
-        },
-      },
       stripFlowPackageNames: ['react-native'],
     },
     web: {

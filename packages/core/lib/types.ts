@@ -1,11 +1,10 @@
-import type { Stats } from 'node:fs';
 import type { BuildContext, Plugin } from 'esbuild';
 import type {
   BabelTransformRule,
   SwcTransformRule,
 } from '@react-native-esbuild/transformer';
+import type { BundleMeta } from '@react-native-esbuild/hmr';
 import type { BundleOptions } from '@react-native-esbuild/config';
-import type { JscConfig } from '@swc/core';
 
 export interface Config {
   /**
@@ -58,10 +57,6 @@ export interface Config {
    * Transformer configurations
    */
   transformer?: {
-    /**
-     * Swc's `jsc` config.
-     */
-    jsc: Pick<JscConfig, 'transform' | 'experimental'>;
     /**
      * Strip flow syntax.
      *
@@ -126,6 +121,17 @@ export interface Config {
    */
   plugins?: Plugin[];
   /**
+   * Experimental configurations
+   */
+  experimental?: {
+    /**
+     * Enable HMR(Hot Module Replacement) on development mode.
+     *
+     * Defaults to `false`.
+     */
+    hmr?: boolean;
+  };
+  /**
    * Client event receiver (only work on native)
    */
   reporter?: (event: ReportableEvent) => void;
@@ -167,10 +173,7 @@ export type ReactNativeEsbuildPluginCreator<PluginConfig = void> = (
 ) => Plugin;
 
 export interface BundlerSharedData {
-  watcher: {
-    changed: string | null;
-    stats?: Stats;
-  };
+  bundleMeta?: BundleMeta;
 }
 
 export type BundlerAdditionalData = Record<string, unknown>;
@@ -180,6 +183,8 @@ export interface PluginContext extends BundleOptions {
   root: string;
   config: Config;
   mode: BundleMode;
+  enableHmr: boolean;
+  externalPattern: string;
   additionalData?: BundlerAdditionalData;
 }
 

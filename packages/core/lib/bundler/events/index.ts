@@ -1,4 +1,5 @@
 import EventEmitter from 'node:events';
+import type { BundleUpdate } from '@react-native-esbuild/hmr';
 import type {
   BundlerAdditionalData,
   BuildStatus,
@@ -46,6 +47,7 @@ export interface BundlerEventPayload {
   'build-end': {
     id: number;
     revisionId: string;
+    update: BundleUpdate | null;
     additionalData?: BundlerAdditionalData;
   };
   'build-status-change': BuildStatus & {

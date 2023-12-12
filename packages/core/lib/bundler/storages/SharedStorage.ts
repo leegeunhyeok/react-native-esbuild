@@ -2,13 +2,21 @@ import type { BundlerSharedData } from '../../types';
 import { Storage } from './Storage';
 
 export class SharedStorage extends Storage<BundlerSharedData> {
+  private static instance: SharedStorage | null = null;
+
+  public static getInstance(): SharedStorage {
+    if (SharedStorage.instance === null) {
+      SharedStorage.instance = new SharedStorage();
+    }
+    return SharedStorage.instance;
+  }
+
+  private constructor() {
+    super();
+  }
+
   private getDefaultSharedData(): BundlerSharedData {
-    return {
-      watcher: {
-        changed: null,
-        stats: undefined,
-      },
-    };
+    return { bundleMeta: undefined };
   }
 
   public get(key: number): BundlerSharedData {
@@ -25,17 +33,13 @@ export class SharedStorage extends Storage<BundlerSharedData> {
 
   public setValue(value: Partial<BundlerSharedData>): void {
     for (const sharedData of this.data.values()) {
-      sharedData.watcher.changed =
-        value.watcher?.changed ?? sharedData.watcher.changed;
-      sharedData.watcher.stats =
-        value.watcher?.stats ?? sharedData.watcher.stats;
+      sharedData.bundleMeta = value.bundleMeta;
     }
   }
 
   public clearAll(): Promise<void> {
     for (const sharedData of this.data.values()) {
-      sharedData.watcher.changed = null;
-      sharedData.watcher.stats = undefined;
+      sharedData.bundleMeta = undefined;
     }
     return Promise.resolve();
   }

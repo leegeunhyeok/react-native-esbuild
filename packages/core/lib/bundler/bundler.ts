@@ -1,4 +1,5 @@
 import path from 'node:path';
+import type { Stats } from 'node:fs';
 import esbuild, {
   type BuildOptions,
   type BuildResult,
@@ -7,6 +8,7 @@ import esbuild, {
 import invariant from 'invariant';
 import ora from 'ora';
 import { getGlobalVariables } from '@react-native-esbuild/internal';
+import { HmrTransformer } from '@react-native-esbuild/hmr';
 import {
   setEnvironment,
   combineWithDefaultBundleOptions,
@@ -35,23 +37,28 @@ import { createBuildStatusPlugin, createMetafilePlugin } from './plugins';
 import { BundlerEventEmitter } from './events';
 import {
   loadConfig,
-  getConfigFromGlobal,
   createPromiseHandler,
+  getConfigFromGlobal,
   getTransformedPreludeScript,
   getResolveExtensionsOption,
   getLoaderOption,
   getEsbuildWebConfig,
+  getExternalFromPackageJson,
+  getExternalModulePattern,
 } from './helpers';
 import { printLogo, printVersion } from './logo';
 
 export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
-  public static caches = new CacheStorage();
-  public static shared = new SharedStorage();
+  public static caches = CacheStorage.getInstance();
+  public static shared = SharedStorage.getInstance();
+  private static hmr = new Map<number, HmrTransformer>();
   private appLogger = new Logger('app', LogLevel.Trace);
   private buildTasks = new Map<number, BuildTask>();
   private plugins: ReactNativeEsbuildPluginCreator<unknown>[] = [];
-  private initialized = false;
   private config: Config;
+  private external: string[];
+  private externalPattern: string;
+  private initialized = false;
 
   /**
    * Must be bootstrapped first at the entry point
@@ -98,6 +105,11 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
   constructor(private root: string = process.cwd()) {
     super();
     this.config = getConfigFromGlobal();
+    this.external = getExternalFromPackageJson(root);
+    this.externalPattern = getExternalModulePattern(
+      this.external,
+      this.config.resolver?.assetExtensions ?? [],
+    );
     this.on('report', (event) => {
       this.broadcastToReporter(event);
     });
@@ -131,19 +143,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
 
   private startWatcher(): Promise<void> {
     return FileSystemWatcher.getInstance()
-      .setHandler((event, changedFile, stats) => {
-        const hasTask = this.buildTasks.size > 0;
-        ReactNativeEsbuildBundler.shared.setValue({
-          watcher: {
-            changed: hasTask && event === 'change' ? changedFile : null,
-            stats,
-          },
-        });
-
-        for (const { context, handler } of this.buildTasks.values()) {
-          context.rebuild().catch((error) => handler?.rejecter?.(error));
-        }
-      })
+      .setHandler(this.handleFileChanged.bind(this))
       .watch(this.root);
   }
 
@@ -156,11 +156,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     invariant(config.resolver, 'invalid resolver configuration');
     invariant(config.resolver.mainFields, 'invalid mainFields');
     invariant(config.transformer, 'invalid transformer configuration');
-    invariant(config.resolver.assetExtensions, 'invalid assetExtension');
+    invariant(config.resolver.assetExtensions, 'invalid assetExtensions');
     invariant(config.resolver.sourceExtensions, 'invalid sourceExtensions');
-
     setEnvironment(bundleOptions.dev);
 
+    const enableHmr = Boolean(
+      mode === 'watch' && bundleOptions.dev && config.experimental?.hmr,
+    );
     const webSpecifiedOptions =
       bundleOptions.platform === 'web'
         ? getEsbuildWebConfig(mode, this.root, bundleOptions)
@@ -176,6 +178,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       id: this.identifyTaskByBundleOptions(bundleOptions),
       root: this.root,
       config: this.config,
+      externalPattern: this.externalPattern,
+      enableHmr,
       mode,
       additionalData,
     };
@@ -183,7 +187,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     return {
       entryPoints: [bundleOptions.entry],
       outfile: bundleOptions.outfile,
-      sourceRoot: path.dirname(bundleOptions.entry),
+      sourceRoot: this.root,
       mainFields: config.resolver.mainFields,
       resolveExtensions: getResolveExtensionsOption(
         bundleOptions,
@@ -193,7 +197,13 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       loader: getLoaderOption(config.resolver.assetExtensions),
       define: getGlobalVariables(bundleOptions),
       banner: {
-        js: await getTransformedPreludeScript(bundleOptions, this.root),
+        js: await getTransformedPreludeScript(
+          bundleOptions,
+          this.root,
+          [enableHmr ? 'swc-plugin-global-module/runtime' : undefined].filter(
+            Boolean,
+          ) as string[],
+        ),
       },
       plugins: [
         createBuildStatusPlugin(context, {
@@ -207,7 +217,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         // Additional plugins in configuration.
         ...(config.plugins ?? []),
       ],
-      legalComments: bundleOptions.dev ? 'inline' : 'none',
+      legalComments: 'none',
       target: 'es6',
       format: 'esm',
       supported: {
@@ -225,8 +235,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       logLevel: 'silent',
       bundle: true,
       sourcemap: true,
+      metafile: true,
       minify: bundleOptions.minify,
-      metafile: bundleOptions.metafile,
       write: mode === 'bundle',
       ...webSpecifiedOptions,
     };
@@ -257,6 +267,8 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     data: { result: BuildResult; success: boolean },
     context: PluginContext,
   ): void {
+    invariant(data.result.metafile, 'invalid metafile');
+
     /**
      * Exit at the end of a build in bundle mode.
      *
@@ -267,8 +279,19 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       process.exit(1);
     }
 
+    const sharedStorage = ReactNativeEsbuildBundler.shared.get(context.id);
+    const hmrController = ReactNativeEsbuildBundler.hmr.get(context.id);
     const currentTask = this.buildTasks.get(context.id);
+    invariant(sharedStorage, 'invalid shared storage');
     invariant(currentTask, 'no task');
+
+    if (context.enableHmr) {
+      invariant(hmrController, 'no hmr controller');
+      ReactNativeEsbuildBundler.shared.setValue({
+        bundleMeta: HmrTransformer.createBundleMeta(data.result.metafile),
+      });
+    }
+
     const bundleEndedAt = new Date();
     const bundleFilename = context.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
@@ -310,16 +333,53 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
         revisionId,
         id: context.id,
         additionalData: context.additionalData,
+        update: null,
       });
     }
   }
 
-  private async getOrCreateBundleTask(
+  private handleFileChanged(
+    event: string,
+    changedFile: string,
+    _stats?: Stats,
+  ): void {
+    const hasTask = this.buildTasks.size > 0;
+    const isChanged = event === 'change';
+    if (!(hasTask && isChanged)) return;
+
+    if (
+      this.config.experimental?.hmr &&
+      HmrTransformer.isBoundary(changedFile)
+    ) {
+      for (const [
+        id,
+        hmrController,
+      ] of ReactNativeEsbuildBundler.hmr.entries()) {
+        const { bundleMeta } = ReactNativeEsbuildBundler.shared.get(id);
+        Promise.resolve(
+          bundleMeta ? hmrController.getDelta(changedFile, bundleMeta) : null,
+        ).then((update) => {
+          this.emit('build-end', {
+            id,
+            update,
+            revisionId: new Date().getTime().toString(),
+          });
+        });
+      }
+    } else {
+      this.buildTasks.forEach(({ context }) => {
+        context.rebuild();
+      });
+    }
+  }
+
+  private async getOrSetupTask(
     bundleOptions: BundleOptions,
     additionalData?: BundlerAdditionalData,
   ): Promise<BuildTask> {
     const targetTaskId = this.identifyTaskByBundleOptions(bundleOptions);
 
+    // Build Task
     if (!this.buildTasks.has(targetTaskId)) {
       logger.debug(`bundle task not registered (id: ${targetTaskId})`);
       const buildOptions = await this.getBuildOptionsForBundler(
@@ -338,6 +398,35 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       // Trigger first build.
       context.rebuild().catch((error) => handler.rejecter?.(error));
       logger.debug(`bundle task is now watching (id: ${targetTaskId})`);
+    }
+
+    // HMR Transformer
+    if (
+      this.config.experimental?.hmr &&
+      !ReactNativeEsbuildBundler.hmr.has(targetTaskId)
+    ) {
+      const {
+        stripFlowPackageNames,
+        fullyTransformPackageNames,
+        additionalTransformRules,
+      } = this.config.transformer ?? {};
+      ReactNativeEsbuildBundler.hmr.set(
+        targetTaskId,
+        new HmrTransformer(
+          {
+            ...bundleOptions,
+            id: targetTaskId,
+            root: this.root,
+            externalPattern: this.externalPattern,
+          },
+          {
+            additionalBabelRules: additionalTransformRules?.babel,
+            additionalSwcRules: additionalTransformRules?.swc,
+            fullyTransformPackageNames,
+            stripFlowPackageNames,
+          },
+        ),
+      );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Already `set()` if not exist.
@@ -426,7 +515,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
       throw new Error('serve mode is only available on web platform');
     }
 
-    const buildTask = await this.getOrCreateBundleTask(
+    const buildTask = await this.getOrSetupTask(
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
@@ -442,7 +531,7 @@ export class ReactNativeEsbuildBundler extends BundlerEventEmitter {
     additionalData?: BundlerAdditionalData,
   ): Promise<BundleResult> {
     this.throwIfNotInitialized();
-    const buildTask = await this.getOrCreateBundleTask(
+    const buildTask = await this.getOrSetupTask(
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );

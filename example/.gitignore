@@ -73,6 +73,9 @@ yarn-error.log
 !.yarn/sdks
 !.yarn/versions
 
+# @swc
+.swc
+
 # @react-native-esbuild
 .rne
 .swc

@@ -16,6 +16,9 @@ exports.default = {};
 By default, follow the configuration below.
 
 ```js
+/**
+ * @type {import('@react-native-esbuild/core').Config}
+ */
 exports.default = {
   cache: true,
   logger: {
@@ -28,13 +31,6 @@ exports.default = {
     assetExtensions: [/* internal/lib/defaults.ts */],
   },
   transformer: {
-    jsc: {
-      transform: {
-        react: {
-          runtime: 'automatic',
-        },
-      },
-    },
     stripFlowPackageNames: ['react-native'],
   },
   web: {
@@ -68,7 +64,6 @@ Resolver configurations.
 
 Transformer configurations.
 
-- `transformer.jsc`: [jsc](https://swc.rs/docs/configuration/compilation) config in swc.
 - `transformer.stripFlowPackageNames`: Package names to strip flow syntax from (Defaults to `['react-native']`)
 - `transformer.fullyTransformPackageNames`: Package names to fully transform with [metro-react-native-babel-preset](https://github.com/facebook/react-native/tree/main/packages/react-native-babel-preset) from
 - `transformer.additionalTransformRules`: Additional transform rules. This rules will be applied before phase of transform to es5
@@ -89,6 +84,15 @@ For more details, go to [Web Support](/web).
 Additional Esbuild plugins.
 
 For more details, go to [Custom Plugins](/configuration/custom-plugins)
+
+### experimental
+
+<Callout>
+  Experimental configurations.
+</Callout>
+
+- `experimental.hmr`: Enable HMR(Hot Module Replacement) on development mode. (Defaults to `false`)
+  - For more details and limitations, go to [Hot Module Replacement](/limitations/hot-module-replacement).
 
 ## Types
 
@@ -209,6 +213,17 @@ interface Config {
    * Additional Esbuild plugins.
    */
   plugins?: EsbuildPlugin[];
+  /**
+   * Experimental configurations
+   */
+  experimental?: {
+    /**
+     * Enable HMR(Hot Module Replacement) on development mode.
+     *
+     * Defaults to `false`.
+     */
+    hmr?: boolean;
+  };
   /**
    * Client event receiver
    */

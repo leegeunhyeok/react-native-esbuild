@@ -27,7 +27,10 @@ export const transformByBabelRule = (
   context: TransformerContext,
 ): Promise<string | null> => {
   return rule.test(context.path, code)
-    ? transformWithBabel(code, context, ruleOptionsToPreset(rule.options, code))
+    ? transformWithBabel(code, {
+        context,
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : Promise.resolve(null);
 };
 
@@ -37,11 +40,10 @@ export const transformSyncByBabelRule = (
   context: TransformerContext,
 ): string | null => {
   return rule.test(context.path, code)
-    ? transformSyncWithBabel(
-        code,
+    ? transformSyncWithBabel(code, {
         context,
-        ruleOptionsToPreset(rule.options, code),
-      )
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : null;
 };
 
@@ -51,7 +53,10 @@ export const transformBySwcRule = (
   context: TransformerContext,
 ): Promise<string | null> => {
   return rule.test(context.path, code)
-    ? transformWithSwc(code, context, ruleOptionsToPreset(rule.options, code))
+    ? transformWithSwc(code, {
+        context,
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : Promise.resolve(null);
 };
 
@@ -61,10 +66,9 @@ export const transformSyncBySwcRule = (
   context: TransformerContext,
 ): string | null => {
   return rule.test(context.path, code)
-    ? transformSyncWithSwc(
-        code,
+    ? transformSyncWithSwc(code, {
         context,
-        ruleOptionsToPreset(rule.options, code),
-      )
+        preset: ruleOptionsToPreset(rule.options, code),
+      })
     : null;
 };

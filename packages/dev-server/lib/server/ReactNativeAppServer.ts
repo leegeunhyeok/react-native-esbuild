@@ -7,7 +7,7 @@ import { InspectorProxy } from 'metro-inspector-proxy';
 import { createDevServerMiddleware } from '@react-native-community/cli-server-api';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
-  createHotReloadMiddleware,
+  createHmrMiddlewareForApp,
   createServeAssetMiddleware,
   createServeBundleMiddleware,
   createSymbolicateMiddleware,
@@ -105,10 +105,26 @@ export class ReactNativeAppServer extends DevServer {
       throw new Error('server is not initialized');
     }
 
-    const { server: hotReloadWss, ...hr } = createHotReloadMiddleware({
-      onLog: (event) => {
-        this.eventsSocketEndpoint.reportEvent(event);
-        this.bundler?.emit('report', event);
+    const { server: hmrServer, ...hmr } = createHmrMiddlewareForApp({
+      onMessage: (message) => {
+        switch (message.type) {
+          case 'log': {
+            const clientLogEvent = {
+              type: 'client_log',
+              level: message.level,
+              data: message.data,
+              mode: 'BRIDGE',
+            } as const;
+            this.bundler?.emit('report', clientLogEvent);
+            this.eventsSocketEndpoint.reportEvent(clientLogEvent);
+            break;
+          }
+
+          // not supported
+          case 'register-entrypoints':
+          case 'log-opt-in':
+            break;
+        }
       },
     });
 
@@ -123,20 +139,22 @@ export class ReactNativeAppServer extends DevServer {
     );
 
     const webSocketServer: Record<string, WebSocketServer> = {
-      '/hot': hotReloadWss,
+      '/hot': hmrServer.getWebSocketServer(),
       '/debugger-proxy': this.debuggerProxyEndpoint.server,
       '/message': this.messageSocketEndpoint.server,
       '/events': this.eventsSocketEndpoint.server,
       ...inspectorProxyWss,
     };
 
-    this.bundler.on('build-start', hr.updateStart);
-    this.bundler.on('build-end', ({ revisionId, additionalData }) => {
+    this.bundler.on('build-start', hmr.updateStart);
+    this.bundler.on('build-end', ({ revisionId, update, additionalData }) => {
       // `additionalData` can be `{ disableRefresh: true }` by `serve-asset-middleware`.
       if (!additionalData?.disableRefresh) {
-        hr.hotReload(revisionId);
+        update === null || update.fullyReload
+          ? hmr.liveReload(revisionId)
+          : hmr.hotReload(revisionId, update.code);
       }
-      hr.updateDone();
+      hmr.updateDone();
     });
 
     this.server.on('upgrade', (request, socket, head) => {

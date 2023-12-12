@@ -6,6 +6,7 @@ import {
   type Asset,
 } from '@react-native-esbuild/internal';
 import { ASSET_EXTENSIONS } from '@react-native-esbuild/internal';
+import { HmrTransformer } from '@react-native-esbuild/hmr';
 import type { AssetRegisterPluginConfig, SuffixPathResult } from '../types';
 import {
   copyAssetsToDestination,
@@ -96,12 +97,19 @@ export const createAssetRegisterPlugin: ReactNativeEsbuildPluginCreator<
 
     build.onLoad({ filter: /./, namespace: ASSET_NAMESPACE }, async (args) => {
       const asset = await resolveScaledAssets(context, args);
+      const assetRegistrationScript = getAssetRegistrationScript(asset);
 
       assets.push(asset);
 
       return {
         resolveDir: path.dirname(args.path),
-        contents: getAssetRegistrationScript(asset),
+        contents: context.dev
+          ? HmrTransformer.registerAsExternalModule(
+              args.path,
+              assetRegistrationScript,
+              'module.exports',
+            )
+          : assetRegistrationScript,
         loader: 'js',
       };
     });

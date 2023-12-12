@@ -6,10 +6,16 @@ import { getBuildStatusCachePath } from '@react-native-esbuild/config';
 import { colors, isTTY } from '@react-native-esbuild/utils';
 import { logger } from '../../../shared';
 import { ESBUILD_LABEL } from '../../logo';
-import type { BuildStatus, PluginContext } from '../../../types';
+import type {
+  BuildStatus,
+  BundlerSharedData,
+  PluginContext,
+} from '../../../types';
+import { SharedStorage } from '../../storages';
 import { fromTemplate, getSummaryTemplate } from './templates';
 
 export class StatusLogger {
+  private bundlerSharedData: BundlerSharedData;
   private platformText: string;
   private spinner: Ora;
   private totalModuleCount = 0;
@@ -19,6 +25,7 @@ export class StatusLogger {
   private previousPercent = 0;
 
   constructor(private context: PluginContext) {
+    this.bundlerSharedData = SharedStorage.getInstance().get(context.id);
     this.platformText = colors.gray(
       `[${[context.platform, context.dev ? 'dev' : null]
         .filter(Boolean)
@@ -102,6 +109,7 @@ export class StatusLogger {
     this.previousPercent = 0;
     this.statusUpdate();
 
+    process.stdout.write('\n');
     isTTY()
       ? this.spinner.start()
       : this.print(`${this.platformText} build in progress...`);

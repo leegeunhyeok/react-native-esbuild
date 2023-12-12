@@ -12,18 +12,16 @@ export const createMetafilePlugin: ReactNativeEsbuildPluginCreator = (
   name: NAME,
   setup: (build): void => {
     build.onEnd(async (result: BuildResult) => {
-      const { metafile } = result;
+      if (!(context.metafile && result.metafile)) return;
+
       const filename = path.join(
         context.root,
         `metafile-${context.platform}-${new Date().getTime().toString()}.json`,
       );
-
-      if (metafile) {
-        logger.debug('writing esbuild metafile', { destination: filename });
-        await fs.writeFile(filename, JSON.stringify(metafile), {
-          encoding: 'utf-8',
-        });
-      }
+      logger.debug('writing esbuild metafile', { destination: filename });
+      await fs.writeFile(filename, JSON.stringify(result.metafile), {
+        encoding: 'utf-8',
+      });
     });
   },
 });

@@ -6,8 +6,21 @@ import type {
 } from '@swc/core';
 import type {
   TransformerOptionsPreset,
+  ReactNativeRuntimePresetOptions,
   SwcJestPresetOptions,
+  ModuleMeta,
+  SwcMinifyPresetOptions,
+  TransformerContext,
 } from '../../types';
+
+/**
+ * TODO: move into hmr package.
+ *
+ * @see `HmrTransformer.isBoundary`
+ */
+const isHMRBoundary = (path: string): boolean => {
+  return !path.includes('/node_modules/') && !path.endsWith('runtime.js');
+};
 
 const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
   return /\.tsx?$/.test(path)
@@ -23,13 +36,35 @@ const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
       } as EsParserConfig);
 };
 
+const getSwcExperimental = (
+  context: TransformerContext,
+  moduleMeta?: ModuleMeta,
+  options?: ReactNativeRuntimePresetOptions,
+): JscConfig['experimental'] => {
+  if (options?.experimental?.hmr && isHMRBoundary(context.path)) {
+    return {
+      plugins: [
+        [
+          'swc-plugin-global-module',
+          {
+            runtimeModule: options.experimental.hmr.runtime,
+            externalPattern: moduleMeta?.externalPattern,
+            importPaths: moduleMeta?.importPaths,
+          },
+        ],
+      ],
+    };
+  }
+  return undefined;
+};
+
 /**
  * swc transform options preset for react-native runtime.
  */
 const getReactNativeRuntimePreset = (
-  jscConfig?: Pick<JscConfig, 'transform' | 'experimental'>,
+  options?: ReactNativeRuntimePresetOptions,
 ): TransformerOptionsPreset<Options> => {
-  return (context) => ({
+  return (context, moduleMeta) => ({
     minify: false,
     sourceMaps: false,
     isModule: true,
@@ -39,10 +74,22 @@ const getReactNativeRuntimePreset = (
       parser: getParserOptions(context.path),
       target: 'es5',
       loose: false,
-      externalHelpers: true,
+      externalHelpers: !context.dev,
       keepClassNames: true,
-      transform: jscConfig?.transform,
-      experimental: jscConfig?.experimental,
+      transform: {
+        react: {
+          development: context.dev,
+          // @ts-expect-error -- wrong type definition.
+          refresh:
+            options?.experimental?.hmr && isHMRBoundary(context.path)
+              ? {
+                  refreshReg: options.experimental.hmr.refreshReg,
+                  refreshSig: options.experimental.hmr.refreshSig,
+                }
+              : undefined,
+        },
+      },
+      experimental: getSwcExperimental(context, moduleMeta, options),
     },
     filename: context.path,
     root: context.root,
@@ -95,11 +142,21 @@ const getJestPreset = (
   });
 };
 
-const getMinifyPreset = () => {
-  return () => ({
-    compress: true,
-    mangle: true,
-    sourceMap: false,
+const getMinifyPreset = ({
+  minify,
+}: SwcMinifyPresetOptions): TransformerOptionsPreset<Options> => {
+  return (context) => ({
+    minify,
+    inputSourceMap: false,
+    inlineSourcesContent: false,
+    jsc: {
+      parser: getParserOptions(context.path),
+      target: 'es5',
+      loose: false,
+      keepClassNames: true,
+    },
+    filename: context.path,
+    root: context.root,
   });
 };
 

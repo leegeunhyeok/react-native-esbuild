@@ -31,7 +31,7 @@ And create `react-native-esbuild.js` to project root.
 exports.default = {};
 ```
 
-for more details, go to [Configuration](/configuration/basic).
+for more details, go to [Basic Configuration](/configuration/basic-configuration).
 
 ## Native Setup
 

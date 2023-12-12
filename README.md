@@ -28,7 +28,7 @@
 - 💾 In-memory & Local File System Caching
 - 🎨 Flexible & Extensible
 - 🔥 Supports JSC & Hermes Runtime
-- 🔄 Supports Live Reload
+- 🔄 Supports HMR & Live Reload
 - 🐛 Supports Debugging(Flipper, Chrome Debugger)
 - 🌍 Supports All Platforms(Android, iOS, Web)
 - ✨ New Architecture Ready

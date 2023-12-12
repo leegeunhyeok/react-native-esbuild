@@ -3650,6 +3650,7 @@ __metadata:
     "@babel/core": ^7.23.2
     "@faker-js/faker": ^8.1.0
     "@react-native-esbuild/config": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/transformer": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
@@ -3661,6 +3662,7 @@ __metadata:
     ora: ^5.4.1
   peerDependencies:
     react-native: "*"
+    swc-plugin-global-module: "*"
   languageName: unknown
   linkType: soft
 
@@ -3672,6 +3674,7 @@ __metadata:
     "@react-native-community/cli-server-api": ^11.3.6
     "@react-native-esbuild/config": "workspace:*"
     "@react-native-esbuild/core": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/symbolicate": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
@@ -3702,7 +3705,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/internal@workspace:*, @react-native-esbuild/internal@workspace:packages/internal":
+"@react-native-esbuild/hmr@workspace:*, @react-native-esbuild/hmr@workspace:packages/hmr":
+  version: 0.0.0-use.local
+  resolution: "@react-native-esbuild/hmr@workspace:packages/hmr"
+  dependencies:
+    "@react-native-esbuild/internal": "workspace:^"
+    "@react-native-esbuild/transformer": "workspace:^"
+    "@react-native-esbuild/utils": "workspace:*"
+    "@swc/helpers": ^0.5.2
+    "@types/react-refresh": ^0.14.3
+    esbuild: ^0.19.3
+    react-refresh: ^0.14.0
+    ws: ^8.14.2
+  languageName: unknown
+  linkType: soft
+
+"@react-native-esbuild/internal@workspace:*, @react-native-esbuild/internal@workspace:^, @react-native-esbuild/internal@workspace:packages/internal":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/internal@workspace:packages/internal"
   dependencies:
@@ -3736,6 +3754,7 @@ __metadata:
     "@faker-js/faker": ^8.1.0
     "@react-native-esbuild/config": "workspace:*"
     "@react-native-esbuild/core": "workspace:*"
+    "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/transformer": "workspace:*"
     "@react-native-esbuild/utils": "workspace:*"
@@ -3761,7 +3780,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-native-esbuild/transformer@workspace:*, @react-native-esbuild/transformer@workspace:packages/transformer":
+"@react-native-esbuild/transformer@workspace:*, @react-native-esbuild/transformer@workspace:^, @react-native-esbuild/transformer@workspace:packages/transformer":
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/transformer@workspace:packages/transformer"
   dependencies:
@@ -3774,6 +3793,7 @@ __metadata:
     md5: ^2.3.0
     sucrase: ^3.34.0
     swc-plugin-coverage-instrument: ^0.0.20
+    swc-plugin-global-module: ^0.1.0-alpha.5
     swc_mut_cjs_exports: ^0.85.0
   languageName: unknown
   linkType: soft
@@ -4414,7 +4434,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.5.3":
+"@swc/helpers@npm:^0.5.2, @swc/helpers@npm:^0.5.3":
   version: 0.5.3
   resolution: "@swc/helpers@npm:0.5.3"
   dependencies:
@@ -4541,7 +4561,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__core@npm:^7.1.14":
+"@types/babel__core@npm:*, @types/babel__core@npm:^7.1.14":
   version: 7.20.3
   resolution: "@types/babel__core@npm:7.20.3"
   dependencies:
@@ -4837,6 +4857,16 @@ __metadata:
   version: 15.7.9
   resolution: "@types/prop-types@npm:15.7.9"
   checksum: c7591d3ff7593e243908a07e1d3e2bb6e8879008af5800d8378115a90d0fdf669a1cae72a6d7f69e59c4fa7bb4c8ed61f6ebc1c520fe110c6f2b03ac02414072
+  languageName: node
+  linkType: hard
+
+"@types/react-refresh@npm:^0.14.3":
+  version: 0.14.3
+  resolution: "@types/react-refresh@npm:0.14.3"
+  dependencies:
+    "@types/babel__core": "*"
+    csstype: ^3.0.2
+  checksum: ff48c18f928f213cfd1fa379f6b275e401adad87f909a83501a7026075a1d596ef2697269a9ce4fc5063841622ea2c2ffe9c332a2cc9e5ca67199f05c7994f89
   languageName: node
   linkType: hard
 
@@ -8201,7 +8231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.19.5":
+"esbuild@npm:^0.19.3, esbuild@npm:^0.19.5":
   version: 0.19.5
   resolution: "esbuild@npm:0.19.5"
   dependencies:
@@ -17694,6 +17724,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swc-plugin-global-module@npm:^0.1.0-alpha.5":
+  version: 0.1.0-alpha.5
+  resolution: "swc-plugin-global-module@npm:0.1.0-alpha.5"
+  checksum: 10523c54644544a989bdd77cf45a273f529d191816d8c5a4cb992267845048d66125e720a71bca49ae2ab47fcd051077f024d00cf4cf31030eeac1c67082ac18
+  languageName: node
+  linkType: hard
+
 "swc_mut_cjs_exports@npm:^0.85.0":
   version: 0.85.0
   resolution: "swc_mut_cjs_exports@npm:0.85.0"
@@ -19122,7 +19159,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.13.0":
+"ws@npm:^8.13.0, ws@npm:^8.14.2":
   version: 8.14.2
   resolution: "ws@npm:8.14.2"
   peerDependencies:

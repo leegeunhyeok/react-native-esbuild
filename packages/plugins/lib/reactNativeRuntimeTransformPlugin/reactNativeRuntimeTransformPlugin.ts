@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { OnLoadResult } from 'esbuild';
 import {
   ReactNativeEsbuildBundler as Bundler,
   type ReactNativeEsbuildPluginCreator,
@@ -11,6 +10,11 @@ import {
   swcPresets,
   type AsyncTransformStep,
 } from '@react-native-esbuild/transformer';
+import {
+  HmrTransformer,
+  REACT_REFRESH_REGISTER_FUNCTION,
+  REACT_REFRESH_SIGNATURE_FUNCTION,
+} from '@react-native-esbuild/hmr';
 import { logger } from '../shared';
 import type { ReactNativeRuntimeTransformPluginConfig } from '../types';
 import {
@@ -18,6 +22,7 @@ import {
   getTransformedCodeFromFileSystemCache,
   writeTransformedCodeToInMemoryCache,
   writeTransformedCodeToFileSystemCache,
+  jsonAsJsModule,
 } from './helpers';
 
 const NAME = 'react-native-runtime-transform-plugin';
@@ -28,7 +33,6 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
   name: NAME,
   setup: (build): void => {
     const cacheController = Bundler.caches.get(context.id);
-    const bundlerSharedData = Bundler.shared.get(context.id);
     const cacheEnabled = context.config.cache ?? true;
     const {
       stripFlowPackageNames = [],
@@ -38,33 +42,38 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
     const additionalBabelRules = additionalTransformRules?.babel ?? [];
     const additionalSwcRules = additionalTransformRules?.swc ?? [];
     const injectScriptPaths = [
-      getReactNativeInitializeCore(context.root),
+      ...[
+        getReactNativeInitializeCore(context.root),
+        // `hmr/runtime` should import after `initializeCore` initialized.
+        context.enableHmr ? '@react-native-esbuild/hmr/runtime' : undefined,
+      ],
       ...(config?.injectScriptPaths ?? []),
-    ];
+    ].filter(Boolean) as string[];
 
-    const reactNativeRuntimePreset = swcPresets.getReactNativeRuntimePreset(
-      context.config.transformer?.jsc,
-    );
+    const reactNativeRuntimePreset = swcPresets.getReactNativeRuntimePreset({
+      experimental: {
+        hmr: context.enableHmr
+          ? {
+              runtime: false,
+              refreshReg: REACT_REFRESH_REGISTER_FUNCTION,
+              refreshSig: REACT_REFRESH_SIGNATURE_FUNCTION,
+            }
+          : undefined,
+      },
+    });
 
     const onBeforeTransform: AsyncTransformStep = async (
       code,
-      args,
+      _args,
       moduleMeta,
     ) => {
-      const isChangedFile = bundlerSharedData.watcher.changed === args.path;
       const cacheConfig = {
         hash: moduleMeta.hash,
         mtimeMs: moduleMeta.stats.mtimeMs,
       };
 
-      // 1. Force re-transform when file is changed.
-      if (isChangedFile) {
-        logger.debug('changed file detected', { path: args.path });
-        return { code, done: false };
-      }
-
       /**
-       * 2. Use previous transformed result and skip transform
+       * 1. Use previous transformed result and skip transform
        *    when file is not changed and transform result exist in memory.
        */
       const inMemoryCache = getTransformedCodeFromInMemoryCache(
@@ -75,12 +84,12 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
         return { code: inMemoryCache, done: true };
       }
 
-      // 3. Transform code on each build task when cache is disabled.
+      // 2. Transform code on each build task when cache is disabled.
       if (!cacheEnabled) {
         return { code, done: false };
       }
 
-      // 4. Trying to get cache from file system.
+      // 3. Trying to get cache from file system.
       //    = cache exist ? use cache : transform code
       const cachedCode = await getTransformedCodeFromFileSystemCache(
         cacheController,
@@ -92,7 +101,7 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
 
     const onAfterTransform: AsyncTransformStep = async (
       code,
-      _args,
+      args,
       moduleMeta,
     ) => {
       const cacheConfig = {
@@ -109,11 +118,16 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
         );
       }
 
-      return { code, done: true };
+      return {
+        code:
+          context.enableHmr && HmrTransformer.isBoundary(args.path)
+            ? HmrTransformer.asBoundary(args.path, code)
+            : code,
+        done: true,
+      };
     };
 
-    let transformPipeline: AsyncTransformPipeline;
-    const transformPipelineBuilder = new AsyncTransformPipeline.builder(context)
+    const transformPipeline = new AsyncTransformPipeline.builder(context)
       .setSwcPreset(reactNativeRuntimePreset)
       .setInjectScripts(injectScriptPaths)
       .setFullyTransformPackages(fullyTransformPackageNames)
@@ -121,18 +135,21 @@ export const createReactNativeRuntimeTransformPlugin: ReactNativeEsbuildPluginCr
       .setAdditionalBabelTransformRules(additionalBabelRules)
       .setAdditionalSwcTransformRules(additionalSwcRules)
       .onStart(onBeforeTransform)
-      .onEnd(onAfterTransform);
+      .onEnd(onAfterTransform)
+      .build();
 
-    build.onStart(() => {
-      transformPipeline = transformPipelineBuilder.build();
-    });
+    context.enableHmr && jsonAsJsModule(build);
 
     build.onLoad({ filter: /\.(?:[mc]js|[tj]sx?)$/ }, async (args) => {
       const rawCode = await fs.readFile(args.path, { encoding: 'utf-8' });
       return {
-        contents: (await transformPipeline.transform(rawCode, args)).code,
+        contents: (
+          await transformPipeline.transform(rawCode, args, {
+            externalPattern: context.externalPattern,
+          })
+        ).code,
         loader: 'js',
-      } as OnLoadResult;
+      };
     });
 
     build.onEnd(async (args) => {

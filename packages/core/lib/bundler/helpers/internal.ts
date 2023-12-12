@@ -1,16 +1,21 @@
+import fs from 'node:fs/promises';
 import type { BuildOptions } from 'esbuild';
 import { getPreludeScript } from '@react-native-esbuild/internal';
 import type { TransformerContext } from '@react-native-esbuild/transformer';
 import {
   stripFlowWithSucrase,
-  minifyWithSwc,
+  transformWithSwc,
   swcPresets,
 } from '@react-native-esbuild/transformer';
 import type { BundleOptions } from '@react-native-esbuild/config';
 
+const loadScript = (path: string): Promise<string> =>
+  fs.readFile(require.resolve(path), 'utf-8');
+
 export const getTransformedPreludeScript = async (
   bundleOptions: BundleOptions,
   root: string,
+  additionalScriptPaths?: string[],
 ): Promise<string> => {
   // Dummy context
   const context: TransformerContext = {
@@ -20,19 +25,28 @@ export const getTransformedPreludeScript = async (
     dev: bundleOptions.dev,
     entry: bundleOptions.entry,
   };
-  const preludeScript = await getPreludeScript(bundleOptions, root);
+
+  const additionalPreludeScripts = await Promise.all(
+    (additionalScriptPaths ?? []).map(loadScript),
+  );
+
+  const preludeScript = [
+    await getPreludeScript(bundleOptions, root),
+    ...additionalPreludeScripts,
+  ].join('\n');
 
   /**
    * Remove `"use strict";` added by sucrase.
    * @see {@link https://github.com/alangpierce/sucrase/issues/787#issuecomment-1483934492}
    */
-  const strippedScript = stripFlowWithSucrase(preludeScript, context)
+  const strippedScript = stripFlowWithSucrase(preludeScript, { context })
     .replace(/"use strict";/, '')
     .trim();
 
-  return bundleOptions.minify
-    ? minifyWithSwc(strippedScript, context, swcPresets.getMinifyPreset())
-    : strippedScript;
+  return transformWithSwc(strippedScript, {
+    context,
+    preset: swcPresets.getMinifyPreset({ minify: bundleOptions.minify }),
+  });
 };
 
 export const getResolveExtensionsOption = (
@@ -69,4 +83,25 @@ export const getLoaderOption = (
   return Object.fromEntries(
     assetExtensions.map((ext) => [ext, 'file'] as const),
   );
+};
+
+export const getExternalModulePattern = (
+  externalPackages: string[],
+  assetExtensions: string[],
+): string => {
+  const externalPackagePatterns = externalPackages
+    .map((packageName) => `^${packageName}/?$`)
+    .join('|');
+
+  const assetPatterns = [
+    ...assetExtensions,
+    // `.svg` assets will be handled by `svg-transform-plugin`.
+    '.svg',
+    // `.json` contents will be handled by `react-native-runtime-transform-plugin`.
+    '.json',
+  ]
+    .map((extension) => `${extension}$`)
+    .join('|');
+
+  return `(${externalPackagePatterns}|${assetPatterns})`;
 };

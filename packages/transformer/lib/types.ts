@@ -5,15 +5,19 @@ import type { Options as SwcTransformOptions } from '@swc/core';
 
 export type AsyncTransformer<TransformerOptions> = (
   code: string,
-  context: TransformerContext,
-  preset?: TransformerOptionsPreset<TransformerOptions>,
+  config: TransformerConfig<TransformerOptions>,
 ) => Promise<string>;
 
 export type SyncTransformer<TransformerOptions> = (
   code: string,
-  context: TransformerContext,
-  preset?: TransformerOptionsPreset<TransformerOptions>,
+  config: TransformerConfig<TransformerOptions>,
 ) => string;
+
+interface TransformerConfig<TransformerOptions> {
+  context: TransformerContext;
+  moduleMeta?: ModuleMeta;
+  preset?: TransformerOptionsPreset<TransformerOptions>;
+}
 
 export interface TransformerContext {
   id: number;
@@ -25,11 +29,30 @@ export interface TransformerContext {
 
 export type TransformerOptionsPreset<TransformerOptions> = (
   context: TransformerContext,
+  moduleMeta?: ModuleMeta,
 ) => TransformerOptions;
 
-// swc preset options
-export interface SwcReactNativeRuntimePresetOptions {
-  reactRefresh?: { moduleId: string };
+export interface ReactNativeRuntimePresetOptions {
+  /**
+   * Options for experimental features.
+   */
+  experimental?: {
+    /**
+     * HMR(Hot Module Replacement) options.
+     *
+     * If `undefined`, HMR will be disabled.
+     */
+    hmr?: {
+      /**
+       * `runtimeModule` option in `swc-plugin-global-module`.
+       *
+       * @see github {@link https://github.com/leegeunhyeok/swc-plugin-global-module}
+       */
+      runtime: boolean;
+      refreshReg: string;
+      refreshSig: string;
+    };
+  };
 }
 
 export interface SwcJestPresetOptions {
@@ -61,6 +84,10 @@ export interface SwcJestPresetOptions {
       instrumentLog?: { level: string; enableTrace: boolean };
     };
   };
+}
+
+export interface SwcMinifyPresetOptions {
+  minify: boolean;
 }
 
 export interface TransformRuleBase<T> {
@@ -95,4 +122,6 @@ export interface TransformResult {
 export interface ModuleMeta {
   hash: string;
   stats: Stats;
+  externalPattern?: string;
+  importPaths?: Record<string, string>;
 }

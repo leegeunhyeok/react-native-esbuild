@@ -8,8 +8,8 @@ import {
 } from '../transformer';
 import { transformSyncByBabelRule, transformSyncBySwcRule } from '../helpers';
 import type { SyncTransformStep, TransformResult, ModuleMeta } from '../types';
-import { TransformPipeline } from './pipeline';
-import { TransformPipelineBuilder } from './builder';
+import { TransformPipeline } from './TransformPipeline';
+import { TransformPipelineBuilder } from './TransformPipelineBuilder';
 
 export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
   SyncTransformStep,
@@ -40,14 +40,14 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
       this.fullyTransformPackageNames,
     );
     if (fullyTransformPackagesRegExp) {
-      pipeline.addStep((code, args) => {
+      pipeline.addStep((code, args, moduleMeta) => {
         if (fullyTransformPackagesRegExp.test(args.path)) {
           return {
-            code: transformSyncWithBabel(
-              code,
-              this.getContext(args),
-              this.presets.babelFullyTransform,
-            ),
+            code: transformSyncWithBabel(code, {
+              moduleMeta,
+              context: this.getContext(args),
+              preset: this.presets.babelFullyTransform,
+            }),
             // skip other transformations when fully transformed
             done: true,
           };
@@ -61,12 +61,15 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
       this.stripFlowPackageNames,
     );
     if (stripFlowPackageNamesRegExp) {
-      pipeline.addStep((code, args) => {
+      pipeline.addStep((code, args, moduleMeta) => {
         if (
           stripFlowPackageNamesRegExp.test(args.path) ||
           this.isFlow(code, args.path)
         ) {
-          code = stripFlowWithSucrase(code, this.getContext(args));
+          code = stripFlowWithSucrase(code, {
+            moduleMeta,
+            context: this.getContext(args),
+          });
         }
 
         return { code, done: false };
@@ -96,9 +99,13 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
     }
 
     // 6. Transform code to es5.
-    pipeline.addStep((code, args) => {
+    pipeline.addStep((code, args, moduleMeta) => {
       return {
-        code: transformSyncWithSwc(code, this.getContext(args), this.swcPreset),
+        code: transformSyncWithSwc(code, {
+          moduleMeta,
+          context: this.getContext(args),
+          preset: this.swcPreset,
+        }),
         done: true,
       };
     });
@@ -128,9 +135,14 @@ export class SyncTransformPipeline extends TransformPipeline<SyncTransformStep> 
     return this;
   }
 
-  transform(code: string, args: OnLoadArgs): TransformResult {
+  transform(
+    code: string,
+    args: OnLoadArgs,
+    baseModuleMeta?: Pick<ModuleMeta, 'externalPattern' | 'importPaths'>,
+  ): TransformResult {
     const fileStat = fs.statSync(args.path);
     const moduleMeta: ModuleMeta = {
+      ...baseModuleMeta,
       stats: fileStat,
       hash: this.getHash(this.context.id, args.path, fileStat.mtimeMs),
     };
