@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.43](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.12...v0.1.0-alpha.43) (2023-12-14)
+
+### Features
+
+- add transformer.jsc config ([1786c20](https://github.com/leegeunhyeok/react-native-esbuild/commit/1786c20f7eb0bf1b2fe31095f9c1e8b0692099b1))
+- hot module replacement ([de55ffb](https://github.com/leegeunhyeok/react-native-esbuild/commit/de55ffb175d66437e18c8075122d94524eefdcb0)), closes [#38](https://github.com/leegeunhyeok/react-native-esbuild/issues/38)
+- strip flow syntax with keep esm statements ([bec3b70](https://github.com/leegeunhyeok/react-native-esbuild/commit/bec3b7059db4d7c7631c299b8c732efc23db42b0))
+- **transformer:** supports runtime jsx transformation ([c17e1c6](https://github.com/leegeunhyeok/react-native-esbuild/commit/c17e1c6bd0065fa443a07139ddaf8f167b16bf73))
+
+### Miscellaneous Chores
+
+- disable no-param-reassign rule ([4646fc3](https://github.com/leegeunhyeok/react-native-esbuild/commit/4646fc3742e2ef9123f0d1cfe55dc4ba3fda87d6))
+- lint error fix ([30fcbd1](https://github.com/leegeunhyeok/react-native-esbuild/commit/30fcbd1eeca38b4160e3338fd47b140f420ada17))
+- update Podfile.lock ([a1eb801](https://github.com/leegeunhyeok/react-native-esbuild/commit/a1eb8011fcc743567278bae94894a63e900fe4de))
+
+### Code Refactoring
+
+- add getReloadByDevSettingsProxy ([5728bf3](https://github.com/leegeunhyeok/react-native-esbuild/commit/5728bf3e867db5ea0de66b64dabc9f9cffa43d46))
+- add module metadata ([a960c14](https://github.com/leegeunhyeok/react-native-esbuild/commit/a960c14dd358390e4dfa9037382b098bed185a09))
+- declare metro-inspector-proxy module type ([3cbb7b1](https://github.com/leegeunhyeok/react-native-esbuild/commit/3cbb7b1c2543a0a65406881e4b5459b0407d4f6c))
+
+### Build System
+
+- **deps:** bump axios from 1.5.1 to 1.6.2 ([5e4501d](https://github.com/leegeunhyeok/react-native-esbuild/commit/5e4501d73c272bca630efc865f80b5b1952aafcc))
+
 ## [0.1.0-beta.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2023-10-25)
 
 ### Features

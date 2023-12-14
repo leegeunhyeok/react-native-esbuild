@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.0-alpha.43](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.12...v0.1.0-alpha.43) (2023-12-14)
+
+### Features
+
+- add transformer.jsc config ([1786c20](https://github.com/leegeunhyeok/react-native-esbuild/commit/1786c20f7eb0bf1b2fe31095f9c1e8b0692099b1))
+- hot module replacement ([de55ffb](https://github.com/leegeunhyeok/react-native-esbuild/commit/de55ffb175d66437e18c8075122d94524eefdcb0)), closes [#38](https://github.com/leegeunhyeok/react-native-esbuild/issues/38)
+
+### Miscellaneous Chores
+
+- lint error fix ([30fcbd1](https://github.com/leegeunhyeok/react-native-esbuild/commit/30fcbd1eeca38b4160e3338fd47b140f420ada17))
+
+### Code Refactoring
+
+- add module metadata ([a960c14](https://github.com/leegeunhyeok/react-native-esbuild/commit/a960c14dd358390e4dfa9037382b098bed185a09))
+
 ## [0.1.0-beta.12](https://github.com/leegeunhyeok/react-native-esbuild/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2023-10-25)
 
 ### Features
