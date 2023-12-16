@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { performance } from 'node:perf_hooks';
 import esbuild, { type BuildResult, type Message } from 'esbuild';
 import ora, { type Ora } from 'ora';
 import { getBuildStatusCachePath } from '@react-native-esbuild/config';
@@ -15,7 +16,6 @@ export class StatusLogger {
   private totalModuleCount = 0;
   private resolvedModules = new Set();
   private loadedModules = 0;
-  private buildStartedAt = 0;
   private previousPercent = 0;
 
   constructor(private context: PluginContext) {
@@ -96,9 +96,10 @@ export class StatusLogger {
   }
 
   setup(): void {
+    performance.clearMarks(`bundle:${this.context.id}`);
+    performance.mark(`bundle:${this.context.id}`);
     this.resolvedModules.clear();
     this.loadedModules = 0;
-    this.buildStartedAt = new Date().getTime();
     this.previousPercent = 0;
     this.statusUpdate();
 
@@ -108,7 +109,10 @@ export class StatusLogger {
   }
 
   async summary({ warnings, errors }: BuildResult): Promise<boolean> {
-    const duration = (new Date().getTime() - this.buildStartedAt) / 1000;
+    const { duration } = performance.measure(
+      `bundle-duration:${this.context.id}`,
+      `bundle:${this.context.id}`,
+    );
     const isSuccess = errors.length === 0;
 
     await this.printMessages(warnings, 'warning');
@@ -131,7 +135,7 @@ export class StatusLogger {
       fromTemplate(getSummaryTemplate(), {
         warnings: colors.yellow(warnings.length.toString()),
         errors: colors.red(errors.length.toString()),
-        duration: colors.cyan(duration.toFixed(3)),
+        duration: colors.cyan((duration / 1000).toFixed(3)),
       }),
     );
 
