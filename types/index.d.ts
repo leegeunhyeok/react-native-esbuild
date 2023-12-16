@@ -4,6 +4,7 @@ declare global {
     // core config
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `BundlerConfig` in @react-native-esbuild/core.
     _config: any;
+    _version: string;
     // core
     shouldResetCache?: boolean;
     // logger

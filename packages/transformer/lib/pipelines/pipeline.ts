@@ -14,11 +14,11 @@ export abstract class TransformPipeline<Step extends TransformStep<unknown>> {
    *
    * `id` is combined(platform, dev, minify) bundle options value in `@react-native-esbuild`.
    *
-   * hash = md5(id + modified time + file path)
-   *            number + number    + string
+   * hash = md5(id + modified time + file path + core version)
+   *            number + number    + string    + string
    */
   protected getHash(id: number, filepath: string, modifiedAt: number): string {
-    return md5(id + modifiedAt + filepath);
+    return md5(id + modifiedAt + filepath + self._version);
   }
 
   public beforeTransform(onBeforeTransform: Step): this {
