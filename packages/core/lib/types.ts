@@ -44,13 +44,13 @@ export interface Config {
     /**
      * File extensions for transform.
      *
-     * Defaults: https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/internal/lib/defaults.ts
+     * Defaults: https://github.com/leegeunhyeok/react-native-esbuild/blob/main/packages/internal/lib/defaults.ts
      */
     sourceExtensions?: string[];
     /**
      * File extensions for assets registration.
      *
-     * Defaults: https://github.com/leegeunhyeok/react-native-esbuild/blob/master/packages/internal/lib/defaults.ts
+     * Defaults: https://github.com/leegeunhyeok/react-native-esbuild/blob/main/packages/internal/lib/defaults.ts
      */
     assetExtensions?: string[];
   };
