@@ -1,3 +1,4 @@
+import type { ScopedTransformContext } from '@react-native-esbuild/shared';
 import {
   transformSyncWithBabel,
   transformSyncWithSwc,
@@ -7,12 +8,7 @@ import {
   transformSyncByBabelRule,
   transformSyncBySwcRule,
 } from '../../helpers';
-import type {
-  SyncTransformStep,
-  TransformResult,
-  TransformContext,
-  BaseTransformContext,
-} from '../../types';
+import type { SyncTransformStep, TransformResult } from '../../types';
 import { TransformPipeline } from '../TransformPipeline';
 import { TransformPipelineBuilder } from '../TransformPipelineBuilder';
 
@@ -120,10 +116,7 @@ export class SyncTransformPipeline extends TransformPipeline<SyncTransformStep> 
     return this;
   }
 
-  transform(
-    code: string,
-    context: Omit<TransformContext, keyof BaseTransformContext>,
-  ): TransformResult {
+  transform(code: string, context: ScopedTransformContext): TransformResult {
     const transformContext = { ...this.baseContext, ...context };
     const transformResult = this.steps.reduce(
       (prev, curr) => (prev.done ? prev : curr(prev.code, transformContext)),

@@ -1,6 +1,6 @@
 import {
-  HmrAppServer,
-  HmrWebServer,
+  HMRAppServer,
+  HMRWebServer,
   type HMRClientMessage,
 } from '@react-native-esbuild/hmr';
 import { getReloadByDevSettingsProxy } from '@react-native-esbuild/internal';
@@ -12,7 +12,7 @@ export const createHMRMiddlewareForApp = ({
 }: {
   onMessage?: (event: HMRClientMessage) => void;
 }): HMRMiddleware => {
-  const server = new HmrAppServer();
+  const server = new HMRAppServer();
 
   server.setMessageHandler((event) => onMessage?.(event));
 
@@ -64,7 +64,7 @@ export const createHMRMiddlewareForApp = ({
 };
 
 export const createHMRMiddlewareForWeb = (): HMRMiddleware => {
-  const server = new HmrWebServer();
+  const server = new HMRWebServer();
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function -- noop
   const noop = (): void => {};

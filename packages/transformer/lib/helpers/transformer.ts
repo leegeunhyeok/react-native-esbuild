@@ -1,6 +1,7 @@
 import type {
   BabelTransformRule,
   SwcTransformRule,
+  TransformContext,
   TransformRuleBase,
 } from '@react-native-esbuild/shared';
 import {
@@ -9,7 +10,7 @@ import {
   transformWithSwc,
   transformSyncWithSwc,
 } from '../transformer';
-import type { TransformContext, TransformerOptionsPreset } from '../types';
+import type { TransformerOptionsPreset } from '../types';
 
 const ruleOptionsToPreset = <T>(
   options: TransformRuleBase<T>['options'],

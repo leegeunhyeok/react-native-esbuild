@@ -1,15 +1,11 @@
+import type { ScopedTransformContext } from '@react-native-esbuild/shared';
 import {
   transformWithBabel,
   transformWithSwc,
   stripFlowWithSucrase,
 } from '../../transformer';
 import { transformByBabelRule, transformBySwcRule } from '../../helpers';
-import type {
-  AsyncTransformStep,
-  BaseTransformContext,
-  TransformContext,
-  TransformResult,
-} from '../../types';
+import type { AsyncTransformStep, TransformResult } from '../../types';
 import { TransformPipeline } from '../TransformPipeline';
 import { TransformPipelineBuilder } from '../TransformPipelineBuilder';
 
@@ -114,7 +110,7 @@ export class AsyncTransformPipeline extends TransformPipeline<AsyncTransformStep
 
   async transform(
     code: string,
-    context: Omit<TransformContext, keyof BaseTransformContext>,
+    context: ScopedTransformContext,
   ): Promise<TransformResult> {
     const transformContext = { ...this.baseContext, ...context };
     const transformResult = await this.steps.reduce(

@@ -1,6 +1,8 @@
-import type { BuildResult, Plugin } from 'esbuild';
+import type { BuildResult, Metafile, Plugin } from 'esbuild';
+import type { DependencyGraph } from 'esbuild-dependency-graph';
 import type { BuildMode } from '../enums';
 import type { Config } from './config';
+import type { ScopedTransformContext, TransformContext } from './transformer';
 
 export type SupportedPlatform = 'android' | 'ios' | 'web';
 
@@ -25,9 +27,16 @@ export interface BuildContext {
   mode: BuildMode;
   config: Config;
   bundleOptions: BundleOptions;
+  transformer: (
+    code: string,
+    context: ScopedTransformContext,
+  ) => Promise<string>;
+  flags: {
+    cacheEnabled: boolean;
+    hmrEnabled: boolean;
+  };
   moduleManager: ModuleManager;
   cacheStorage: CacheStorage;
-  hmrEnabled: boolean;
   /**
    * ```ts
    * interface AdditionalData {
@@ -91,5 +100,11 @@ export interface ModuleManager {
   /**
    * @param modulePath - actual module path(`path` value in esbuild metafile).
    */
-  getModuleId: (modulePath: string, isEntryPoint?: boolean) => number;
+  getModuleId: (modulePath: string, isEntryPoint?: boolean) => ModuleId;
+  getModuleIds: () => Record<string, ModuleId>;
+  initializeDependencyGraph: (
+    metafile: Metafile,
+    entryPoint: string,
+  ) => DependencyGraph;
+  getDependencyGraph: () => DependencyGraph;
 }

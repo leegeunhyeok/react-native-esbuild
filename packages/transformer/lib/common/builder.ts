@@ -1,28 +1,31 @@
-import type { BuildContext } from '@react-native-esbuild/shared';
+import type { BundleOptions, Config } from '@react-native-esbuild/shared';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
 import { AsyncTransformPipeline } from '../pipelines';
 import { swcPresets } from '../transformer';
 
 export const getCommonReactNativeRuntimePipelineBuilder = (
-  context: BuildContext,
+  root: string,
+  config: Config,
+  bundleOptions: BundleOptions,
+  { hmrEnabled }: { hmrEnabled: boolean },
 ): InstanceType<typeof AsyncTransformPipeline.builder> => {
   const {
     stripFlowPackageNames = [],
     fullyTransformPackageNames = [],
     additionalTransformRules,
-  } = context.config.transformer ?? {};
+  } = config.transformer ?? {};
   const additionalBabelRules = additionalTransformRules?.babel ?? [];
   const additionalSwcRules = additionalTransformRules?.swc ?? [];
   const injectScriptPaths = [
-    getReactNativeInitializeCore(context.root),
+    getReactNativeInitializeCore(root),
     // `hmr/runtime` should import after `initializeCore` initialized.
-    context.hmrEnabled ? '@react-native-esbuild/hmr/runtime' : undefined,
+    hmrEnabled ? '@react-native-esbuild/hmr/runtime' : undefined,
   ].filter(Boolean) as string[];
 
   const builder = new AsyncTransformPipeline.builder({
-    dev: context.bundleOptions.dev,
-    entry: context.bundleOptions.entry,
-    root: context.root,
+    root,
+    entry: bundleOptions.entry,
+    dev: bundleOptions.dev,
   })
     .setSwcPreset(swcPresets.getReactNativeRuntimePreset())
     .setInjectScripts(injectScriptPaths)

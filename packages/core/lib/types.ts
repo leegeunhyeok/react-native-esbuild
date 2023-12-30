@@ -1,12 +1,13 @@
 import type { Stats } from 'node:fs';
 import type { BuildContext as EsbuildBuildContext } from 'esbuild';
-import type { BundleOptions } from '@react-native-esbuild/shared';
+import type { BuildContext, BundleOptions } from '@react-native-esbuild/shared';
 
 export interface BundlerInitializeOptions {
   watcherEnabled?: boolean;
 }
 
 export interface BuildTask {
+  context: BuildContext;
   esbuild: EsbuildBuildContext;
   delegate: BuildTaskDelegate;
   buildCount: number;

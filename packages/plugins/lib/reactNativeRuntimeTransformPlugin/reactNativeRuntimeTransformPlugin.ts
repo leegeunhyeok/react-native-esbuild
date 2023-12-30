@@ -1,9 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { getCommonReactNativeRuntimePipelineBuilder } from '@react-native-esbuild/transformer';
 import type { PluginFactory } from '@react-native-esbuild/shared';
 import { logger } from '../shared';
-import { getCachingSteps, transformJsonAsJsModule } from './helpers';
+import { enhanceTransformer, transformJsonAsJsModule } from './helpers';
 
 export const createReactNativeRuntimeTransformPlugin: PluginFactory = (
   buildContext,
@@ -11,13 +10,7 @@ export const createReactNativeRuntimeTransformPlugin: PluginFactory = (
   name: 'react-native-runtime-transform-plugin',
   setup: (build): void => {
     const filter = /\.(?:[mc]js|[tj]sx?)$/;
-    const cachingSteps = getCachingSteps(buildContext);
-    const transformPipeline = getCommonReactNativeRuntimePipelineBuilder(
-      buildContext,
-    )
-      .beforeTransform(cachingSteps.beforeTransform)
-      .afterTransform(cachingSteps.afterTransform)
-      .build();
+    const transformer = enhanceTransformer(buildContext);
 
     transformJsonAsJsModule(buildContext, build);
 
@@ -31,15 +24,17 @@ export const createReactNativeRuntimeTransformPlugin: PluginFactory = (
     );
 
     build.onLoad({ filter }, async (args) => {
-      const moduleId = buildContext.moduleManager.getModuleId(args.path);
+      const moduleId = buildContext.moduleManager.getModuleId(
+        args.path,
+        args.pluginData?.isEntryPoint,
+      );
       let handle: fs.FileHandle | undefined;
 
       try {
         handle = await fs.open(args.path);
         const stat = await handle.stat();
         const rawCode = await handle.readFile({ encoding: 'utf-8' });
-
-        const { code } = await transformPipeline.transform(rawCode, {
+        const code = await transformer(rawCode, {
           id: moduleId,
           path: args.path,
           pluginData: {

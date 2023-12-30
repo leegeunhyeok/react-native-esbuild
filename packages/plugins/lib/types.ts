@@ -15,5 +15,5 @@ export interface SuffixPathResult {
 
 // buildStatusPlugin
 export interface BuildStatusPluginConfig {
-  handler?: BuildStatusListener;
+  handler: BuildStatusListener;
 }

@@ -25,7 +25,7 @@ export const createSvgTransformPlugin: PluginFactory = (buildContext) => ({
       );
 
       return {
-        contents: buildContext.hmrEnabled
+        contents: buildContext.flags.hmrEnabled
           ? registerAsExternalModule(
               moduleId,
               svgTransformedCode,

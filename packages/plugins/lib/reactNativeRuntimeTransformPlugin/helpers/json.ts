@@ -11,7 +11,7 @@ export const transformJsonAsJsModule = (
   buildContext: BuildContext,
   build: PluginBuild,
 ): void => {
-  if (!buildContext.hmrEnabled) return;
+  if (!buildContext.flags.hmrEnabled) return;
 
   build.onLoad({ filter: /\.json$/ }, async (args) => {
     const moduleId = buildContext.moduleManager.getModuleId(args.path);

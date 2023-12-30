@@ -10,9 +10,9 @@ import {
   SyncTransformPipeline,
   AsyncTransformPipeline,
   swcPresets,
-  type BaseTransformContext,
 } from '@react-native-esbuild/transformer';
 import { getReactNativeInitializeCore } from '@react-native-esbuild/internal';
+import type { BaseTransformContext } from '@react-native-esbuild/shared';
 import type { TransformerConfig } from '../types';
 import pkg from '../../package.json';
 

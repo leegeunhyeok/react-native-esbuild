@@ -22,7 +22,7 @@ const Label = styled(Text, { defaultVariant: 'text.button' })({
 export function Button({ label, onPress }: ButtonProps): JSX.Element {
   return (
     <ButtonContainer onPress={onPress}>
-      <Label>{label}</Label>
+      <Label>{label + 'te'}</Label>
     </ButtonContainer>
   );
 }

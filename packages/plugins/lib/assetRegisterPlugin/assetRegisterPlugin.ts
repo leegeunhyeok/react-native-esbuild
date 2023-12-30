@@ -95,7 +95,7 @@ export const createAssetRegisterPlugin: PluginFactory<
       };
     });
 
-    build.onLoad({ filter: /./, namespace: ASSET_NAMESPACE }, async (args) => {
+    build.onLoad({ filter: /.*/, namespace: ASSET_NAMESPACE }, async (args) => {
       const asset = await resolveScaledAssets(buildContext, args);
       const assetRegistrationScript = getAssetRegistrationScript(asset);
       const moduleId = buildContext.moduleManager.getModuleId(args.path);
@@ -104,7 +104,7 @@ export const createAssetRegisterPlugin: PluginFactory<
 
       return {
         resolveDir: path.dirname(args.path),
-        contents: buildContext.hmrEnabled
+        contents: buildContext.flags.hmrEnabled
           ? registerAsExternalModule(
               moduleId,
               assetRegistrationScript,

@@ -59,9 +59,9 @@ const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
                 [
                   'swc-plugin-global-module',
                   {
+                    moduleId: context.id.toString(),
                     runtimeModule: context.pluginData?.isRuntimeModule,
                     externalPattern: context.pluginData?.externalPattern,
-                    importPaths: context.pluginData?.importPaths,
                   },
                 ],
               ]

@@ -1,7 +1,7 @@
 import type { HMRMessage, HMRMessageType } from '../types';
 import { HMRServer } from './HMRServer';
 
-export class HmrWebServer extends HMRServer {
+export class HMRWebServer extends HMRServer {
   constructor() {
     super();
     this.setup();

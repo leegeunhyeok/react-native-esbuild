@@ -1,5 +1,5 @@
 import type { Plugin } from 'esbuild';
-import type { BabelTransformRule, SwcTransformRule } from './transformers';
+import type { BabelTransformRule, SwcTransformRule } from './transformer';
 
 export interface Config {
   /**

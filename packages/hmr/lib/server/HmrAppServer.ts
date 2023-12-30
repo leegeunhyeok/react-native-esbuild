@@ -2,7 +2,7 @@ import type { Server, MessageEvent, Data } from 'ws';
 import type { HMRClientMessage, HMRMessage, HMRMessageType } from '../types';
 import { HMRServer } from './HMRServer';
 
-export class HmrAppServer extends HMRServer {
+export class HMRAppServer extends HMRServer {
   private messageHandler?: (message: HMRClientMessage) => void;
 
   constructor() {

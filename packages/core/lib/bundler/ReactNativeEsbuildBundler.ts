@@ -1,5 +1,4 @@
 import path from 'node:path';
-import os from 'node:os';
 import esbuild, {
   type BuildOptions,
   type BuildResult,
@@ -7,7 +6,7 @@ import esbuild, {
 } from 'esbuild';
 import invariant from 'invariant';
 import ora from 'ora';
-import { isHMRBoundary } from '@react-native-esbuild/hmr';
+import { isAvailable, isHMRBoundary } from '@react-native-esbuild/hmr';
 import {
   Logger,
   LogLevel,
@@ -33,8 +32,12 @@ import {
 } from '@react-native-esbuild/internal';
 import {
   createBuildStatusPlugin,
-  createMetafilePlugin,
+  createBundleAnalyzePlugin,
 } from '@react-native-esbuild/plugins';
+import {
+  HMRTransformer,
+  getCommonReactNativeRuntimePipelineBuilder,
+} from '@react-native-esbuild/transformer';
 import { logger } from '../shared';
 import {
   loadConfig,
@@ -151,9 +154,7 @@ export class ReactNativeEsbuildBundler
   }
 
   private async getBuildOptions(
-    mode: BuildMode,
-    bundleOptions: BundleOptions,
-    additionalData?: AdditionalData,
+    buildContext: BuildContext,
   ): Promise<BuildOptions> {
     const config = this.config;
     invariant(config.resolver, 'invalid resolver configuration');
@@ -161,41 +162,25 @@ export class ReactNativeEsbuildBundler
     invariant(config.transformer, 'invalid transformer configuration');
     invariant(config.resolver.assetExtensions, 'invalid assetExtensions');
     invariant(config.resolver.sourceExtensions, 'invalid sourceExtensions');
+    setEnvironment(buildContext.bundleOptions.dev);
 
-    setEnvironment(bundleOptions.dev);
+    const { mode, root, flags, bundleOptions } = buildContext;
+    const { dev, entry, minify, outfile, platform } = bundleOptions;
 
-    const hmrEnabled = Boolean(
-      mode === BuildMode.Watch && bundleOptions.dev && config.experimental?.hmr,
-    );
     const webSpecifiedOptions =
-      bundleOptions.platform === 'web'
-        ? getEsbuildWebConfig(mode, this.root, bundleOptions)
+      platform === 'web'
+        ? getEsbuildWebConfig(mode, root, bundleOptions)
         : null;
 
     if (webSpecifiedOptions) {
-      bundleOptions.outfile =
-        webSpecifiedOptions.outfile ?? path.basename(bundleOptions.entry);
+      buildContext.bundleOptions.outfile =
+        webSpecifiedOptions.outfile ?? path.basename(entry);
     }
 
-    const context: BuildContext = {
-      id: getIdByOptions(bundleOptions),
-      root: this.root,
-      config: this.config,
-      bundleOptions,
-      mode,
-      moduleManager: new ModuleManager(),
-      cacheStorage: new CacheStorage(),
-      hmrEnabled,
-      additionalData: {
-        ...additionalData,
-        externalPattern: this.externalPattern,
-      },
-    };
-
     return {
-      entryPoints: [bundleOptions.entry],
-      outfile: bundleOptions.outfile,
-      sourceRoot: this.root,
+      entryPoints: [entry],
+      outfile,
+      sourceRoot: root,
       mainFields: config.resolver.mainFields,
       resolveExtensions: getResolveExtensionsOption(
         bundleOptions,
@@ -203,26 +188,25 @@ export class ReactNativeEsbuildBundler
         config.resolver.assetExtensions,
       ),
       loader: getLoaderOption(config.resolver.assetExtensions),
-      define: getGlobalVariables(bundleOptions.dev, bundleOptions.platform),
+      define: getGlobalVariables(dev, platform),
       banner: {
         js: await getTransformedPreludeScript(
           bundleOptions,
-          this.root,
-          [hmrEnabled ? 'swc-plugin-global-module/runtime' : undefined].filter(
-            Boolean,
-          ) as string[],
+          root,
+          [
+            flags.hmrEnabled ? 'swc-plugin-global-module/runtime' : undefined,
+          ].filter(Boolean) as string[],
         ),
       },
       plugins: [
         // Common plugins
-        createBuildStatusPlugin(context, {}),
-        createMetafilePlugin(context),
+        createBuildStatusPlugin(buildContext, { handler: this }),
+        createBundleAnalyzePlugin(buildContext),
         // Added plugin creators
-        ...(bundleOptions.platform === 'web'
-          ? presets.web
-          : presets.native
-        ).map((createPlugin) => createPlugin(context)),
-        ...this.plugins.map((plugin) => plugin(context)),
+        ...(platform === 'web' ? presets.web : presets.native).map(
+          (createPlugin) => createPlugin(buildContext),
+        ),
+        ...this.plugins.map((plugin) => plugin(buildContext)),
         // Additional plugins in configuration.
         ...(config.plugins ?? []),
       ],
@@ -245,7 +229,7 @@ export class ReactNativeEsbuildBundler
       bundle: true,
       sourcemap: true,
       metafile: true,
-      minify: bundleOptions.minify,
+      minify,
       write: mode === BuildMode.Bundle,
       ...webSpecifiedOptions,
     };
@@ -254,6 +238,46 @@ export class ReactNativeEsbuildBundler
   private throwIfNotInitialized(): void {
     if (this.initialized) return;
     throw new Error('bundler not initialized');
+  }
+
+  private createContext(
+    mode: BuildMode,
+    bundleOptions: BundleOptions,
+    additionalData?: AdditionalData,
+  ): BuildContext {
+    const root = this.root;
+    const config = this.config;
+    const cacheEnabled = Boolean(config.cache);
+    const hmrEnabled = Boolean(
+      isAvailable(mode, bundleOptions) && config.experimental?.hmr,
+    );
+
+    const pipeline = getCommonReactNativeRuntimePipelineBuilder(
+      root,
+      config,
+      bundleOptions,
+      { hmrEnabled },
+    ).build();
+
+    const context: BuildContext = {
+      mode,
+      id: getIdByOptions(bundleOptions),
+      root,
+      config,
+      bundleOptions,
+      transformer: async (code, context) => {
+        return (await pipeline.transform(code, context)).code;
+      },
+      flags: {
+        cacheEnabled,
+        hmrEnabled,
+      },
+      moduleManager: new ModuleManager(root),
+      cacheStorage: new CacheStorage(),
+      additionalData: additionalData ?? {},
+    };
+
+    return context;
   }
 
   private async setupTask(
@@ -265,13 +289,15 @@ export class ReactNativeEsbuildBundler
       return this.buildTasks.get(id)!;
     }
 
-    const buildOptions = await this.getBuildOptions(
+    const context = this.createContext(
       BuildMode.Watch,
       bundleOptions,
       additionalData,
     );
 
+    const buildOptions = await this.getBuildOptions(context);
     const buildTask: BuildTask = {
+      context,
       esbuild: await esbuild.context(buildOptions),
       delegate: createBuildTaskDelegate(),
       buildCount: 0,
@@ -288,18 +314,18 @@ export class ReactNativeEsbuildBundler
     // Skip when bundle mode because task does not exist in this mode.
     if (context.mode === BuildMode.Bundle) return;
 
-    const buildContext = this.buildTasks.get(context.id);
-    invariant(buildContext, 'no build context');
+    const buildTask = this.buildTasks.get(context.id);
+    invariant(buildTask, 'no build task');
 
-    if (buildContext.buildCount === 0) return;
+    if (buildTask.buildCount === 0) return;
 
     logger.debug(`reset build context (id: ${context.id})`, {
-      buildCount: buildContext.buildCount,
+      buildCount: buildTask.buildCount,
     });
 
-    buildContext.delegate = createBuildTaskDelegate();
-    buildContext.status = 'pending';
-    buildContext.buildCount += 1;
+    buildTask.delegate = createBuildTaskDelegate();
+    buildTask.status = 'pending';
+    buildTask.buildCount += 1;
   }
 
   public onBuildStart(context: BuildContext): void {
@@ -329,23 +355,19 @@ export class ReactNativeEsbuildBundler
     invariant(data.result.metafile, 'invalid metafile');
     invariant(data.result.outputFiles, 'empty outputFiles');
 
-    const buildContext = this.buildTasks.get(context.id);
-    invariant(buildContext, 'no build context');
-
-    // if (context.hmrEnabled) {
-    //   ReactNativeEsbuildBundler.sharedData.get(context.id).set({
-    //     dependencyGraph: generateDependencyGraph(
-    //       data.result.metafile,
-    //       context.bundleOptions.entry,
-    //     ),
-    //   });
-    // }
+    const buildTask = this.buildTasks.get(context.id);
+    invariant(buildTask, 'no build task');
 
     const bundleEndedAt = new Date();
     const bundleFilename = context.bundleOptions.outfile;
     const bundleSourcemapFilename = `${bundleFilename}.map`;
     const revisionId = bundleEndedAt.getTime().toString();
-    const { outputFiles } = data.result;
+    const { outputFiles, metafile } = data.result;
+
+    buildTask.context.moduleManager.initializeDependencyGraph(
+      metafile,
+      context.bundleOptions.entry,
+    );
 
     const findFromOutputFile = (
       filename: string,
@@ -362,7 +384,7 @@ export class ReactNativeEsbuildBundler
       invariant(bundleOutput, 'empty bundle output');
       invariant(bundleSourcemapOutput, 'empty sourcemap output');
 
-      buildContext.delegate.success({
+      buildTask.delegate.success({
         result: {
           source: bundleOutput.contents,
           sourcemap: bundleSourcemapOutput.contents,
@@ -372,9 +394,9 @@ export class ReactNativeEsbuildBundler
         error: null,
       });
     } catch (error) {
-      buildContext.delegate.failure(error);
+      buildTask.delegate.failure(error);
     } finally {
-      buildContext.status = 'resolved';
+      buildTask.status = 'resolved';
       this.emit('build-end', {
         revisionId,
         id: context.id,
@@ -394,18 +416,17 @@ export class ReactNativeEsbuildBundler
     this.buildTasks.forEach((task) => (task.status = 'pending'));
 
     if (this.config.experimental?.hmr && isHMRBoundary(path)) {
-      // for (const [
-      //   id,
-      //   hmrController,
-      // ] of ReactNativeEsbuildBundler.hmr.entries()) {
-      //   hmrController.getDelta(changedFile).then((update) => {
-      //     this.emit('build-end', {
-      //       id,
-      //       update,
-      //       revisionId: new Date().getTime().toString(),
-      //     });
-      //   });
-      // }
+      this.buildTasks.forEach((task) => {
+        const buildContext = task.context;
+        const moduleId = buildContext.moduleManager.getModuleId(path);
+        HMRTransformer.transformDelta(buildContext, moduleId).then((result) => {
+          this.emit('build-end', {
+            id: moduleId,
+            update: result,
+            revisionId: new Date().getTime().toString(),
+          });
+        });
+      });
     } else {
       this.buildTasks.forEach(({ esbuild }) => {
         esbuild.rebuild();
@@ -450,11 +471,15 @@ export class ReactNativeEsbuildBundler
     additionalData?: AdditionalData,
   ): Promise<BuildResult> {
     this.throwIfNotInitialized();
-    const buildOptions = await this.getBuildOptions(
+
+    const context = this.createContext(
       BuildMode.Bundle,
       combineWithDefaultBundleOptions(bundleOptions),
       additionalData,
     );
+
+    const buildOptions = await this.getBuildOptions(context);
+
     return esbuild.build(buildOptions);
   }
 
@@ -467,16 +492,19 @@ export class ReactNativeEsbuildBundler
       throw new Error('serve mode is only available on web platform');
     }
 
-    const buildContext = await this.setupTask(
-      combineWithDefaultBundleOptions(bundleOptions),
+    const postProcessedBundleOptions =
+      combineWithDefaultBundleOptions(bundleOptions);
+
+    const buildTask = await this.setupTask(
+      postProcessedBundleOptions,
       additionalData,
     );
 
-    if (buildContext.status === 'pending') {
-      buildContext.esbuild.rebuild();
+    if (buildTask.status === 'pending') {
+      buildTask.esbuild.rebuild();
     }
 
-    return buildContext.esbuild.serve({
+    return buildTask.esbuild.serve({
       servedir: getDevServerPublicPath(this.root),
     });
   }
@@ -486,16 +514,20 @@ export class ReactNativeEsbuildBundler
     additionalData?: AdditionalData,
   ): Promise<BundleResult> {
     this.throwIfNotInitialized();
-    const buildContext = await this.setupTask(
-      combineWithDefaultBundleOptions(bundleOptions),
+
+    const postProcessedBundleOptions =
+      combineWithDefaultBundleOptions(bundleOptions);
+
+    const buildTask = await this.setupTask(
+      postProcessedBundleOptions,
       additionalData,
     );
 
-    if (buildContext.status === 'pending') {
-      buildContext.esbuild.rebuild();
+    if (buildTask.status === 'pending') {
+      buildTask.esbuild.rebuild();
     }
 
-    const result = await buildContext.delegate.promise;
+    const result = await buildTask.delegate.promise;
 
     return result;
   }

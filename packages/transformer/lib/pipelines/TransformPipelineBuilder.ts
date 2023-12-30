@@ -1,13 +1,10 @@
 import type { Options as SwcTransformOptions } from '@swc/core';
 import type {
+  BaseTransformContext,
   BabelTransformRule,
   SwcTransformRule,
 } from '@react-native-esbuild/shared';
-import type {
-  BaseTransformContext,
-  TransformStep,
-  TransformerOptionsPreset,
-} from '../types';
+import type { TransformStep, TransformerOptionsPreset } from '../types';
 import { babelPresets } from '../transformer';
 import type { TransformPipeline } from './TransformPipeline';
 

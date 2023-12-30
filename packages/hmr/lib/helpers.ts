@@ -1,6 +1,8 @@
 import path from 'node:path';
 import {
   colors,
+  BuildMode,
+  type BundleOptions,
   type BuildContext,
   type ModuleId,
 } from '@react-native-esbuild/shared';
@@ -11,9 +13,16 @@ import { logger } from './shared';
 
 let INTERNAL_boundaryIndex = 0;
 
+export const isAvailable = (
+  mode: BuildMode,
+  bundleOptions: BundleOptions,
+): boolean => {
+  return Boolean(mode === BuildMode.Watch && bundleOptions.dev);
+};
+
 export const asHMRBoundary = (id: ModuleId, body: string): string => {
   const ident = `__hmr${INTERNAL_boundaryIndex++}`;
-  return `var ${ident} = ${HMR_REGISTER_FUNCTION}(${JSON.stringify(id)});
+  return `var ${ident} = ${HMR_REGISTER_FUNCTION}("${id}");
   ${body}
   ${ident}.dispose(function () { });
   ${ident}.accept(function (payload) {
@@ -32,7 +41,7 @@ export const asHMRBoundary = (id: ModuleId, body: string): string => {
  * ```
  */
 export const asHMRUpdateCall = (id: ModuleId, body: string): string => {
-  return `${HMR_UPDATE_FUNCTION}(${JSON.stringify(id)}, function () {
+  return `${HMR_UPDATE_FUNCTION}("${id}", function () {
     ${body}
   });`;
 };
@@ -73,9 +82,7 @@ export const registerAsExternalModule = (
   body: string,
   identifierName: string,
 ): string => {
-  return `${body}\nglobal.__modules.external(${JSON.stringify(
-    id,
-  )}, ${identifierName});`;
+  return `${body}\nglobal.__modules.external("${id}", ${identifierName});`;
 };
 
 export const isHMRBoundary = (path: string): boolean => {

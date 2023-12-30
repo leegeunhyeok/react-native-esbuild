@@ -1,10 +1,7 @@
 import type { TransformOptions } from '@babel/core';
 import { loadOptions, transformAsync, transformSync } from '@babel/core';
-import type {
-  AsyncTransformer,
-  SyncTransformer,
-  TransformContext,
-} from '../../types';
+import type { TransformContext } from '@react-native-esbuild/shared';
+import type { AsyncTransformer, SyncTransformer } from '../../types';
 
 const loadBabelOptions = (
   context: TransformContext,

@@ -1,8 +1,8 @@
 import type {
   BaseTransformContext,
-  TransformStep,
-  TransformContext,
-} from '../types';
+  ScopedTransformContext,
+} from '@react-native-esbuild/shared';
+import type { TransformStep } from '../types';
 
 export abstract class TransformPipeline<Step extends TransformStep<unknown>> {
   protected steps: Step[] = [];
@@ -16,6 +16,6 @@ export abstract class TransformPipeline<Step extends TransformStep<unknown>> {
 
   abstract transform(
     code: string,
-    context: Omit<TransformContext, keyof BaseTransformContext>,
+    context: ScopedTransformContext,
   ): ReturnType<Step>;
 }

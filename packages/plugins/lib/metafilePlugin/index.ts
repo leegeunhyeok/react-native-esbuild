@@ -1,1 +1,0 @@
-export { createMetafilePlugin } from './metafilePlugin';

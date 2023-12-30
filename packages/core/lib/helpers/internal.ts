@@ -1,12 +1,14 @@
 import fs from 'node:fs/promises';
 import type { BuildOptions } from 'esbuild';
-import type { TransformContext } from '@react-native-esbuild/transformer';
 import {
   stripFlowWithSucrase,
   transformWithSwc,
   swcPresets,
 } from '@react-native-esbuild/transformer';
-import type { BundleOptions } from '@react-native-esbuild/shared';
+import type {
+  BundleOptions,
+  TransformContext,
+} from '@react-native-esbuild/shared';
 import { getPreludeScript } from '@react-native-esbuild/internal';
 
 const loadScript = (path: string): Promise<string> =>

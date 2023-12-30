@@ -1,6 +1,7 @@
 import path from 'node:path';
 import type { BuildResult } from 'esbuild';
 import type { PluginFactory } from '@react-native-esbuild/shared';
+import invariant from 'invariant';
 import type { BuildStatusPluginConfig } from '../types';
 import { StatusLogger } from './StatusLogger';
 
@@ -10,6 +11,8 @@ export const createBuildStatusPlugin: PluginFactory<BuildStatusPluginConfig> = (
 ) => ({
   name: 'react-native-esbuild-bundler-status-plugin',
   setup: (build): void => {
+    invariant(config?.handler, 'handler is required');
+
     const filter = /.*/;
     const statusLogger = new StatusLogger(buildContext);
     let statusLoaded = false;
@@ -20,7 +23,7 @@ export const createBuildStatusPlugin: PluginFactory<BuildStatusPluginConfig> = (
         statusLoaded = true;
       }
       statusLogger.setup();
-      config?.handler?.onBuildStart(buildContext);
+      config.handler.onBuildStart(buildContext);
     });
 
     build.onResolve({ filter }, (args) => {
@@ -28,7 +31,7 @@ export const createBuildStatusPlugin: PluginFactory<BuildStatusPluginConfig> = (
       statusLogger.onResolve(
         isRelative ? path.resolve(args.resolveDir, args.path) : args.path,
       );
-      config?.handler?.onBuild(buildContext, statusLogger.getStatus());
+      config.handler.onBuild(buildContext, statusLogger.getStatus());
       return null;
     });
 
@@ -40,7 +43,7 @@ export const createBuildStatusPlugin: PluginFactory<BuildStatusPluginConfig> = (
     build.onEnd(async (result: BuildResult) => {
       const success = await statusLogger.summary(result);
       await statusLogger.persistStatus();
-      config?.handler?.onBuildEnd(
+      config.handler.onBuildEnd(
         buildContext,
         { result, success },
         statusLogger.getStatus(),

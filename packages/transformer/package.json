@@ -50,7 +50,7 @@
     "esbuild-dependency-graph": "^0.3.0",
     "sucrase": "^3.34.0",
     "swc-plugin-coverage-instrument": "^0.0.20",
-    "swc-plugin-global-module": "^0.1.0-alpha.5",
+    "swc-plugin-global-module": "^0.2.0",
     "swc_mut_cjs_exports": "^0.85.0"
   }
 }

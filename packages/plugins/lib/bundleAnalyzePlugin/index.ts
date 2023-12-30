@@ -1,0 +1,1 @@
+export { createBundleAnalyzePlugin } from './bundleAnalyzePlugin';

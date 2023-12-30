@@ -15,4 +15,4 @@ export { Logger, LogLevel } from './logger';
 // Shared types
 export type * from './types/config';
 export type * from './types/core';
-export type * from './types/transformers';
+export type * from './types/transformer';

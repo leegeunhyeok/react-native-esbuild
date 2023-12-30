@@ -3770,6 +3770,7 @@ __metadata:
     colors: ^1.4.0
     dayjs: ^1.11.10
     esbuild: ^0.19.5
+    esbuild-dependency-graph: ^0.3.0
     md5: ^2.3.0
     node-self: ^1.0.2
   languageName: unknown
@@ -3799,7 +3800,7 @@ __metadata:
     esbuild-dependency-graph: ^0.3.0
     sucrase: ^3.34.0
     swc-plugin-coverage-instrument: ^0.0.20
-    swc-plugin-global-module: ^0.1.0-alpha.5
+    swc-plugin-global-module: ^0.2.0
     swc_mut_cjs_exports: ^0.85.0
   languageName: unknown
   linkType: soft
@@ -17739,10 +17740,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swc-plugin-global-module@npm:^0.1.0-alpha.5":
-  version: 0.1.0-alpha.5
-  resolution: "swc-plugin-global-module@npm:0.1.0-alpha.5"
-  checksum: 10523c54644544a989bdd77cf45a273f529d191816d8c5a4cb992267845048d66125e720a71bca49ae2ab47fcd051077f024d00cf4cf31030eeac1c67082ac18
+"swc-plugin-global-module@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "swc-plugin-global-module@npm:0.2.0"
+  checksum: 2ab72bfa84d2596e8f2a89e72e6360de507a5df13c368a249f95b15d482b57a8e1c656ded2c4ebcac81d5f91e846c56c1c0065fe0fbd66edb3be4d728d735eb5
   languageName: node
   linkType: hard
 

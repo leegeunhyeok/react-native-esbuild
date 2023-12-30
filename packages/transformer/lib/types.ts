@@ -1,5 +1,4 @@
-import type { OnLoadArgs } from 'esbuild';
-import type { ModuleId } from '@react-native-esbuild/shared';
+import type { TransformContext } from '@react-native-esbuild/shared';
 
 export type AsyncTransformer<TransformerOptions> = (
   code: string,
@@ -14,39 +13,6 @@ export type SyncTransformer<TransformerOptions> = (
 interface TransformerConfig<TransformerOptions> {
   context: TransformContext;
   preset?: TransformerOptionsPreset<TransformerOptions>;
-}
-
-export interface BaseTransformContext {
-  root: string;
-  entry: string;
-  dev: boolean;
-}
-
-export interface TransformContext extends BaseTransformContext {
-  id: ModuleId;
-  path: string;
-  /**
-   * @internal
-   *
-   * - `react-native-runtime-transform-plugin`
-   *   - `mtimeMs`, `hash`, `externalPattern`
-   * - `HMRTransformPipeline`
-   *   - `externalPattern`
-   *
-   * ```ts
-   * interface PluginData {
-   *   // Set modified at timestamp.
-   *   mtimeMs?: number;
-   *   // Set hash value when cache enabled.
-   *   hash?: string;
-   *   // Set map value when HMR enabled.
-   *   importPaths?: Record<string, string>;
-   *   // Set `true` if it's entry-point module.
-   *   isEntryPoint?: boolean;
-   * }
-   * ```
-   */
-  pluginData: OnLoadArgs['pluginData'];
 }
 
 export type TransformerOptionsPreset<TransformerOptions> = (
