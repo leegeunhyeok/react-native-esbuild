@@ -26,13 +26,12 @@ export const createBuildStatusPlugin: PluginFactory<BuildStatusPluginConfig> = (
       config.handler.onBuildStart(buildContext);
     });
 
-    build.onResolve({ filter }, (args) => {
+    build.onResolve({ filter }, (args): undefined => {
       const isRelative = args.path.startsWith('.');
       statusLogger.onResolve(
         isRelative ? path.resolve(args.resolveDir, args.path) : args.path,
       );
       config.handler.onBuild(buildContext, statusLogger.getStatus());
-      return null;
     });
 
     build.onLoad({ filter }, () => {

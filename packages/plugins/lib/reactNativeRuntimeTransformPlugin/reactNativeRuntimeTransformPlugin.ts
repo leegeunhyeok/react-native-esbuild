@@ -14,14 +14,14 @@ export const createReactNativeRuntimeTransformPlugin: PluginFactory = (
 
     transformJsonAsJsModule(buildContext, build);
 
-    build.onResolve({ filter }, (args) =>
-      args.kind === 'entry-point'
-        ? {
-            path: args.path,
-            pluginData: { isEntryPoint: true },
-          }
-        : null,
-    );
+    build.onResolve({ filter }, (args) => {
+      if (args.kind === 'entry-point') {
+        return {
+          path: args.path,
+          pluginData: { isEntryPoint: true },
+        };
+      }
+    });
 
     build.onLoad({ filter }, async (args) => {
       const moduleId = buildContext.moduleManager.getModuleId(
