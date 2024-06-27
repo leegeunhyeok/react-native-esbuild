@@ -22,7 +22,7 @@ Add `.rne` and `.swc` to `.gitignore`.
 .swc
 ```
 
-And create `react-native-esbuild.js` to project root.
+And create `react-native-esbuild.config.js` to project root.
 
 ```js
 /**
@@ -31,7 +31,7 @@ And create `react-native-esbuild.js` to project root.
 exports.default = {};
 ```
 
-for more details, go to [Configuration](/configuration/basic).
+for more details, go to [Configuration](/configuration/basic-configuration).
 
 ## Native Setup
 
