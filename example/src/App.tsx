@@ -5,15 +5,12 @@ import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import { useFlipper } from '@react-navigation/devtools';
 import { DripsyProvider } from 'dripsy';
 import { RootStackNavigator } from './navigators';
 import { themeLight } from './theme';
 
-export function App(): JSX.Element {
+export function App(): React.JSX.Element {
   const navigationRef = useNavigationContainerRef();
-
-  useFlipper(navigationRef);
 
   useEffect(() => {
     console.log('Hello, world!');

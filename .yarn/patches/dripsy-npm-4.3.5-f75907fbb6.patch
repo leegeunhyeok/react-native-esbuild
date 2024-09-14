@@ -1,0 +1,13 @@
+diff --git a/src/core/index.ts b/src/core/index.ts
+index 1419f9162a578851a0dbcba565c57f61e68a379c..d27d9130f186868a212c3d7b309836b4bced4080 100644
+--- a/src/core/index.ts
++++ b/src/core/index.ts
+@@ -4,7 +4,7 @@ export * from './provider'
+ export * from './css/scales'
+ export { useResponsiveValue } from './css/use-responsive-value'
+ export { Styles, css } from './css'
+-export { DripsyFinalTheme as Theme } from './types-v2/declarations'
++export { type DripsyFinalTheme as Theme } from './types-v2/declarations'
+ export { styled } from './css/styled'
+ export { useBreakpointIndex } from './css/breakpoint-context'
+ export { getBreakpointIndex } from './css/get-breakpoint-index'

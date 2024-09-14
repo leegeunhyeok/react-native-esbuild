@@ -4,5 +4,6 @@
     "metafile",
     "middlewares",
     "dripsy"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
