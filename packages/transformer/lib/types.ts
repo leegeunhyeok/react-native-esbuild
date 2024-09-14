@@ -3,14 +3,14 @@ import type { OnLoadArgs } from 'esbuild';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
 import type { Options as SwcTransformOptions } from '@swc/core';
 
-export type AsyncTransformer<TransformerOptions> = (
-  code: string,
+export type AsyncTransformer<TransformerOptions, Source = string> = (
+  source: Source,
   context: TransformerContext,
   preset?: TransformerOptionsPreset<TransformerOptions>,
 ) => Promise<string>;
 
-export type SyncTransformer<TransformerOptions> = (
-  code: string,
+export type SyncTransformer<TransformerOptions, Source = string> = (
+  source: Source,
   context: TransformerContext,
   preset?: TransformerOptionsPreset<TransformerOptions>,
 ) => string;

@@ -1,5 +1,11 @@
-import type { TransformOptions } from '@babel/core';
-import { loadOptions, transformAsync, transformSync } from '@babel/core';
+import {
+  loadOptions,
+  transformAsync,
+  transformSync,
+  transformFromAstAsync,
+  type TransformOptions,
+  type Node,
+} from '@babel/core';
 import type {
   AsyncTransformer,
   SyncTransformer,
@@ -18,7 +24,7 @@ const loadBabelOptions = (
 };
 
 export const transformWithBabel: AsyncTransformer<TransformOptions> = async (
-  code: string,
+  source,
   context,
   preset,
 ) => {
@@ -27,7 +33,7 @@ export const transformWithBabel: AsyncTransformer<TransformOptions> = async (
     throw new Error('cannot load babel options');
   }
 
-  const result = await transformAsync(code, babelOptions);
+  const result = await transformAsync(source, babelOptions);
   if (typeof result?.code !== 'string') {
     throw new Error('babel transformed source is empty');
   }
@@ -36,7 +42,7 @@ export const transformWithBabel: AsyncTransformer<TransformOptions> = async (
 };
 
 export const transformSyncWithBabel: SyncTransformer<TransformOptions> = (
-  code: string,
+  source,
   context,
   preset,
 ) => {
@@ -45,10 +51,29 @@ export const transformSyncWithBabel: SyncTransformer<TransformOptions> = (
     throw new Error('cannot load babel options');
   }
 
-  const result = transformSync(code, babelOptions);
+  const result = transformSync(source, babelOptions);
   if (typeof result?.code !== 'string') {
     throw new Error('babel transformed source is empty');
   }
 
   return result.code;
 };
+
+export const transformWithBabelAst: AsyncTransformer<
+  TransformOptions,
+  Node
+> = async (ast, context, preset) => {
+  const babelOptions = loadBabelOptions(context, preset?.(context));
+  if (!babelOptions) {
+    throw new Error('cannot load babel options');
+  }
+
+  const result = await transformFromAstAsync(ast, undefined, babelOptions);
+  if (typeof result?.code !== 'string') {
+    throw new Error('babel transformed source is empty');
+  }
+
+  return result.code;
+};
+
+// @TODO: Add transformSyncWithBabelAST

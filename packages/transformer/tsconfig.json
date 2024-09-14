@@ -6,6 +6,7 @@
     "declaration": true,
     "emitDeclarationOnly": true
   },
+  "files": ["../../types/index.d.ts", "types/lib.d.ts"],
   "include": ["./lib", "./tests"],
   "exclude": ["./dist"]
 }
