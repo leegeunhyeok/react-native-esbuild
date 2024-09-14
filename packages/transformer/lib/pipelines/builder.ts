@@ -10,7 +10,7 @@ import type {
 import { babelPresets } from '../transformer';
 import type { TransformPipeline } from './pipeline';
 
-const FLOW_SYMBOL = ['@flow', '@noflow'] as const;
+const FLOW_SYMBOL = ['@flow', '@noflow', 'import typeof'] as const;
 
 export abstract class TransformPipelineBuilder<
   Step extends TransformStep<unknown>,
