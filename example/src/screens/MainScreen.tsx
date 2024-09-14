@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Container, View, H1, P } from 'dripsy';
 import { Fade, Button } from '../components';
 import type { RootStackProps } from '../navigators/types';
-import LogoSvg from '../assets/logo.svg';
+import LogoSvg from './react-dev.png';
 
 export function MainScreen({
   navigation,
@@ -18,10 +18,13 @@ export function MainScreen({
   return (
     <Container sx={{ paddingTop: top, paddingBottom: bottom }}>
       <Fade style={styles.contentArea} delay={500}>
-        <LogoSvg width={120} height={120} />
-        <H1>React Native Esbuild</H1>
-        <P style={styles.subTitle}>
-          ⚡️ An extremely fast bundler{'\n'}+{'\n'}React Native
+        {/* <LogoSvg width={120} height={120} /> */}
+        <Image style={{ height: 100, objectFit: 'contain' }} source={LogoSvg} />
+        <H1 style={{ fontSize: 20, marginBottom: 8 }}>
+          react-native-devtools-standalone
+        </H1>
+        <P style={[styles.subTitle, { fontSize: 16 }]}>
+          Standalone React DevTools{'\n'}for integration with React Native
         </P>
       </Fade>
       <Fade delay={750}>

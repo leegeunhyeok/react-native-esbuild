@@ -8,7 +8,11 @@ import type { ModuleId } from '@react-native-esbuild/shared';
 declare global {
   interface HotModuleReplacementRuntimeModule {
     register: (id: ModuleId) => void;
-    update: (id: ModuleId, evalUpdates: () => void) => void;
+    update: (
+      id: ModuleId,
+      inverseDependencies: ModuleId[],
+      evalUpdates: () => void,
+    ) => void;
     // react-refresh/runtime
     reactRefresh: {
       register: typeof register;

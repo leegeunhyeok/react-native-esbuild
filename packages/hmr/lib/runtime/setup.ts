@@ -44,7 +44,11 @@ if (__DEV__ && typeof global.__hmr === 'undefined') {
       return (HotModuleReplacementContext.registry[id] =
         new HotModuleReplacementContext(id));
     },
-    update: (id: ModuleId, evalUpdates: () => void) => {
+    update: (
+      id: ModuleId,
+      inverseDependencies: ModuleId[],
+      evalUpdates: () => void,
+    ) => {
       const context = HotModuleReplacementContext.registry[id];
       if (context) {
         context.disposeCallbacks.forEach((callback) => {
@@ -53,6 +57,10 @@ if (__DEV__ && typeof global.__hmr === 'undefined') {
         evalUpdates();
         context.acceptCallbacks.forEach((callback) => {
           callback({ id });
+        });
+
+        inverseDependencies.forEach((id) => {
+          const context = HotModuleReplacementContext.registry[id];
         });
       }
     },

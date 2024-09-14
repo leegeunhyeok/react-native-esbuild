@@ -41,7 +41,7 @@ export const asHMRBoundary = (id: ModuleId, body: string): string => {
  * ```
  */
 export const asHMRUpdateCall = (id: ModuleId, body: string): string => {
-  return `${HMR_UPDATE_FUNCTION}("${id}", function () {
+  return `${HMR_UPDATE_FUNCTION}("${id}", function() {
     ${body}
   });`;
 };

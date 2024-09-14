@@ -210,6 +210,8 @@ export class ReactNativeEsbuildBundler
         // Additional plugins in configuration.
         ...(config.plugins ?? []),
       ],
+      // Ignore package.json's `sideEffects` to keep all modules.
+      ignoreAnnotations: flags.hmrEnabled,
       legalComments: 'none',
       target: 'es6',
       format: 'esm',
