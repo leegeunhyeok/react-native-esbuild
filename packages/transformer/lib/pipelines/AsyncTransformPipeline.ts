@@ -1,10 +1,12 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import type { OnLoadArgs } from 'esbuild';
+import { parse as hermesParse } from 'hermes-parser';
 import {
   transformWithBabel,
   transformWithSwc,
   stripFlowWithSucrase,
+  transformWithBabelAst,
 } from '../transformer';
 import { transformByBabelRule, transformBySwcRule } from '../helpers';
 import type { AsyncTransformStep, ModuleMeta, TransformResult } from '../types';
@@ -61,15 +63,24 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
       this.stripFlowPackageNames,
     );
     if (stripFlowPackageNamesRegExp) {
-      pipeline.addStep((code, args) => {
+      pipeline.addStep(async (code, args) => {
         if (
           stripFlowPackageNamesRegExp.test(args.path) ||
           this.isFlow(code, args.path)
         ) {
-          code = stripFlowWithSucrase(code, this.getContext(args));
+          const context = this.getContext(args);
+
+          try {
+            code = stripFlowWithSucrase(code, context);
+          } catch {
+            code = await transformWithBabelAst(
+              hermesParse(code, { babel: true, flow: 'all' }),
+              context,
+            );
+          }
         }
 
-        return Promise.resolve({ code, done: false });
+        return { code, done: false };
       });
     }
 

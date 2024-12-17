@@ -15,7 +15,7 @@ const SectionTitle = styled(H2, {
   defaultVariant: 'text.primary',
 })();
 
-export function Section({ children, title }: SectionProps): JSX.Element {
+export function Section({ children, title }: SectionProps): React.JSX.Element {
   return (
     <SectionContainer>
       {title ? <SectionTitle>{title}</SectionTitle> : null}
