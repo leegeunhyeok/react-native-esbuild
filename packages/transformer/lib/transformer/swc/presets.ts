@@ -2,8 +2,8 @@ import type { Options, TsParserConfig, EsParserConfig } from '@swc/core';
 import {
   REACT_REFRESH_GET_SIGNATURE_FUNCTION,
   REACT_REFRESH_REGISTER_FUNCTION,
-  isHMRBoundary,
 } from '@react-native-esbuild/hmr';
+import globalModulePlugin, { Phase } from '@global-modules/swc-plugin';
 import type {
   TransformerOptionsPreset,
   SwcJestPresetOptions,
@@ -29,7 +29,6 @@ const getParserOptions = (path: string): TsParserConfig | EsParserConfig => {
  */
 const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
   return (context) => {
-    const hmrEnabled = isHMRBoundary(context.path);
     return {
       minify: false,
       sourceMaps: false,
@@ -45,27 +44,16 @@ const getReactNativeRuntimePreset = (): TransformerOptionsPreset<Options> => {
         transform: {
           react: {
             development: context.dev,
-            refresh: hmrEnabled
-              ? {
-                  refreshReg: REACT_REFRESH_REGISTER_FUNCTION,
-                  refreshSig: REACT_REFRESH_GET_SIGNATURE_FUNCTION,
-                }
-              : undefined,
+            refresh: {
+              refreshReg: REACT_REFRESH_REGISTER_FUNCTION,
+              refreshSig: REACT_REFRESH_GET_SIGNATURE_FUNCTION,
+            } as unknown,
           },
         },
         experimental: {
-          plugins: hmrEnabled
-            ? [
-                [
-                  'swc-plugin-global-module',
-                  {
-                    moduleId: context.id.toString(),
-                    runtimeModule: context.pluginData?.isRuntimeModule,
-                    externalPattern: context.pluginData?.externalPattern,
-                  },
-                ],
-              ]
-            : undefined,
+          plugins: [
+            [globalModulePlugin, { id: context.id, phase: Phase.Bundle }],
+          ],
         },
       },
       filename: context.path,

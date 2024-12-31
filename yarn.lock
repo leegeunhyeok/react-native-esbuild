@@ -2077,6 +2077,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@global-modules/runtime@npm:dev":
+  version: 0.0.0-dev.20241231102326
+  resolution: "@global-modules/runtime@npm:0.0.0-dev.20241231102326"
+  checksum: e9c03b50c12457ab710d0dcec5b533442c491ff290a50ab90b925e5e345cf31887893764e4db69e19741d58e5f36b72e5853785e4f1124e31f074e7bf863e3db
+  languageName: node
+  linkType: hard
+
+"@global-modules/swc-plugin@npm:dev":
+  version: 0.0.0-dev.20241231102326
+  resolution: "@global-modules/swc-plugin@npm:0.0.0-dev.20241231102326"
+  checksum: fc3af81dfadaa47997cd8c440d57dba8dac69daa6cd1b904d0d874f8364aee9b4bd7e5fd5bb6e4e31c6a1029da0c5e6831d464290c21f1636fd438e0c2302360
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -2223,15 +2237,6 @@ __metadata:
     node-notifier:
       optional: true
   checksum: af759c9781cfc914553320446ce4e47775ae42779e73621c438feb1e4231a5d4862f84b1d8565926f2d1aab29b3ec3dcfdc84db28608bdf5f29867124ebcfc0d
-  languageName: node
-  linkType: hard
-
-"@jest/create-cache-key-function@npm:^27.4.2":
-  version: 27.5.1
-  resolution: "@jest/create-cache-key-function@npm:27.5.1"
-  dependencies:
-    "@jest/types": ^27.5.1
-  checksum: a6c3a8c769aca6f66f5dc80f1c77e66980b4f213a6b2a15a92ba3595f032848a1261c06c9c798dcf2b672b1ffbefad5085af89d130548741c85ddbe0cf4284e7
   languageName: node
   linkType: hard
 
@@ -3641,12 +3646,13 @@ __metadata:
   dependencies:
     "@babel/core": ^7.23.2
     "@faker-js/faker": ^8.1.0
+    "@global-modules/runtime": dev
     "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/plugins": "workspace:*"
     "@react-native-esbuild/shared": "workspace:*"
     "@react-native-esbuild/transformer": "workspace:*"
-    "@swc/core": ^1.3.95
+    "@swc/core": ^1.10.4
     chokidar: ^3.5.3
     deepmerge: ^4.3.1
     esbuild: ^0.19.5
@@ -3704,7 +3710,7 @@ __metadata:
   dependencies:
     "@react-native-esbuild/internal": "workspace:*"
     "@react-native-esbuild/shared": "workspace:*"
-    "@swc/helpers": ^0.5.2
+    "@swc/helpers": ^0.5.15
     "@types/react-refresh": ^0.14.3
     esbuild: ^0.19.3
     react-refresh: ^0.14.0
@@ -3772,7 +3778,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.23.2
     "@faker-js/faker": ^8.1.0
-    "@swc/core": ^1.3.95
+    "@swc/core": ^1.10.4
     "@types/md5": ^2.3.5
     colors: ^1.4.0
     dayjs: ^1.11.10
@@ -3800,17 +3806,17 @@ __metadata:
   resolution: "@react-native-esbuild/transformer@workspace:packages/transformer"
   dependencies:
     "@babel/core": ^7.23.2
+    "@global-modules/swc-plugin": dev
     "@react-native-esbuild/hmr": "workspace:*"
     "@react-native-esbuild/internal": "workspace:^"
     "@react-native-esbuild/shared": "workspace:*"
-    "@swc/core": ^1.3.95
-    "@swc/helpers": ^0.5.3
+    "@swc/core": ^1.10.4
+    "@swc/helpers": ^0.5.15
     esbuild: ^0.19.5
     esbuild-dependency-graph: ^0.3.0
     sucrase: ^3.34.0
-    swc-plugin-coverage-instrument: ^0.0.20
-    swc-plugin-global-module: ^0.2.0
-    swc_mut_cjs_exports: ^0.85.0
+    swc-plugin-coverage-instrument: ^0.0.25
+    swc_mut_cjs_exports: ^8.0.1
     typescript: ^5.2.2
   languageName: unknown
   linkType: soft
@@ -4307,94 +4313,94 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-darwin-arm64@npm:1.3.95"
+"@swc/core-darwin-arm64@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-darwin-arm64@npm:1.10.4"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-darwin-x64@npm:1.3.95"
+"@swc/core-darwin-x64@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-darwin-x64@npm:1.10.4"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.95"
+"@swc/core-linux-arm-gnueabihf@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.10.4"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.95"
+"@swc/core-linux-arm64-gnu@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.10.4"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-linux-arm64-musl@npm:1.3.95"
+"@swc/core-linux-arm64-musl@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-linux-arm64-musl@npm:1.10.4"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-linux-x64-gnu@npm:1.3.95"
+"@swc/core-linux-x64-gnu@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-linux-x64-gnu@npm:1.10.4"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-linux-x64-musl@npm:1.3.95"
+"@swc/core-linux-x64-musl@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-linux-x64-musl@npm:1.10.4"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.95"
+"@swc/core-win32-arm64-msvc@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.10.4"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.95"
+"@swc/core-win32-ia32-msvc@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.10.4"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core-win32-x64-msvc@npm:1.3.95"
+"@swc/core-win32-x64-msvc@npm:1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core-win32-x64-msvc@npm:1.10.4"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.3.95":
-  version: 1.3.95
-  resolution: "@swc/core@npm:1.3.95"
+"@swc/core@npm:^1.10.4":
+  version: 1.10.4
+  resolution: "@swc/core@npm:1.10.4"
   dependencies:
-    "@swc/core-darwin-arm64": 1.3.95
-    "@swc/core-darwin-x64": 1.3.95
-    "@swc/core-linux-arm-gnueabihf": 1.3.95
-    "@swc/core-linux-arm64-gnu": 1.3.95
-    "@swc/core-linux-arm64-musl": 1.3.95
-    "@swc/core-linux-x64-gnu": 1.3.95
-    "@swc/core-linux-x64-musl": 1.3.95
-    "@swc/core-win32-arm64-msvc": 1.3.95
-    "@swc/core-win32-ia32-msvc": 1.3.95
-    "@swc/core-win32-x64-msvc": 1.3.95
-    "@swc/counter": ^0.1.1
-    "@swc/types": ^0.1.5
+    "@swc/core-darwin-arm64": 1.10.4
+    "@swc/core-darwin-x64": 1.10.4
+    "@swc/core-linux-arm-gnueabihf": 1.10.4
+    "@swc/core-linux-arm64-gnu": 1.10.4
+    "@swc/core-linux-arm64-musl": 1.10.4
+    "@swc/core-linux-x64-gnu": 1.10.4
+    "@swc/core-linux-x64-musl": 1.10.4
+    "@swc/core-win32-arm64-msvc": 1.10.4
+    "@swc/core-win32-ia32-msvc": 1.10.4
+    "@swc/core-win32-x64-msvc": 1.10.4
+    "@swc/counter": ^0.1.3
+    "@swc/types": ^0.1.17
   peerDependencies:
-    "@swc/helpers": ^0.5.0
+    "@swc/helpers": "*"
   dependenciesMeta:
     "@swc/core-darwin-arm64":
       optional: true
@@ -4419,14 +4425,14 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 49856ad64fa16151f7f784956c8134060c5ed612c9b3fcb79e33676c77219f61fa3bb6b9e0dd15d78c7bff92cacc0c944d2b4e60849eb93caca917a8544b1c2c
+  checksum: 85c28503450b8420fd791aadfe79eea260e0128270415b8496a3e304b75a65f624b20bd66ce36ed07378bd4f2f461802ea349661e05e537491e0a948750b7696
   languageName: node
   linkType: hard
 
-"@swc/counter@npm:^0.1.1":
-  version: 0.1.2
-  resolution: "@swc/counter@npm:0.1.2"
-  checksum: 8427c594f1f0cf44b83885e9c8fe1e370c9db44ae96e07a37c117a6260ee97797d0709483efbcc244e77bac578690215f45b23254c4cd8a70fb25ddbb50bf33e
+"@swc/counter@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "@swc/counter@npm:0.1.3"
+  checksum: df8f9cfba9904d3d60f511664c70d23bb323b3a0803ec9890f60133954173047ba9bdeabce28cd70ba89ccd3fd6c71c7b0bd58be85f611e1ffbe5d5c18616598
   languageName: node
   linkType: hard
 
@@ -4439,31 +4445,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.5.2, @swc/helpers@npm:^0.5.3":
-  version: 0.5.3
-  resolution: "@swc/helpers@npm:0.5.3"
+"@swc/helpers@npm:^0.5.15":
+  version: 0.5.15
+  resolution: "@swc/helpers@npm:0.5.15"
   dependencies:
-    tslib: ^2.4.0
-  checksum: 61c3f7ccd47fc70ad91437df88be6b458cdc11e311cb331288827d7c50befffc72aa18fe913ec2a9e70fbf44e4b818bed38bfd7c329d689e1ff3c198d084cd02
+    tslib: ^2.8.0
+  checksum: 1a9e0dbb792b2d1e0c914d69c201dbc96af3a0e6e6e8cf5a7f7d6a5d7b0e8b762915cd4447acb6b040e2ecc1ed49822875a7239f99a2d63c96c3c3407fb6fccf
   languageName: node
   linkType: hard
 
-"@swc/jest@npm:^0.2.29":
-  version: 0.2.29
-  resolution: "@swc/jest@npm:0.2.29"
+"@swc/jest@npm:^0.2.37":
+  version: 0.2.37
+  resolution: "@swc/jest@npm:0.2.37"
   dependencies:
-    "@jest/create-cache-key-function": ^27.4.2
+    "@jest/create-cache-key-function": ^29.7.0
+    "@swc/counter": ^0.1.3
     jsonc-parser: ^3.2.0
   peerDependencies:
     "@swc/core": "*"
-  checksum: 9eaad322310f34e81f67d41411a7d60663341af1bd9fb65456faa914c936d849d6f643fa3b942a187d52e71e62c33097098c639d25c2047fa874f49bf51cec76
+  checksum: 8d9a16404068c7f7d0548bc62f9d1465592178affbc7fe105dd59d463975d82cdcab2e0582c2a542250e6d240c76828bdbc404c77c85dd4d81061eb720351c4a
   languageName: node
   linkType: hard
 
-"@swc/types@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "@swc/types@npm:0.1.5"
-  checksum: 6aee11f62d3d805a64848e0bd5f0e0e615f958e327a9e1260056c368d7d28764d89e38bd8005a536c9bf18afbcd303edd84099d60df34a2975d62540f61df13b
+"@swc/types@npm:^0.1.17":
+  version: 0.1.17
+  resolution: "@swc/types@npm:0.1.17"
+  dependencies:
+    "@swc/counter": ^0.1.3
+  checksum: 6cc87b8ddfb540096abdf40bc29742df0b7d068f97c1ce6c32cd1b7073cde263ed7bc3bae1fba7bf0e1a0f5d63336e9fa092e05a54f6d9b3570df956d2acaff6
   languageName: node
   linkType: hard
 
@@ -8883,7 +8892,7 @@ __metadata:
     "@react-navigation/devtools": ^6.0.19
     "@react-navigation/native": ^6.1.7
     "@react-navigation/stack": ^6.3.17
-    "@swc/jest": ^0.2.29
+    "@swc/jest": ^0.2.37
     "@tsconfig/react-native": ^3.0.2
     "@types/react": ^18.2.31
     "@types/react-test-renderer": ^18.0.5
@@ -15913,8 +15922,8 @@ __metadata:
     "@commitlint/cli": ^17.7.1
     "@commitlint/config-conventional": ^17.7.0
     "@faker-js/faker": ^8.1.0
-    "@swc/core": ^1.3.95
-    "@swc/jest": ^0.2.29
+    "@swc/core": ^1.10.4
+    "@swc/jest": ^0.2.37
     "@types/invariant": ^2.2.36
     "@types/jest": ^29.5.5
     "@types/node": ^20.6.2
@@ -17743,27 +17752,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swc-plugin-coverage-instrument@npm:^0.0.20":
-  version: 0.0.20
-  resolution: "swc-plugin-coverage-instrument@npm:0.0.20"
-  checksum: 4d182c67b9db10280c5f2cc3e234afd6bb939c8aa0c92ba215fe1dc8d283f3114d39531bfc28f1046d9f5d26737599ca6a8dbcdf874a5275ac62f73c5ffe01d3
+"swc-plugin-coverage-instrument@npm:^0.0.25":
+  version: 0.0.25
+  resolution: "swc-plugin-coverage-instrument@npm:0.0.25"
+  checksum: a1ce0d674496f89ed7a49c888efe71e2deb5e8244de1149d962aeffa0f635129fe7eab74e0ebbc2ed6d72e78f2c8e102812edd0c05418888ccbb26fac3dcbebd
   languageName: node
   linkType: hard
 
-"swc-plugin-global-module@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "swc-plugin-global-module@npm:0.2.0"
-  checksum: 2ab72bfa84d2596e8f2a89e72e6360de507a5df13c368a249f95b15d482b57a8e1c656ded2c4ebcac81d5f91e846c56c1c0065fe0fbd66edb3be4d728d735eb5
-  languageName: node
-  linkType: hard
-
-"swc_mut_cjs_exports@npm:^0.85.0":
-  version: 0.85.0
-  resolution: "swc_mut_cjs_exports@npm:0.85.0"
+"swc_mut_cjs_exports@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "swc_mut_cjs_exports@npm:8.0.1"
   peerDependencies:
-    "@swc/core": ^1.3.78
-    "@swc/jest": ^0.2.26
-  checksum: ea67b438f9130f72d0ac95855d570a4fc5fa094a7ca37e6e18a168cfc6c6247da8ccd73c2394b6e1ea7e0c4a91697269e9edbff7c3fcc8252d5246c448094551
+    "@swc/core": ^1.10.0
+    "@swc/jest": ^0.2.37
+  checksum: 817b6cccef540341a44f0fb0c55660a279091563a67b27e5093c6df6ab0f41d67a40883435f437fcdde58ccb965cbfd48f3cbe6ce6e391d6a4b99180a36a87f2
   languageName: node
   linkType: hard
 
@@ -18137,6 +18139,13 @@ __metadata:
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.8.0":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 

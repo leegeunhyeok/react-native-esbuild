@@ -193,9 +193,9 @@ export class ReactNativeEsbuildBundler
         js: await getTransformedPreludeScript(
           bundleOptions,
           root,
-          [
-            flags.hmrEnabled ? 'swc-plugin-global-module/runtime' : undefined,
-          ].filter(Boolean) as string[],
+          [flags.hmrEnabled ? '@global-modules/runtime' : undefined].filter(
+            Boolean,
+          ) as string[],
         ),
       },
       plugins: [

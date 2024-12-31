@@ -1,6 +1,5 @@
 import path from 'node:path';
 import type { OnResolveArgs, ResolveResult } from 'esbuild';
-import { registerAsExternalModule } from '@react-native-esbuild/hmr';
 import type { PluginFactory } from '@react-native-esbuild/shared';
 import {
   ASSET_EXTENSIONS,
@@ -98,19 +97,12 @@ export const createAssetRegisterPlugin: PluginFactory<
     build.onLoad({ filter: /.*/, namespace: ASSET_NAMESPACE }, async (args) => {
       const asset = await resolveScaledAssets(buildContext, args);
       const assetRegistrationScript = getAssetRegistrationScript(asset);
-      const moduleId = buildContext.moduleManager.getModuleId(args.path);
 
       assets.push(asset);
 
       return {
         resolveDir: path.dirname(args.path),
-        contents: buildContext.flags.hmrEnabled
-          ? registerAsExternalModule(
-              moduleId,
-              assetRegistrationScript,
-              'module.exports',
-            )
-          : assetRegistrationScript,
+        contents: assetRegistrationScript,
         loader: 'js',
       };
     });

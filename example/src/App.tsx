@@ -10,6 +10,8 @@ import { DripsyProvider } from 'dripsy';
 import { RootStackNavigator } from './navigators';
 import { themeLight } from './theme';
 
+console.log('!!');
+
 export function App(): JSX.Element {
   const navigationRef = useNavigationContainerRef();
 

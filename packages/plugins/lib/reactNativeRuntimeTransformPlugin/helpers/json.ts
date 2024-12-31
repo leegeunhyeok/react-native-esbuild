@@ -11,28 +11,28 @@ export const transformJsonAsJsModule = (
   buildContext: BuildContext,
   build: PluginBuild,
 ): void => {
-  if (!buildContext.flags.hmrEnabled) return;
+  // if (!buildContext.flags.hmrEnabled) return;
 
-  build.onLoad({ filter: /\.json$/ }, async (args) => {
-    const moduleId = buildContext.moduleManager.getModuleId(args.path);
-    const rawJson = await fs.readFile(args.path, { encoding: 'utf-8' });
-    const parsedJson = JSON.parse(rawJson) as Record<string, unknown>;
-    const identifier = 'json';
+  // build.onLoad({ filter: /\.json$/ }, async (args) => {
+  //   const moduleId = buildContext.moduleManager.getModuleId(args.path);
+  //   const rawJson = await fs.readFile(args.path, { encoding: 'utf-8' });
+  //   const parsedJson = JSON.parse(rawJson) as Record<string, unknown>;
+  //   const identifier = 'json';
 
-    return {
-      contents: registerAsExternalModule(
-        moduleId,
-        `const ${identifier} = ${rawJson};
-        ${Object.keys(parsedJson)
-          .map((member) => {
-            const memberName = JSON.stringify(member);
-            return `exports[${memberName}] = ${identifier}[${memberName}]`;
-          })
-          .join('\n')}
-        module.exports = ${identifier};`,
-        identifier,
-      ),
-      loader: 'js',
-    };
-  });
+  //   return {
+  //     contents: registerAsExternalModule(
+  //       moduleId,
+  //       `const ${identifier} = ${rawJson};
+  //       ${Object.keys(parsedJson)
+  //         .map((member) => {
+  //           const memberName = JSON.stringify(member);
+  //           return `exports[${memberName}] = ${identifier}[${memberName}]`;
+  //         })
+  //         .join('\n')}
+  //       module.exports = ${identifier};`,
+  //       identifier,
+  //     ),
+  //     loader: 'js',
+  //   };
+  // });
 };

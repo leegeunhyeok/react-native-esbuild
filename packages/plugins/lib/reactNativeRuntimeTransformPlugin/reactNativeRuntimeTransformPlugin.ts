@@ -12,7 +12,7 @@ export const createReactNativeRuntimeTransformPlugin: PluginFactory = (
     const filter = /\.(?:[mc]js|[tj]sx?)$/;
     const transformer = enhanceTransformer(buildContext);
 
-    transformJsonAsJsModule(buildContext, build);
+    // transformJsonAsJsModule(buildContext, build);
 
     build.onResolve({ filter }, (args) => {
       if (args.kind === 'entry-point') {

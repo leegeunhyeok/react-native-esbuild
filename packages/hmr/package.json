@@ -43,7 +43,7 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
-    "@swc/helpers": "^0.5.2",
+    "@swc/helpers": "^0.5.15",
     "@types/react-refresh": "^0.14.3",
     "esbuild": "^0.19.3",
     "typescript": "^5.2.2"

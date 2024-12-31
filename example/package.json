@@ -50,7 +50,7 @@
     "@react-native/gradle-plugin": "^0.73.2",
     "@react-native/metro-config": "^0.74.0",
     "@react-navigation/devtools": "^6.0.19",
-    "@swc/jest": "^0.2.29",
+    "@swc/jest": "^0.2.37",
     "@tsconfig/react-native": "^3.0.2",
     "@types/react": "^18.2.31",
     "@types/react-test-renderer": "^18.0.5",
