@@ -2883,16 +2883,16 @@ __metadata:
   linkType: hard
 
 "@global-modules/runtime@npm:dev":
-  version: 0.0.0-dev.20241231102326
-  resolution: "@global-modules/runtime@npm:0.0.0-dev.20241231102326"
-  checksum: e9c03b50c12457ab710d0dcec5b533442c491ff290a50ab90b925e5e345cf31887893764e4db69e19741d58e5f36b72e5853785e4f1124e31f074e7bf863e3db
+  version: 0.0.0-dev.20241231184149
+  resolution: "@global-modules/runtime@npm:0.0.0-dev.20241231184149"
+  checksum: 60e6b9eaf79fa637e409f22ae9b7090e3f4c818b93f593c99ff2d5a3c84f11ffb7b8735bbaa47fe60c0ac9e14db5db05d70ca608c4893e878469397ba43322ac
   languageName: node
   linkType: hard
 
 "@global-modules/swc-plugin@npm:dev":
-  version: 0.0.0-dev.20241231102326
-  resolution: "@global-modules/swc-plugin@npm:0.0.0-dev.20241231102326"
-  checksum: fc3af81dfadaa47997cd8c440d57dba8dac69daa6cd1b904d0d874f8364aee9b4bd7e5fd5bb6e4e31c6a1029da0c5e6831d464290c21f1636fd438e0c2302360
+  version: 0.0.0-dev.20241231184149
+  resolution: "@global-modules/swc-plugin@npm:0.0.0-dev.20241231184149"
+  checksum: 5bb5d462be81b334c02a33e1fc25c7f1fb43b33129f663ce3df9b45242881a3a686394eb9064032cbbff4bced8ccffb98df3d83794fef42544e589d9599efff0
   languageName: node
   linkType: hard
 

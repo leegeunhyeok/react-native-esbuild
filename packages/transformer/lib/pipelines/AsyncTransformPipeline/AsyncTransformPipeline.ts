@@ -1,8 +1,10 @@
 import type { ScopedTransformContext } from '@react-native-esbuild/shared';
+import { parse as hermesParse } from 'hermes-parser';
 import {
   transformWithBabel,
   transformWithSwc,
   stripFlowWithSucrase,
+  transformWithBabelAst,
 } from '../../transformer';
 import { transformByBabelRule, transformBySwcRule } from '../../helpers';
 import type { AsyncTransformStep, TransformResult } from '../../types';
@@ -55,12 +57,19 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
       this.stripFlowPackageNames,
     );
     if (stripFlowPackageNamesRegExp) {
-      pipeline.addStep((code, context) => {
+      pipeline.addStep(async (code, context) => {
         if (
           stripFlowPackageNamesRegExp.test(context.path) ||
           this.isFlow(code, context.path)
         ) {
-          code = stripFlowWithSucrase(code, { context });
+          try {
+            code = stripFlowWithSucrase(code, { context });
+          } catch {
+            code = await transformWithBabelAst(
+              hermesParse(code, { babel: true, flow: 'all' }),
+              { context },
+            );
+          }
         }
 
         return Promise.resolve({ code, done: false });
