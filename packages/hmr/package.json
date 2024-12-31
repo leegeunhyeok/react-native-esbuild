@@ -45,7 +45,8 @@
   "devDependencies": {
     "@swc/helpers": "^0.5.2",
     "@types/react-refresh": "^0.14.3",
-    "esbuild": "^0.19.3"
+    "esbuild": "^0.19.3",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@react-native-esbuild/internal": "workspace:*",

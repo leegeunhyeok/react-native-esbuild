@@ -39,7 +39,8 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
-    "esbuild": "^0.19.5"
+    "esbuild": "^0.19.5",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@babel/code-frame": "^7.22.10",

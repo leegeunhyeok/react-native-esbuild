@@ -3627,6 +3627,7 @@ __metadata:
     "@react-native-esbuild/shared": "workspace:*"
     "@types/yargs": ^17.0.24
     esbuild: ^0.19.5
+    typescript: ^5.2.2
     yargs: ^17.7.2
     zod: ^3.22.2
   bin:
@@ -3652,6 +3653,7 @@ __metadata:
     esbuild-dependency-graph: ^0.3.0
     invariant: ^2.2.4
     ora: ^5.4.1
+    typescript: ^5.2.2
   peerDependencies:
     react-native: "*"
   languageName: unknown
@@ -3676,6 +3678,7 @@ __metadata:
     invariant: ^2.2.4
     metro-inspector-proxy: ^0.78.0
     mime: ^3.0.0
+    typescript: ^5.2.2
     ws: ^8.13.0
     zod: ^3.22.2
   languageName: unknown
@@ -3705,6 +3708,7 @@ __metadata:
     "@types/react-refresh": ^0.14.3
     esbuild: ^0.19.3
     react-refresh: ^0.14.0
+    typescript: ^5.2.2
     ws: ^8.14.2
   languageName: unknown
   linkType: soft
@@ -3715,6 +3719,7 @@ __metadata:
   dependencies:
     esbuild: ^0.19.5
     indent-string: ^4.0.0
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 
@@ -3731,6 +3736,7 @@ __metadata:
     "@types/md5": ^2.3.2
     esbuild: ^0.19.5
     md5: ^2.3.0
+    typescript: ^5.2.2
   peerDependencies:
     react-native: "*"
   languageName: unknown
@@ -3756,6 +3762,7 @@ __metadata:
     invariant: ^2.2.4
     md5: ^2.3.0
     ora: ^5.4.1
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 
@@ -3773,6 +3780,7 @@ __metadata:
     esbuild-dependency-graph: ^0.3.0
     md5: ^2.3.0
     node-self: ^1.0.2
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 
@@ -3783,6 +3791,7 @@ __metadata:
     "@babel/code-frame": ^7.22.10
     esbuild: ^0.19.5
     source-map: ^0.7.4
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 
@@ -3802,6 +3811,7 @@ __metadata:
     swc-plugin-coverage-instrument: ^0.0.20
     swc-plugin-global-module: ^0.2.0
     swc_mut_cjs_exports: ^0.85.0
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 

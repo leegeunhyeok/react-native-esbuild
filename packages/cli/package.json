@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@types/yargs": "^17.0.24",
-    "esbuild": "^0.19.5"
+    "esbuild": "^0.19.5",
+    "typescript": "^5.2.2"
   }
 }
