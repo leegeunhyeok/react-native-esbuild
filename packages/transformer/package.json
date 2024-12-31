@@ -42,7 +42,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@babel/core": "^7.23.2",
+    "@babel/core": "^7.25.2",
     "@global-modules/swc-plugin": "dev",
     "@react-native-esbuild/hmr": "workspace:*",
     "@react-native-esbuild/internal": "workspace:^",
@@ -50,7 +50,9 @@
     "@swc/core": "^1.10.4",
     "@swc/helpers": "^0.5.15",
     "esbuild-dependency-graph": "^0.3.0",
-    "sucrase": "^3.34.0",
+    "hermes-parser": "^0.23.1",
+    "md5": "^2.3.0",
+    "sucrase": "^3.35.0",
     "swc-plugin-coverage-instrument": "^0.0.25",
     "swc_mut_cjs_exports": "^8.0.1"
   }

@@ -1,12 +1,12 @@
 import type { TransformContext } from '@react-native-esbuild/shared';
 
-export type AsyncTransformer<TransformerOptions> = (
-  code: string,
+export type AsyncTransformer<TransformerOptions, Input = string> = (
+  code: Input,
   config: TransformerConfig<TransformerOptions>,
 ) => Promise<string>;
 
-export type SyncTransformer<TransformerOptions> = (
-  code: string,
+export type SyncTransformer<TransformerOptions, Input = string> = (
+  code: Input,
   config: TransformerConfig<TransformerOptions>,
 ) => string;
 

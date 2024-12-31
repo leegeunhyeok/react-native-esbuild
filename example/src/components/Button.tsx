@@ -19,7 +19,7 @@ const Label = styled(Text, { defaultVariant: 'text.button' })({
   fontSize: '$button',
 });
 
-export function Button({ label, onPress }: ButtonProps): JSX.Element {
+export function Button({ label, onPress }: ButtonProps): React.JSX.Element {
   return (
     <ButtonContainer onPress={onPress}>
       <Label>{label}</Label>

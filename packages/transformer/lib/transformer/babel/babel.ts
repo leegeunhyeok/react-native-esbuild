@@ -1,5 +1,10 @@
-import type { TransformOptions } from '@babel/core';
-import { loadOptions, transformAsync, transformSync } from '@babel/core';
+import type { Node, TransformOptions } from '@babel/core';
+import {
+  loadOptions,
+  transformAsync,
+  transformSync,
+  transformFromAstAsync,
+} from '@babel/core';
 import type { TransformContext } from '@react-native-esbuild/shared';
 import type { AsyncTransformer, SyncTransformer } from '../../types';
 
@@ -47,3 +52,22 @@ export const transformSyncWithBabel: SyncTransformer<TransformOptions> = (
 
   return result.code;
 };
+
+export const transformWithBabelAst: AsyncTransformer<
+  TransformOptions,
+  Node
+> = async (ast, { context, preset }) => {
+  const babelOptions = loadBabelOptions(context, preset?.(context));
+  if (!babelOptions) {
+    throw new Error('cannot load babel options');
+  }
+
+  const result = await transformFromAstAsync(ast, undefined, babelOptions);
+  if (typeof result?.code !== 'string') {
+    throw new Error('babel transformed source is empty');
+  }
+
+  return result.code;
+};
+
+// @TODO: Add transformSyncWithBabelAST
