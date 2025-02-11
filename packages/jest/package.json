@@ -51,6 +51,6 @@
   "devDependencies": {
     "@jest/transform": "^29.7.0",
     "@types/md5": "^2.3.2",
-    "esbuild": "^0.19.5"
+    "esbuild": "^0.25.0"
   }
 }

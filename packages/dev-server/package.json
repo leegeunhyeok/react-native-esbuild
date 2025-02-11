@@ -43,7 +43,7 @@
     "@types/invariant": "^2.2.36",
     "@types/mime": "^3.0.1",
     "@types/ws": "^8.5.5",
-    "esbuild": "^0.19.5"
+    "esbuild": "^0.25.0"
   },
   "dependencies": {
     "@react-native-community/cli-server-api": "^11.3.6",
