@@ -4569,7 +4569,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/docs@workspace:docs"
   dependencies:
-    "@types/node": "npm:18.11.10"
+    "@types/node": "npm:^22"
     next: "npm:^13.0.6"
     nextra: "npm:latest"
     nextra-theme-docs: "npm:latest"
@@ -5833,13 +5833,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.25.1"
   checksum: 10c0/739b3d6f4aa760d72373d504d91adec86ac2eab502f68a80214711983e7d1886fd276ade78a276a2affe4942a55ad65cf655c3aa9464d1150f6405445c5ba635
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:18.11.10":
-  version: 18.11.10
-  resolution: "@types/node@npm:18.11.10"
-  checksum: 10c0/29fcbfa60c7fd32c36eb444f419e4eae391fb7a7e383c6fd7f9dac8ac5a11b0e2aa810b945a05b83daaaa2db11b3f3bdec61984962315959e5b5cd93b35f724b
   languageName: node
   linkType: hard
 

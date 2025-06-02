@@ -3,83 +3,91 @@ name: default-workflows
 on:
   push:
     branches:
-      - "**"
+      - '**'
 
 jobs:
   install-dependencies-and-caching:
     if: contains(github.event.head_commit.message, 'skip ci') == false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: .nvmrc
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: dependencies
         with:
-          path: node_modules
+          path: .yarn/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Setup corepack
+        run: corepack enable
+
       - name: Install Dependencies
         if: steps.dependencies.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
-  
   build:
     needs: [install-dependencies-and-caching]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: .nvmrc
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: dependencies
         with:
-          path: node_modules
+          path: .yarn/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Setup corepack
+        run: corepack enable
+
       - name: Install Dependencies
         if: steps.dependencies.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
-        run: npx lerna run build
+        run: yarn lerna run build
 
   lint:
     needs: [install-dependencies-and-caching, build]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: .nvmrc
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: dependencies
         with:
-          path: node_modules
+          path: .yarn/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Setup corepack
+        run: corepack enable
+
       - name: Install Dependencies
         if: steps.dependencies.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
-        run: npx lerna run build
+        run: yarn lerna run build
 
       - run: yarn lint
 
@@ -91,13 +99,13 @@ jobs:
       pull-requests: write
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: dependencies
         with:
           path: node_modules
@@ -107,12 +115,12 @@ jobs:
 
       - name: Install Dependencies
         if: steps.dependencies.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
 
       - name: Build
-        run: npx lerna run build
+        run: yarn lerna run build
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2.2.5
+      - uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:
           package-manager: yarn
           skip-step: install
