@@ -58,7 +58,7 @@ jobs:
         run: yarn --immutable
 
       - name: Build
-        run: yarn lerna run build
+        run: yarn build
 
   lint:
     needs: [install-dependencies-and-caching, build]
@@ -87,7 +87,7 @@ jobs:
         run: yarn --immutable
 
       - name: Build
-        run: yarn lerna run build
+        run: yarn build
 
       - run: yarn lint
 
@@ -118,7 +118,7 @@ jobs:
         run: yarn --immutable
 
       - name: Build
-        run: yarn lerna run build
+        run: yarn build
 
       - uses: ArtiomTr/jest-coverage-report-action@v2.3.1
         with:

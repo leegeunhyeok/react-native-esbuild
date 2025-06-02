@@ -44,7 +44,7 @@ Go to [documentation](https://react-native-esbuild.vercel.app)
 
 ```bash
 # install dependencies and run build
-yarn && lerna run build
+yarn && yarn build
 
 # in example directory,
 # run example application (start @react-native-esbuild/dev-server)
@@ -59,13 +59,11 @@ yarn build:ios
 # run yarn commands
 yarn workspace <workspaceName> <command>
 
-# build all packages or specified package only
-lerna run build
-lerna run build --scope @react-native-esbuild/xxx
+# build all packages
+yarn build
 
-# run all test or specified package only
+# run all test
 yarn test
-yarn test --selectProjects <workspaceName>
 
 # show project dependencies graph
 nx graph
