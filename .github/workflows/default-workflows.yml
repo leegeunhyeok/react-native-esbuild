@@ -28,7 +28,6 @@ jobs:
         run: corepack enable
 
       - name: Install Dependencies
-        if: steps.dependencies.outputs.cache-hit != 'true'
         run: yarn --immutable
 
   build:
@@ -54,7 +53,6 @@ jobs:
         run: corepack enable
 
       - name: Install Dependencies
-        if: steps.dependencies.outputs.cache-hit != 'true'
         run: yarn --immutable
 
       - name: Build
@@ -83,7 +81,6 @@ jobs:
         run: corepack enable
 
       - name: Install Dependencies
-        if: steps.dependencies.outputs.cache-hit != 'true'
         run: yarn --immutable
 
       - name: Build
@@ -114,7 +111,6 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
-        if: steps.dependencies.outputs.cache-hit != 'true'
         run: yarn --immutable
 
       - name: Build
