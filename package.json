@@ -14,10 +14,12 @@
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "lint": "eslint packages",
-    "example": "yarn --cwd example"
+    "example": "yarn --cwd example",
+    "release": "nx release"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.8.0",
+    "@nx/js": "^21.1.2",
     "@swc/core": "^1.11.29",
     "@swc/jest": "^0.2.38",
     "@types/invariant": "^2.2.37",
