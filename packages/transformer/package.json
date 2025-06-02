@@ -39,13 +39,13 @@
   },
   "devDependencies": {
     "@types/md5": "^2.3.4",
-    "esbuild": "^0.19.5"
+    "esbuild": "^0.25.5"
   },
   "dependencies": {
     "@babel/core": "^7.25.2",
     "@react-native-esbuild/config": "workspace:*",
     "@swc/core": "^1.11.29",
-    "@swc/helpers": "^0.5.3",
+    "@swc/helpers": "^0.5.17",
     "hermes-parser": "^0.23.1",
     "md5": "^2.3.0",
     "sucrase": "^3.34.0",

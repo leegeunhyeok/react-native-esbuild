@@ -26,7 +26,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22",
     "@vercel/style-guide": "^5",
-    "esbuild": "^0.19.5",
+    "esbuild": "^0.25.5",
     "eslint": "^8.49.0",
     "eslint-plugin-prettier": "^5.4.1",
     "husky": "^9.1.7",

@@ -46,7 +46,7 @@
     "@react-native-esbuild/utils": "workspace:*",
     "chokidar": "^3.5.3",
     "deepmerge": "^4.3.1",
-    "esbuild": "^0.19.5",
+    "esbuild": "^0.25.5",
     "invariant": "^2.2.4",
     "ora": "^5.4.1"
   },
