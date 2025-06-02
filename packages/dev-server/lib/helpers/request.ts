@@ -25,28 +25,22 @@ const bundleSearchParamSchema = z
 
 export const parseBundleOptionsFromRequestUrl = (
   requestUrl: string | undefined,
-): {
-  type: BundleRequestType;
-  bundleOptions: ParsedBundleOptions | null;
-} => {
+): { type: BundleRequestType; bundleOptions: ParsedBundleOptions | null } => {
   if (!requestUrl) {
     return { type: BundleRequestType.Unknown, bundleOptions: null };
   }
 
   const { pathname, query } = parse(requestUrl, true);
   if (typeof pathname !== 'string') {
-    return {
-      type: BundleRequestType.Unknown,
-      bundleOptions: null,
-    };
+    return { type: BundleRequestType.Unknown, bundleOptions: null };
   }
 
   // eslint-disable-next-line no-nested-ternary -- Allow nested ternary operator.
   const type = pathname.endsWith('.bundle')
     ? BundleRequestType.Bundle
     : pathname.endsWith('.map')
-    ? BundleRequestType.Sourcemap
-    : BundleRequestType.Unknown;
+      ? BundleRequestType.Sourcemap
+      : BundleRequestType.Unknown;
 
   return {
     type,
@@ -60,10 +54,7 @@ export const parseBundleOptionsFromRequestUrl = (
 export const parseBundleOptionsForWeb = (
   bundleOptions: Partial<BundleOptions>,
   type: 'bundle' | 'sourcemap',
-): {
-  type: BundleRequestType;
-  bundleOptions: ParsedBundleOptions | null;
-} => {
+): { type: BundleRequestType; bundleOptions: ParsedBundleOptions | null } => {
   return {
     type:
       type === 'bundle'

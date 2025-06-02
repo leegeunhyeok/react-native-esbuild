@@ -94,6 +94,7 @@ describe('serve-asset-middleware', () => {
       request = getMockedRequest({ url: bundleRequestUrl });
       response = getMockedResponse();
       bundler = getMockedBundler({ bundle, hasError: true });
+      next = jest.fn();
       middleware = createServeBundleMiddleware({
         devServerOptions: {
           host: 'localhost',

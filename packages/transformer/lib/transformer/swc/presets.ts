@@ -53,7 +53,7 @@ const getJestPreset = (
   options: SwcJestPresetOptions,
 ): TransformerOptionsPreset<Options> => {
   const plugins = [
-    options.experimental?.mutableCjsExports ?? true
+    (options.experimental?.mutableCjsExports ?? true)
       ? ['swc_mut_cjs_exports', {}]
       : null,
     options.experimental?.customCoverageInstrumentation
@@ -74,33 +74,23 @@ const getJestPreset = (
         /**
          * @see {@link https://github.com/swc-project/jest/blob/v0.2.29/index.ts#L119}
          */
-        hidden: {
-          jest: true,
-        },
+        hidden: { jest: true },
         react: {
           runtime: 'automatic',
           development: context.dev,
           refresh: false,
         },
       },
-      experimental: {
-        plugins,
-      },
+      experimental: { plugins },
     },
-    module: {
-      type: options.module === 'esm' ? 'es6' : 'commonjs',
-    },
+    module: { type: options.module === 'esm' ? 'es6' : 'commonjs' },
     filename: context.path,
     root: context.root,
   });
 };
 
 const getMinifyPreset = () => {
-  return () => ({
-    compress: true,
-    mangle: true,
-    sourceMap: false,
-  });
+  return () => ({ compress: true, mangle: true, sourceMap: false });
 };
 
 export { getReactNativeRuntimePreset, getJestPreset, getMinifyPreset };

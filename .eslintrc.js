@@ -37,7 +37,6 @@ module.exports = {
         'no-bitwise': 'off',
         'no-param-reassign': 'off',
         'eslint-comments/disable-enable-pair': 'off',
-        'prettier/prettier': 'error',
         '@typescript-eslint/prefer-reduce-type-parameter': 'off',
         '@typescript-eslint/no-shadow': 'off',
         '@typescript-eslint/no-floating-promises': 'off',
