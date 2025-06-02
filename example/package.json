@@ -1,10 +1,6 @@
 {
   "name": "example",
-  "version": "0.0.1",
   "private": true,
-  "installConfig": {
-    "hoistingLimits": "dependencies"
-  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",

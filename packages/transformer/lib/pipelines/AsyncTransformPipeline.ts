@@ -125,8 +125,8 @@ export class AsyncTransformPipelineBuilder extends TransformPipelineBuilder<
 export class AsyncTransformPipeline extends TransformPipeline<AsyncTransformStep> {
   public static builder = AsyncTransformPipelineBuilder;
   protected steps: AsyncTransformStep[] = [];
-  protected onBeforeTransform?: AsyncTransformStep;
-  protected onAfterTransform?: AsyncTransformStep;
+  declare protected onBeforeTransform?: AsyncTransformStep;
+  declare protected onAfterTransform?: AsyncTransformStep;
 
   async transform(code: string, args: OnLoadArgs): Promise<TransformResult> {
     const fileStat = await fs.stat(args.path);

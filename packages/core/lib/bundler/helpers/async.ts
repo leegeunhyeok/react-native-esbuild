@@ -6,8 +6,8 @@ export const createPromiseHandler = (): PromiseHandler<BundleResult> => {
 
   const task = new Promise<BundleResult>((resolve, _reject) => {
     resolver = resolve;
-    rejecter = (reason: Error) => {
-      resolve({ result: null, error: reason });
+    rejecter = (reason: unknown) => {
+      resolve({ result: null, error: reason as Error });
     };
   });
 

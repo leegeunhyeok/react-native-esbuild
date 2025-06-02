@@ -91,10 +91,7 @@ export const stripSuffix = (basename: string, extension: string): string => {
  */
 export const getSuffixedPath = (
   assetPath: string,
-  options?: {
-    scale?: AssetScale;
-    platform?: BundlerSupportPlatform | null;
-  },
+  options?: { scale?: AssetScale; platform?: BundlerSupportPlatform | null },
 ): SuffixPathResult => {
   // if `scale` present, append scale suffix to path
   // assetPath: '/path/to/assets/image.png'
@@ -155,8 +152,8 @@ export const resolveScaledAssets = async (
     const match = assetRegExp.exec(file);
     if (match) {
       const [, , scale = '1'] = match;
-      if (scaledAssets[scale]) continue;
-      scaledAssets[scale] = file;
+      if (scaledAssets[scale as unknown as AssetScale]) continue;
+      scaledAssets[scale as unknown as AssetScale] = file;
     }
   }
 
@@ -233,7 +230,7 @@ export const getAndroidAssetDestinationPath = (
   scale: number,
 ): string => {
   let resourceDir = 'raw';
-  const assetQualifierSuffix: string = ANDROID_ASSET_QUALIFIER[scale];
+  const assetQualifierSuffix = ANDROID_ASSET_QUALIFIER[scale];
   const assetDir = getDevServerBasePath(asset);
   const assetName = `${assetDir}/${asset.name}`
     .toLowerCase()

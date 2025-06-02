@@ -1,9 +1,10 @@
 import type {
-  Transformer,
   TransformOptions,
   TransformedSource,
+  TransformerCreator,
+  SyncTransformer,
 } from '@jest/transform';
-import getCacheKeyFunction from '@jest/create-cache-key-function';
+import createCacheKeyFunction from '@jest/create-cache-key-function';
 import md5 from 'md5';
 import { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 import {
@@ -28,14 +29,18 @@ const TRANSFORMER_CONTEXT: TransformerContext = {
 
 ReactNativeEsbuildBundler.bootstrap();
 
-export const createTransformer = (config: TransformerConfig): Transformer => {
-  const cacheKeyFunction = getCacheKeyFunction([], [pkg.version]);
+export const createTransformer: TransformerCreator<
+  SyncTransformer,
+  TransformerConfig
+> = (config): SyncTransformer => {
+  // @ts-expect-error -- ESM default export
+  const cacheKeyFunction = createCacheKeyFunction.default([], [pkg.version]);
   const { transformer } = ReactNativeEsbuildBundler.getConfig();
   const instrumentEnabled = Boolean(
-    config.experimental?.customCoverageInstrumentation,
+    config?.experimental?.customCoverageInstrumentation,
   );
   const swcExperimentalOptions = instrumentEnabled
-    ? config.experimental
+    ? config?.experimental
     : undefined;
 
   const syncTransformPipeline = new SyncTransformPipeline.builder(
@@ -114,7 +119,6 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
       path: string,
       options: TransformOptions,
     ): string => {
-      // @ts-expect-error -- `NewGetCacheKeyFunction`
       return md5(cacheKeyFunction(code, path, options));
     },
   };

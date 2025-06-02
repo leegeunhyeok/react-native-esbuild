@@ -6,23 +6,23 @@ import type {
 } from '../../types';
 
 export class BundlerEventEmitter extends EventEmitter {
-  addListener: <EventType extends BundlerEventType>(
+  declare addListener: <EventType extends BundlerEventType>(
     type: EventType,
     listener: BundlerEventListener<EventType>,
   ) => this;
-  removeEventListener: <EventType extends BundlerEventType>(
+  declare removeEventListener: <EventType extends BundlerEventType>(
     type: EventType,
     listener: BundlerEventListener<EventType>,
   ) => this;
-  on: <EventType extends BundlerEventType>(
+  declare on: <EventType extends BundlerEventType>(
     type: EventType,
     listener: BundlerEventListener<EventType>,
   ) => this;
-  off: <EventType extends BundlerEventType>(
+  declare off: <EventType extends BundlerEventType>(
     type: EventType,
     listener: BundlerEventListener<EventType>,
   ) => this;
-  emit: <EventType extends BundlerEventType>(
+  declare emit: <EventType extends BundlerEventType>(
     type: EventType,
     payload: BundlerEventPayload[EventType],
   ) => boolean;
@@ -39,10 +39,7 @@ export type BundlerEventListener<EventType extends BundlerEventType> = (
 ) => void;
 
 export interface BundlerEventPayload {
-  'build-start': {
-    id: number;
-    additionalData?: BundlerAdditionalData;
-  };
+  'build-start': { id: number; additionalData?: BundlerAdditionalData };
   'build-end': {
     id: number;
     revisionId: string;

@@ -121,8 +121,8 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
 export class SyncTransformPipeline extends TransformPipeline<SyncTransformStep> {
   public static builder = SyncTransformPipelineBuilder;
   protected steps: SyncTransformStep[] = [];
-  protected onBeforeTransform?: SyncTransformStep;
-  protected onAfterTransform?: SyncTransformStep;
+  declare protected onBeforeTransform?: SyncTransformStep;
+  declare protected onAfterTransform?: SyncTransformStep;
 
   beforeTransform(onBeforeTransform: SyncTransformStep): this {
     this.onBeforeTransform = onBeforeTransform;

@@ -13,16 +13,24 @@ describe('CacheController', () => {
     jest.spyOn(fs, 'mkdirSync').mockImplementation(() => void 0);
     jest
       .spyOn(fs.promises, 'readFile')
-      .mockImplementation((path: string): Promise<string> => {
-        const file = mockedFs[path];
-        return file ? Promise.resolve(file) : Promise.reject();
-      });
+      .mockImplementation(
+        (path: fs.PathLike | fs.promises.FileHandle): Promise<string> => {
+          const file = mockedFs[String(path)];
+          return file ? Promise.resolve(file) : Promise.reject();
+        },
+      );
     jest
       .spyOn(fs.promises, 'writeFile')
-      .mockImplementation((path: string, data: string): Promise<void> => {
-        mockedFs[path] = data;
-        return Promise.resolve();
-      });
+      .mockImplementation(
+        (
+          path: fs.PathLike | fs.promises.FileHandle,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow
+          data: any,
+        ): Promise<void> => {
+          mockedFs[String(path)] = data;
+          return Promise.resolve();
+        },
+      );
     jest.spyOn(fs.promises, 'rm').mockReturnValue(Promise.resolve());
 
     manager = new CacheController(CACHE_DIR);

@@ -100,19 +100,24 @@ const getCodeFrame = (
   try {
     const source = sourcemapConsumer.sourceContentFor(frame.file);
     const { lineNumber, column, file } = frame;
+
+    if (source == null) {
+      throw new Error('Source not found');
+    }
+
     return {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment -- `codeFrameColumns` type isn't defined.
       content: codeFrameColumns(
         source,
         {
-          start: { column, lineNumber },
+          start: { column, line: lineNumber },
         },
         { highlightCode: true },
       ),
       location: { column, row: lineNumber },
       fileName: file,
     };
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 };

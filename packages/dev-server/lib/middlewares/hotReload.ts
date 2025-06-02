@@ -1,4 +1,9 @@
-import { Server, type WebSocket, type MessageEvent, type Data } from 'ws';
+import {
+  WebSocketServer,
+  type WebSocket,
+  type MessageEvent,
+  type Data,
+} from 'ws';
 import type { ClientLogEvent } from '@react-native-esbuild/core';
 import { getReloadByDevSettingsProxy } from '@react-native-esbuild/internal';
 import { logger } from '../shared';
@@ -25,7 +30,7 @@ export const createHotReloadMiddleware = ({
 }: {
   onLog?: (event: ClientLogEvent) => void;
 }): HotReloadMiddleware => {
-  const server = new Server({ noServer: true });
+  const server = new WebSocketServer({ noServer: true });
   let connectedSocket: WebSocket | null = null;
 
   const handleClose = (): void => {
@@ -95,9 +100,7 @@ export const createHotReloadMiddleware = ({
     logger.debug('sending update-start');
     const hmrUpdateStartMessage: HmrUpdateStartMessage = {
       type: 'update-start',
-      body: {
-        isInitialUpdate: false,
-      },
+      body: { isInitialUpdate: false },
     };
     connectedSocket?.send(JSON.stringify(hmrUpdateStartMessage), handleError);
   };

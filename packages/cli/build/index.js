@@ -1,7 +1,7 @@
-const esbuild = require('esbuild');
-const { getEsbuildBaseOptions } = require('../../../shared');
+import esbuild from 'esbuild';
+import { getEsbuildBaseOptions } from '../../../shared/index.mjs';
 
-const buildOptions = getEsbuildBaseOptions(__dirname, {
+const buildOptions = getEsbuildBaseOptions(import.meta.dirname, {
   banner: {
     js: '#!/usr/bin/env node',
   },

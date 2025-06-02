@@ -1,6 +1,7 @@
 {
   "name": "@react-native-esbuild/config",
   "version": "0.1.0-beta.12",
+  "type": "module",
   "description": "shared configs for @react-native-esbuild",
   "keywords": [
     "react-native",
@@ -9,8 +10,6 @@
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
   "license": "MIT",
-  "type": "commonjs",
-  "module": "lib/index.ts",
   "main": "dist/index.js",
   "types": "dist/lib/index.d.ts",
   "directories": {

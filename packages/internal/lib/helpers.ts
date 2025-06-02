@@ -1,5 +1,8 @@
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import indent from 'indent-string';
+
+const require = createRequire(import.meta.url);
 
 export const resolveFromRoot = (
   targetPath: string,

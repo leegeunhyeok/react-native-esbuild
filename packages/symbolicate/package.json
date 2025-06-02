@@ -1,6 +1,7 @@
 {
   "name": "@react-native-esbuild/symbolicate",
   "version": "0.1.0-beta.12",
+  "type": "module",
   "description": "symbolicate utilities for @react-native-esbuild",
   "keywords": [
     "react-native",
@@ -11,8 +12,6 @@
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "homepage": "https://github.com/leegeunhyeok/react-native-esbuild#readme",
   "license": "MIT",
-  "type": "commonjs",
-  "module": "lib/index.ts",
   "main": "dist/index.js",
   "types": "dist/lib/index.d.ts",
   "directories": {
@@ -39,11 +38,12 @@
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
   "devDependencies": {
+    "@types/babel__code-frame": "^7.0.6",
     "esbuild": "^0.25.5",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.22.10",
+    "@babel/code-frame": "^7.27.1",
     "source-map": "^0.7.4"
   }
 }

@@ -1,7 +1,7 @@
 /**
  * @type {import('@react-native-esbuild/core').Config}
  */
-exports.default = {
+export default {
   cache: true,
   logger: {
     timestamp: 'YYYY-MM-DD HH:mm:ss.SSS',

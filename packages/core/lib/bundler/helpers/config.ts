@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import type { BuildOptions } from 'esbuild';
 import deepmerge from 'deepmerge';
 import {
@@ -13,38 +14,34 @@ import {
 import { logger } from '../../shared';
 import type { BundleMode, Config } from '../../types';
 
+const require = createRequire(import.meta.url);
+
 export const loadConfig = (configFilePath?: string): Config => {
   let config: Config | undefined;
 
   // Base config
   const baseConfig: Config = {
     cache: true,
-    logger: {
-      disabled: false,
-      timestamp: null,
-    },
+    logger: { disabled: false, timestamp: null },
     resolver: {
       mainFields: RESOLVER_MAIN_FIELDS,
       sourceExtensions: SOURCE_EXTENSIONS,
       assetExtensions: ASSET_EXTENSIONS,
     },
     transformer: {
-      jsc: {
-        transform: {
-          react: {
-            runtime: 'automatic',
-          },
-        },
-      },
+      jsc: { transform: { react: { runtime: 'automatic' } } },
       stripFlowPackageNames: ['react-native'],
     },
     web: {
-      template: path.resolve(__filename, '../../static/templates/index.html'),
+      template: path.resolve(
+        import.meta.filename as string,
+        '../../static/templates/index.html',
+      ),
     },
   };
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires -- Config file may not exist.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Config file may not exist.
     config = require(
       configFilePath
         ? path.resolve(configFilePath)
@@ -69,10 +66,7 @@ export const loadConfig = (configFilePath?: string): Config => {
     : baseConfig;
 
   // Assign config to global context.
-  Object.defineProperty(self, '_config', {
-    value: config,
-    writable: false,
-  });
+  Object.defineProperty(self, '_config', { value: config, writable: false });
 
   return config;
 };

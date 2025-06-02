@@ -11,7 +11,7 @@ const TRANSFORM_PACKAGES = [
 /**
  * @type {import('jest').Config}
  */
-module.exports = {
+export default {
   preset: 'react-native',
   transform: {
     '^.+\\.(t|j)sx?$': '@react-native-esbuild/jest',

@@ -22,13 +22,13 @@ import { DevServer } from './DevServer';
  */
 export class ReactNativeAppServer extends DevServer {
   private wsInitialized = false;
-  private debuggerProxyEndpoint: ReturnType<
+  declare private debuggerProxyEndpoint: ReturnType<
     typeof createDevServerMiddleware
   >['debuggerProxyEndpoint'];
-  private messageSocketEndpoint: ReturnType<
+  declare private messageSocketEndpoint: ReturnType<
     typeof createDevServerMiddleware
   >['messageSocketEndpoint'];
-  private eventsSocketEndpoint: ReturnType<
+  declare private eventsSocketEndpoint: ReturnType<
     typeof createDevServerMiddleware
   >['eventsSocketEndpoint'];
   private inspectorProxy?: InspectorProxy;

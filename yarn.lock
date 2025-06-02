@@ -22,7 +22,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.22.10, @babel/code-frame@npm:^7.22.13":
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.22.13":
   version: 7.22.13
   resolution: "@babel/code-frame@npm:7.22.13"
   dependencies:
@@ -5317,7 +5317,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-native-esbuild/symbolicate@workspace:packages/symbolicate"
   dependencies:
-    "@babel/code-frame": "npm:^7.22.10"
+    "@babel/code-frame": "npm:^7.27.1"
+    "@types/babel__code-frame": "npm:^7.0.6"
     esbuild: "npm:^0.25.5"
     source-map: "npm:^0.7.4"
     typescript: "npm:^5.8.3"
@@ -6152,6 +6153,13 @@ __metadata:
   dependencies:
     "@types/estree": "npm:*"
   checksum: 10c0/5a65a1d7e91fc95703f0a717897be60fa7ccd34b17f5462056274a246e6690259fe0a1baabc86fd3260354f87245cb3dc483346d7faad2b78fc199763978ede9
+  languageName: node
+  linkType: hard
+
+"@types/babel__code-frame@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "@types/babel__code-frame@npm:7.0.6"
+  checksum: 10c0/6517ac6ac6b971fb0a8c6f394dc5fc5afbc90d52d85e260dcaba3abdfe97e79b783ac7c6cf05de6494520cafe3b09d934af95c8c6dbc24a62f7846110dd1f838
   languageName: node
   linkType: hard
 

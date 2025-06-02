@@ -1,25 +1,37 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "types": ["node", "jest"],
-    "module": "commonjs",
-    "declaration": true,
-    "noImplicitAny": false,
-    "removeComments": false,
-    "noLib": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es6",
-    "sourceMap": false,
-    "strictNullChecks": true,
-    "strictBindCallApply": true,
-    "esModuleInterop": true,
+    /* Modules */
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
     "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    /* Type Checking */
+    "types": ["node", "jest"],
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+
+    /* Language and Environment */
+    "experimentalDecorators": true,
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "ESNext.AsyncIterable"],
+    "target": "ESNext",
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Completeness */
+    "allowJs": false,
     "skipLibCheck": true,
-    "moduleResolution": "node",
-    "lib": [
-      "es6"
-    ]
+
+    /* Others */
+    "stripInternal": true
   },
   "files": ["types/index.d.ts"],
   "include": [
@@ -28,5 +40,5 @@
     "jest.config.ts",
     "test/setup.ts"
   ],
-  "exclude": ["**/*/node_modules"]
+  "exclude": ["**/*/node_modules", "**/dist/*", "**/esm/*"]
 }

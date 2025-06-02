@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { Server as WebSocketServer } from 'ws';
+import type { WebSocketServer } from 'ws';
 import type { ReactNativeEsbuildBundler } from '@react-native-esbuild/core';
 
 export enum BundleRequestType {
@@ -86,9 +86,7 @@ export interface HmrUpdateMessage {
 }
 export interface HmrUpdateStartMessage {
   type: 'update-start';
-  body: {
-    isInitialUpdate: boolean;
-  };
+  body: { isInitialUpdate: boolean };
 }
 
 export interface HmrUpdateDoneMessage {

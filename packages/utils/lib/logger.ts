@@ -1,15 +1,6 @@
 import 'node-self';
 import dayjs from 'dayjs';
-import {
-  gray,
-  cyan,
-  green,
-  yellow,
-  red,
-  magenta,
-  bold,
-  type Color,
-} from 'colors';
+import colors, { type Color } from 'colors';
 
 export enum LogLevel {
   Trace,
@@ -26,12 +17,12 @@ self.logTimestampFormat = null;
 
 export class Logger {
   private static COLOR_BY_LEVEL: Record<LogLevel, Color> = {
-    [LogLevel.Trace]: gray,
-    [LogLevel.Debug]: gray,
-    [LogLevel.Info]: cyan,
-    [LogLevel.Log]: green,
-    [LogLevel.Warn]: yellow,
-    [LogLevel.Error]: red,
+    [LogLevel.Trace]: colors.gray,
+    [LogLevel.Debug]: colors.gray,
+    [LogLevel.Info]: colors.cyan,
+    [LogLevel.Log]: colors.green,
+    [LogLevel.Warn]: colors.yellow,
+    [LogLevel.Error]: colors.red,
   };
   private groupDepth = 0;
 
@@ -77,16 +68,16 @@ export class Logger {
     if (!self.logTimestampFormat) return '';
 
     // eg. "2023-05-09 18:33:19.232 " (extra padding included)
-    return `${gray(dayjs().format(self.logTimestampFormat as string))} `;
+    return `${colors.gray(dayjs().format(self.logTimestampFormat as string))} `;
   }
 
   private parseExtra(extra?: object): string {
     let extraString = '';
     if (typeof extra === 'object') {
       try {
-        extraString = gray(`\n${JSON.stringify(extra, null, 2)}`);
+        extraString = colors.gray(`\n${JSON.stringify(extra, null, 2)}`);
       } catch (error) {
-        extraString = gray('[extra parse error]');
+        extraString = colors.gray('[extra parse error]');
       }
     }
     return extraString;
@@ -117,7 +108,9 @@ export class Logger {
   }
 
   private getLevelTag(level: LogLevel): string {
-    return bold(Logger.COLOR_BY_LEVEL[level](this.getTagStringByLevel(level)));
+    return colors.bold(
+      Logger.COLOR_BY_LEVEL[level](this.getTagStringByLevel(level)),
+    );
   }
   private getGroupPadding(options?: {
     padding?: string;
@@ -130,7 +123,7 @@ export class Logger {
 
     if (last) paddingArray[paddingArray.length - 1] = last;
 
-    return gray(paddingArray.join(''));
+    return colors.gray(paddingArray.join(''));
   }
 
   public getLogLevel(): LogLevel {
@@ -151,7 +144,7 @@ export class Logger {
     this.stdout(
       this.getGroupPadding(),
       this.getLevelTag(LogLevel.Trace),
-      magenta(this.scope),
+      colors.magenta(this.scope),
       message,
       this.parseExtra(extra),
     );
@@ -163,7 +156,7 @@ export class Logger {
     this.stdout(
       this.getGroupPadding(),
       this.getLevelTag(LogLevel.Debug),
-      magenta(this.scope),
+      colors.magenta(this.scope),
       message,
       this.parseExtra(extra),
     );
@@ -175,7 +168,7 @@ export class Logger {
     this.stdout(
       this.getGroupPadding(),
       this.getLevelTag(LogLevel.Log),
-      magenta(this.scope),
+      colors.magenta(this.scope),
       message,
       this.parseExtra(extra),
     );
@@ -187,7 +180,7 @@ export class Logger {
     this.stdout(
       this.getGroupPadding(),
       this.getLevelTag(LogLevel.Info),
-      magenta(this.scope),
+      colors.magenta(this.scope),
       message,
       this.parseExtra(extra),
     );
@@ -199,7 +192,7 @@ export class Logger {
     this.stderr(
       this.getGroupPadding(),
       this.getLevelTag(LogLevel.Warn),
-      magenta(this.scope),
+      colors.magenta(this.scope),
       message,
       this.parseError(error),
       this.parseExtra(extra),
@@ -210,7 +203,7 @@ export class Logger {
     this.stderr(
       this.getGroupPadding(),
       this.getLevelTag(LogLevel.Error),
-      magenta(this.scope),
+      colors.magenta(this.scope),
       message,
       this.parseError(error),
       this.parseExtra(extra),

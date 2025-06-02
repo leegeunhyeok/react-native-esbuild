@@ -1,5 +1,6 @@
 /* eslint-disable quotes -- Allow using backtick */
 import fs from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import type { BundleOptions } from '@react-native-esbuild/config';
 import { resolveFromRoot, wrapWithIIFE } from './helpers';
 import type { Asset } from './types';
@@ -7,6 +8,8 @@ import type { Asset } from './types';
 const REACT_NATIVE_GET_POLYFILLS_PATH = 'react-native/rn-get-polyfills';
 const REACT_NATIVE_INITIALIZE_CORE_PATH =
   'react-native/Libraries/Core/InitializeCore';
+
+const require = createRequire(import.meta.url);
 
 const getNodeEnv = (dev: boolean): string =>
   dev ? 'development' : 'production';
@@ -23,7 +26,6 @@ export const getInjectVariables = (dev: boolean): string[] => [
 ];
 
 const getReactNativePolyfills = (root: string): Promise<string[]> => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Allow dynamic require.
   const getPolyfills = require(
     resolveFromRoot(REACT_NATIVE_GET_POLYFILLS_PATH, root),
   ) as () => string[];

@@ -11,10 +11,7 @@ const TAG = 'serve-asset-middleware';
 const resolveAndLoadAssetData = (
   assetPath: string,
   platform?: string,
-): Promise<{
-  data: Buffer;
-  headers: Record<string, string | number>;
-}> => {
+): Promise<{ data: Buffer; headers: Record<string, string | number> }> => {
   const extname = path.extname(assetPath);
   const resolvePath = platform
     ? assetPath.replace(new RegExp(`${extname}$`), `.${platform}${extname}`)
@@ -62,7 +59,7 @@ export const createServeAssetMiddleware: DevServerMiddlewareCreator = (
 
     const assetPath = path.join(context.bundler.getRoot(), pathname);
 
-    (async function resolveAssetWithPlatformSuffix() {
+    return void (async function resolveAssetWithPlatformSuffix() {
       const hasPlatform = typeof query.platform === 'string';
 
       /**

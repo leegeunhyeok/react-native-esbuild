@@ -11,11 +11,14 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "build": "nx run-many --target=build",
-    "test": "nx run-many --target=test",
+    "build": "yarn build:all",
+    "build:all": "nx run-many --target=build",
+    "test": "yarn test:all",
+    "test:all": "nx run-many --target=test",
     "lint": "eslint packages",
     "example": "yarn --cwd example",
-    "release": "nx release"
+    "release": "nx release",
+    "clean": "rimraf --glob \"packages/**/*/dist\" .nx"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.8.0",
