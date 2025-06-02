@@ -39,8 +39,14 @@ export class ReactNativeWebServer extends DevServer {
       return;
     }
 
+    const host = this.serveResult.hosts[0];
+    if (host == null) {
+      logger.warn('esbuild context is not serving now');
+      return;
+    }
+
     const options = {
-      hostname: this.serveResult.host,
+      hostname: host,
       port: this.serveResult.port,
       path: request.url,
       method: request.method,
@@ -131,8 +137,15 @@ export class ReactNativeWebServer extends DevServer {
 
     server.listen(port, () => {
       logger.info(`dev server listening on http://${host}:${port}`);
-      logger.debug(`proxy to esbuild ${serveResult.host}:${serveResult.port}`);
+
+      if (serveResult.hosts[0] != null) {
+        logger.debug(
+          `proxy to esbuild ${serveResult.hosts[0]}:${serveResult.port}`,
+        );
+      }
+
       logger.nl();
+
       onListen?.();
     });
 

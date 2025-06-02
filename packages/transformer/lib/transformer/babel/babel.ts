@@ -3,6 +3,7 @@ import {
   transformAsync,
   transformSync,
   transformFromAstAsync,
+  transformFromAstSync,
   type TransformOptions,
   type Node,
 } from '@babel/core';
@@ -76,4 +77,19 @@ export const transformWithBabelAst: AsyncTransformer<
   return result.code;
 };
 
-// @TODO: Add transformSyncWithBabelAST
+export const transformSyncWithBabelAST: SyncTransformer<
+  TransformOptions,
+  Node
+> = (ast, context, preset) => {
+  const babelOptions = loadBabelOptions(context, preset?.(context));
+  if (!babelOptions) {
+    throw new Error('cannot load babel options');
+  }
+
+  const result = transformFromAstSync(ast, undefined, babelOptions);
+  if (typeof result?.code !== 'string') {
+    throw new Error('babel transformed source is empty');
+  }
+
+  return result.code;
+};

@@ -1,10 +1,12 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import type { OnLoadArgs } from 'esbuild';
+import * as hermesParser from 'hermes-parser';
 import {
   transformSyncWithBabel,
   transformSyncWithSwc,
   stripFlowWithSucrase,
+  transformSyncWithBabelAST,
 } from '../transformer';
 import { transformSyncByBabelRule, transformSyncBySwcRule } from '../helpers';
 import type { SyncTransformStep, TransformResult, ModuleMeta } from '../types';
@@ -66,7 +68,16 @@ export class SyncTransformPipelineBuilder extends TransformPipelineBuilder<
           stripFlowPackageNamesRegExp.test(args.path) ||
           this.isFlow(code, args.path)
         ) {
-          code = stripFlowWithSucrase(code, this.getContext(args));
+          const context = this.getContext(args);
+
+          try {
+            code = stripFlowWithSucrase(code, context);
+          } catch {
+            code = transformSyncWithBabelAST(
+              hermesParser.parse(code, { babel: true, flow: 'all' }),
+              context,
+            );
+          }
         }
 
         return { code, done: false };

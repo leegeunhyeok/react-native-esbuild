@@ -36,6 +36,7 @@ module.exports = {
         'import/no-named-as-default-member': 'off',
         'no-bitwise': 'off',
         'no-param-reassign': 'off',
+        'eqeqeq': 'off',
         'eslint-comments/disable-enable-pair': 'off',
         '@typescript-eslint/prefer-reduce-type-parameter': 'off',
         '@typescript-eslint/no-shadow': 'off',

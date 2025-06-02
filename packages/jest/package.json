@@ -51,6 +51,7 @@
   "devDependencies": {
     "@jest/transform": "^29.7.0",
     "@types/md5": "^2.3.2",
-    "esbuild": "^0.25.5"
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
   }
 }

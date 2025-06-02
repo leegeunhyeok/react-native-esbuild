@@ -91,6 +91,7 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
         pluginData: DUMMY_ESBUILD_VALUE,
         namespace: DUMMY_ESBUILD_VALUE,
         suffix: DUMMY_ESBUILD_VALUE,
+        with: {},
       });
       return { code: transformResult.code };
     },
@@ -104,6 +105,7 @@ export const createTransformer = (config: TransformerConfig): Transformer => {
         pluginData: DUMMY_ESBUILD_VALUE,
         namespace: DUMMY_ESBUILD_VALUE,
         suffix: DUMMY_ESBUILD_VALUE,
+        with: {},
       });
       return { code: transformResult.code };
     },

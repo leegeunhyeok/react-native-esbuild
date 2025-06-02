@@ -38,7 +38,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
-    "esbuild": "^0.25.5"
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "colors": "^1.4.0",

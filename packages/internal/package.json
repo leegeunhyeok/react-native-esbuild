@@ -38,7 +38,8 @@
   },
   "devDependencies": {
     "@react-native-esbuild/config": "workspace:*",
-    "esbuild": "^0.25.5"
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "indent-string": "^4.0.0"
