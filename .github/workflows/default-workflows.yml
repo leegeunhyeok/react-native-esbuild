@@ -110,7 +110,8 @@ jobs:
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
+          package-manager: yarn
           skip-step: install
-          test-script: yarn test:coverage
+          test-script: yarn jest
           coverage-file: coverage/report.json
           base-coverage-file: coverage/report.json
