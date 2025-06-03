@@ -13,6 +13,13 @@
   "bin": {
     "rne": "./dist/index.js"
   },
+  "scripts": {
+    "prepack": "yarn cleanup && yarn build",
+    "cleanup": "rimraf ./dist",
+    "typecheck": "tsc --noEmit",
+    "build": "node build/index.js",
+    "start": "tsc && node ./dist/index.js"
+  },
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -28,12 +35,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
-  },
-  "scripts": {
-    "prepack": "yarn cleanup && yarn build",
-    "cleanup": "rimraf ./dist",
-    "build": "node build/index.js",
-    "start": "tsc && node ./dist/index.js"
   },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"

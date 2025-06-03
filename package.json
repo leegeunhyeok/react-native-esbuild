@@ -11,8 +11,8 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "build": "yarn build:all",
     "build:all": "nx run-many --target=build",
+    "typecheck:all": "nx run-many --target=typecheck",
     "test": "jest",
     "test:coverage": "jest --coverage --json --outputFile=coverage/report.json",
     "lint": "eslint packages",

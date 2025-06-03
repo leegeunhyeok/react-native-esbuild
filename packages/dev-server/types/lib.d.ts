@@ -1,4 +1,6 @@
 declare module 'metro-inspector-proxy' {
+  import type { WebSocketServer } from 'ws';
+
   class InspectorProxy {
     constructor(projectRoot: string);
 

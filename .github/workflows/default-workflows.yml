@@ -42,38 +42,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-  build:
-    needs: [install-dependencies-and-caching]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/cache@v4
-        id: dependencies
-        with:
-          path: |
-            .yarn/cache
-            .nx
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
-      - name: Setup corepack
-        run: corepack enable
-
-      - name: Install Dependencies
-        run: yarn --immutable
-
-      - name: Build
-        run: yarn build
-
   lint:
-    needs: [install-dependencies-and-caching, build]
+    needs: [install-dependencies-and-caching]
     runs-on: ubuntu-latest
 
     steps:
@@ -105,7 +75,7 @@ jobs:
       - run: yarn lint
 
   unit-test-and-report-coverage:
-    needs: [install-dependencies-and-caching, build]
+    needs: [install-dependencies-and-caching]
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -141,5 +111,6 @@ jobs:
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           skip-step: install
+          test-script: yarn test:coverage
           coverage-file: coverage/report.json
           base-coverage-file: coverage/report.json

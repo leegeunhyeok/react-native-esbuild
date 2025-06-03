@@ -34,7 +34,7 @@ export const loadConfig = (configFilePath?: string): Config => {
     },
     web: {
       template: path.resolve(
-        import.meta.filename as string,
+        import.meta.filename,
         '../../static/templates/index.html',
       ),
     },
