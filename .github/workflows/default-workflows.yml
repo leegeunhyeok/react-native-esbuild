@@ -30,7 +30,7 @@ jobs:
         if: steps.cached-dependencies.outputs.cache-hit != 'true'
         run: |
           corepack enable
-          yarn --immutable
+          yarn install --immutable
           yarn build:all
 
       - uses: actions/cache@v4
@@ -66,9 +66,6 @@ jobs:
       - name: Setup corepack
         run: corepack enable
 
-      - name: Install Dependencies
-        run: yarn --immutable
-
       - name: Build
         run: yarn build:all
 
@@ -101,9 +98,6 @@ jobs:
 
       - name: Setup corepack
         run: corepack enable
-
-      - name: Install Dependencies
-        run: yarn --immutable
 
       - name: Build
         run: yarn build:all
