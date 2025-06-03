@@ -13,8 +13,8 @@
     "prepare": "husky install",
     "build": "yarn build:all",
     "build:all": "nx run-many --target=build",
-    "test": "yarn test:all",
-    "test:all": "nx run-many --target=test",
+    "test": "jest",
+    "test:coverage": "jest --coverage --json --outputFile=coverage/report.json",
     "lint": "eslint packages",
     "example": "yarn --cwd example",
     "release": "nx release",
@@ -39,6 +39,7 @@
     "prettier": "^3.5.3",
     "react-native": "0.72.6",
     "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "prettier": "@vercel/style-guide/prettier",
