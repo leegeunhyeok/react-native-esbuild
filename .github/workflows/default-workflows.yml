@@ -16,6 +16,9 @@ jobs:
         id: cached-dependencies
         with:
           lookup-only: true
+          path: |
+            .yarn/cache
+            .nx
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - uses: actions/setup-node@v4
