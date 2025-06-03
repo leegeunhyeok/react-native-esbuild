@@ -107,5 +107,3 @@ jobs:
           package-manager: yarn
           skip-step: install
           test-script: yarn jest
-          coverage-file: coverage/report.json
-          base-coverage-file: coverage/report.json
