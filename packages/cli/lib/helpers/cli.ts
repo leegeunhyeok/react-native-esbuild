@@ -4,7 +4,7 @@ import { logger } from '../shared';
 export const getCommand = <RawArgv extends { _: (string | number)[] }>(
   argv: RawArgv,
   position = 0,
-): string => argv._[position].toString();
+): string => argv._[position]?.toString() ?? '';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Allow any type for debugging.
 export const printDebugOptions = <T extends Record<string, any>>(
