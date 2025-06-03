@@ -15,9 +15,6 @@ jobs:
       - uses: actions/cache@v4
         id: cached-dependencies
         with:
-          path: |
-            .yarn/cache
-            .nx
           lookup-only: true
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
@@ -31,7 +28,7 @@ jobs:
         run: |
           corepack enable
           yarn --immutable
-          yarn build
+          yarn build:all
 
       - uses: actions/cache@v4
         with:
@@ -70,7 +67,7 @@ jobs:
         run: yarn --immutable
 
       - name: Build
-        run: yarn build
+        run: yarn build:all
 
       - run: yarn lint
 
@@ -106,7 +103,7 @@ jobs:
         run: yarn --immutable
 
       - name: Build
-        run: yarn build
+        run: yarn build:all
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
