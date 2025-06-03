@@ -17,8 +17,8 @@ jobs:
         with:
           lookup-only: true
           path: |
-            .yarn/cache
             .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - uses: actions/setup-node@v4
@@ -36,8 +36,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: |
-            .yarn/cache
             .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
@@ -53,8 +53,8 @@ jobs:
         id: dependencies
         with:
           path: |
-            .yarn/cache
             .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
@@ -89,8 +89,8 @@ jobs:
         id: dependencies
         with:
           path: |
-            .yarn/cache
             .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
