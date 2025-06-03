@@ -5,10 +5,6 @@
       "dependsOn": ["^build"],
       "cache": false
     },
-    "test": {
-      "dependsOn": ["^build"],
-      "cache": false
-    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["{projectRoot}/dist"],

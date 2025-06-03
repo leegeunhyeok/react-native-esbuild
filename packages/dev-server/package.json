@@ -12,6 +12,12 @@
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/lib/index.d.ts",
+  "scripts": {
+    "prepack": "yarn cleanup && yarn build",
+    "cleanup": "rimraf ./dist",
+    "typecheck": "tsc --noEmit",
+    "build": "node build/index.js && tsc"
+  },
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -28,11 +34,6 @@
     "type": "git",
     "url": "git+https://github.com/leegeunhyeok/react-native-esbuild.git"
   },
-  "scripts": {
-    "prepack": "yarn cleanup && yarn build",
-    "cleanup": "rimraf ./dist",
-    "build": "node build/index.js && tsc"
-  },
   "bugs": {
     "url": "https://github.com/leegeunhyeok/react-native-esbuild/issues"
   },
@@ -41,7 +42,7 @@
     "@types/connect": "^3.4.35",
     "@types/invariant": "^2.2.36",
     "@types/mime": "^3.0.1",
-    "@types/ws": "^8.5.5",
+    "@types/ws": "^8.18.1",
     "esbuild": "^0.25.5",
     "typescript": "^5.8.3"
   },
@@ -55,7 +56,7 @@
     "invariant": "^2.2.4",
     "metro-inspector-proxy": "^0.78.0",
     "mime": "^3.0.0",
-    "ws": "^8.13.0",
+    "ws": "^8.18.2",
     "zod": "^3.22.2"
   }
 }

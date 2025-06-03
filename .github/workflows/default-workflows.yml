@@ -12,111 +12,124 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/cache@v4
+        id: cached-dependencies
+        with:
+          lookup-only: true
+          path: |
+            .nx
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
       - uses: actions/setup-node@v4
+        if: steps.cached-dependencies.outputs.cache-hit != 'true'
         with:
           node-version-file: .nvmrc
 
+      - name: Install dependencies and caching build result
+        if: steps.cached-dependencies.outputs.cache-hit != 'true'
+        run: |
+          corepack enable
+          yarn install --immutable
+          yarn build:all
+
       - uses: actions/cache@v4
-        id: dependencies
         with:
-          path: .yarn/cache
+          path: |
+            .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Setup corepack
-        run: corepack enable
-
-      - name: Install Dependencies
-        run: yarn --immutable
-
-  build:
+  lint:
     needs: [install-dependencies-and-caching]
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
       - uses: actions/cache@v4
         id: dependencies
         with:
-          path: .yarn/cache
+          path: |
+            .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
       - name: Setup corepack
         run: corepack enable
 
-      - name: Install Dependencies
-        run: yarn --immutable
-
       - name: Build
-        run: yarn build
+        run: yarn build:all
 
-  lint:
-    needs: [install-dependencies-and-caching, build]
+      - run: yarn lint
+
+  typecheck:
+    needs: [install-dependencies-and-caching]
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-
       - uses: actions/cache@v4
         id: dependencies
         with:
-          path: .yarn/cache
+          path: |
+            .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
       - name: Setup corepack
         run: corepack enable
 
-      - name: Install Dependencies
-        run: yarn --immutable
-
-      - name: Build
-        run: yarn build
-
-      - run: yarn lint
+      - run: yarn typecheck:all
 
   unit-test-and-report-coverage:
-    needs: [install-dependencies-and-caching, build]
+    needs: [install-dependencies-and-caching]
     runs-on: ubuntu-latest
     permissions:
       checks: write
       pull-requests: write
       contents: write
+
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
 
       - uses: actions/cache@v4
         id: dependencies
         with:
-          path: node_modules
+          path: |
+            .nx
+            node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install Dependencies
-        run: yarn --immutable
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Setup corepack
+        run: corepack enable
 
       - name: Build
-        run: yarn build
+        run: yarn build:all
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2.3.1
+      - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           package-manager: yarn
           skip-step: install
+          test-script: yarn jest

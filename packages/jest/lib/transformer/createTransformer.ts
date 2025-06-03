@@ -33,8 +33,11 @@ export const createTransformer: TransformerCreator<
   SyncTransformer,
   TransformerConfig
 > = (config): SyncTransformer => {
-  // @ts-expect-error -- ESM default export
-  const cacheKeyFunction = createCacheKeyFunction.default([], [pkg.version]);
+  const cacheKeyFunction = // @ts-expect-error -- ESM default export
+    (createCacheKeyFunction.default as typeof createCacheKeyFunction)(
+      [],
+      [pkg.version],
+    );
   const { transformer } = ReactNativeEsbuildBundler.getConfig();
   const instrumentEnabled = Boolean(
     config?.experimental?.customCoverageInstrumentation,
@@ -119,6 +122,7 @@ export const createTransformer: TransformerCreator<
       path: string,
       options: TransformOptions,
     ): string => {
+       // @ts-expect-error -- `NewGetCacheKeyFunction`
       return md5(cacheKeyFunction(code, path, options));
     },
   };

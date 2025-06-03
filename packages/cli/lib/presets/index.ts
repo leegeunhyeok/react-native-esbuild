@@ -6,13 +6,16 @@ import {
   createSvgTransformPlugin,
 } from '@react-native-esbuild/plugins';
 
-const native: ReactNativeEsbuildPluginCreator<unknown>[] = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow
+type AnyPlugin = any;
+
+const native: ReactNativeEsbuildPluginCreator<AnyPlugin>[] = [
   createAssetRegisterPlugin,
   createSvgTransformPlugin,
   createReactNativeRuntimeTransformPlugin,
 ];
 
-const web: ReactNativeEsbuildPluginCreator<unknown>[] = [
+const web: ReactNativeEsbuildPluginCreator<AnyPlugin>[] = [
   createReactNativeWebPlugin,
   createSvgTransformPlugin,
   createReactNativeRuntimeTransformPlugin,
