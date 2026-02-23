@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This project has been deprecated. Please refer to the [Rollipop](https://github.com/leegeunhyeok/rollipop) project instead.
+
 <div align="center">
 
   # react-native-esbuild
